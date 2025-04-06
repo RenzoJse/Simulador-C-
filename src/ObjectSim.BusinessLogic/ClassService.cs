@@ -22,5 +22,9 @@ public class ClassService
             throw new ArgumentException("Name cannot be longer than 15 characters");
         }
 
+        if(name.Length < 3)
+        {
+            throw new ArgumentException("Name cannot be shorter than 3 characters");
+        }
     }
 }
