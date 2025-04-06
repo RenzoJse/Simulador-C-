@@ -1,6 +1,9 @@
 ﻿namespace ObjectSim;
 
-public class Class1
+public class Test
 {
-
+    public int Sumar(int a, int b)
+    {
+        return a + b;
+    }
 }

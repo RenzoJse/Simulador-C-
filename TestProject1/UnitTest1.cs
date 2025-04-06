@@ -1,0 +1,15 @@
+using ObjectSim;
+
+namespace TestProject1;
+
+[TestClass]
+public class UnitTest1
+{
+    [TestMethod]
+    public void Sumar_DosNumerosPositivos_RetornaSuma()
+    {
+        var calc = new Test();
+        var resultado = calc.Sumar(3, 5);
+        Assert.AreEqual(8, resultado);
+    }
+}
