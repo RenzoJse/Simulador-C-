@@ -38,6 +38,18 @@ public class ClassServiceTest
             .WithMessage("Name cannot be longer than 15 characters");
     }
 
+    [TestMethod]
+    public void CreateClass_WithNameShorterThan3Characters_ThrowsException()
+    {
+        var shortName = "ab";
+        var args = new CreateClassArgs(shortName, true, true, [],[], null!, Guid.NewGuid());
+
+        Action action = () => ClassService.Create(args);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be shorter than 3 characters");
+    }
+
     #endregion
     #endregion
 }
