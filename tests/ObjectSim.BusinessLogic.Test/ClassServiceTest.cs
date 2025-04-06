@@ -23,7 +23,7 @@ public class ClassServiceTest
     {
         var args = new CreateClassArgs(null, true, true, [],[], null!, Guid.NewGuid());
 
-        _classService!.Create(args);
+        ClassService.Create(args);
     }
 
     [TestMethod]
@@ -32,7 +32,7 @@ public class ClassServiceTest
         var longName = "15CharactersLongName";
         var args = new CreateClassArgs(longName, true, true, [],[], null!, Guid.NewGuid());
 
-        Action action = () => _classService!.Create(args);
+        Action action = () => ClassService.Create(args);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be longer than 15 characters");

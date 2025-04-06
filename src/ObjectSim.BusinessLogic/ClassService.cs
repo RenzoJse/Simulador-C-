@@ -8,14 +8,16 @@ public class ClassService
     {
     }
 
-    public void Create(CreateClassArgs args)
+    public static void Create(CreateClassArgs args)
     {
-        if(args.Name == null)
-        {
-            throw new ArgumentNullException(nameof(args.Name));
-        }
+        IsValidName(args.Name!);
+    }
 
-        if(args.Name .Length > 15)
+    private static void IsValidName(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+
+        if(name.Length > 15)
         {
             throw new ArgumentException("Name cannot be longer than 15 characters");
         }
