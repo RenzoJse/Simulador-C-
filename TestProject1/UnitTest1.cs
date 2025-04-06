@@ -9,7 +9,7 @@ public class UnitTest1
     public void Sumar_DosNumerosPositivos_RetornaSuma()
     {
         var calc = new Test();
-        var resultado = Test.Sumar(3, 5);
-        Assert.AreEqual(9, resultado);
+        var resultado = Test.Sumar(3, 6);
+        Assert.AreEqual(10, resultado);
     }
 }
