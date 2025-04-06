@@ -17,6 +17,7 @@ public class ClassServiceTest
     #region Error
 
     [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
     public void CreateClass_WithoutName_ThrowsException()
     {
         var args = new CreateClassArgs(null, true, true, [],[], null!, Guid.NewGuid());
