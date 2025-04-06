@@ -10,6 +10,6 @@ public class UnitTest1
     {
         var calc = new Test();
         var resultado = Test.Sumar(3, 5);
-        Assert.AreEqual(8, resultado);
+        Assert.AreEqual(9, resultado);
     }
 }
