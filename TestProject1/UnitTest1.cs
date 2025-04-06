@@ -8,7 +8,7 @@ public class UnitTest1
     [TestMethod]
     public void Sumar_DosNumerosPositivos_RetornaSuma()
     {
-        var resultado = Test.Sumar(3, 6);
-        Assert.AreEqual(10, resultado);
+        var resultado = Test.Sumar(3, 7);
+        Assert.AreEqual(11, resultado);
     }
 }
