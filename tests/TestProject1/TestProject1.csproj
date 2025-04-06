@@ -22,7 +22,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ObjectSim\ObjectSim.csproj" />
-      <ProjectReference Include="..\src\ObjectSim\ObjectSim.csproj" />
     </ItemGroup>
 
 </Project>
