@@ -25,6 +25,15 @@ public class ClassServiceTest
         _classService!.Create(args);
     }
 
+    [TestMethod]
+    public void CreateClass_WithNameLongerThan15Characters_ThrowsException()
+    {
+        var longName = "15CharactersLongName";
+        var args = new CreateClassArgs(longName, true, true, [],[], null!, Guid.NewGuid());
+
+        _classService!.Create(args);
+    }
+
     #endregion
     #endregion
 }
