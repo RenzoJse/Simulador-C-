@@ -4,6 +4,9 @@ namespace ObjectSim.BusinessLogic;
 
 public class ClassService
 {
+    private const int MaxNameLength = 15;
+    private const int MinNameLength = 3;
+
     public ClassService()
     {
     }
@@ -16,13 +19,26 @@ public class ClassService
     private static void IsValidName(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
+        VerifyNameLenght(name);
+    }
 
-        if(name.Length > 15)
+    private static void VerifyNameLenght(string name)
+    {
+        VerifyMaxNameLenght(name);
+        VerifyMinNameLenght(name);
+    }
+
+    private static void VerifyMaxNameLenght(string name)
+    {
+        if (name.Length > MaxNameLength)
         {
             throw new ArgumentException("Name cannot be longer than 15 characters");
         }
+    }
 
-        if(name.Length < 3)
+    private static void VerifyMinNameLenght(string name)
+    {
+        if (name.Length < MinNameLength)
         {
             throw new ArgumentException("Name cannot be shorter than 3 characters");
         }
