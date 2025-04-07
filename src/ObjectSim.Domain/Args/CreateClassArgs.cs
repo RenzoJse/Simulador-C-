@@ -5,7 +5,7 @@ namespace ObjectSim.Domain.Args;
 
 public class CreateClassArgs(
     string? name,
-    bool isAbstract,
+    bool? isAbstract,
     bool isSealed,
     List<Attribute> attribute,
     List<Method> methods,
@@ -13,7 +13,7 @@ public class CreateClassArgs(
     Guid id)
 {
     public string? Name { get; set; } = name;
-    public bool IsAbstract { get; set; } = isAbstract;
+    public bool? IsAbstract { get; set; } = isAbstract;
     public bool IsSealed { get; set; } = isSealed;
     public List<Attribute> Attribute { get; set; } = attribute;
     public List<Method> Methods { get; set; } = methods;

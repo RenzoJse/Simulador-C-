@@ -51,6 +51,15 @@ public class ClassDirectorTest
             .WithMessage("Name cannot be shorter than 3 characters");
     }
 
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void CreateClass_SetAbstractionNull_ThrowsException()
+    {
+        var args = new CreateClassArgs(null, null, true, [], [], null!, Guid.NewGuid());
+
+        ClassService.Create(args, _classBuilder!);
+    }
+
     #endregion
 
     #endregion
