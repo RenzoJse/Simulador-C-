@@ -1,42 +1,14 @@
-﻿using ObjectSim.Domain.Args;
+﻿using ObjectSim.BusinessLogic.ClassesBuilders;
+using ObjectSim.Domain.Args;
 
 namespace ObjectSim.BusinessLogic;
 
 public class ClassService
 {
-    private const int MaxNameLength = 15;
-    private const int MinNameLength = 3;
-
-    public static void Create(CreateClassArgs args)
+    public static void Create(CreateClassArgs args, Builder builder)
     {
-        IsValidName(args.Name!);
+        var director = new ClassDirector(builder);
+        director.ConstructClass(args);
     }
 
-    private static void IsValidName(string name)
-    {
-        ArgumentNullException.ThrowIfNull(name);
-        VerifyNameLenght(name);
-    }
-
-    private static void VerifyNameLenght(string name)
-    {
-        VerifyMaxNameLenght(name);
-        VerifyMinNameLenght(name);
-    }
-
-    private static void VerifyMaxNameLenght(string name)
-    {
-        if(name.Length > MaxNameLength)
-        {
-            throw new ArgumentException("Name cannot be longer than 15 characters");
-        }
-    }
-
-    private static void VerifyMinNameLenght(string name)
-    {
-        if(name.Length < MinNameLength)
-        {
-            throw new ArgumentException("Name cannot be shorter than 3 characters");
-        }
-    }
 }
