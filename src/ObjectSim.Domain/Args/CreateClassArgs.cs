@@ -2,8 +2,14 @@
 
 namespace ObjectSim.BusinessLogic.Args;
 
-public class CreateClassArgs(string? name, bool isAbstract, bool isSealed, List<Attribute> attribute,
-    List<Method> methods, Class parent, Guid id)
+public class CreateClassArgs(
+    string? name,
+    bool isAbstract,
+    bool isSealed,
+    List<Attribute> attribute,
+    List<Method> methods,
+    Class parent,
+    Guid id)
 {
     public string? Name { get; set; } = name;
     public bool IsAbstract { get; set; } = isAbstract;
