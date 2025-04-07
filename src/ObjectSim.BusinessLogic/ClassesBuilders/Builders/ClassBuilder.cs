@@ -6,4 +6,9 @@ public class ClassBuilder : Builder
     {
         base.SetAttributes(attributes);
     }
+
+    public override void SetMethods(List<Method> methods)
+    {
+        base.SetMethods(methods);
+    }
 }

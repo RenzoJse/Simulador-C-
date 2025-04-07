@@ -27,6 +27,12 @@ public abstract class Builder
         ArgumentNullException.ThrowIfNull(attributes);
     }
 
+    public virtual void SetMethods(List<Method> methods)
+    {
+        ArgumentNullException.ThrowIfNull(methods);
+    }
+
+
     private static void IsValidName(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
