@@ -17,6 +17,11 @@ public abstract class Builder
         ArgumentNullException.ThrowIfNull(abstraction);
     }
 
+    public virtual void SetSealed(bool? sealedClass)
+    {
+        ArgumentNullException.ThrowIfNull(sealedClass);
+    }
+
     private static void IsValidName(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
