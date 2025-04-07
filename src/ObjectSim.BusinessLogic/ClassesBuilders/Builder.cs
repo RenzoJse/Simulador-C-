@@ -22,6 +22,8 @@ public abstract class Builder
         ArgumentNullException.ThrowIfNull(sealedClass);
     }
 
+    public abstract void SetAttributes(List<Attribute> attributes);
+
     private static void IsValidName(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
