@@ -14,5 +14,6 @@ public class ClassDirector
     public void ConstructClass(CreateClassArgs args)
     {
         _builder.SetName(args.Name!);
+        _builder.SetAbstraction(args.IsAbstract);
     }
 }

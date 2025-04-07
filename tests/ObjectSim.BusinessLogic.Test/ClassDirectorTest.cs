@@ -4,6 +4,7 @@ using ObjectSim.Domain.Args;
 
 namespace ObjectSim.BusinessLogic.Test;
 
+[TestClass]
 public class ClassDirectorTest
 {
     private ClassBuilder? _classBuilder;

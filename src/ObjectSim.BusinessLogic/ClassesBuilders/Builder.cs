@@ -1,4 +1,6 @@
-﻿namespace ObjectSim.BusinessLogic.ClassesBuilders;
+﻿using ObjectSim.Domain;
+
+namespace ObjectSim.BusinessLogic.ClassesBuilders;
 
 public abstract class Builder
 {
@@ -8,6 +10,11 @@ public abstract class Builder
     public virtual void SetName(string name)
     {
         IsValidName(name);
+    }
+
+    public virtual void SetAbstraction(bool? abstraction)
+    {
+        ArgumentNullException.ThrowIfNull(abstraction);
     }
 
     private static void IsValidName(string name)
