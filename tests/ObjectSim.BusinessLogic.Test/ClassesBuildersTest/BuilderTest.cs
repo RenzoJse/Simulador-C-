@@ -107,7 +107,7 @@ public class BuilderTest
 
         Action action = () => _genericBuilder!.SetName(validName);
         action.Should().NotThrow();
-        _genericBuilder!.GetResult().Name.Should().Be(validName);
+        _genericBuilder!.Result.Name.Should().Be(validName);
 
     }
 

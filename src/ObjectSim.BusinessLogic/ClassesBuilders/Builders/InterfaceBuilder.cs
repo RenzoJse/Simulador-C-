@@ -13,9 +13,4 @@ public class InterfaceBuilder : Builder
     {
         base.SetMethods(methods);
     }
-
-    public override Class GetResult()
-    {
-        return null;
-    }
 }

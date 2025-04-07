@@ -6,12 +6,14 @@ public abstract class Builder
 {
     private const int MaxNameLength = 15;
     private const int MinNameLength = 3;
+    public Class Result { get; private set; } = new Class();
 
     #region SetName
 
     public virtual void SetName(string name)
     {
         IsValidName(name);
+        Result.Name = name;
     }
 
     private static void IsValidName(string name)
@@ -81,7 +83,5 @@ public abstract class Builder
     }
 
     #endregion
-
-    public abstract Class GetResult();
 
 }
