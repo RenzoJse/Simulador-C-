@@ -32,6 +32,10 @@ public abstract class Builder
         ArgumentNullException.ThrowIfNull(methods);
     }
 
+    public virtual void SetParent(Class parent)
+    {
+        ArgumentNullException.ThrowIfNull(parent);
+    }
 
     private static void IsValidName(string name)
     {

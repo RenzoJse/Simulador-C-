@@ -81,7 +81,7 @@ public class BuilderTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void CreateClass_WithNullParent_ThrowsException()
     {
-        _genericBuilder!.SetParent(null!);}
+        _genericBuilder!.SetParent(null!);
     }
 
     #endregion
