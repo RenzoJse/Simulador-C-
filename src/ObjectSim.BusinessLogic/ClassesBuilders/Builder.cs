@@ -35,12 +35,12 @@ public abstract class Builder
     public virtual void SetParent(Class parent)
     {
         ArgumentNullException.ThrowIfNull(parent);
-        if(parent.IsSealed)
-        {
-            throw new ArgumentException("Parent class cannot be sealed");
-        }
+        IsParentSealed(parent);
     }
 
+    #region Private
+
+    #region Name Methods
     private static void IsValidName(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
@@ -68,4 +68,21 @@ public abstract class Builder
             throw new ArgumentException("Name cannot be shorter than 3 characters");
         }
     }
+
+    #endregion
+
+    #region Parent Methods
+
+    private static void IsParentSealed(Class parent)
+    {
+        if(parent.IsSealed)
+        {
+            throw new ArgumentException("Parent class cannot be sealed");
+        }
+    }
+
+    #endregion
+
+    #endregion
+
 }
