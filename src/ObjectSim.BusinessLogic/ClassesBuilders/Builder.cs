@@ -35,6 +35,10 @@ public abstract class Builder
     public virtual void SetParent(Class parent)
     {
         ArgumentNullException.ThrowIfNull(parent);
+        if(parent.IsSealed)
+        {
+            throw new ArgumentException("Parent class cannot be sealed");
+        }
     }
 
     private static void IsValidName(string name)
