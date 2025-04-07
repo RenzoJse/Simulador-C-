@@ -1,21 +1,22 @@
 ﻿using FluentAssertions;
+using ObjectSim.BusinessLogic.ClassesBuilders;
 using ObjectSim.BusinessLogic.ClassesBuilders.Builders;
 using ObjectSim.Domain.Args;
 
-namespace ObjectSim.BusinessLogic.Test;
+namespace ObjectSim.BusinessLogic.Test.ClassesBuildersTest;
 
 [TestClass]
-public class ClassDirectorTest
+public class BuilderTest
 {
-    private ClassBuilder? _classBuilder;
+    private Builder? _genericBuilder;
 
     [TestInitialize]
     public void Initialize()
     {
-        _classBuilder = new ClassBuilder();
+        _genericBuilder = new ClassBuilder();
     }
 
-    #region Create
+    #region CreateClass
 
     #region Error
 
@@ -23,18 +24,15 @@ public class ClassDirectorTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void CreateClass_WithoutName_ThrowsException()
     {
-        var args = new CreateClassArgs(null, true, true, [], [], null!, Guid.NewGuid());
-
-        ClassService.Create(args, _classBuilder!);
+        _genericBuilder!.SetName(null!);
     }
 
     [TestMethod]
     public void CreateClass_WithNameLongerThan15Characters_ThrowsException()
     {
         const string longName = "15CharactersLongName";
-        var args = new CreateClassArgs(longName, true, true, [], [], null!, Guid.NewGuid());
 
-        Action action = () => ClassService.Create(args, _classBuilder!);
+        Action action = () => _genericBuilder!.SetName(longName);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be longer than 15 characters");
@@ -44,9 +42,8 @@ public class ClassDirectorTest
     public void CreateClass_WithNameShorterThan3Characters_ThrowsException()
     {
         const string shortName = "ab";
-        var args = new CreateClassArgs(shortName, true, true, [], [], null!, Guid.NewGuid());
 
-        Action action = () => ClassService.Create(args, _classBuilder!);
+        Action action = () => _genericBuilder!.SetName(shortName);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be shorter than 3 characters");
@@ -56,18 +53,14 @@ public class ClassDirectorTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void CreateClass_SetAbstractionNull_ThrowsException()
     {
-        var args = new CreateClassArgs(null, null, true, [], [], null!, Guid.NewGuid());
-
-        ClassService.Create(args, _classBuilder!);
+        _genericBuilder!.SetAbstraction(null!);
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void CreateClass_SetSealedNull_ThrowsException()
     {
-        var args = new CreateClassArgs(null, null, true, [], [], null!, Guid.NewGuid());
-
-        ClassService.Create(args, _classBuilder!);
+        _genericBuilder!.SetSealed(null!);
     }
 
     #endregion

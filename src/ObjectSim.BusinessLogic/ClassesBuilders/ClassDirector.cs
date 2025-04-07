@@ -1,4 +1,5 @@
-﻿using ObjectSim.Domain.Args;
+﻿using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 
 namespace ObjectSim.BusinessLogic.ClassesBuilders;
 
@@ -11,9 +12,10 @@ public class ClassDirector
         _builder = classBuilder;
     }
 
-    public void ConstructClass(CreateClassArgs args)
+    public Class ConstructClass(CreateClassArgs args)
     {
         _builder.SetName(args.Name!);
         _builder.SetAbstraction(args.IsAbstract);
+        return null!;
     }
 }
