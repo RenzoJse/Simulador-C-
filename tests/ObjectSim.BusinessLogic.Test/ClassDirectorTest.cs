@@ -61,6 +61,15 @@ public class ClassDirectorTest
         ClassService.Create(args, _classBuilder!);
     }
 
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void CreateClass_SetSealedNull_ThrowsException()
+    {
+        var args = new CreateClassArgs(null, null, true, [], [], null!, Guid.NewGuid());
+
+        ClassService.Create(args, _classBuilder!);
+    }
+
     #endregion
 
     #endregion
