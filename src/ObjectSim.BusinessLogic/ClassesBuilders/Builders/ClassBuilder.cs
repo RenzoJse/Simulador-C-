@@ -1,4 +1,6 @@
-﻿namespace ObjectSim.BusinessLogic.ClassesBuilders.Builders;
+﻿using ObjectSim.Domain;
+
+namespace ObjectSim.BusinessLogic.ClassesBuilders.Builders;
 
 public class ClassBuilder : Builder
 {
@@ -10,5 +12,10 @@ public class ClassBuilder : Builder
     public override void SetMethods(List<Method> methods)
     {
         base.SetMethods(methods);
+    }
+
+    public override Class GetResult()
+    {
+        return null;
     }
 }

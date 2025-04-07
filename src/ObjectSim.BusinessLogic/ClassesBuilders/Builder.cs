@@ -7,40 +7,13 @@ public abstract class Builder
     private const int MaxNameLength = 15;
     private const int MinNameLength = 3;
 
+    #region SetName
+
     public virtual void SetName(string name)
     {
         IsValidName(name);
     }
 
-    public virtual void SetAbstraction(bool? abstraction)
-    {
-        ArgumentNullException.ThrowIfNull(abstraction);
-    }
-
-    public virtual void SetSealed(bool? sealedClass)
-    {
-        ArgumentNullException.ThrowIfNull(sealedClass);
-    }
-
-    public virtual void SetAttributes(List<Attribute> attributes)
-    {
-        ArgumentNullException.ThrowIfNull(attributes);
-    }
-
-    public virtual void SetMethods(List<Method> methods)
-    {
-        ArgumentNullException.ThrowIfNull(methods);
-    }
-
-    public virtual void SetParent(Class parent)
-    {
-        ArgumentNullException.ThrowIfNull(parent);
-        IsParentSealed(parent);
-    }
-
-    #region Private
-
-    #region Name Methods
     private static void IsValidName(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
@@ -71,7 +44,33 @@ public abstract class Builder
 
     #endregion
 
-    #region Parent Methods
+    public virtual void SetAbstraction(bool? abstraction)
+    {
+        ArgumentNullException.ThrowIfNull(abstraction);
+    }
+
+    public virtual void SetSealed(bool? sealedClass)
+    {
+        ArgumentNullException.ThrowIfNull(sealedClass);
+    }
+
+    public virtual void SetAttributes(List<Attribute> attributes)
+    {
+        ArgumentNullException.ThrowIfNull(attributes);
+    }
+
+    public virtual void SetMethods(List<Method> methods)
+    {
+        ArgumentNullException.ThrowIfNull(methods);
+    }
+
+    #region SetParent
+
+    public virtual void SetParent(Class parent)
+    {
+        ArgumentNullException.ThrowIfNull(parent);
+        IsParentSealed(parent);
+    }
 
     private static void IsParentSealed(Class parent)
     {
@@ -83,6 +82,6 @@ public abstract class Builder
 
     #endregion
 
-    #endregion
+    public abstract Class GetResult();
 
 }

@@ -98,5 +98,20 @@ public class BuilderTest
 
     #endregion
 
+    #region Success
+
+    [TestMethod]
+    public void CreateClass_WithValidName_SetValidName()
+    {
+        const string validName = "ValidName";
+
+        Action action = () => _genericBuilder!.SetName(validName);
+        action.Should().NotThrow();
+        _genericBuilder!.GetResult().Name.Should().Be(validName);
+
+    }
+
+    #endregion
+
     #endregion
 }
