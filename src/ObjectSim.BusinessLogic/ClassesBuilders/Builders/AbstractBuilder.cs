@@ -1,6 +1,6 @@
 ﻿namespace ObjectSim.BusinessLogic.ClassesBuilders.Builders;
 
-public class ClassBuilder : Builder
+public class AbstractBuilder : Builder
 {
     public override void SetAttributes(List<Attribute> attributes)
     {

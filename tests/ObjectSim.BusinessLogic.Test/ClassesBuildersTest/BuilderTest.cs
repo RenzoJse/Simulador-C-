@@ -70,6 +70,13 @@ public class BuilderTest
         _genericBuilder!.SetAttributes(null!);
     }
 
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void CreateClass_WithNullMethods_ThrowsException()
+    {
+        _genericBuilder!.SetMethods(null!);
+    }
+
     #endregion
 
     #endregion

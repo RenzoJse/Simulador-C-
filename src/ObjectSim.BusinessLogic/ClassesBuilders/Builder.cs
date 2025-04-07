@@ -22,7 +22,10 @@ public abstract class Builder
         ArgumentNullException.ThrowIfNull(sealedClass);
     }
 
-    public abstract void SetAttributes(List<Attribute> attributes);
+    public virtual void SetAttributes(List<Attribute> attributes)
+    {
+        ArgumentNullException.ThrowIfNull(attributes);
+    }
 
     private static void IsValidName(string name)
     {
