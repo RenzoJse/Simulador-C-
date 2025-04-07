@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using ObjectSim.BusinessLogic.ClassesBuilders;
 using ObjectSim.BusinessLogic.ClassesBuilders.Builders;
+using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 
 namespace ObjectSim.BusinessLogic.Test.ClassesBuildersTest;
@@ -82,6 +83,17 @@ public class BuilderTest
     public void CreateClass_WithNullParent_ThrowsException()
     {
         _genericBuilder!.SetParent(null!);
+    }
+
+    [TestMethod]
+    public void CreateClass_WithSealedParent_ThrowsException()
+    {
+        var sealedParent = new Class() { IsSealed = true };
+
+        Action action = () => _genericBuilder!.SetParent(sealedParent);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Parent class cannot be sealed");
     }
 
     #endregion
