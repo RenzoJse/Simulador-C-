@@ -9,10 +9,11 @@ public class CreateClassArgs
     public bool IsSealed { get; set; }
     public List<Attribute> Attribute { get; set; } = [];
     public List<Method> Methods { get; set; } = [];
-    public Class Parent { get; set; } = new Class();
+    public Class Parent { get; set; } = new();
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    public CreateClassArgs(string? name, bool isAbstract, bool isSealed, List<Attribute> attribute, List<Method> methods, Class parent, Guid id)
+    public CreateClassArgs(string? name, bool isAbstract, bool isSealed, List<Attribute> attribute,
+        List<Method> methods, Class parent, Guid id)
     {
         Name = name;
         IsAbstract = isAbstract;

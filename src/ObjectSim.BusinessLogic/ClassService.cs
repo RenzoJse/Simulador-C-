@@ -7,10 +7,6 @@ public class ClassService
     private const int MaxNameLength = 15;
     private const int MinNameLength = 3;
 
-    public ClassService()
-    {
-    }
-
     public static void Create(CreateClassArgs args)
     {
         IsValidName(args.Name!);
@@ -30,7 +26,7 @@ public class ClassService
 
     private static void VerifyMaxNameLenght(string name)
     {
-        if (name.Length > MaxNameLength)
+        if(name.Length > MaxNameLength)
         {
             throw new ArgumentException("Name cannot be longer than 15 characters");
         }
@@ -38,7 +34,7 @@ public class ClassService
 
     private static void VerifyMinNameLenght(string name)
     {
-        if (name.Length < MinNameLength)
+        if(name.Length < MinNameLength)
         {
             throw new ArgumentException("Name cannot be shorter than 3 characters");
         }

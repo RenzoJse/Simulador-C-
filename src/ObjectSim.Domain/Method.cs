@@ -1,6 +1,3 @@
 ﻿namespace ObjectSim.BusinessLogic;
 
-public class Method
-{
-    
-}
+public class Method;

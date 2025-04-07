@@ -1,5 +1,5 @@
-using ObjectSim.BusinessLogic.Args;
 using FluentAssertions;
+using ObjectSim.BusinessLogic.Args;
 
 namespace ObjectSim.BusinessLogic.Test;
 
@@ -15,13 +15,14 @@ public class ClassServiceTest
     }
 
     #region Create
+
     #region Error
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void CreateClass_WithoutName_ThrowsException()
     {
-        var args = new CreateClassArgs(null, true, true, [],[], null!, Guid.NewGuid());
+        var args = new CreateClassArgs(null, true, true, [], [], null!, Guid.NewGuid());
 
         ClassService.Create(args);
     }
@@ -30,7 +31,7 @@ public class ClassServiceTest
     public void CreateClass_WithNameLongerThan15Characters_ThrowsException()
     {
         var longName = "15CharactersLongName";
-        var args = new CreateClassArgs(longName, true, true, [],[], null!, Guid.NewGuid());
+        var args = new CreateClassArgs(longName, true, true, [], [], null!, Guid.NewGuid());
 
         Action action = () => ClassService.Create(args);
 
@@ -42,7 +43,7 @@ public class ClassServiceTest
     public void CreateClass_WithNameShorterThan3Characters_ThrowsException()
     {
         var shortName = "ab";
-        var args = new CreateClassArgs(shortName, true, true, [],[], null!, Guid.NewGuid());
+        var args = new CreateClassArgs(shortName, true, true, [], [], null!, Guid.NewGuid());
 
         Action action = () => ClassService.Create(args);
 
@@ -51,5 +52,6 @@ public class ClassServiceTest
     }
 
     #endregion
+
     #endregion
 }
