@@ -1,18 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{71DC35C4-01E0-47C0-A566-42E0892AD9EF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{58ED209C-2D15-4608-A042-A27F768A98BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim", "src\ObjectSim\ObjectSim.csproj", "{4852E0FD-733D-4CF4-819E-A94AE1C05BFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectSim", "src\ObjectSim\ObjectSim.csproj", "{4852E0FD-733D-4CF4-819E-A94AE1C05BFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.BusinessLogic", "src\ObjectSim.BusinessLogic\ObjectSim.BusinessLogic.csproj", "{A11E50DB-D98C-4112-B920-D522597007EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectSim.BusinessLogic", "src\ObjectSim.BusinessLogic\ObjectSim.BusinessLogic.csproj", "{A11E50DB-D98C-4112-B920-D522597007EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.Domain", "src\ObjectSim.Domain\ObjectSim.Domain.csproj", "{1F9389D9-E4AA-4714-BE38-FF97B1D66D15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectSim.Domain", "src\ObjectSim.Domain\ObjectSim.Domain.csproj", "{1F9389D9-E4AA-4714-BE38-FF97B1D66D15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "tests\TestProject1\TestProject1.csproj", "{E0DA61CE-9CAE-47AF-ACAB-457AE5F9719A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject1", "tests\TestProject1\TestProject1.csproj", "{E0DA61CE-9CAE-47AF-ACAB-457AE5F9719A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.BusinessLogic.Test", "tests\ObjectSim.BusinessLogic.Test\ObjectSim.BusinessLogic.Test.csproj", "{9D527C21-03C7-4593-A51A-5D109C6728BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectSim.BusinessLogic.Test", "tests\ObjectSim.BusinessLogic.Test\ObjectSim.BusinessLogic.Test.csproj", "{9D527C21-03C7-4593-A51A-5D109C6728BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.Domain.Test", "tests\ObjectSim.Domain.Test\ObjectSim.Domain.Test.csproj", "{F7AE48DB-8A3D-4009-B4ED-4B5B8A3BAF34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +45,13 @@ Global
 		{9D527C21-03C7-4593-A51A-5D109C6728BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D527C21-03C7-4593-A51A-5D109C6728BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D527C21-03C7-4593-A51A-5D109C6728BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7AE48DB-8A3D-4009-B4ED-4B5B8A3BAF34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7AE48DB-8A3D-4009-B4ED-4B5B8A3BAF34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7AE48DB-8A3D-4009-B4ED-4B5B8A3BAF34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7AE48DB-8A3D-4009-B4ED-4B5B8A3BAF34}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4852E0FD-733D-4CF4-819E-A94AE1C05BFD} = {71DC35C4-01E0-47C0-A566-42E0892AD9EF}
@@ -47,5 +59,9 @@ Global
 		{1F9389D9-E4AA-4714-BE38-FF97B1D66D15} = {71DC35C4-01E0-47C0-A566-42E0892AD9EF}
 		{E0DA61CE-9CAE-47AF-ACAB-457AE5F9719A} = {58ED209C-2D15-4608-A042-A27F768A98BA}
 		{9D527C21-03C7-4593-A51A-5D109C6728BF} = {58ED209C-2D15-4608-A042-A27F768A98BA}
+		{F7AE48DB-8A3D-4009-B4ED-4B5B8A3BAF34} = {58ED209C-2D15-4608-A042-A27F768A98BA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CC05B606-312E-4F2D-B29B-42AA215262C4}
 	EndGlobalSection
 EndGlobal
