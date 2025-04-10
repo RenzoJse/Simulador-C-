@@ -1,7 +1,7 @@
-﻿using ObjectSim.BusinessLogic;
+﻿using ObjectSim.Domain;
 using Attribute = System.Attribute;
 
-namespace ObjectSim.Domain.Args;
+namespace ClassManagement;
 
 public class CreateClassArgs(
     string? name,

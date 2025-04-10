@@ -1,7 +1,4 @@
-﻿using ObjectSim.Domain;
-using ObjectSim.Domain.Args;
-
-namespace ObjectSim.BusinessLogic.ClassesBuilders;
+﻿namespace ClassManagement.ClassesBuilders;
 
 public class ClassDirector
 {

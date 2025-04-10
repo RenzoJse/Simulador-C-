@@ -22,6 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\ClassManagement\ClassManagement.csproj" />
       <ProjectReference Include="..\..\src\ObjectSim.BusinessLogic\ObjectSim.BusinessLogic.csproj" />
     </ItemGroup>
 

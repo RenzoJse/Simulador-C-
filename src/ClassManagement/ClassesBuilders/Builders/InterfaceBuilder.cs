@@ -1,8 +1,9 @@
 ﻿using ObjectSim.Domain;
+using Attribute = ObjectSim.Domain.Attribute;
 
-namespace ObjectSim.BusinessLogic.ClassesBuilders.Builders;
+namespace ClassManagement.ClassesBuilders.Builders;
 
-public class ClassBuilder : Builder
+public class InterfaceBuilder : Builder
 {
     public override void SetAttributes(List<Attribute> attributes)
     {

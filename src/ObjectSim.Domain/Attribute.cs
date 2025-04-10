@@ -1,4 +1,4 @@
-﻿namespace ObjectSim.BusinessLogic;
+﻿namespace ObjectSim.Domain;
 
 public class Attribute
 {

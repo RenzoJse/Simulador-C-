@@ -1,7 +1,7 @@
-﻿using ObjectSim.BusinessLogic;
-using Attribute = ObjectSim.BusinessLogic.Attribute;
+﻿using ObjectSim.Domain;
+using Attribute = ObjectSim.Domain.Attribute;
 
-namespace ObjectSim.Domain;
+namespace ClassManagement;
 
 public class Class
 {

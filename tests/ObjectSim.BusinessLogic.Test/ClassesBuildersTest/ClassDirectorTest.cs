@@ -1,8 +1,4 @@
-﻿using FluentAssertions;
-using ObjectSim.BusinessLogic.ClassesBuilders.Builders;
-using ObjectSim.Domain.Args;
-
-namespace ObjectSim.BusinessLogic.Test;
+﻿namespace ObjectSim.BusinessLogic.Test.ClassesBuildersTest;
 
 [TestClass]
 public class ClassDirectorTest

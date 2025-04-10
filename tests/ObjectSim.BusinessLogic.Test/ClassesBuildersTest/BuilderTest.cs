@@ -1,8 +1,7 @@
-﻿using FluentAssertions;
-using ObjectSim.BusinessLogic.ClassesBuilders;
-using ObjectSim.BusinessLogic.ClassesBuilders.Builders;
-using ObjectSim.Domain;
-using ObjectSim.Domain.Args;
+﻿using ClassManagement;
+using ClassManagement.ClassesBuilders;
+using ClassManagement.ClassesBuilders.Builders;
+using FluentAssertions;
 
 namespace ObjectSim.BusinessLogic.Test.ClassesBuildersTest;
 
