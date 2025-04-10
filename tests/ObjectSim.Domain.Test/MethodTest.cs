@@ -1,7 +1,7 @@
 namespace ObjectSim.Domain.Test;
 
 [TestClass]
-public class UnitTest1
+public class MethodTest
 {
     [TestMethod]
     public void TestMethod1()
