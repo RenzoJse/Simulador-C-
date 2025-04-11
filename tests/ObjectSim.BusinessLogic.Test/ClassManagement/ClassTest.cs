@@ -1,0 +1,153 @@
+﻿using System.Security.Cryptography.X509Certificates;
+using ClassManagement;
+using FluentAssertions;
+using ObjectSim.Domain;
+using Attribute = System.Attribute;
+
+namespace ObjectSim.BusinessLogic.Test.ClassManagement;
+
+[TestClass]
+public class ClassTest
+{
+    private Class? _testClass;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        _testClass = new Class();
+    }
+
+    #region CreateClass
+
+    #region Error
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void CreateClass_WithoutName_ThrowsException()
+    {
+        Class test = new Class { Name = null! };
+    }
+
+    [TestMethod]
+    public void CreateClass_WithNameLongerThan15Characters_ThrowsException()
+    {
+        const string longName = "15CharactersLongName";
+
+        Action action = () => _testClass!.Name = longName;
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be longer than 15 characters");
+    }
+
+    [TestMethod]
+    public void CreateClass_WithNameShorterThan3Characters_ThrowsException()
+    {
+        const string shortName = "ab";
+
+        Action action = () => _testClass!.Name = shortName;
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be shorter than 3 characters");
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void CreateClass_SetAbstractionNull_ThrowsException()
+    {
+        _testClass!.IsAbstract = null;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void CreateClass_SetSealedNull_ThrowsException()
+    {
+        _testClass!.IsSealed = null;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void CreateClass_WithNullAttributes_ThrowsException()
+    {
+        _testClass!.Attributes = null;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void CreateClass_WithNullMethods_ThrowsException()
+    {
+        _testClass!.Methods = null;
+    }
+
+    [TestMethod]
+    public void CreateClass_WithSealedParent_ThrowsException()
+    {
+        var sealedParent = new Class() { IsSealed = true };
+
+        Action action = () =>  _testClass!.Parent = sealedParent;
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Parent class cannot be sealed");
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void CreateClass_WithValidName_SetValidName()
+    {
+        const string validName = "ValidName";
+
+        Action action = () => _testClass!.Name = validName;
+        action.Should().NotThrow();
+        _testClass!.Name.Should().Be(validName);
+    }
+
+    [TestMethod]
+    public void CreateClass_WithNotSealedParent_SetParent()
+    {
+        Class validParent = new Class
+        {
+            Name = "validName",
+            IsAbstract = false,
+            IsSealed = false,
+            Attributes =[],
+            Methods = [],
+            Parent = null
+        };
+
+        Action action = () => _testClass!.Parent = validParent;
+        action.Should().NotThrow();
+        _testClass!.Parent.Should().Be(validParent);
+    }
+
+    [TestMethod]
+    public void CreateClass_ValidClass_SetValidName()
+    {
+        const string validName = "ValidName";
+        var id = Guid.NewGuid();
+
+        Class test = new Class
+        {
+            Name = validName,
+            IsAbstract = false,
+            IsSealed = false,
+            Attributes =[],
+            Methods = [],
+            Parent = null,
+            Id = id
+        };
+        test.Name.Should().Be(validName);
+        test.IsAbstract.Should().BeFalse();
+        test.IsSealed.Should().BeFalse();
+        test.Attributes.Should().BeEmpty();
+        test.Methods.Should().BeEmpty();
+        test.Parent.Should().BeNull();
+        test.Id.Should().Be(id);
+    }
+
+    #endregion
+
+    #endregion
+
+}
