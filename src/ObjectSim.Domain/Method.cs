@@ -1,4 +1,4 @@
-﻿namespace ObjectSim.BusinessLogic;
+﻿namespace ObjectSim.Domain;
 
 public class Method
 {
@@ -7,4 +7,6 @@ public class Method
     public bool Abstract { get; set; } = false;
     public bool IsSealed { get; set; } = false;
     public string Accessibility { get; set; } = null;
+    public List<Parameter> Parameters { get; set; } = [];
+    public List<LocalVariable> LocalVariables { get; set; } = [];
 }
