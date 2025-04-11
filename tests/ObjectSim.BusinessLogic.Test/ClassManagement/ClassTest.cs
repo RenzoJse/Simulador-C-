@@ -1,8 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using ClassManagement;
+﻿using ClassManagement;
 using FluentAssertions;
-using ObjectSim.Domain;
-using Attribute = System.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test.ClassManagement;
 

@@ -5,7 +5,7 @@ namespace ClassManagement.ClassesBuilders;
 
 public abstract class Builder
 {
-    private Class Result { get; set; } = new Class();
+    private Class Result { get; } = new Class();
 
     public virtual void SetName(string name)
     {
@@ -35,6 +35,11 @@ public abstract class Builder
     public virtual void SetParent(Class parent)
     {
         Result.Parent = parent;
+    }
+
+    public Class GetResult()
+    {
+        return Result;
     }
 
 }

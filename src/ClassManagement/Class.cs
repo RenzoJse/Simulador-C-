@@ -5,7 +5,7 @@ namespace ClassManagement;
 
 public class Class
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; init; } = Guid.NewGuid();
 
     #region Name
 
