@@ -4,7 +4,7 @@ namespace ObjectSim.Domain.Test;
 public class MethodTest
 {
     [TestMethod]
-    public void TestMethod1()
-    {
+    public void CreateValidMethod()
+    { 
     }
 }
