@@ -1,7 +1,4 @@
-﻿using ObjectSim.Domain;
-using Attribute = ObjectSim.Domain.Attribute;
-
-namespace ClassManagement;
+﻿namespace ObjectSim.Domain;
 
 public class Class
 {

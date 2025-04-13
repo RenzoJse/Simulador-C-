@@ -1,5 +1,6 @@
 ﻿using ClassManagement;
 using FluentAssertions;
+using ObjectSim.Domain;
 
 namespace ObjectSim.BusinessLogic.Test.ClassManagement;
 

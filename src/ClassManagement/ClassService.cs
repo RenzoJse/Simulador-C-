@@ -1,4 +1,5 @@
 ﻿using ClassManagement.ClassesBuilders;
+using ObjectSim.Domain;
 
 namespace ClassManagement;
 

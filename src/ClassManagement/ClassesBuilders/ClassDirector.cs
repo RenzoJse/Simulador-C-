@@ -1,4 +1,6 @@
-﻿namespace ClassManagement.ClassesBuilders;
+﻿using ObjectSim.Domain;
+
+namespace ClassManagement.ClassesBuilders;
 
 public class ClassDirector
 {
