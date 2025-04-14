@@ -7,8 +7,35 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
 {
     public Method Create(Method Entity)
     {
-        methodRepository.GetAll();
-        throw new NotImplementedException();
+        if (Entity == null) 
+        {
+            throw new Exception("Method cannot be null");
+        }
+
+        var existMethod = methodRepository.Exist(m => m.Name == Entity.Name);
+        if(existMethod)
+        {
+            throw new Exception("Method already exist");
+        }
+
+        if(Entity.Name == string.Empty)
+        {
+            throw new Exception("Method name cannot be empty");
+        }
+
+        var methodToAdd = new Method
+        {
+            Name = Entity.Name,
+            Type = Entity.Type,
+            Abstract = Entity.Abstract,
+            IsSealed = Entity.IsSealed,
+            Accessibility = Entity.Accessibility,
+            Parameters = Entity.Parameters,
+            LocalVariables = Entity.LocalVariables,
+        };
+
+        methodRepository.Add(methodToAdd);
+        return methodToAdd;
     }
 
     public bool Delete(int id)
