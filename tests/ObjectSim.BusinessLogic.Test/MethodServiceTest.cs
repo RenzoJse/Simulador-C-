@@ -25,6 +25,7 @@ public class MethodServiceTest
     {
         var testMethod = new Method
         {
+            Id = 1,
             Name = "MetodoDePrueba",
             Type = "boolean",
             Abstract = false,
@@ -49,6 +50,7 @@ public class MethodServiceTest
     {
         var testMethod = new Method
         {
+            Id = 1,
             Name = string.Empty,
             Type = "boolean",
             Abstract = false,
@@ -62,5 +64,40 @@ public class MethodServiceTest
         _methodRepositoryMock.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
 
         var result = _methodService.Create(testMethod);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(Exception))]
+    public void CreateNullMethod()
+    {
+        _methodService.Create(null);
+    }
+
+    [TestMethod]
+    public void GetAllTest()
+    {
+        var methods = new List<Method>
+        {
+            new Method{Id = 1, Name = "m1Test", Abstract = false, IsSealed =  false, Accessibility = "public", LocalVariables = new List<LocalVariable>(), Parameters = new List<Parameter>() },
+            new Method{Id = 2, Name = "m1Test2", Abstract = false, IsSealed =  false, Accessibility = "public", LocalVariables = new List<LocalVariable>(), Parameters = new List<Parameter>() }
+        };
+
+        Assert.IsNotNull(_methodRepositoryMock);
+        Assert.IsNotNull(_methodService);
+        _methodRepositoryMock.Setup(repo => repo.GetAll()).Returns(methods);
+        var result = _methodService.GetAll();
+        result.Should().HaveCount(2);
+        _methodRepositoryMock.Verify(repo => repo.GetAll(), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(Exception))]
+    public void GetAllThrowsBusinessDataException()
+    {
+        _methodRepositoryMock
+            .Setup(repo => repo.GetAll())
+            .Throws(new Exception());
+        _methodService.GetAll();
+        _methodRepositoryMock.VerifyAll();
     }
 }
