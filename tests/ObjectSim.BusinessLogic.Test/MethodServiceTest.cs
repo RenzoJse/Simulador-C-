@@ -152,6 +152,8 @@ public class MethodServiceTest
     }
 
     [TestMethod]
+    [ExpectedException(typeof(Exception))]
+
     public void DeleteNullMethod()
     {
         var testMethod = new Method
