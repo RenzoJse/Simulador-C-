@@ -56,7 +56,14 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
 
     public Method GetById(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            return methodRepository.GetById(id);
+        }
+        catch(Exception)
+        {
+            throw new InvalidOperationException("Not found method.");
+        }
     }
 
     public Method Update(int id, Method entity)
