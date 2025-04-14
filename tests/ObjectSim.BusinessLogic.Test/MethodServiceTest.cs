@@ -175,4 +175,79 @@ public class MethodServiceTest
         _methodRepositoryMock.Verify(x => x.Get(It.IsAny<Expression<Func<Method, bool>>>()), Times.Once);
         _methodRepositoryMock.Verify(x => x.Remove(It.IsAny<Method>()), Times.Never);
     }
+
+    [TestMethod]
+    public void UpdateUserTest()
+    {
+        var testMethod = new Method
+        {
+            Id = 1,
+            Name = "M1Test",
+            Type = "boolean",
+            Abstract = false,
+            IsSealed = false,
+            Accessibility = "public",
+            Parameters = new List<Parameter>(),
+            LocalVariables = new List<LocalVariable>()
+        };
+
+        var newMethod = new Method
+        {
+            Id = 2,
+            Name = "M1New",
+            Type = "boolean",
+            Abstract = false,
+            IsSealed = false,
+            Accessibility = "public",
+            Parameters = new List<Parameter>(),
+            LocalVariables = new List<LocalVariable>()
+        };
+
+        _methodRepositoryMock.Setup(x => x.GetById(testMethod.Id)).Returns(testMethod);
+        _methodRepositoryMock.Setup(x => x.Update(testMethod));
+
+        _methodService.Update(testMethod.Id, newMethod);
+
+        _methodRepositoryMock.VerifyAll();
+
+        Assert.AreEqual(testMethod.Name, newMethod.Name);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void UpdateInvalidMethodNameTest()
+    {
+        var testMethod = new Method
+        {
+            Id = 1,
+            Name = "M1Test",
+            Type = "boolean",
+            Abstract = false,
+            IsSealed = false,
+            Accessibility = "public",
+            Parameters = new List<Parameter>(),
+            LocalVariables = new List<LocalVariable>()
+        };
+
+        var newMethod = new Method
+        {
+            Id = 2,
+            Name = "",
+            Type = "boolean",
+            Abstract = false,
+            IsSealed = false,
+            Accessibility = "public",
+            Parameters = new List<Parameter>(),
+            LocalVariables = new List<LocalVariable>()
+        };
+
+        _methodRepositoryMock.Setup(x => x.GetById(testMethod.Id)).Returns(testMethod);
+        _methodRepositoryMock.Setup(x => x.Update(testMethod));
+
+        _methodService.Update(testMethod.Id, newMethod);
+
+        _methodRepositoryMock.VerifyAll();
+
+        Assert.AreEqual(testMethod.Name, newMethod.Name);
+    }
 }
