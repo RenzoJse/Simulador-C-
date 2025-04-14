@@ -2,7 +2,7 @@
 
 namespace ObjectSim.IDataAccess;
 
-public interface IMethopdRepository<TEntity>
+public interface IMethodRepository<TEntity>
        where TEntity : class
 {
     TEntity Add(TEntity entity);
