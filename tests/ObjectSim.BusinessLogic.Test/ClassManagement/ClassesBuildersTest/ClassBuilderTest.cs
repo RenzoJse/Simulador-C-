@@ -1,7 +1,5 @@
 ﻿using ClassManagement.ClassesBuilders.Builders;
 using FluentAssertions;
-using ObjectSim.Domain;
-using Attribute = System.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test.ClassManagement.ClassesBuildersTest;
 
