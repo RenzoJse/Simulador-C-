@@ -6,7 +6,7 @@ public class AttributeService(IAttributeRepository attributeRepository) : IAttri
 {
     public Domain.Attribute Create(Domain.Attribute attribute) // Explicitly specify Domain.Attribute
     {
-        if (attribute == null)
+        if(attribute == null)
         {
             throw new InvalidOperationException("Attribute cannot be null.");
         }
