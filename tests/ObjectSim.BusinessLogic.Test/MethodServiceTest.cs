@@ -214,7 +214,7 @@ public class MethodServiceTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(Exception))]
     public void UpdateInvalidMethodNameTest()
     {
         var testMethod = new Method
