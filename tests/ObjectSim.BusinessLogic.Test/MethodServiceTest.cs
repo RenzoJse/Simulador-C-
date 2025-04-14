@@ -31,8 +31,8 @@ public class MethodServiceTest
             Abstract = false,
             IsSealed = false,
             Accessibility = "public",
-            Parameters = new List<Parameter>(),
-            LocalVariables = new List<LocalVariable>()
+            Parameters = [],
+            LocalVariables = []
         };
 
         _methodRepositoryMock.Setup(repo => repo.Exist(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
@@ -56,8 +56,8 @@ public class MethodServiceTest
             Abstract = false,
             IsSealed = false,
             Accessibility = "public",
-            Parameters = new List<Parameter>(),
-            LocalVariables = new List<LocalVariable>()
+            Parameters = [],
+            LocalVariables = []
         };
 
         _methodRepositoryMock.Setup(repo => repo.Exist(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
@@ -78,8 +78,8 @@ public class MethodServiceTest
     {
         var methods = new List<Method>
         {
-            new Method{Id = 1, Name = "m1Test", Abstract = false, IsSealed =  false, Accessibility = "public", LocalVariables = new List<LocalVariable>(), Parameters = new List<Parameter>() },
-            new Method{Id = 2, Name = "m1Test2", Abstract = false, IsSealed =  false, Accessibility = "public", LocalVariables = new List<LocalVariable>(), Parameters = new List<Parameter>() }
+            new Method{Id = 1, Name = "m1Test", Abstract = false, IsSealed =  false, Accessibility = "public", LocalVariables = [], Parameters = []},
+            new Method{Id = 2, Name = "m1Test2", Abstract = false, IsSealed =  false, Accessibility = "public", LocalVariables = [], Parameters = []}
         };
 
         Assert.IsNotNull(_methodRepositoryMock);
@@ -112,8 +112,8 @@ public class MethodServiceTest
             Abstract = false,
             IsSealed = false,
             Accessibility = "public",
-            Parameters = new List<Parameter>(),
-            LocalVariables = new List<LocalVariable>()
+            Parameters = [],
+            LocalVariables = []
         };
 
         _methodRepositoryMock.Setup(x => x.GetById(1)).Returns(testMethod);
@@ -138,8 +138,8 @@ public class MethodServiceTest
             Abstract = false,
             IsSealed = false,
             Accessibility = "public",
-            Parameters = new List<Parameter>(),
-            LocalVariables = new List<LocalVariable>()
+            Parameters = [],
+            LocalVariables = []
         };
 
         _methodRepositoryMock.Setup(x => x.GetById(1)).Returns(testMethod);
@@ -164,8 +164,8 @@ public class MethodServiceTest
             Abstract = false,
             IsSealed = false,
             Accessibility = "public",
-            Parameters = new List<Parameter>(),
-            LocalVariables = new List<LocalVariable>()
+            Parameters = [],
+            LocalVariables = []
         };
 
         _methodRepositoryMock.Setup(x => x.GetById(1)).Returns((Method)null);
@@ -187,8 +187,8 @@ public class MethodServiceTest
             Abstract = false,
             IsSealed = false,
             Accessibility = "public",
-            Parameters = new List<Parameter>(),
-            LocalVariables = new List<LocalVariable>()
+            Parameters = [],
+            LocalVariables = []
         };
 
         var newMethod = new Method
@@ -199,8 +199,8 @@ public class MethodServiceTest
             Abstract = false,
             IsSealed = false,
             Accessibility = "public",
-            Parameters = new List<Parameter>(),
-            LocalVariables = new List<LocalVariable>()
+            Parameters = [],
+            LocalVariables = []
         };
 
         _methodRepositoryMock.Setup(x => x.GetById(testMethod.Id)).Returns(testMethod);
@@ -225,8 +225,8 @@ public class MethodServiceTest
             Abstract = false,
             IsSealed = false,
             Accessibility = "public",
-            Parameters = new List<Parameter>(),
-            LocalVariables = new List<LocalVariable>()
+            Parameters = [],
+            LocalVariables = []
         };
 
         var newMethod = new Method
@@ -237,8 +237,8 @@ public class MethodServiceTest
             Abstract = false,
             IsSealed = false,
             Accessibility = "public",
-            Parameters = new List<Parameter>(),
-            LocalVariables = new List<LocalVariable>()
+            Parameters = [],
+            LocalVariables = []
         };
 
         _methodRepositoryMock.Setup(x => x.GetById(testMethod.Id)).Returns(testMethod);
