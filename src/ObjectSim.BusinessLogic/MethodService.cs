@@ -89,6 +89,7 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
         method.Accessibility = entity.Accessibility;
 
         methodRepository.Update(method);
+
         return method;
     }
 }
