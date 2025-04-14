@@ -1,4 +1,4 @@
-﻿using ObjectSim.BusinessLogic.Args;
+﻿using ObjectSim.Domain.Args;
 
 namespace ObjectSim.BusinessLogic;
 
