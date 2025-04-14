@@ -42,4 +42,25 @@ public class MethodServiceTest
         result.Should().NotBeNull();
         _methodRepositoryMock.VerifyAll();
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(Exception))]
+    public void CreateInvalidNameMethodData()
+    {
+        var testMethod = new Method
+        {
+            Name = string.Empty,
+            Type = "boolean",
+            Abstract = false,
+            IsSealed = false,
+            Accessibility = "public",
+            Parameters = new List<Parameter>(),
+            LocalVariables = new List<LocalVariable>()
+        };
+
+        _methodRepositoryMock.Setup(repo => repo.Exist(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
+        _methodRepositoryMock.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
+
+        var result = _methodService.Create(testMethod);
+    }
 }
