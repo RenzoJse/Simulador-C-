@@ -5,6 +5,6 @@ public class MethodTest
 {
     [TestMethod]
     public void CreateValidMethod()
-    { 
+    {
     }
 }

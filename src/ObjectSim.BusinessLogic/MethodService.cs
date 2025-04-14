@@ -7,7 +7,7 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
 {
     public Method Create(Method Entity)
     {
-        if (Entity == null) 
+        if(Entity == null)
         {
             throw new Exception("Method cannot be null");
         }

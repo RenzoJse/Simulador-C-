@@ -1,8 +1,8 @@
-﻿using ObjectSim.IDataAccess;
+﻿using System.Linq.Expressions;
+using FluentAssertions;
 using Moq;
 using ObjectSim.Domain;
-using System.Linq.Expressions;
-using FluentAssertions;
+using ObjectSim.IDataAccess;
 
 namespace ObjectSim.BusinessLogic.Test;
 
@@ -10,7 +10,7 @@ namespace ObjectSim.BusinessLogic.Test;
 public class MethodServiceTest
 {
     private Mock<IMethodRepository<Method>>? _methodRepositoryMock;
-    private MethodService?  _methodService;
+    private MethodService? _methodService;
 
     [TestInitialize]
     public void Initialize()
