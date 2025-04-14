@@ -126,4 +126,51 @@ public class MethodServiceTest
 
         _methodRepositoryMock.Verify(x => x.GetById(1), Times.Once);
     }
+
+    [TestMethod]
+    public void DeleteMethod()
+    {
+        var testMethod = new Method
+        {
+            Id = 1,
+            Name = "M1Test",
+            Type = "boolean",
+            Abstract = false,
+            IsSealed = false,
+            Accessibility = "public",
+            Parameters = new List<Parameter>(),
+            LocalVariables = new List<LocalVariable>()
+        };
+
+        _methodRepositoryMock.Setup(x => x.GetById(1)).Returns(testMethod);
+        _methodRepositoryMock.Setup(x => x.Remove(testMethod));
+
+        _methodService.Delete(testMethod.Id);
+
+        _methodRepositoryMock.Verify(x => x.GetById(1), Times.Once);
+        _methodRepositoryMock.Verify(x => x.Remove(testMethod), Times.Once);
+    }
+
+    [TestMethod]
+    public void DeleteNullMethod()
+    {
+        var testMethod = new Method
+        {
+            Id = 1,
+            Name = "M1Test",
+            Type = "boolean",
+            Abstract = false,
+            IsSealed = false,
+            Accessibility = "public",
+            Parameters = new List<Parameter>(),
+            LocalVariables = new List<LocalVariable>()
+        };
+
+        _methodRepositoryMock.Setup(x => x.GetById(1)).Returns((Method)null);
+
+        _methodService.Delete(1);
+
+        _methodRepositoryMock.Verify(x => x.Get(It.IsAny<Expression<Func<Method, bool>>>()), Times.Once);
+        _methodRepositoryMock.Verify(x => x.Remove(It.IsAny<Method>()), Times.Never);
+    }
 }
