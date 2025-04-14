@@ -1,7 +1,8 @@
-﻿using ClassManagement.ClassesBuilders;
+﻿using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 
-namespace ClassManagement;
+namespace ObjectSim.BusinessLogic.ClassLogic;
 
 public class ClassService
 {

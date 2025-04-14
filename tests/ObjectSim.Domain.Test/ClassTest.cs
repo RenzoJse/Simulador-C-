@@ -1,8 +1,6 @@
-﻿using ClassManagement;
-using FluentAssertions;
-using ObjectSim.Domain;
+﻿using FluentAssertions;
 
-namespace ObjectSim.BusinessLogic.Test.ClassManagement;
+namespace ObjectSim.Domain.Test;
 
 [TestClass]
 public class ClassTest

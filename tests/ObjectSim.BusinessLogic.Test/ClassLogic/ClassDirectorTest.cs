@@ -1,7 +1,7 @@
-﻿using ClassManagement.ClassesBuilders;
-using ClassManagement.ClassesBuilders.Builders;
+﻿using ObjectSim.BusinessLogic.ClassLogic;
+using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 
-namespace ObjectSim.BusinessLogic.Test.ClassManagement.ClassesBuildersTest;
+namespace ObjectSim.BusinessLogic.Test.ClassLogic;
 
 [TestClass]
 public class ClassDirectorTest

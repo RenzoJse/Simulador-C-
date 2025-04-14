@@ -1,7 +1,7 @@
-﻿using ClassManagement.ClassesBuilders.Builders;
-using FluentAssertions;
+﻿using FluentAssertions;
+using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 
-namespace ObjectSim.BusinessLogic.Test.ClassManagement.ClassesBuildersTest;
+namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 
 [TestClass]
 public class ClassBuilderTest

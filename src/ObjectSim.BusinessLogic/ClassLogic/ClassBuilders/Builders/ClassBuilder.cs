@@ -1,7 +1,7 @@
 ﻿using ObjectSim.Domain;
 using Attribute = ObjectSim.Domain.Attribute;
 
-namespace ClassManagement.ClassesBuilders.Builders;
+namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 
 public class ClassBuilder : Builder
 {

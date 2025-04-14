@@ -1,11 +1,10 @@
-﻿using ClassManagement;
-using ClassManagement.ClassesBuilders;
-using ClassManagement.ClassesBuilders.Builders;
-using FluentAssertions;
+﻿using FluentAssertions;
+using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
+using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 using ObjectSim.Domain;
 using Attribute = ObjectSim.Domain.Attribute;
 
-namespace ObjectSim.BusinessLogic.Test.ClassManagement.ClassesBuildersTest;
+namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 
 [TestClass]
 public class BuilderTest
