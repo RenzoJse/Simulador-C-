@@ -1,6 +1,27 @@
-﻿namespace ObjectSim.BusinessLogic;
+﻿namespace ObjectSim.Domain;
 
 public class Attribute
 {
-
+    public enum AttributeDataType
+    {
+        String,
+        Char,
+        Int,
+        Decimal,
+        Bool,
+        DateTime
+    }
+    public enum AttributeVisibility
+    {
+        Public,
+        Private,
+        Protected,
+        Internal,
+        ProtectedInternal,
+        PrivateProtected
+    }
+    public AttributeDataType DataType { get; set; }
+    public AttributeVisibility Visibility { get; set; }
+    public int Id { get; set; }
+    public string? Name { get; set; } = null!;
 }
