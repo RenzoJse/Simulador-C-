@@ -100,4 +100,30 @@ public class MethodServiceTest
         _methodService.GetAll();
         _methodRepositoryMock.VerifyAll();
     }
+
+    [TestMethod]
+    public void GetMethodById()
+    {
+        var testMethod = new Method
+        {
+            Id = 1,
+            Name = "M1Test",
+            Type = "boolean",
+            Abstract = false,
+            IsSealed = false,
+            Accessibility = "public",
+            Parameters = new List<Parameter>(),
+            LocalVariables = new List<LocalVariable>()
+        };
+
+        _methodRepositoryMock.Setup(x => x.GetById(1)).Returns(testMethod);
+
+        var result = _methodService.GetById(1);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Id);
+        Assert.AreEqual("M1Test", result.Name);
+
+        _methodRepositoryMock.Verify(x => x.GetById(1), Times.Once);
+    }
 }
