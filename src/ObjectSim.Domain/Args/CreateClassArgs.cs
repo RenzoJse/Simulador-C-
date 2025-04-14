@@ -1,6 +1,4 @@
-﻿using ObjectSim.Domain;
-
-namespace ObjectSim.BusinessLogic.Args;
+﻿namespace ObjectSim.Domain.Args;
 
 public class CreateClassArgs(
     string? name,
