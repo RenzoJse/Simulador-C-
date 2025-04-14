@@ -45,7 +45,13 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
 
     public List<Method> GetAll()
     {
-        throw new NotImplementedException();
+        var methods = methodRepository.GetAll();
+        if(methods == null || !methods.Any())
+        {
+            throw new Exception("No methods found.");
+        }
+
+        return (List<Method>)methods;
     }
 
     public Method GetById(int id)
