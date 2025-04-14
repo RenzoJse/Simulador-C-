@@ -75,6 +75,20 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
 
     public Method Update(int id, Method entity)
     {
-        throw new NotImplementedException();
+        Method method = methodRepository.GetById(id);
+        if(entity.Name == string.Empty)
+        {
+            throw new Exception("Incorrect name method");
+        }
+        method.Name = entity.Name;
+        method.Type = entity.Type;
+        method.Abstract = entity.Abstract;
+        method.IsSealed = entity.IsSealed;
+        method.Parameters = entity.Parameters;
+        method.LocalVariables = entity.LocalVariables;
+        method.Accessibility = entity.Accessibility;
+
+        methodRepository.Update(method);
+        return method;
     }
 }
