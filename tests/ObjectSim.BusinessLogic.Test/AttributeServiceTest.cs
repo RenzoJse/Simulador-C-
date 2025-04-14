@@ -48,6 +48,7 @@ public class AttributeServiceTest
 
         result.Should().NotBeNull();
         result.Should().Be(_attribute);
+
         _attributeRepositoryMock.Verify(repo => repo.Add(It.IsAny<ObjectSim.Domain.Attribute>()), Times.Once);
     }
 
