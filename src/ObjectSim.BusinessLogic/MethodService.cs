@@ -40,7 +40,14 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
 
     public bool Delete(int id)
     {
-        throw new NotImplementedException();
+        var method = methodRepository.GetById(id);
+        if(method == null)
+        {
+            throw new Exception("Method cannot be null.");
+        }
+
+        methodRepository.Remove(method);
+        return true;
     }
 
     public List<Method> GetAll()
