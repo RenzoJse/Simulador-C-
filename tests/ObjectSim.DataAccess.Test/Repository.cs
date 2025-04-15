@@ -1,5 +1,6 @@
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using ObjectSim.DataAccess.Repository;
+using ObjectSim.DataAccess.Repositories;
 
 namespace ObjectSim.DataAccess.Test;
 
@@ -34,6 +35,13 @@ public class RepositoryTest
 
     #endregion
 }
+
+internal sealed class TestDbContext(DbContextOptions options)
+    : DbContext(options)
+{
+    public DbSet<TestEntity> EntitiesTest { get; set; }
+}
+
 
 internal sealed record class TestEntity()
 {
