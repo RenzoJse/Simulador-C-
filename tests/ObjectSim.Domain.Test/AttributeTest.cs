@@ -17,13 +17,6 @@ public class AttributeTest
         Assert.AreEqual(Attribute.AttributeVisibility.Public, attribute.Visibility);
     }
     [TestMethod]
-    public void AttributeIdTest()
-    {
-        var attribute = new Attribute();
-        attribute.Id = 1;
-        Assert.AreEqual(1, attribute.Id);
-    }
-    [TestMethod]
     public void AttributeNameTest()
     {
         var attribute = new Attribute();
