@@ -13,6 +13,6 @@ public interface IMethodRepository<TEntity>
     void Remove(TEntity entity);
 
     void Update(TEntity entity);
-    TEntity GetById(int id);
+    TEntity GetById(Guid id);
     bool Exist(Expression<Func<TEntity, bool>> expression);
 }

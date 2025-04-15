@@ -11,6 +11,7 @@ public class MethodServiceTest
 {
     private Mock<IMethodRepository<Method>>? _methodRepositoryMock;
     private MethodService? _methodService;
+    private static readonly Guid ClassId = Guid.NewGuid();
 
     [TestInitialize]
     public void Initialize()
@@ -19,13 +20,12 @@ public class MethodServiceTest
         _methodService = new MethodService(_methodRepositoryMock.Object);
     }
 
-
     [TestMethod]
     public void CreateValidMethod()
     {
         var testMethod = new Method
         {
-            Id = 1,
+            Id = Guid.NewGuid(),
             Name = "MetodoDePrueba",
             Type = "boolean",
             Abstract = false,
@@ -35,10 +35,10 @@ public class MethodServiceTest
             LocalVariables = []
         };
 
-        _methodRepositoryMock.Setup(repo => repo.Exist(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
+        _methodRepositoryMock!.Setup(repo => repo.Exist(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
         _methodRepositoryMock.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
 
-        var result = _methodService.Create(testMethod);
+        var result = _methodService!.Create(testMethod);
 
         result.Should().NotBeNull();
         _methodRepositoryMock.VerifyAll();
@@ -50,7 +50,6 @@ public class MethodServiceTest
     {
         var testMethod = new Method
         {
-            Id = 1,
             Name = string.Empty,
             Type = "boolean",
             Abstract = false,
@@ -60,17 +59,17 @@ public class MethodServiceTest
             LocalVariables = []
         };
 
-        _methodRepositoryMock.Setup(repo => repo.Exist(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
+        _methodRepositoryMock!.Setup(repo => repo.Exist(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
         _methodRepositoryMock.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
 
-        var result = _methodService.Create(testMethod);
+        var result = _methodService!.Create(testMethod);
     }
 
     [TestMethod]
     [ExpectedException(typeof(Exception))]
     public void CreateNullMethod()
     {
-        _methodService.Create(null);
+        _methodService!.Create(null!);
     }
 
     [TestMethod]
@@ -78,8 +77,8 @@ public class MethodServiceTest
     {
         var methods = new List<Method>
         {
-            new Method{Id = 1, Name = "m1Test", Abstract = false, IsSealed =  false, Accessibility = "public", LocalVariables = [], Parameters = []},
-            new Method{Id = 2, Name = "m1Test2", Abstract = false, IsSealed =  false, Accessibility = "public", LocalVariables = [], Parameters = []}
+            new Method{Name = "m1Test", Abstract = false, IsSealed =  false, Accessibility = "public", LocalVariables = [], Parameters = []},
+            new Method{Name = "m1Test2", Abstract = false, IsSealed =  false, Accessibility = "public", LocalVariables = [], Parameters = []}
         };
 
         Assert.IsNotNull(_methodRepositoryMock);
@@ -94,10 +93,10 @@ public class MethodServiceTest
     [ExpectedException(typeof(Exception))]
     public void GetAllThrowsBusinessDataException()
     {
-        _methodRepositoryMock
+        _methodRepositoryMock!
             .Setup(repo => repo.GetAll())
             .Throws(new Exception());
-        _methodService.GetAll();
+        _methodService!.GetAll();
         _methodRepositoryMock.VerifyAll();
     }
 
@@ -106,7 +105,7 @@ public class MethodServiceTest
     {
         var testMethod = new Method
         {
-            Id = 1,
+            Id = ClassId,
             Name = "M1Test",
             Type = "boolean",
             Abstract = false,
@@ -116,15 +115,15 @@ public class MethodServiceTest
             LocalVariables = []
         };
 
-        _methodRepositoryMock.Setup(x => x.GetById(1)).Returns(testMethod);
+        _methodRepositoryMock!.Setup(x => x.GetById(ClassId)).Returns(testMethod);
 
-        var result = _methodService.GetById(1);
+        var result = _methodService!.GetById(ClassId);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(1, result.Id);
+        Assert.AreEqual(ClassId, result.Id);
         Assert.AreEqual("M1Test", result.Name);
 
-        _methodRepositoryMock.Verify(x => x.GetById(1), Times.Once);
+        _methodRepositoryMock.Verify(x => x.GetById(ClassId), Times.Once);
     }
 
     [TestMethod]
@@ -132,7 +131,7 @@ public class MethodServiceTest
     {
         var testMethod = new Method
         {
-            Id = 1,
+            Id = ClassId,
             Name = "M1Test",
             Type = "boolean",
             Abstract = false,
@@ -142,12 +141,12 @@ public class MethodServiceTest
             LocalVariables = []
         };
 
-        _methodRepositoryMock.Setup(x => x.GetById(1)).Returns(testMethod);
+        _methodRepositoryMock!.Setup(x => x.GetById(ClassId)).Returns(testMethod);
         _methodRepositoryMock.Setup(x => x.Remove(testMethod));
 
-        _methodService.Delete(testMethod.Id);
+        _methodService!.Delete(testMethod.Id);
 
-        _methodRepositoryMock.Verify(x => x.GetById(1), Times.Once);
+        _methodRepositoryMock.Verify(x => x.GetById(ClassId), Times.Once);
         _methodRepositoryMock.Verify(x => x.Remove(testMethod), Times.Once);
     }
 
@@ -158,7 +157,7 @@ public class MethodServiceTest
     {
         var testMethod = new Method
         {
-            Id = 1,
+            Id = ClassId,
             Name = "M1Test",
             Type = "boolean",
             Abstract = false,
@@ -168,9 +167,9 @@ public class MethodServiceTest
             LocalVariables = []
         };
 
-        _methodRepositoryMock.Setup(x => x.GetById(1)).Returns((Method)null);
+        _methodRepositoryMock!.Setup(x => x.GetById(ClassId)).Returns((Method)null!);
 
-        _methodService.Delete(1);
+        _methodService!.Delete(ClassId);
 
         _methodRepositoryMock.Verify(x => x.Get(It.IsAny<Expression<Func<Method, bool>>>()), Times.Once);
         _methodRepositoryMock.Verify(x => x.Remove(It.IsAny<Method>()), Times.Never);
@@ -181,7 +180,7 @@ public class MethodServiceTest
     {
         var testMethod = new Method
         {
-            Id = 1,
+            Id = ClassId,
             Name = "M1Test",
             Type = "boolean",
             Abstract = false,
@@ -193,7 +192,7 @@ public class MethodServiceTest
 
         var newMethod = new Method
         {
-            Id = 2,
+            Id = ClassId,
             Name = "M1New",
             Type = "boolean",
             Abstract = false,
@@ -203,10 +202,10 @@ public class MethodServiceTest
             LocalVariables = []
         };
 
-        _methodRepositoryMock.Setup(x => x.GetById(testMethod.Id)).Returns(testMethod);
+        _methodRepositoryMock!.Setup(x => x.GetById(testMethod.Id)).Returns(testMethod);
         _methodRepositoryMock.Setup(x => x.Update(testMethod));
 
-        _methodService.Update(testMethod.Id, newMethod);
+        _methodService!.Update(testMethod.Id, newMethod);
 
         _methodRepositoryMock.VerifyAll();
 
@@ -219,7 +218,7 @@ public class MethodServiceTest
     {
         var testMethod = new Method
         {
-            Id = 1,
+            Id = ClassId,
             Name = "M1Test",
             Type = "boolean",
             Abstract = false,
@@ -229,9 +228,11 @@ public class MethodServiceTest
             LocalVariables = []
         };
 
+        var secondClassId = Guid.NewGuid();
+
         var newMethod = new Method
         {
-            Id = 2,
+            Id = secondClassId,
             Name = "",
             Type = "boolean",
             Abstract = false,
@@ -241,10 +242,10 @@ public class MethodServiceTest
             LocalVariables = []
         };
 
-        _methodRepositoryMock.Setup(x => x.GetById(testMethod.Id)).Returns(testMethod);
+        _methodRepositoryMock!.Setup(x => x.GetById(testMethod.Id)).Returns(testMethod);
         _methodRepositoryMock.Setup(x => x.Update(testMethod));
 
-        _methodService.Update(testMethod.Id, newMethod);
+        _methodService!.Update(testMethod.Id, newMethod);
 
         _methodRepositoryMock.VerifyAll();
 

@@ -38,7 +38,7 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
         return methodToAdd;
     }
 
-    public bool Delete(int id)
+    public bool Delete(Guid id)
     {
         var method = methodRepository.GetById(id);
         if(method == null)
@@ -61,7 +61,7 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
         return (List<Method>)methods;
     }
 
-    public Method GetById(int id)
+    public Method GetById(Guid id)
     {
         try
         {
@@ -73,7 +73,7 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
         }
     }
 
-    public Method Update(int id, Method entity)
+    public Method Update(Guid id, Method entity)
     {
         Method method = methodRepository.GetById(id);
         if(entity.Name == string.Empty)

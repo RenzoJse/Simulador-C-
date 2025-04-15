@@ -4,7 +4,7 @@ public interface IMethodService<T>
 {
     T Create(T Entity);
     List<T> GetAll();
-    bool Delete(int id);
-    T GetById(int id);
-    T Update(int id, T entity);
+    bool Delete(Guid id);
+    T GetById(Guid id);
+    T Update(Guid id, T entity);
 }
