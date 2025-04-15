@@ -34,6 +34,7 @@ public abstract class Builder
 
     public virtual void SetParent(Guid idParent)
     {
+        ArgumentNullException.ThrowIfNull(idParent);
     }
 
     public Class GetResult()
