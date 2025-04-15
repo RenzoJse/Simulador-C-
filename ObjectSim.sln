@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.DataAccess.Test",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.DataAccess", "src\ObjectSim.DataAccess\ObjectSim.DataAccess.csproj", "{291FB926-CD4F-4555-A7B8-B7DD1D3D1071}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.WebApi", "src\ObjectSim.WebApi\ObjectSim.WebApi.csproj", "{886E568F-B5AB-4CAC-826E-E70ED4351737}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{291FB926-CD4F-4555-A7B8-B7DD1D3D1071}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{291FB926-CD4F-4555-A7B8-B7DD1D3D1071}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{291FB926-CD4F-4555-A7B8-B7DD1D3D1071}.Release|Any CPU.Build.0 = Release|Any CPU
+		{886E568F-B5AB-4CAC-826E-E70ED4351737}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{886E568F-B5AB-4CAC-826E-E70ED4351737}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{886E568F-B5AB-4CAC-826E-E70ED4351737}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{886E568F-B5AB-4CAC-826E-E70ED4351737}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +78,7 @@ Global
 		{9D527C21-03C7-4593-A51A-5D109C6728BF} = {58ED209C-2D15-4608-A042-A27F768A98BA}
 		{842BC71A-EE46-4A1E-BD36-A34058C7E131} = {58ED209C-2D15-4608-A042-A27F768A98BA}
 		{291FB926-CD4F-4555-A7B8-B7DD1D3D1071} = {71DC35C4-01E0-47C0-A566-42E0892AD9EF}
+		{886E568F-B5AB-4CAC-826E-E70ED4351737} = {71DC35C4-01E0-47C0-A566-42E0892AD9EF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC05B606-312E-4F2D-B29B-42AA215262C4}
