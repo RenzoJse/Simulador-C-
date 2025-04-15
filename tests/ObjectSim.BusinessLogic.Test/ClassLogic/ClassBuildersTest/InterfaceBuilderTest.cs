@@ -1,6 +1,4 @@
-﻿using FluentAssertions;
-using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
-using Attribute = ObjectSim.Domain.Attribute;
+﻿using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 

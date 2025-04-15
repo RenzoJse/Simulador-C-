@@ -1,7 +1,4 @@
-﻿using ObjectSim.Domain;
-using Attribute = ObjectSim.Domain.Attribute;
-
-namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+﻿namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 
 public class InterfaceBuilder : Builder
 {

@@ -21,7 +21,7 @@ public class ClassTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void CreateClass_WithoutName_ThrowsException()
     {
-        Class test = new Class { Name = null! };
+        _testClass!.Name = null!;
     }
 
     [TestMethod]
@@ -102,7 +102,7 @@ public class ClassTest
     [TestMethod]
     public void CreateClass_WithNotSealedParent_SetParent()
     {
-        Class validParent = new Class
+        var validParent = new Class
         {
             Name = "validName",
             IsAbstract = false,
@@ -123,7 +123,7 @@ public class ClassTest
         const string validName = "ValidName";
         var id = Guid.NewGuid();
 
-        Class test = new Class
+        var test = new Class
         {
             Name = validName,
             IsAbstract = false,

@@ -4,7 +4,6 @@ using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 using ObjectSim.Domain;
 using ObjectSim.IDataAccess;
-using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 
