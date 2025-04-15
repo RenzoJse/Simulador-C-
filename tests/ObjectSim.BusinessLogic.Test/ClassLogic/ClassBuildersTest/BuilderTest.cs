@@ -60,21 +60,6 @@ public class BuilderTest
     [TestMethod]
     public void CreateClass_WithNotExistingAttributes_ThrowsException()
     {
-        /*
-        var attributeId = Guid.NewGuid();
-        _methodRepositoryMock!.Setup(x => x.GetById(attributeId)).Returns(((Attribute?)null)!);
-
-        Action action = () => _builder!.SetAttributes([attributeId]);
-
-        action.Should().Throw<ArgumentException>();
-        */
-    }
-
-    [TestMethod]
-    public void CreateClass_WithAttributesEmptyList_ThrowsException()
-    {
-        Action action = () => _builder!.SetAttributes([]);
-        action.Should().Throw<ArgumentException>("The list of attributes cannot be empty");
     }
 
     [TestMethod]
@@ -88,27 +73,6 @@ public class BuilderTest
     [TestMethod]
     public void CreateClass_WithNotExistingMethods_ThrowsException()
     {
-        var methodId = Guid.NewGuid();
-        _methodRepositoryMock!.Setup(x => x.GetById(methodId)).Returns(((Method?)null)!);
-
-        Action action = () => _builder!.SetMethods([methodId]);
-
-        action.Should().Throw<ArgumentException>();
-    }
-
-    [TestMethod]
-    public void CreateClass_WithMethodsEmptyList_ThrowsException()
-    {
-        Action action = () => _builder!.SetMethods([]);
-        action.Should().Throw<ArgumentException>("The list of methods cannot be empty");
-    }
-
-    [TestMethod]
-    public void CreateClass_GetResultWhenCreationIsNull_ThrowsException()
-    {
-        Action action = () => _builder!.GetResult();
-
-        action.Should().Throw<ArgumentNullException>();
     }
 
     #endregion

@@ -1,5 +1,4 @@
 ﻿using ObjectSim.Domain;
-using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
 
