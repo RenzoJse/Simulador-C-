@@ -228,7 +228,7 @@ public class MethodServiceTest
             LocalVariables = []
         };
 
-        Guid secondClassId = Guid.NewGuid();
+        var secondClassId = Guid.NewGuid();
 
         var newMethod = new Method
         {
