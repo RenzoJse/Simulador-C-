@@ -17,6 +17,10 @@ public class ClassDirector
     {
         _builder.SetName(args.Name!);
         _builder.SetAbstraction(args.IsAbstract);
+        _builder.SetSealed(args.IsSealed);
+        _builder.SetAttributes(args.Attributes);
+        _builder.SetMethods(args.Methods);
+        _builder.SetParent(args.Parent);
         return null!;
     }
 }

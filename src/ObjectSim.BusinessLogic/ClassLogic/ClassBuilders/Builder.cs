@@ -22,19 +22,18 @@ public abstract class Builder
       Result.IsSealed = sealedClass;
     }
 
-    public virtual void SetAttributes(List<Attribute> attributes)
+    public virtual void SetAttributes(List<Guid> attributes)
     {
-       Result.Attributes = attributes;
+        ArgumentNullException.ThrowIfNull(attributes);
     }
 
-    public virtual void SetMethods(List<Method> methods)
+    public virtual void SetMethods(List<Guid> methods)
     {
-        Result.Methods = methods;
+        ArgumentNullException.ThrowIfNull(methods);
     }
 
-    public virtual void SetParent(Class parent)
+    public virtual void SetParent(Guid idParent)
     {
-        Result.Parent = parent;
     }
 
     public Class GetResult()

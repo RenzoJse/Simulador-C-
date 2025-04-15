@@ -1,9 +1,7 @@
 ﻿using FluentAssertions;
 using ObjectSim.BusinessLogic.ClassLogic;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
-using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
-using Attribute = System.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic;
 
@@ -62,6 +60,16 @@ public class ClassDirectorTest
     public void ConstructClass_WithNullAttributes_ThrowsException()
     {
         var args = new CreateClassArgs(ValidName, IsAbstract, IsSealed, null!, Methods, Guid.NewGuid());
+
+        Action action = () => _classDirector!.ConstructClass(args);
+
+        action.Should().Throw<ArgumentException>();
+    }
+
+    [TestMethod]
+    public void ConstructClass_WithNullMethods_ThrowsException()
+    {
+        var args = new CreateClassArgs(ValidName, IsAbstract, IsSealed, Attributes, null!, Guid.NewGuid());
 
         Action action = () => _classDirector!.ConstructClass(args);
 

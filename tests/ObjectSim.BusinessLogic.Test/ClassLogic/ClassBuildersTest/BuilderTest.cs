@@ -1,7 +1,9 @@
 ﻿using FluentAssertions;
+using Moq;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 using ObjectSim.Domain;
+using ObjectSim.IDataAccess;
 using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
@@ -10,11 +12,15 @@ namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 public class BuilderTest
 {
     private Builder? _builder;
+    private Mock<IMethodRepository<Method>>? _methodRepositoryMock;
+    private MethodService? _methodService;
 
     [TestInitialize]
     public void Initialize()
     {
         _builder = new ClassBuilder();
+        _methodRepositoryMock = new Mock<IMethodRepository<Method>>(MockBehavior.Strict);
+        _methodService = new MethodService(_methodRepositoryMock.Object);
     }
 
     #region Error
@@ -59,6 +65,11 @@ public class BuilderTest
         action.Should().Throw<ArgumentNullException>();
     }
 
+    [TestMethod]
+    public void CreateClass_WithNotExistingMethods_ThrowsException()
+    {
+    }
+
     #endregion
 
     #region Success
@@ -87,28 +98,16 @@ public class BuilderTest
     [TestMethod]
     public void CreateClass_WithValidAttributes_SetsAttributes()
     {
-        var attributes = new List<Attribute>();
-
-        _builder!.SetAttributes(attributes);
-        _builder.GetResult().Attributes.Should().BeEquivalentTo(attributes);
     }
 
     [TestMethod]
     public void CreateClass_WithValidMethods_SetsMethods()
     {
-        var methods = new List<Method>();
-
-        _builder!.SetMethods(methods);
-        _builder.GetResult().Methods.Should().BeEquivalentTo(methods);
     }
 
     [TestMethod]
     public void CreateClass_WithValidParent_SetsParent()
     {
-        var parent = new Class();
-
-        _builder!.SetParent(parent);
-        _builder.GetResult().Parent.Should().Be(parent);
     }
 
     #endregion

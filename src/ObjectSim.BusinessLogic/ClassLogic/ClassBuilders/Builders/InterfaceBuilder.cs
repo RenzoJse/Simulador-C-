@@ -5,12 +5,12 @@ namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 
 public class InterfaceBuilder : Builder
 {
-    public override void SetAttributes(List<Attribute> attributes)
+    public override void SetAttributes(List<Guid> attributes)
     {
         base.SetAttributes(attributes);
     }
 
-    public override void SetMethods(List<Method> methods)
+    public override void SetMethods(List<Guid> methods)
     {
         base.SetMethods(methods);
     }
