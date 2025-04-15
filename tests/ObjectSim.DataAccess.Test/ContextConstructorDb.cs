@@ -3,17 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ObjectSim.DataAccess.Test;
 
-internal sealed class ContextConstructorDB
+internal static class ContextConstructorDb
 {
-    private static readonly SqliteConnection _conection = new("Data Source=:memory:");
+    private static readonly SqliteConnection Conection = new("Data Source=:memory:");
 
     public static TestDbContext CreateMemoryContext()
     {
         var options = new DbContextOptionsBuilder<TestDbContext>()
-            .UseSqlite(_conection)
+            .UseSqlite(Conection)
             .Options;
 
-        _conection.Open();
+        Conection.Open();
 
         var context = new TestDbContext(options);
 
