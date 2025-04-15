@@ -61,7 +61,7 @@ public class RepositoryTest
 
         _repository.Add(element);
 
-        var result = _repository.Get(element.Id);
+        var result = _repository.Get(e => e.Id == element.Id);
 
         result.Should().Be(element);
     }
@@ -79,7 +79,7 @@ public class RepositoryTest
         _repository.Add(element1);
         _repository.Add(element2);
 
-        var result = _repository.GetAll();
+        var result = _repository.GetAll(_ => true);
 
         result.Should().Contain(new[] { element1, element2 });
     }
@@ -113,7 +113,7 @@ public class RepositoryTest
 
         _repository.Delete(element);
 
-        var result = _repository.Get(element.Id);
+        var result = _repository.Get(e => e.Id == element.Id);
 
         result.Should().BeNull();
     }
@@ -128,7 +128,7 @@ internal sealed class TestDbContext(DbContextOptions options)
 }
 
 
-internal sealed record class TestEntity()
+internal sealed record TestEntity()
 {
     public string Id { get; init; } = Guid.NewGuid().ToString();
 
