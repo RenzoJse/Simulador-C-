@@ -22,6 +22,6 @@ public class Attribute
     }
     public AttributeDataType DataType { get; set; }
     public AttributeVisibility Visibility { get; set; }
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string? Name { get; set; } = null!;
 }
