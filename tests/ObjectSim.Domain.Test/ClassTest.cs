@@ -79,7 +79,7 @@ public class ClassTest
     {
         var sealedParent = new Class() { IsSealed = true };
 
-        Action action = () =>  _testClass!.Parent = sealedParent;
+        Action action = () => _testClass!.Parent = sealedParent;
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Parent class cannot be sealed");
@@ -107,7 +107,7 @@ public class ClassTest
             Name = "validName",
             IsAbstract = false,
             IsSealed = false,
-            Attributes =[],
+            Attributes = [],
             Methods = [],
             Parent = null
         };
@@ -128,7 +128,7 @@ public class ClassTest
             Name = validName,
             IsAbstract = false,
             IsSealed = false,
-            Attributes =[],
+            Attributes = [],
             Methods = [],
             Parent = null,
             Id = id

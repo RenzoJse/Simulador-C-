@@ -123,10 +123,11 @@ public class Class
         get => _parent;
         set
         {
-            if (value != null)
+            if(value != null)
             {
                 VerifyParent(value);
             }
+
             _parent = value;
         }
     }

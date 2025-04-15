@@ -18,7 +18,7 @@ public abstract class Builder
 
     public virtual void SetSealed(bool? sealedClass)
     {
-      Result.IsSealed = sealedClass;
+        Result.IsSealed = sealedClass;
     }
 
     public virtual void SetAttributes(List<Guid> attributes)
