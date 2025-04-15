@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using ObjectSim.DataAccess.Repository;
+
 namespace ObjectSim.DataAccess.Test;
 
 [TestClass]
