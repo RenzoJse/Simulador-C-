@@ -9,7 +9,7 @@ public class RepositoryTest
 {
     private readonly DbContext _context = ContextConstructorDb.CreateMemoryContext();
     private readonly Repository<TestEntity> _repository;
-
+    private readonly TestEntity _testEntity = new TestEntity("Test");
     public RepositoryTest()
     {
         _repository = new Repository<TestEntity>(_context);
@@ -21,16 +21,20 @@ public class RepositoryTest
         _context.Database.EnsureCreated();
     }
 
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _context.Database.EnsureDeleted();
+    }
+
     #region Add
 
     [TestMethod]
     public void Add_WhenElementIsProvided_AddsElementToRepository()
     {
-        var element = new TestEntity("Test");
+        var result = _repository.Add(_testEntity);
 
-        var result = _repository.Add(element);
-
-        result.Should().Be(element);
+        result.Should().Be(_testEntity);
     }
 
     #endregion
@@ -40,14 +44,12 @@ public class RepositoryTest
     [TestMethod]
     public void Update_WhenElementIsProvided_UpdatesElementInRepository()
     {
-        var element = new TestEntity("Test");
+        _repository.Add(_testEntity);
 
-        _repository.Add(element);
+        _testEntity.Name = "Test Modified";
+        var result = _repository.Update(_testEntity);
 
-        element.Name = "Test Modified";
-        var result = _repository.Update(element);
-
-        result.Should().Be(element);
+        result.Should().Be(_testEntity);
     }
 
     #endregion
@@ -57,13 +59,11 @@ public class RepositoryTest
     [TestMethod]
     public void Get_WhenElementIsProvided_ReturnsElementFromRepository()
     {
-        var element = new TestEntity("Test");
+        _repository.Add(_testEntity);
 
-        _repository.Add(element);
+        var result = _repository.Get(e => e.Id == _testEntity.Id);
 
-        var result = _repository.Get(e => e.Id == element.Id);
-
-        result.Should().Be(element);
+        result.Should().Be(_testEntity);
     }
 
     #endregion
@@ -73,15 +73,14 @@ public class RepositoryTest
     [TestMethod]
     public void GetAll_WhenCalled_ReturnsAllElementsFromRepository()
     {
-        var element1 = new TestEntity("Test 1");
         var element2 = new TestEntity("Test 2");
 
-        _repository.Add(element1);
+        _repository.Add(_testEntity);
         _repository.Add(element2);
 
         var result = _repository.GetAll(_ => true);
 
-        result.Should().Contain(new[] { element1, element2 });
+        result.Should().Contain(new[] { _testEntity, element2 });
     }
 
     #endregion
@@ -91,11 +90,9 @@ public class RepositoryTest
     [TestMethod]
     public void Exists_WhenElementIsProvided_ReturnsTrueIfElementExists()
     {
-        var element = new TestEntity("Test");
+        _repository.Add(_testEntity);
 
-        _repository.Add(element);
-
-        var result = _repository.Exists(e => e.Id == element.Id);
+        var result = _repository.Exists(e => e.Id == _testEntity.Id);
 
         result.Should().BeTrue();
     }
@@ -107,13 +104,11 @@ public class RepositoryTest
     [TestMethod]
     public void Delete_WhenElementIsProvided_DeletesElementFromRepository()
     {
-        var element = new TestEntity("Test");
+        _repository.Add(_testEntity);
 
-        _repository.Add(element);
+        _repository.Delete(_testEntity);
 
-        _repository.Delete(element);
-
-        var result = _repository.Get(e => e.Id == element.Id);
+        var result = _repository.Get(e => e.Id == _testEntity.Id);
 
         result.Should().BeNull();
     }
