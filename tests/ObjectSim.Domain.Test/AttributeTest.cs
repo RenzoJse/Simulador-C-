@@ -40,4 +40,36 @@ public class AttributeTest
 
         act.Should().NotThrow();
     }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenIdIsEmpty()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.Empty,
+            Name = "ValidAttribute",
+            DataType = Attribute.AttributeDataType.String,
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Id must be a valid non-empty GUID.");
+    }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenNameIsNull()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = null,
+            DataType = Attribute.AttributeDataType.String,
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or whitespace.");
+    }
 }
