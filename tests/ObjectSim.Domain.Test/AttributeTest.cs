@@ -159,7 +159,7 @@ public class AttributeTest
             Visibility = Attribute.AttributeVisibility.Public
         };
 
-        Action act =attribute.Validate;
+        Action act = attribute.Validate;
 
         act.Should().NotThrow();
     }
@@ -174,7 +174,7 @@ public class AttributeTest
             DataType = (Attribute.AttributeDataType)999
         };
 
-        Action act =attribute.Validate;
+        Action act = attribute.Validate;
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("Invalid data type.");
@@ -190,7 +190,7 @@ public class AttributeTest
             Visibility = (Attribute.AttributeVisibility)999
         };
 
-        Action act =attribute.Validate;
+        Action act = attribute.Validate;
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("Invalid visibility type.");
@@ -206,7 +206,7 @@ public class AttributeTest
             Visibility = Attribute.AttributeVisibility.Internal
         };
 
-        Action act =attribute.Validate;
+        Action act = attribute.Validate;
 
         act.Should().NotThrow();
     }
