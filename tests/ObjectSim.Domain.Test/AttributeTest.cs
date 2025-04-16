@@ -158,12 +158,27 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Test",
             DataType = Attribute.AttributeDataType.String,
-            Visibility = (Attribute.AttributeVisibility)999 // inválido
+            Visibility = (Attribute.AttributeVisibility)999
         };
 
         Action act =attribute.Validate;
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("Invalid visibility type.");
+    }
+    [TestMethod]
+    public void AttributeValidator_WithValidVisibility_ShouldNotThrow()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            DataType = Attribute.AttributeDataType.String,
+            Visibility = Attribute.AttributeVisibility.Internal
+        };
+
+        Action act =attribute.Validate;
+
+        act.Should().NotThrow();
     }
 }

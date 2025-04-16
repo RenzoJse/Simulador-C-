@@ -29,6 +29,7 @@ public class Attribute
         ValidateId(Id);
         ValidateName(Name);
         ValidateDataType(DataType);
+        ValidateVisibility(Visibility);
     }
     private static void ValidateId(Guid id)
     {
@@ -54,6 +55,13 @@ public class Attribute
         if(!Enum.IsDefined(typeof(AttributeDataType), dataType))
         {
             throw new ArgumentException("Invalid data type.");
+        }
+    }
+    private static void ValidateVisibility(AttributeVisibility visibility)
+    {
+        if(!Enum.IsDefined(typeof(AttributeVisibility), visibility))
+        {
+            throw new ArgumentException("Invalid visibility type.");
         }
     }
 }
