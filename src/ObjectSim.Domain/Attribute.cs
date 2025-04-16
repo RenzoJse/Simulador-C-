@@ -24,4 +24,15 @@ public class Attribute
     public AttributeVisibility Visibility { get; set; }
     public Guid Id { get; set; }
     public string? Name { get; set; } = null!;
+    public void Validate()
+    {
+        ValidateId(Id);
+    }
+    private static void ValidateId(Guid id)
+    {
+        if(id == Guid.Empty)
+        {
+            throw new ArgumentException("Id must be a valid non-empty GUID.");
+        }
+    }
 }

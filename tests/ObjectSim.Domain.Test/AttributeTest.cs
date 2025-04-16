@@ -1,4 +1,6 @@
-﻿namespace ObjectSim.Domain.Test;
+﻿using FluentAssertions;
+
+namespace ObjectSim.Domain.Test;
 [TestClass]
 public class AttributeTest
 {
@@ -34,6 +36,8 @@ public class AttributeTest
             Visibility = Attribute.AttributeVisibility.Public
         };
 
-        AttributeValidator.Validate(attribute);
+        Action act = attribute.Validate;
+
+        act.Should().NotThrow();
     }
 }
