@@ -19,7 +19,6 @@ public class AttributeServiceTest
 
         _attribute = new ObjectSim.Domain.Attribute
         {
-            Id = 1,
             Name = "Color",
             DataType = AttributeDataType.String,
             Visibility = AttributeVisibility.Public

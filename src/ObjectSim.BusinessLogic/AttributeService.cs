@@ -4,7 +4,7 @@ using ObjectSim.IDataAccess;
 namespace ObjectSim.BusinessLogic;
 public class AttributeService(IAttributeRepository attributeRepository) : IAttributeService
 {
-    public Domain.Attribute Create(Domain.Attribute attribute) // Explicitly specify Domain.Attribute
+    public Domain.Attribute Create(Domain.Attribute attribute)
     {
         if(attribute == null)
         {
