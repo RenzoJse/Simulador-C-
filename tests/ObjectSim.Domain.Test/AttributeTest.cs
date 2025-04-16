@@ -88,4 +88,50 @@ public class AttributeTest
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or whitespace.");
     }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenNameIsTooLong()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = new string('a', 101),
+            DataType = Attribute.AttributeDataType.String,
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot exceed 100 characters.");
+    }
+    [TestMethod]
+    public void Validate_ShouldNotThrow_WhenNameIsOk()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "aaa",
+            DataType = Attribute.AttributeDataType.String,
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().NotThrow();
+    }
+    [TestMethod]
+    public void AttributeValidator_WithValidDataType_ShouldNotThrow()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            DataType = Attribute.AttributeDataType.Int,
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = () => attribute.AttributeValidator();
+
+        act.Should().NotThrow();
+    }
 }
