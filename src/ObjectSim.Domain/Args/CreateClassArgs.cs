@@ -1,19 +1,17 @@
 ﻿namespace ObjectSim.Domain.Args;
 
 public class CreateClassArgs(
-    string? name,
-    bool isAbstract,
-    bool isSealed,
-    List<Attribute> attribute,
-    List<Method> methods,
-    Class parent,
-    Guid id)
+    string name,
+    bool? isAbstract,
+    bool? isSealed,
+    List<Guid> attributes,
+    List<Guid> methods,
+    Guid parent)
 {
     public string? Name { get; set; } = name;
-    public bool IsAbstract { get; set; } = isAbstract;
-    public bool IsSealed { get; set; } = isSealed;
-    public List<Attribute> Attribute { get; set; } = attribute;
-    public List<Method> Methods { get; set; } = methods;
-    public Class Parent { get; set; } = parent;
-    public Guid Id { get; set; } = id;
+    public bool? IsAbstract { get; set; } = isAbstract;
+    public bool? IsSealed { get; set; } = isSealed;
+    public List<Guid> Attributes { get; set; } = attributes;
+    public List<Guid> Methods { get; set; } = methods;
+    public Guid Parent { get; set; } = parent;
 }
