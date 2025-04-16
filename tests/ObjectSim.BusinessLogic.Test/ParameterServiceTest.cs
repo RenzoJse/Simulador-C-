@@ -43,6 +43,8 @@ public class ParameterServiceTest
     }
 
     [TestMethod]
+    [ExpectedException(typeof(Exception))]
+
     public void CreateNullParameter()
     {
         _parameterService!.Create(null!);
