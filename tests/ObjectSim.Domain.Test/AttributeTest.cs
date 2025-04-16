@@ -5,6 +5,35 @@ namespace ObjectSim.Domain.Test;
 public class AttributeTest
 {
     [TestMethod]
+    public void DataType_Property_SetAndGet_ShouldBeEqual()
+    {
+        var attribute = new Attribute();
+        attribute.DataType = Attribute.AttributeDataType.Decimal;
+        attribute.DataType.Should().Be(Attribute.AttributeDataType.Decimal);
+    }
+    [TestMethod]
+    public void Visibility_Property_SetAndGet_ShouldBeEqual()
+    {
+        var attribute = new Attribute();
+        attribute.Visibility = Attribute.AttributeVisibility.ProtectedInternal;
+        attribute.Visibility.Should().Be(Attribute.AttributeVisibility.ProtectedInternal);
+    }
+    [TestMethod]
+    public void Name_Property_SetAndGet_ShouldBeEqual()
+    {
+        var attribute = new Attribute();
+        attribute.Name = "TestAttribute";
+        attribute.Name.Should().Be("TestAttribute");
+    }
+    [TestMethod]
+    public void Id_Property_SetAndGet_ShouldBeEqual()
+    {
+        var id = Guid.NewGuid();
+        var attribute = new Attribute();
+        attribute.Id = id;
+        attribute.Id.Should().Be(id);
+    }
+    [TestMethod]
     public void AttributeDataTypeCreateAttribute_OKTest()
     {
         var attribute = new Attribute();
