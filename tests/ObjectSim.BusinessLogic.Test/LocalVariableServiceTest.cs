@@ -5,7 +5,7 @@ using ObjectSim.IDataAccess;
 
 namespace ObjectSim.BusinessLogic.Test;
 [TestClass]
-public class ParameterServiceTest
+public class LocalVariableServiceTest
 {
     private Mock<ILocalVariableRepository<Domain.LocalVariable>>? _localVariableRepositoryMock;
     private LocalVariableService? _localVariableService;
