@@ -20,4 +20,51 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 .EnableSensitiveDataLogging();
         }
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Class>(c =>
+        {
+
+            c.HasKey(c => c.Id);
+            c.HasMany(c => c.Methods)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+            c.HasMany(c => c.Attributes)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+            c.HasOne(c => c.Parent)
+                .WithMany()
+                .HasForeignKey("ParentId")
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+       modelBuilder.Entity<Method>(m =>
+           {
+               m.HasKey(m => m.Id);
+               m.HasMany(m => m.Parameters)
+                   .WithOne()
+                   .OnDelete(DeleteBehavior.Cascade);
+               m.HasMany(m => m.LocalVariables)
+                   .WithOne()
+                   .OnDelete(DeleteBehavior.Cascade);
+           });
+
+        modelBuilder.Entity<Attribute>(a =>
+        {
+            a.HasKey(a => a.Id);
+        });
+
+        modelBuilder.Entity<Parameter>(p =>
+        {
+            p.HasKey(p => p.Id);
+        });
+
+        modelBuilder.Entity<LocalVariable>(lv =>
+        {
+            lv.HasKey(lv => lv.Id);
+        });
+
+        base.OnModelCreating(modelBuilder);
+    }
 }
