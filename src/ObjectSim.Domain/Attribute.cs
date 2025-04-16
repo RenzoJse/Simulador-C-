@@ -28,6 +28,7 @@ public class Attribute
     {
         ValidateId(Id);
         ValidateName(Name);
+        ValidateDataType(DataType);
     }
     private static void ValidateId(Guid id)
     {
@@ -46,6 +47,13 @@ public class Attribute
         if(name.Length > 100)
         {
             throw new ArgumentException("Name cannot exceed 100 characters.");
+        }
+    }
+    private static void ValidateDataType(AttributeDataType dataType)
+    {
+        if(!Enum.IsDefined(typeof(AttributeDataType), dataType))
+        {
+            throw new ArgumentException("Invalid data type.");
         }
     }
 }

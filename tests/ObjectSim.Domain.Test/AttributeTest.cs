@@ -130,7 +130,7 @@ public class AttributeTest
             Visibility = Attribute.AttributeVisibility.Public
         };
 
-        Action act = () => attribute.AttributeValidator();
+        Action act =attribute.Validate;
 
         act.Should().NotThrow();
     }
