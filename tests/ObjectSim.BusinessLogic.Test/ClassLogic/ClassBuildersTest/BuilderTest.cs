@@ -2,8 +2,8 @@
 using Moq;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
-using ObjectSim.IDataAccess;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 
@@ -11,14 +11,14 @@ namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 public class BuilderTest
 {
     private Builder? _builder;
-    private Mock<IMethodRepository<Method>>? _methodRepositoryMock;
+    private Mock<IRepository<Method>>? _methodRepositoryMock;
     private MethodService? _methodService;
 
     [TestInitialize]
     public void Initialize()
     {
         _builder = new ClassBuilder();
-        _methodRepositoryMock = new Mock<IMethodRepository<Method>>(MockBehavior.Strict);
+        _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
         _methodService = new MethodService(_methodRepositoryMock.Object);
     }
 
