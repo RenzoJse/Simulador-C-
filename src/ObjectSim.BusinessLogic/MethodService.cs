@@ -1,9 +1,9 @@
-﻿using ObjectSim.Domain;
+﻿using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
-using ObjectSim.IDataAccess;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodService(IMethodRepository<Method> methodRepository) : IMethodService<Method>
+public class MethodService(IRepository<Method> methodRepository) : IMethodService<Method>
 {
     public Method Create(Method Entity)
     {
@@ -12,7 +12,7 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
             throw new Exception("Method cannot be null");
         }
 
-        var existMethod = methodRepository.Exist(m => m.Name == Entity.Name);
+        var existMethod = methodRepository.Exists(m => m.Name == Entity.Name);
         if(existMethod)
         {
             throw new Exception("Method already exist");
@@ -40,19 +40,19 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
 
     public bool Delete(Guid id)
     {
-        var method = methodRepository.GetById(id);
+        var method = methodRepository.Get(method1 => id == method1.Id);
         if(method == null)
         {
             throw new Exception("Method cannot be null.");
         }
 
-        methodRepository.Remove(method);
+        methodRepository.Delete(method);
         return true;
     }
 
     public List<Method> GetAll()
     {
-        var methods = methodRepository.GetAll();
+        var methods = methodRepository.GetAll(method1 => method1.Id != Guid.Empty);
         if(methods == null || !methods.Any())
         {
             throw new Exception("No methods found.");
@@ -65,7 +65,7 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
     {
         try
         {
-            return methodRepository.GetById(id);
+            return methodRepository.Get(method1 => id == method1.Id)!;
         }
         catch(Exception)
         {
@@ -75,7 +75,7 @@ public class MethodService(IMethodRepository<Method> methodRepository) : IMethod
 
     public Method Update(Guid id, Method entity)
     {
-        Method method = methodRepository.GetById(id);
+        Method method = methodRepository.Get(method1 => id == method1.Id)!;;
         if(entity.Name == string.Empty)
         {
             throw new Exception("Incorrect name method");

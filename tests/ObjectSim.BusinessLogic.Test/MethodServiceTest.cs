@@ -1,22 +1,22 @@
 ﻿using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
+using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
-using ObjectSim.IDataAccess;
 
 namespace ObjectSim.BusinessLogic.Test;
 
 [TestClass]
 public class MethodServiceTest
 {
-    private Mock<IMethodRepository<Method>>? _methodRepositoryMock;
+    private Mock<IRepository<Method>>? _methodRepositoryMock;
     private MethodService? _methodService;
     private static readonly Guid ClassId = Guid.NewGuid();
 
     [TestInitialize]
     public void Initialize()
     {
-        _methodRepositoryMock = new Mock<IMethodRepository<Method>>(MockBehavior.Strict);
+        _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
         _methodService = new MethodService(_methodRepositoryMock.Object);
     }
 
@@ -35,7 +35,7 @@ public class MethodServiceTest
             LocalVariables = []
         };
 
-        _methodRepositoryMock!.Setup(repo => repo.Exist(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
+        _methodRepositoryMock!.Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
         _methodRepositoryMock.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
 
         var result = _methodService!.Create(testMethod);
@@ -59,7 +59,7 @@ public class MethodServiceTest
             LocalVariables = []
         };
 
-        _methodRepositoryMock!.Setup(repo => repo.Exist(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
+        _methodRepositoryMock!.Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
         _methodRepositoryMock.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
 
         var result = _methodService!.Create(testMethod);
@@ -83,10 +83,11 @@ public class MethodServiceTest
 
         Assert.IsNotNull(_methodRepositoryMock);
         Assert.IsNotNull(_methodService);
-        _methodRepositoryMock.Setup(repo => repo.GetAll()).Returns(methods);
+        _methodRepositoryMock.Setup(repo => repo.GetAll(It.IsAny<Func<Method, bool>>()))
+            .Returns(methods);
         var result = _methodService.GetAll();
         result.Should().HaveCount(2);
-        _methodRepositoryMock.Verify(repo => repo.GetAll(), Times.Once);
+        _methodRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Method, bool>>()), Times.Once);
     }
 
     [TestMethod]
