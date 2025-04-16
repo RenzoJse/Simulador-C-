@@ -150,4 +150,20 @@ public class AttributeTest
         act.Should().Throw<ArgumentException>()
             .WithMessage("Invalid data type.");
     }
+    [TestMethod]
+    public void AttributeValidator_WithInvalidVisibility_ShouldThrowArgumentException()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            DataType = Attribute.AttributeDataType.String,
+            Visibility = (Attribute.AttributeVisibility)999 // inválido
+        };
+
+        Action act =attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Invalid visibility type.");
+    }
 }
