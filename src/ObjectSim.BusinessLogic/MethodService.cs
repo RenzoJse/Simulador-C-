@@ -75,11 +75,12 @@ public class MethodService(IRepository<Method> methodRepository) : IMethodServic
 
     public Method Update(Guid id, Method entity)
     {
-        Method method = methodRepository.Get(method1 => id == method1.Id)!;;
+        Method method = methodRepository.Get(method1 => id == method1.Id)!;
         if(entity.Name == string.Empty)
         {
             throw new Exception("Incorrect name method");
         }
+
         method.Name = entity.Name;
         method.Type = entity.Type;
         method.Abstract = entity.Abstract;

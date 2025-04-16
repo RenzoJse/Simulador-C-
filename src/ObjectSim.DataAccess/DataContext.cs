@@ -14,9 +14,11 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (!optionsBuilder.IsConfigured)
+        if(!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=ObjectSim; Integrated Security=True; Trusted_Connection=True; MultipleActiveResultSets=True; TrustServerCertificate=True")
+            optionsBuilder
+                .UseSqlServer(
+                    "Server=.\\SQLEXPRESS;Database=ObjectSim; Integrated Security=True; Trusted_Connection=True; MultipleActiveResultSets=True; TrustServerCertificate=True")
                 .EnableSensitiveDataLogging();
         }
     }
@@ -25,7 +27,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     {
         modelBuilder.Entity<Class>(c =>
         {
-
             c.HasKey(c => c.Id);
             c.HasMany(c => c.Methods)
                 .WithOne()
@@ -39,16 +40,16 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-       modelBuilder.Entity<Method>(m =>
-           {
-               m.HasKey(m => m.Id);
-               m.HasMany(m => m.Parameters)
-                   .WithOne()
-                   .OnDelete(DeleteBehavior.Cascade);
-               m.HasMany(m => m.LocalVariables)
-                   .WithOne()
-                   .OnDelete(DeleteBehavior.Cascade);
-           });
+        modelBuilder.Entity<Method>(m =>
+        {
+            m.HasKey(m => m.Id);
+            m.HasMany(m => m.Parameters)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+            m.HasMany(m => m.LocalVariables)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+        });
 
         modelBuilder.Entity<Attribute>(a =>
         {
