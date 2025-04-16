@@ -72,4 +72,20 @@ public class AttributeTest
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or whitespace.");
     }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenNameIsWhitespace()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "   ",
+            DataType = Attribute.AttributeDataType.String,
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or whitespace.");
+    }
 }
