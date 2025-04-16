@@ -16,6 +16,7 @@ public class AttributeTest
     {
         var attribute = new Attribute();
         attribute.Visibility = Attribute.AttributeVisibility.ProtectedInternal;
+
         attribute.Visibility.Should().Be(Attribute.AttributeVisibility.ProtectedInternal);
     }
     [TestMethod]
