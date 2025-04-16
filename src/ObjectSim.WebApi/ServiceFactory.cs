@@ -4,6 +4,7 @@ using ObjectSim.DataAccess;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.DataAccess.Repositories;
 using ObjectSim.Domain;
+using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.WebApi;
@@ -25,7 +26,7 @@ public static class ServiceFactory
 
     public static void AddServices(IServiceCollection services)
     {
-
+        services.AddScoped<IMethodService<Class>>();
     }
 
     public static void AddDataAccess(IServiceCollection services)
