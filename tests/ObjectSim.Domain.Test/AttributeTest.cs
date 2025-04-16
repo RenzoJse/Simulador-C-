@@ -134,4 +134,20 @@ public class AttributeTest
 
         act.Should().NotThrow();
     }
+    [TestMethod]
+    public void AttributeValidator_WithInvalidDataType_ShouldThrowArgumentException()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            Visibility = Attribute.AttributeVisibility.Public,
+            DataType = (Attribute.AttributeDataType)999
+        };
+
+        Action act =attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Invalid data type.");
+    }
 }
