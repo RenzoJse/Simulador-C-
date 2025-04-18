@@ -212,4 +212,10 @@ public class AttributeTest
 
         act.Should().NotThrow();
     }
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ValueType_ShouldThrow_WhenInvalidType()
+    {
+        var type = new ValueType("invalid");
+    }
 }
