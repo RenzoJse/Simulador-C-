@@ -1,7 +1,9 @@
 ﻿using FluentAssertions;
+using Moq;
 using ObjectSim.BusinessLogic.ClassLogic;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 using ObjectSim.Domain.Args;
+using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic;
 
@@ -14,12 +16,13 @@ public class ClassDirectorTest
     private const bool IsSealed = true;
     private static readonly List<Guid> Attributes = [Guid.NewGuid(), Guid.NewGuid()];
     private static readonly List<Guid> Methods = [Guid.NewGuid(), Guid.NewGuid()];
-
+    private Mock<IMethodService> _methodServiceMock = new();
 
     [TestInitialize]
     public void Initialize()
     {
-        var builder = new ClassBuilder();
+        _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
+        var builder = new ClassBuilder(_methodServiceMock.Object);
         _classDirector = new ClassDirector(builder);
     }
 

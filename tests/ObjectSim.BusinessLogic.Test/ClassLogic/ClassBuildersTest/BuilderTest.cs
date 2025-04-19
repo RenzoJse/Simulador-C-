@@ -4,6 +4,7 @@ using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
+using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 
@@ -12,14 +13,14 @@ public class BuilderTest
 {
     private Builder? _builder;
     private Mock<IRepository<Method>>? _methodRepositoryMock;
-    private MethodService? _methodService;
+    private Mock<IMethodService>? _methodServiceMock;
 
     [TestInitialize]
     public void Initialize()
     {
-        _builder = new ClassBuilder();
+        _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
+        _builder = new ClassBuilder(_methodServiceMock.Object);
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
-        _methodService = new MethodService(_methodRepositoryMock.Object);
     }
 
     #region Error

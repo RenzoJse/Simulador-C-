@@ -1,8 +1,10 @@
-﻿using ObjectSim.Domain;
+﻿using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain;
+using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
 
-public abstract class Builder
+public abstract class Builder(IMethodService methodService)
 {
     private Class Result { get; } = new Class();
 
@@ -29,16 +31,13 @@ public abstract class Builder
     public virtual void SetMethods(List<Guid> methods)
     {
         ArgumentNullException.ThrowIfNull(methods);
-        /*if (Result.Parent is not null && Result.Parent.IsAbstract)
+        foreach (var method in methods.Select(methodService.GetById))
         {
-            foreach (var method in methods)
+            if (method is null)
             {
-                if (!Result.Parent.Methods.Contains(method))
-                {
-                    throw new ArgumentException("Parent class is an interface and methods are not implemented.");
-                }
+                throw new ArgumentException("Method does not exist");
             }
-        }*/
+        }
     }
 
     public virtual void SetParent(Guid idParent)

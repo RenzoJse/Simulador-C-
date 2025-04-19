@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
+using Moq;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 using ObjectSim.Domain;
+using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 
@@ -8,11 +10,13 @@ namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 public class ClassBuilderTest
 {
     private ClassBuilder? _classBuilderTest;
+    private Mock<IMethodService>? _methodServiceMock;
 
     [TestInitialize]
     public void Initialize()
     {
-        _classBuilderTest = new ClassBuilder();
+        _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
+        _classBuilderTest = new ClassBuilder(_methodServiceMock.Object);
     }
 
     #region Error
@@ -65,6 +69,20 @@ public class ClassBuilderTest
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Parent class is an interface and has methods that are not implemented");
+    }
+
+    [TestMethod]
+    public void SetMethods_WhenTryingToAddNonExistantMethodID_ThrowsException()
+    {
+        Guid nonExistentMethodId = Guid.NewGuid();
+
+        _methodServiceMock!.Setup(m => m.GetById(nonExistentMethodId))
+            .Returns((Method)null!);
+
+        Action action = () => _classBuilderTest!.SetMethods([nonExistentMethodId]);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Method does not exist");
     }
 
     [TestMethod]

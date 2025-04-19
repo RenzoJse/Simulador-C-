@@ -1,4 +1,6 @@
-﻿using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+﻿using Moq;
+using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 
@@ -6,11 +8,13 @@ namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 public class InterfaceBuilderTest
 {
     private InterfaceBuilder? _interfaceBuilderTest;
+    private Mock<IMethodService>? _methodServiceMock;
 
     [TestInitialize]
     public void Initialize()
     {
-        _interfaceBuilderTest = new InterfaceBuilder();
+        _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
+        _interfaceBuilderTest = new InterfaceBuilder(_methodServiceMock.Object);
     }
 
     #region Error

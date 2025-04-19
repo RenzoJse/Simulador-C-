@@ -26,7 +26,7 @@ public static class ServiceFactory
 
     public static void AddServices(IServiceCollection services)
     {
-        services.AddScoped<IMethodService<Class>>();
+        services.AddScoped<IMethodService>();
     }
 
     public static void AddDataAccess(IServiceCollection services)

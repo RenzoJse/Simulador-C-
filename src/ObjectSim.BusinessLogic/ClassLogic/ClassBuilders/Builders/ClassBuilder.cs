@@ -1,6 +1,10 @@
-﻿namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+﻿using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain;
+using ObjectSim.IBusinessLogic;
 
-public class ClassBuilder : Builder
+namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+
+public class ClassBuilder(IMethodService methodRepository) : Builder(methodRepository)
 {
     public override void SetAttributes(List<Guid> attributes)
     {

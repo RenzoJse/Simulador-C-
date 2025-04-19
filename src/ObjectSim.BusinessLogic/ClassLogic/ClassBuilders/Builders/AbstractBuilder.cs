@@ -1,6 +1,8 @@
-﻿namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+﻿using ObjectSim.IBusinessLogic;
 
-public class AbstractBuilder : Builder
+namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+
+public class AbstractBuilder(IMethodService methodService) : Builder(methodService)
 {
     public override void SetAttributes(List<Guid> attributes)
     {
