@@ -29,6 +29,16 @@ public abstract class Builder
     public virtual void SetMethods(List<Guid> methods)
     {
         ArgumentNullException.ThrowIfNull(methods);
+        /*if (Result.Parent is not null && Result.Parent.IsAbstract)
+        {
+            foreach (var method in methods)
+            {
+                if (!Result.Parent.Methods.Contains(method))
+                {
+                    throw new ArgumentException("Parent class is an interface and methods are not implemented.");
+                }
+            }
+        }*/
     }
 
     public virtual void SetParent(Guid idParent)

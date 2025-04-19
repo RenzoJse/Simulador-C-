@@ -55,6 +55,13 @@ public class ClassTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
+    public void CreateClass_SetInterfaceNull_ThrowsException()
+    {
+        _testClass!.IsInterface = null;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
     public void CreateClass_SetSealedNull_ThrowsException()
     {
         _testClass!.IsSealed = null;
@@ -68,10 +75,50 @@ public class ClassTest
     }
 
     [TestMethod]
+    public void CreateClass_WithAttributesAndIsInterface_SetsEmptyList()
+    {
+        _testClass!.IsInterface = true;
+
+        var attributes = new List<Attribute>
+        {
+            new Attribute
+            {
+                Name = "TestAttribute",
+            }
+        };
+
+        _testClass.Attributes = attributes;
+
+        _testClass.Attributes.Should().NotBeNull();
+        _testClass.Attributes.Should().BeEmpty();
+    }
+
+    [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void CreateClass_WithNullMethods_ThrowsException()
     {
         _testClass!.Methods = null;
+    }
+
+    [TestMethod]
+    public void CreateClass_WithNotAbstractMethodsAndIsInterface_ThrowsException()
+    {
+        _testClass!.IsInterface = true;
+
+        var methods = new List<Method>
+        {
+            new Method
+            {
+                Name = "TestMethod",
+                Abstract = false,
+                Type = "void"
+            }
+        };
+
+        Action action = () => _testClass.Methods = methods;
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Methods in an interface must be abstract");
     }
 
     [TestMethod]
@@ -107,6 +154,7 @@ public class ClassTest
             Name = "validName",
             IsAbstract = false,
             IsSealed = false,
+            IsInterface = false,
             Attributes = [],
             Methods = [],
             Parent = null
@@ -122,22 +170,30 @@ public class ClassTest
     {
         const string validName = "ValidName";
         var id = Guid.NewGuid();
+        var attribute = new Attribute
+        {
+            Name = "TestAttribute",
+        };
+        var method = new Method
+        {
+            Name = "TestMethod",
+        };
 
         var test = new Class
         {
             Name = validName,
             IsAbstract = false,
             IsSealed = false,
-            Attributes = [],
-            Methods = [],
+            Attributes = [attribute],
+            Methods = [method],
             Parent = null,
             Id = id
         };
         test.Name.Should().Be(validName);
         test.IsAbstract.Should().BeFalse();
         test.IsSealed.Should().BeFalse();
-        test.Attributes.Should().BeEmpty();
-        test.Methods.Should().BeEmpty();
+        test.Attributes.Should().HaveCount(1);
+        test.Methods.Should().HaveCount(1);
         test.Parent.Should().BeNull();
         test.Id.Should().Be(id);
     }

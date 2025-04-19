@@ -66,6 +66,22 @@ public class Class
 
     #endregion
 
+    #region Interface
+
+    private bool? _isInterface;
+
+    public bool? IsInterface
+    {
+        get => _isInterface;
+        set
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            _isInterface = value;
+        }
+    }
+
+    #endregion
+
     #region Sealed
 
     private bool? _isSealed;
@@ -92,7 +108,7 @@ public class Class
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            _attributes = value.ToList();
+            _attributes = IsInterface == true ? [] : value.ToList();
         }
     }
 
@@ -108,6 +124,14 @@ public class Class
         set
         {
             ArgumentNullException.ThrowIfNull(value);
+            if (IsInterface == true)
+            {
+                if (value.Any(method => method.Abstract != true))
+                {
+                    throw new ArgumentException("Methods in an interface must be abstract");
+                }
+            }
+
             _methods = value.ToList();
         }
     }
