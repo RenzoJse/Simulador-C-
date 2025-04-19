@@ -7,9 +7,12 @@ public class AttributeTest
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqual()
     {
-        var attribute = new Attribute();
-        attribute.DataType = Attribute.AttributeDataType.Decimal;
-        attribute.DataType.Should().Be(Attribute.AttributeDataType.Decimal);
+        var expectedType = ValueType.Create("int");
+        var attribute = new ObjectSim.Domain.Attribute();
+
+        attribute.DataType = expectedType;
+        attribute.DataType.Should().Be(expectedType);
+        attribute.DataType.Name.Should().Be("int");
     }
     [TestMethod]
     public void Visibility_Property_SetAndGet_ShouldBeEqual()
@@ -36,11 +39,45 @@ public class AttributeTest
         attribute.Id.Should().Be(id);
     }
     [TestMethod]
+    public void Validate_ValidAttribute_ShouldNotThrow()
+    {
+        var attribute = new ObjectSim.Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            DataType = ValueType.Create("int"),
+            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Public
+        };
+
+        Action action = attribute.Validate;
+
+        action.Should().NotThrow();
+    }
+    [TestMethod]
     public void AttributeDataTypeCreateAttribute_OKTest()
     {
+        var id = Guid.NewGuid();
         var attribute = new Attribute();
-        attribute.DataType = Attribute.AttributeDataType.String;
-        Assert.AreEqual(Attribute.AttributeDataType.String, attribute.DataType);
+        attribute.Id = id;
+        attribute.Name = "TestAttribute";
+        attribute.Visibility = Attribute.AttributeVisibility.Public;
+        var datatype = new ValueType();
+        datatype.Name = "int";
+        attribute
+        var attr = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Edad",
+            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Public,
+            DataType = new ValueType()
+            {
+                Name = "int"
+            }
+        };
+
+        Action action = attr.Validate;
+
+        action.Should().NotThrow();
     }
     [TestMethod]
     public void AttributeVisibilityCreateAttribute_OKTest()
@@ -59,12 +96,12 @@ public class AttributeTest
     [TestMethod]
     public void Validate_ValidAttribute_ShouldNotThrow()
     {
-        var attribute = new Attribute
+        var attribute = new ObjectSim.Domain.Attribute
         {
             Id = Guid.NewGuid(),
-            Name = "Test",
-            DataType = Attribute.AttributeDataType.String,
-            Visibility = Attribute.AttributeVisibility.Public
+            Name = "Nombre",
+            DataType = ReferenceType.Create("string"),
+            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
         };
 
         Action act = attribute.Validate;
