@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+using ObjectSim.Domain;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 
@@ -35,6 +36,35 @@ public class ClassBuilderTest
     [TestMethod]
     public void SetMethods_WhenParentIsInterface_AndMethodsAreNotImplemented_ThrowsException()
     {
+        var notImplementedMethod = new Method
+        {
+            Name = "NotImplementedMethod",
+        };
+
+        var parentClass = new Class
+        {
+            Name = "ParentInterfaceClass",
+            IsAbstract = true,
+            IsSealed = false,
+            Methods = [notImplementedMethod],
+            Attributes = [],
+            Parent = null,
+        };
+
+        var childClass = new Class
+        {
+            Name = "ChildClass",
+            IsAbstract = false,
+            IsSealed = false,
+            Methods = [],
+            Attributes = [],
+            Parent = parentClass,
+        };
+
+        Action action = () => _classBuilderTest!.SetMethods([Guid.NewGuid()]);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Parent class is an interface and has methods that are not implemented");
     }
 
     [TestMethod]
