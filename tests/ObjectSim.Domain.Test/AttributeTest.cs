@@ -15,6 +15,16 @@ public class AttributeTest
         attribute.DataType.Name.Should().Be("int");
     }
     [TestMethod]
+    public void DataType_Property_SetAndGet_ShouldBeEqualReference()
+    {
+        var expectedType = ReferenceType.Create("string");
+        var attribute = new ObjectSim.Domain.Attribute();
+
+        attribute.DataType = expectedType;
+        attribute.DataType.Should().Be(expectedType);
+        attribute.DataType.Name.Should().Be("string");
+    }
+    [TestMethod]
     public void Visibility_Property_SetAndGet_ShouldBeEqual()
     {
         var attribute = new Attribute();
@@ -54,7 +64,7 @@ public class AttributeTest
         action.Should().NotThrow();
     }
     [TestMethod]
-    public void AttributeDataTypeCreateAttribute_OKTest()
+    public void AttributeDataTypeCreateAttributeValue_OKTest()
     {
         var attr = new Attribute
         {
@@ -62,6 +72,20 @@ public class AttributeTest
             Name = "Edad",
             Visibility = Attribute.AttributeVisibility.Public,
             DataType = ValueType.Create("int")
+        };
+
+        Action action = attr.Validate;
+        action.Should().NotThrow();
+    }
+    [TestMethod]
+    public void AttributeDataTypeCreateAttributeReference_OKTest()
+    {
+        var attr = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Edad",
+            Visibility = Attribute.AttributeVisibility.Public,
+            DataType = ReferenceType.Create("string")
         };
 
         Action action = attr.Validate;
@@ -89,6 +113,21 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Nombre",
             DataType = ReferenceType.Create("string"),
+            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().NotThrow();
+    }
+    [TestMethod]
+    public void Validate_ValidAttributeValue_ShouldNotThrow()
+    {
+        var attribute = new ObjectSim.Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Nombre",
+            DataType = ValueType.Create("int"),
             Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
         };
 
@@ -239,12 +278,35 @@ public class AttributeTest
         act.Should().NotThrow();
     }
     [TestMethod]
+    public void AttributeValidator_WithValidReferenceType_ShouldNotThrow()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            DataType = ReferenceType.Create("string"),
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().NotThrow();
+    }
+    [TestMethod]
     public void AttributeValidator_WithInvalidDataType_ShouldThrowArgumentException()
     {
         Action act = () => ValueType.Create("false");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("Invalid ValueType: false");
+    }
+    [TestMethod]
+    public void AttributeValidator_WithInvalidReferenceType_ShouldThrowArgumentException()
+    {
+        Action act = () => ReferenceType.Create("false");
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Invalid ReferenceType: false");
     }
     [TestMethod]
     public void AttributeValidator_WithInvalidVisibility_ShouldThrowArgumentException()
@@ -270,6 +332,21 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Test",
             DataType = ValueType.Create("int"),
+            Visibility = Attribute.AttributeVisibility.Internal
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().NotThrow();
+    }
+    [TestMethod]
+    public void AttributeValidator_WithValidVisibility_ShouldNotThrowReference()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Internal
         };
 
