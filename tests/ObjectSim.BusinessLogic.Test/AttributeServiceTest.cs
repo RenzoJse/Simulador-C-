@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
+using ObjectSim.Domain;
 using ObjectSim.IDataAccess;
 using static ObjectSim.Domain.Attribute;
 
@@ -20,7 +21,7 @@ public class AttributeServiceTest
         _attribute = new ObjectSim.Domain.Attribute
         {
             Name = "Color",
-            DataType = AttributeDataType.String,
+            DataType = ReferenceType.Create("string"),
             Visibility = AttributeVisibility.Public
         };
     }

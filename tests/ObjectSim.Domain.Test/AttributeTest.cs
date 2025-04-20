@@ -7,9 +7,45 @@ public class AttributeTest
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqual()
     {
-        var attribute = new Attribute();
-        attribute.DataType = Attribute.AttributeDataType.Decimal;
-        attribute.DataType.Should().Be(Attribute.AttributeDataType.Decimal);
+        var expectedType = ValueType.Create("int");
+        var attribute = new ObjectSim.Domain.Attribute();
+
+        attribute.DataType = expectedType;
+        attribute.DataType.Should().Be(expectedType);
+        attribute.DataType.Name.Should().Be("int");
+    }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenDataTypeIsNull()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Edad",
+            DataType = null!,
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("DataType is required.");
+    }
+    [TestMethod]
+    public void ValidateDataType_ShouldPass_WhenValidValueType()
+    {
+        var valid = ValueType.Create("int");
+
+        Attribute.ValidateDataType(valid);
+    }
+    [TestMethod]
+    public void DataType_Property_SetAndGet_ShouldBeEqualReference()
+    {
+        var expectedType = ReferenceType.Create("string");
+        var attribute = new ObjectSim.Domain.Attribute();
+
+        attribute.DataType = expectedType;
+        attribute.DataType.Should().Be(expectedType);
+        attribute.DataType.Name.Should().Be("string");
     }
     [TestMethod]
     public void Visibility_Property_SetAndGet_ShouldBeEqual()
@@ -36,11 +72,47 @@ public class AttributeTest
         attribute.Id.Should().Be(id);
     }
     [TestMethod]
-    public void AttributeDataTypeCreateAttribute_OKTest()
+    public void Validate_ValidAttribute_ShouldNotThrow()
     {
-        var attribute = new Attribute();
-        attribute.DataType = Attribute.AttributeDataType.String;
-        Assert.AreEqual(Attribute.AttributeDataType.String, attribute.DataType);
+        var attribute = new ObjectSim.Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            DataType = ValueType.Create("int"),
+            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Public
+        };
+
+        Action action = attribute.Validate;
+
+        action.Should().NotThrow();
+    }
+    [TestMethod]
+    public void AttributeDataTypeCreateAttributeValue_OKTest()
+    {
+        var attr = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Edad",
+            Visibility = Attribute.AttributeVisibility.Public,
+            DataType = ValueType.Create("int")
+        };
+
+        Action action = attr.Validate;
+        action.Should().NotThrow();
+    }
+    [TestMethod]
+    public void AttributeDataTypeCreateAttributeReference_OKTest()
+    {
+        var attr = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Edad",
+            Visibility = Attribute.AttributeVisibility.Public,
+            DataType = ReferenceType.Create("string")
+        };
+
+        Action action = attr.Validate;
+        action.Should().NotThrow();
     }
     [TestMethod]
     public void AttributeVisibilityCreateAttribute_OKTest()
@@ -57,14 +129,29 @@ public class AttributeTest
         Assert.AreEqual("TestAttribute", attribute.Name);
     }
     [TestMethod]
-    public void Validate_ValidAttribute_ShouldNotThrow()
+    public void Validate_ValidAttributeReference_ShouldNotThrow()
     {
-        var attribute = new Attribute
+        var attribute = new ObjectSim.Domain.Attribute
         {
             Id = Guid.NewGuid(),
-            Name = "Test",
-            DataType = Attribute.AttributeDataType.String,
-            Visibility = Attribute.AttributeVisibility.Public
+            Name = "Nombre",
+            DataType = ReferenceType.Create("string"),
+            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().NotThrow();
+    }
+    [TestMethod]
+    public void Validate_ValidAttributeValue_ShouldNotThrow()
+    {
+        var attribute = new ObjectSim.Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Nombre",
+            DataType = ValueType.Create("int"),
+            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
         };
 
         Action act = attribute.Validate;
@@ -74,12 +161,28 @@ public class AttributeTest
     [TestMethod]
     public void Validate_ShouldThrow_WhenIdIsEmpty()
     {
-        var attribute = new Attribute
+        var attribute = new ObjectSim.Domain.Attribute
         {
             Id = Guid.Empty,
             Name = "ValidAttribute",
-            DataType = Attribute.AttributeDataType.String,
-            Visibility = Attribute.AttributeVisibility.Public
+            DataType = ReferenceType.Create("string"),
+            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Id must be a valid non-empty GUID.");
+    }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenIdIsEmptyValue()
+    {
+        var attribute = new ObjectSim.Domain.Attribute
+        {
+            Id = Guid.Empty,
+            Name = "ValidAttribute",
+            DataType = ValueType.Create("int"),
+            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Public
         };
 
         Action act = attribute.Validate;
@@ -94,7 +197,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = null,
-            DataType = Attribute.AttributeDataType.String,
+            DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -104,13 +207,45 @@ public class AttributeTest
             .WithMessage("Name cannot be null or whitespace.");
     }
     [TestMethod]
-    public void Validate_ShouldThrow_WhenNameIsWhitespace()
+    public void Validate_ShouldThrowReference_WhenNameIsNull()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = null,
+            DataType = ReferenceType.Create("string"),
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or whitespace.");
+    }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenNameIsWhitespaceWithReference()
     {
         var attribute = new Attribute
         {
             Id = Guid.NewGuid(),
             Name = "   ",
-            DataType = Attribute.AttributeDataType.String,
+            DataType = ReferenceType.Create("string"),
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or whitespace.");
+    }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenNameIsWhitespaceWithValue()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "   ",
+            DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -126,7 +261,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = new string('a', 101),
-            DataType = Attribute.AttributeDataType.String,
+            DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -142,7 +277,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "aaa",
-            DataType = Attribute.AttributeDataType.String,
+            DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -157,7 +292,22 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
-            DataType = Attribute.AttributeDataType.Int,
+            DataType = ValueType.Create("int"),
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().NotThrow();
+    }
+    [TestMethod]
+    public void AttributeValidator_WithValidReferenceType_ShouldNotThrow()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -168,18 +318,18 @@ public class AttributeTest
     [TestMethod]
     public void AttributeValidator_WithInvalidDataType_ShouldThrowArgumentException()
     {
-        var attribute = new Attribute
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test",
-            Visibility = Attribute.AttributeVisibility.Public,
-            DataType = (Attribute.AttributeDataType)999
-        };
-
-        Action act = attribute.Validate;
+        Action act = () => ValueType.Create("false");
 
         act.Should().Throw<ArgumentException>()
-            .WithMessage("Invalid data type.");
+            .WithMessage("Invalid ValueType: false");
+    }
+    [TestMethod]
+    public void AttributeValidator_WithInvalidReferenceType_ShouldThrowArgumentException()
+    {
+        Action act = () => ReferenceType.Create("false");
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Invalid ReferenceType: false");
     }
     [TestMethod]
     public void AttributeValidator_WithInvalidVisibility_ShouldThrowArgumentException()
@@ -188,7 +338,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
-            DataType = Attribute.AttributeDataType.String,
+            DataType = ValueType.Create("int"),
             Visibility = (Attribute.AttributeVisibility)999
         };
 
@@ -204,7 +354,22 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
-            DataType = Attribute.AttributeDataType.String,
+            DataType = ValueType.Create("int"),
+            Visibility = Attribute.AttributeVisibility.Internal
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().NotThrow();
+    }
+    [TestMethod]
+    public void AttributeValidator_WithValidVisibility_ShouldNotThrowReference()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Internal
         };
 
