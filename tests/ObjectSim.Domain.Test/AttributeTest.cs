@@ -15,6 +15,29 @@ public class AttributeTest
         attribute.DataType.Name.Should().Be("int");
     }
     [TestMethod]
+    public void Validate_ShouldThrow_WhenDataTypeIsNull()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Edad",
+            DataType = null!,
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("DataType is required.");
+    }
+    [TestMethod]
+    public void ValidateDataType_ShouldPass_WhenValidValueType()
+    {
+        var valid = ValueType.Create("int");
+
+        Attribute.ValidateDataType(valid);
+    }
+    [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqualReference()
     {
         var expectedType = ReferenceType.Create("string");

@@ -42,22 +42,11 @@ public class Attribute
             throw new ArgumentException("Name cannot exceed 100 characters.");
         }
     }
-    private static void ValidateDataType(IDataType DataType)
+    public static void ValidateDataType(IDataType DataType)
     {
         if(DataType == null)
         {
             throw new ArgumentException("DataType is required.");
-        }
-        else
-        {
-            if(DataType is ValueType vt && !ValueType.BuiltinTypes.Contains(vt.Name))
-            {
-                throw new ArgumentException($"Invalid ValueType: {vt.Name}");
-            }
-            if(DataType is ReferenceType rt && !ReferenceType.BuiltinTypes.Contains(rt.Name))
-            {
-                throw new ArgumentException($"Invalid ReferenceType: {rt.Name}");
-            }
         }
     }
     private static void ValidateVisibility(AttributeVisibility visibility)
