@@ -12,13 +12,15 @@ public class ClassBuilderTest
     private ClassBuilder? _classBuilderTest;
     private Mock<IMethodService>? _methodServiceMock;
     private Mock<IClassService>? _classServiceMock;
+    private Mock<IAttributeService>? _attributeServiceMock;
 
     [TestInitialize]
     public void Initialize()
     {
         _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
         _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
-        _classBuilderTest = new ClassBuilder(_methodServiceMock.Object, _classServiceMock.Object);
+        _attributeServiceMock = new Mock<IAttributeService>(MockBehavior.Strict);
+        _classBuilderTest = new ClassBuilder(_methodServiceMock.Object, _classServiceMock.Object, _attributeServiceMock.Object);
     }
 
     #region Error

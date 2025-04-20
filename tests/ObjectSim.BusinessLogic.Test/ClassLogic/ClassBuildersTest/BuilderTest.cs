@@ -16,13 +16,15 @@ public class BuilderTest
     private Mock<IRepository<Method>>? _methodRepositoryMock;
     private Mock<IMethodService>? _methodServiceMock;
     private Mock<IClassService>? _classServiceMock;
+    private Mock<IAttributeService>? _attributeServiceMock;
 
     [TestInitialize]
     public void Initialize()
     {
         _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
         _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
-        _builder = new ClassBuilder(_methodServiceMock.Object, _classServiceMock.Object);
+        _attributeServiceMock = new Mock<IAttributeService>(MockBehavior.Strict);
+        _builder = new ClassBuilder(_methodServiceMock.Object, _classServiceMock.Object, _attributeServiceMock.Object);
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
     }
 
@@ -92,8 +94,8 @@ public class BuilderTest
     {
         var notExistingAttributeId = Guid.NewGuid();
 
-        _methodServiceMock!.Setup(m => m.GetById(notExistingAttributeId))
-            .Throws(new ArgumentException("Method does not exist"));
+        _attributeServiceMock!.Setup(m => m.GetById(notExistingAttributeId))
+            .Throws(new ArgumentException("Attribute does not exist"));
 
         Action action = () => _builder!.SetAttributes([notExistingAttributeId]);
 
@@ -126,6 +128,10 @@ public class BuilderTest
 
         _classServiceMock!.Setup(m => m.GetById(parentId))
             .Returns(parentClass);
+
+        _attributeServiceMock!.Setup(m => m.GetById(existingAttributeId))
+            .Returns(testAttribute);
+
         _builder!.SetParent(parentId);
 
         Action action = () => _builder.SetAttributes([existingAttributeId]);
@@ -145,11 +151,11 @@ public class BuilderTest
             Name = "TestAttribute",
         };
 
-        var newGuid = Guid.NewGuid();
+        var childAttributeId = Guid.NewGuid();
 
-        Attribute testAttribute = new Attribute
+        Attribute childTestAttribute = new Attribute
         {
-            Id = newGuid,
+            Id = childAttributeId,
             Name = "TestAttribute",
         };
 
@@ -168,9 +174,12 @@ public class BuilderTest
         _classServiceMock!.Setup(m => m.GetById(parentId))
             .Returns(parentClass);
 
+        _attributeServiceMock!.Setup(m => m.GetById(childAttributeId))
+            .Returns(childTestAttribute);
+
         _builder!.SetParent(parentId);
 
-        Action action = () => _builder.SetAttributes([newGuid]);
+        Action action = () => _builder.SetAttributes([childAttributeId]);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Attribute name already exists in parent class");
@@ -183,6 +192,19 @@ public class BuilderTest
     [TestMethod]
     public void CreateClass_WithValidAttributes_SetsAttributes()
     {
+        var attributeId = Guid.NewGuid();
+        var testAttribute = new Attribute
+        {
+            Id = attributeId,
+            Name = "TestAttribute",
+        };
+
+        _attributeServiceMock!.Setup(m => m.GetById(attributeId))
+            .Returns(testAttribute);
+
+        _builder!.SetAttributes([attributeId]);
+
+        _builder.GetResult().Attributes.Should().Contain(testAttribute);
     }
 
     #endregion
