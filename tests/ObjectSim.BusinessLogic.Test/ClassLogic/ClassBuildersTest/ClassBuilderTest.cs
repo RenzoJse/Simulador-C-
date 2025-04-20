@@ -53,50 +53,6 @@ public class ClassBuilderTest
     {
     }
 
-    #region SetParent
-
-    #region Error
-
-    [TestMethod]
-    public void SetParent_Null_ThrowsException()
-    {
-        Action action = () => _classBuilderTest!.SetParent(Guid.Empty);
-
-        action.Should().Throw<ArgumentNullException>();
-    }
-
-    #endregion
-
-    #region Success
-
-    [TestMethod]
-    public void SetParent_ValidParentID_AddsParent()
-    {
-        var parentId = Guid.NewGuid();
-        var parentClass = new Class
-        {
-            Id = parentId,
-            Name = "ParentClass",
-            IsAbstract = false,
-            IsSealed = false,
-            IsInterface = false,
-            Methods = [],
-            Attributes = [],
-            Parent = null,
-        };
-
-        _classServiceMock!.Setup(m => m.GetById(parentId))
-            .Returns(parentClass);
-
-        _classBuilderTest!.SetParent(parentId);
-
-        _classBuilderTest.GetResult().Parent.Should().Be(parentClass);
-    }
-
-    #endregion
-
-    #endregion
-
     #region SetMethods
 
     #region Error

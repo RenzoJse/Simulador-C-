@@ -25,6 +25,56 @@ public class BuilderTest
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
     }
 
+    #region SetParent
+
+    #region Error
+
+    [TestMethod]
+    public void SetParent_InvalidParentID_ThrowsException()
+    {
+        var invalidParentId = Guid.NewGuid();
+
+        _classServiceMock!.Setup(m => m.GetById(invalidParentId))
+            .Throws(new ArgumentException("Class does not exist"));
+
+        Action action = () => _builder!.SetParent(invalidParentId);
+
+        action.Should().Throw<ArgumentException>("Class does not exist");
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void SetParent_ValidParentID_AddsParent()
+    {
+        var parentId = Guid.NewGuid();
+        var parentClass = new Class
+        {
+            Id = parentId,
+            Name = "ParentClass",
+            IsAbstract = false,
+            IsSealed = false,
+            IsInterface = false,
+            Methods = [],
+            Attributes = [],
+            Parent = null,
+        };
+
+        _classServiceMock!.Setup(m => m.GetById(parentId))
+            .Returns(parentClass);
+
+        _builder!.SetParent(parentId);
+
+        _builder.GetResult().Parent.Should().Be(parentClass);
+    }
+
+    #endregion
+
+    #endregion
+
+
     #region Error
 
     [TestMethod]
