@@ -17,12 +17,14 @@ public class ClassDirectorTest
     private static readonly List<Guid> Attributes = [Guid.NewGuid(), Guid.NewGuid()];
     private static readonly List<Guid> Methods = [Guid.NewGuid(), Guid.NewGuid()];
     private Mock<IMethodService> _methodServiceMock = new();
+    private Mock<IClassService> _classServiceMock = new();
 
     [TestInitialize]
     public void Initialize()
     {
         _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
-        var builder = new ClassBuilder(_methodServiceMock.Object);
+        _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
+        var builder = new ClassBuilder(_methodServiceMock.Object, _classServiceMock.Object);
         _classDirector = new ClassDirector(builder);
     }
 

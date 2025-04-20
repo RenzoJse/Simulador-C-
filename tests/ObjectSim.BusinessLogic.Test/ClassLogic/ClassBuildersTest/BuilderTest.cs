@@ -14,12 +14,14 @@ public class BuilderTest
     private Builder? _builder;
     private Mock<IRepository<Method>>? _methodRepositoryMock;
     private Mock<IMethodService>? _methodServiceMock;
+    private Mock<IClassService>? _classServiceMock;
 
     [TestInitialize]
     public void Initialize()
     {
         _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
-        _builder = new ClassBuilder(_methodServiceMock.Object);
+        _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
+        _builder = new ClassBuilder(_methodServiceMock.Object, _classServiceMock.Object);
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
     }
 

@@ -21,7 +21,7 @@ public abstract class Builder(IMethodService methodService, IClassService classS
             throw new ArgumentException("Parent does not exist");
         }
 
-        Result.Parent = ;
+        Result.Parent = parent;
     }
 
     public virtual void SetAbstraction(bool? abstraction)

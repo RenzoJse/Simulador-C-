@@ -18,7 +18,7 @@ public class ClassBuilderTest
     {
         _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
         _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
-        _classBuilderTest = new ClassBuilder(_methodServiceMock.Object);
+        _classBuilderTest = new ClassBuilder(_methodServiceMock.Object, _classServiceMock.Object);
     }
 
     #region Error

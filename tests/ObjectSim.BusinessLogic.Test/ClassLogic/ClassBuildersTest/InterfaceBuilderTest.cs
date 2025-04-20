@@ -9,12 +9,14 @@ public class InterfaceBuilderTest
 {
     private InterfaceBuilder? _interfaceBuilderTest;
     private Mock<IMethodService>? _methodServiceMock;
+    private Mock<IClassService>? _classServiceMock;
 
     [TestInitialize]
     public void Initialize()
     {
         _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
-        _interfaceBuilderTest = new InterfaceBuilder(_methodServiceMock.Object);
+        _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
+        _interfaceBuilderTest = new InterfaceBuilder(_methodServiceMock.Object, _classServiceMock.Object);
     }
 
     #region Error

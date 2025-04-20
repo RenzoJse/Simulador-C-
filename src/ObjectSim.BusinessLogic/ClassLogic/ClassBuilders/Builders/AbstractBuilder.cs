@@ -2,7 +2,7 @@
 
 namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 
-public class AbstractBuilder(IMethodService methodService) : Builder(methodService)
+public class AbstractBuilder(IMethodService methodService,IClassService classService) : Builder(methodService, classService)
 {
     public override void SetAttributes(List<Guid> attributes)
     {

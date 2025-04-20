@@ -4,7 +4,7 @@ using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 
-public class ClassBuilder(IMethodService methodRepository) : Builder(methodRepository)
+public class ClassBuilder(IMethodService methodRepository, IClassService classService) : Builder(methodRepository, classService)
 {
     public override void SetAttributes(List<Guid> attributes)
     {
