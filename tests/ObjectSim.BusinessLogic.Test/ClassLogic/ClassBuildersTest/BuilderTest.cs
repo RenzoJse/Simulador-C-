@@ -5,6 +5,7 @@ using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
+using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 
@@ -74,6 +75,120 @@ public class BuilderTest
 
     #endregion
 
+    #region SetAttributes
+
+    #region Error
+
+    [TestMethod]
+    public void CreateClass_WithNullAttributes_ThrowsException()
+    {
+        Action action = () => _builder!.SetAttributes(null!);
+
+        action.Should().Throw<ArgumentNullException>();
+    }
+
+    [TestMethod]
+    public void CreateClass_WithNotExistingAttributes_ThrowsException()
+    {
+        var notExistingAttributeId = Guid.NewGuid();
+
+        _methodServiceMock!.Setup(m => m.GetById(notExistingAttributeId))
+            .Throws(new ArgumentException("Method does not exist"));
+
+        Action action = () => _builder!.SetAttributes([notExistingAttributeId]);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Attribute does not exist");
+    }
+
+    [TestMethod]
+    public void CreateClass_WithSameAttributesAsParent_ThrowsException()
+    {
+        var parentId = Guid.NewGuid();
+        var existingAttributeId = Guid.NewGuid();
+        Attribute testAttribute = new Attribute
+        {
+            Id = existingAttributeId,
+            Name = "TestAttribute",
+        };
+
+        var parentClass = new Class
+        {
+            Id = parentId,
+            Name = "ParentClass",
+            IsAbstract = false,
+            IsSealed = false,
+            IsInterface = false,
+            Methods = [],
+            Attributes = [testAttribute],
+            Parent = null,
+        };
+
+        _classServiceMock!.Setup(m => m.GetById(parentId))
+            .Returns(parentClass);
+        _builder!.SetParent(parentId);
+
+        Action action = () => _builder.SetAttributes([existingAttributeId]);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Attribute already exists in parent class");
+    }
+
+    [TestMethod]
+    public void CreateClass_WithSameAttributesNameAsParent_ThrowsException()
+    {
+        var parentId = Guid.NewGuid();
+        var existingAttributeId = Guid.NewGuid();
+        Attribute parentTestAttribute = new Attribute
+        {
+            Id = existingAttributeId,
+            Name = "TestAttribute",
+        };
+
+        var newGuid = Guid.NewGuid();
+
+        Attribute testAttribute = new Attribute
+        {
+            Id = newGuid,
+            Name = "TestAttribute",
+        };
+
+        var parentClass = new Class
+        {
+            Id = parentId,
+            Name = "ParentClass",
+            IsAbstract = false,
+            IsSealed = false,
+            IsInterface = false,
+            Methods = [],
+            Attributes = [parentTestAttribute],
+            Parent = null,
+        };
+
+        _classServiceMock!.Setup(m => m.GetById(parentId))
+            .Returns(parentClass);
+
+        _builder!.SetParent(parentId);
+
+        Action action = () => _builder.SetAttributes([newGuid]);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Attribute name already exists in parent class");
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void CreateClass_WithValidAttributes_SetsAttributes()
+    {
+    }
+
+    #endregion
+
+    #endregion
+
     #region Error
 
     [TestMethod]
@@ -98,19 +213,6 @@ public class BuilderTest
         Action action = () => _builder!.SetSealed(null!);
 
         action.Should().Throw<ArgumentNullException>();
-    }
-
-    [TestMethod]
-    public void CreateClass_WithNullAttributes_ThrowsException()
-    {
-        Action action = () => _builder!.SetAttributes(null!);
-
-        action.Should().Throw<ArgumentNullException>();
-    }
-
-    [TestMethod]
-    public void CreateClass_WithNotExistingAttributes_ThrowsException()
-    {
     }
 
     [TestMethod]
@@ -152,17 +254,7 @@ public class BuilderTest
     }
 
     [TestMethod]
-    public void CreateClass_WithValidAttributes_SetsAttributes()
-    {
-    }
-
-    [TestMethod]
     public void CreateClass_WithValidMethods_SetsMethods()
-    {
-    }
-
-    [TestMethod]
-    public void CreateClass_WithValidParent_SetsParent()
     {
     }
 
