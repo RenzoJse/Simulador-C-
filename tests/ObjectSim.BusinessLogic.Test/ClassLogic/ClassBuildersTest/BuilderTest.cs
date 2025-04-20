@@ -2,7 +2,6 @@
 using Moq;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
-using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
@@ -13,7 +12,6 @@ namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 public class BuilderTest
 {
     private Builder? _builder;
-    private Mock<IRepository<Method>>? _methodRepositoryMock;
     private Mock<IMethodService>? _methodServiceMock;
     private Mock<IClassService>? _classServiceMock;
     private Mock<IAttributeService>? _attributeServiceMock;
@@ -45,7 +43,6 @@ public class BuilderTest
         _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
         _attributeServiceMock = new Mock<IAttributeService>(MockBehavior.Strict);
         _builder = new ClassBuilder(_methodServiceMock.Object, _classServiceMock.Object, _attributeServiceMock.Object);
-        _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
     }
 
     #region SetParent
@@ -281,6 +278,309 @@ public class BuilderTest
 
     #endregion
 
+    #region SetMethods
+
+    #region Error
+
+    [TestMethod]
+    public void CreateClass_WithNullMethods_ThrowsException()
+    {
+        Action action = () => _builder!.SetMethods(null!);
+
+        action.Should().Throw<ArgumentNullException>();
+    }
+
+    [TestMethod]
+    public void CreateClass_WithNotExistingMethods_ThrowsException()
+    {
+        var notExistingMethodId = Guid.NewGuid();
+
+        _methodServiceMock!.Setup(m => m.GetById(notExistingMethodId))
+            .Throws(new ArgumentException("Method does not exist"));
+
+        Action action = () => _builder!.SetMethods([notExistingMethodId]);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Method does not exist");
+    }
+
+    [TestMethod]
+    public void CreateClass_WithExactSameMethodsAsParent_ThrowsException()
+    {
+        var parentId = Guid.NewGuid();
+        var existingMethodId = Guid.NewGuid();
+
+        var parentMethod = new Method
+        {
+            Id = existingMethodId,
+            Name = "TestMethod",
+        };
+
+        _parentClass.Methods = [parentMethod];
+
+        var childMethodId = Guid.NewGuid();
+
+        var childMethod = new Method
+        {
+            Id = childMethodId,
+            Name = "TestMethod",
+        };
+
+        _classServiceMock!.Setup(m => m.GetById(parentId))
+            .Returns(_parentClass);
+
+        _methodServiceMock!.Setup(m => m.GetById(childMethodId))
+            .Returns(childMethod);
+
+        _builder!.SetParent(parentId);
+
+        Action action = () => _builder.SetMethods([childMethodId]);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Method already exists in parent class");
+    }
+
+    #region Success
+
+    [TestMethod]
+    public void CreateClass_WithValidMethods_SetsMethods()
+    {
+        var methodId = Guid.NewGuid();
+        var method = new Method
+        {
+            Id = methodId,
+            Name = "TestMethod",
+        };
+
+        _methodServiceMock!.Setup(m => m.GetById(methodId))
+            .Returns(method);
+
+        _builder!.SetMethods([methodId]);
+
+        _builder.GetResult().Methods.Should().Contain(method);
+    }
+
+    [TestMethod]
+    public void CreateClass_ValidOverrideMethod_SetsMethods()
+    {
+        var parentId = Guid.NewGuid();
+        var existingMethodId = Guid.NewGuid();
+
+        var parentMethod = new Method
+        {
+            Id = existingMethodId,
+            Name = "TestMethod",
+        };
+
+        _parentClass.Methods = [parentMethod];
+
+        var childMethodId = Guid.NewGuid();
+
+        var childMethod = new Method
+        {
+            Id = childMethodId,
+            Name = "TestMethod",
+        };
+
+        _classServiceMock!.Setup(m => m.GetById(parentId))
+            .Returns(_parentClass);
+
+        _methodServiceMock!.Setup(m => m.GetById(childMethodId))
+            .Returns(childMethod);
+
+        _builder!.SetParent(parentId);
+        _builder.SetMethods([childMethodId]);
+
+        _builder.GetResult().Methods.Should().Contain(childMethod);
+    }
+
+
+    [TestMethod]
+    public void CreateClass_WithSameMethodDefinitionAsParentPublicOne_SetsMethod()
+    {
+        var parentId = Guid.NewGuid();
+        var existingMethodId = Guid.NewGuid();
+        var parameter = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestParameter",
+            Type = "int",
+        };
+
+        var parentMethod = new Method
+        {
+            Id = existingMethodId,
+            Name = "TestMethod",
+            Accessibility = "public",
+            Parameters = [parameter],
+        };
+
+        _parentClass.Methods = [parentMethod];
+
+        var childMethodId = Guid.NewGuid();
+
+        var childMethod = new Method
+        {
+            Id = childMethodId,
+            Name = "TestMethod",
+            Accessibility = "public",
+            Parameters = [parameter]
+        };
+
+        _classServiceMock!.Setup(m => m.GetById(parentId))
+            .Returns(_parentClass);
+
+        _methodServiceMock!.Setup(m => m.GetById(childMethodId))
+            .Returns(childMethod);
+
+        _builder!.SetParent(parentId);
+
+        Action action = () => _builder.SetMethods([childMethodId]);
+
+        _builder.GetResult().Methods.Should().Contain(childMethod);
+    }
+
+    [TestMethod]
+    public void CreateClass_WithSameMethodDefinitionAsParentProtectedOne_SetsMethod()
+    {
+        var parentId = Guid.NewGuid();
+        var existingMethodId = Guid.NewGuid();
+        var parameter = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestParameter",
+            Type = "int",
+        };
+
+        var parentMethod = new Method
+        {
+            Id = existingMethodId,
+            Name = "TestMethod",
+            Accessibility = "Protected",
+            Parameters = [parameter],
+        };
+
+        _parentClass.Methods = [parentMethod];
+
+        var childMethodId = Guid.NewGuid();
+
+        var childMethod = new Method
+        {
+            Id = childMethodId,
+            Name = "TestMethod",
+            Accessibility = "Protected",
+            Parameters = [parameter]
+        };
+
+        _classServiceMock!.Setup(m => m.GetById(parentId))
+            .Returns(_parentClass);
+
+        _methodServiceMock!.Setup(m => m.GetById(childMethodId))
+            .Returns(childMethod);
+
+        _builder!.SetParent(parentId);
+
+        Action action = () => _builder.SetMethods([childMethodId]);
+
+        _builder.GetResult().Methods.Should().Contain(childMethod);
+    }
+
+    [TestMethod]
+    public void CreateClass_WithSameMethodDefinitionAsParentPrivateOne_SetsMethod()
+    {
+        var parentId = Guid.NewGuid();
+        var existingMethodId = Guid.NewGuid();
+        var parameter = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestParameter",
+            Type = "int",
+        };
+
+        var parentMethod = new Method
+        {
+            Id = existingMethodId,
+            Name = "TestMethod",
+            Accessibility = "private",
+            Parameters = [parameter],
+        };
+
+        _parentClass.Methods = [parentMethod];
+
+        var childMethodId = Guid.NewGuid();
+
+        var childMethod = new Method
+        {
+            Id = childMethodId,
+            Name = "TestMethod",
+            Accessibility = "private",
+            Parameters = [parameter]
+        };
+
+        _classServiceMock!.Setup(m => m.GetById(parentId))
+            .Returns(_parentClass);
+
+        _methodServiceMock!.Setup(m => m.GetById(childMethodId))
+            .Returns(childMethod);
+
+        _builder!.SetParent(parentId);
+
+        Action action = () => _builder.SetMethods([childMethodId]);
+
+        _builder.GetResult().Methods.Should().Contain(childMethod);
+    }
+
+    [TestMethod]
+    public void CreateClass_WithSameNameButDifferentDefinitionAsParentClass_SetsMethod()
+    {
+        var parentId = Guid.NewGuid();
+        var existingMethodId = Guid.NewGuid();
+        var parameter = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestParameter",
+            Type = "int",
+        };
+
+        var parentMethod = new Method
+        {
+            Id = existingMethodId,
+            Name = "TestMethod",
+            Accessibility = "public",
+            Parameters = [parameter],
+        };
+
+        _parentClass.Methods = [parentMethod];
+
+        var childMethodId = Guid.NewGuid();
+
+        var childMethod = new Method
+        {
+            Id = childMethodId,
+            Name = "TestMethod",
+            Accessibility = "private",
+            Parameters = []
+        };
+
+        _classServiceMock!.Setup(m => m.GetById(parentId))
+            .Returns(_parentClass);
+
+        _methodServiceMock!.Setup(m => m.GetById(childMethodId))
+            .Returns(childMethod);
+
+        _builder!.SetParent(parentId);
+
+        Action action = () => _builder.SetMethods([childMethodId]);
+
+        _builder.GetResult().Methods.Should().Contain(childMethod);
+    }
+
+    #endregion
+
+    #endregion
+
+    #endregion
+
     #region Error
 
     [TestMethod]
@@ -307,19 +607,6 @@ public class BuilderTest
         action.Should().Throw<ArgumentNullException>();
     }
 
-    [TestMethod]
-    public void CreateClass_WithNullMethods_ThrowsException()
-    {
-        Action action = () => _builder!.SetMethods(null!);
-
-        action.Should().Throw<ArgumentNullException>();
-    }
-
-    [TestMethod]
-    public void CreateClass_WithNotExistingMethods_ThrowsException()
-    {
-    }
-
     #endregion
 
     #region Success
@@ -343,11 +630,6 @@ public class BuilderTest
     {
         _builder!.SetSealed(true);
         _builder.GetResult().IsSealed.Should().BeTrue();
-    }
-
-    [TestMethod]
-    public void CreateClass_WithValidMethods_SetsMethods()
-    {
     }
 
     [TestMethod]

@@ -1,5 +1,6 @@
 ﻿using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
+using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
 
@@ -40,7 +41,7 @@ public abstract class Builder(IMethodService methodService, IClassService classS
     public virtual void SetAttributes(List<Guid> attributes)
     {
         ArgumentNullException.ThrowIfNull(attributes);
-        var newAttributes = new List<Domain.Attribute>();
+        var newAttributes = new List<Attribute>();
         foreach (var attr in attributes.Select(attributeService.GetById))
         {
             if (attr is null)
@@ -53,7 +54,7 @@ public abstract class Builder(IMethodService methodService, IClassService classS
         Result.Attributes = newAttributes;
     }
 
-    private void ValidateAttributeAgainstParentIfNeeded(Domain.Attribute attribute)
+    private void ValidateAttributeAgainstParentIfNeeded(Attribute attribute)
     {
         if (Result.Parent is null || Result.Parent.Attributes!.Count == 0)
         {
@@ -63,7 +64,7 @@ public abstract class Builder(IMethodService methodService, IClassService classS
         ValidateAttributeAgainstParent(Result.Parent, attribute);
     }
 
-    private static void ValidateAttributeAgainstParent(Class parent, Domain.Attribute attribute)
+    private static void ValidateAttributeAgainstParent(Class parent, Attribute attribute)
     {
         foreach (var parentAttribute in parent.Attributes!)
         {
