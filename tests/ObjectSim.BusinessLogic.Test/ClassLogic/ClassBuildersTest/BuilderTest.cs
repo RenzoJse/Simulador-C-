@@ -74,7 +74,6 @@ public class BuilderTest
 
     #endregion
 
-
     #region Error
 
     [TestMethod]

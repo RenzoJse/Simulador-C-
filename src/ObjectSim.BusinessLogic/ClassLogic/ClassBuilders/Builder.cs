@@ -16,12 +16,16 @@ public abstract class Builder(IMethodService methodService, IClassService classS
     public virtual void SetParent(Guid idParent)
     {
         var parent = classService.GetById(idParent);
+        DoesParentExist(parent);
+        Result.Parent = parent;
+    }
+
+    private static void DoesParentExist(Class parent)
+    {
         if (parent is null)
         {
             throw new ArgumentException("Parent does not exist");
         }
-
-        Result.Parent = parent;
     }
 
     public virtual void SetAbstraction(bool? abstraction)
