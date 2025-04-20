@@ -18,6 +18,26 @@ public class BuilderTest
     private Mock<IClassService>? _classServiceMock;
     private Mock<IAttributeService>? _attributeServiceMock;
 
+    private static readonly Guid ParentId = Guid.NewGuid();
+
+    private static readonly Attribute TestAttribute = new Attribute
+    {
+        Id = Guid.NewGuid(),
+        Name = "TestAttribute",
+    };
+
+    private readonly Class _parentClass = new Class
+        {
+            Id = ParentId,
+            Name = "ParentClass",
+            IsAbstract = false,
+            IsSealed = false,
+            IsInterface = false,
+            Methods = [],
+            Attributes = [TestAttribute],
+            Parent = null,
+        };
+
     [TestInitialize]
     public void Initialize()
     {
@@ -108,29 +128,12 @@ public class BuilderTest
     {
         var parentId = Guid.NewGuid();
         var existingAttributeId = Guid.NewGuid();
-        Attribute testAttribute = new Attribute
-        {
-            Id = existingAttributeId,
-            Name = "TestAttribute",
-        };
-
-        var parentClass = new Class
-        {
-            Id = parentId,
-            Name = "ParentClass",
-            IsAbstract = false,
-            IsSealed = false,
-            IsInterface = false,
-            Methods = [],
-            Attributes = [testAttribute],
-            Parent = null,
-        };
 
         _classServiceMock!.Setup(m => m.GetById(parentId))
-            .Returns(parentClass);
+            .Returns(_parentClass);
 
         _attributeServiceMock!.Setup(m => m.GetById(existingAttributeId))
-            .Returns(testAttribute);
+            .Returns(TestAttribute);
 
         _builder!.SetParent(parentId);
 
@@ -143,13 +146,15 @@ public class BuilderTest
     [TestMethod]
     public void CreateClass_WithSameAttributesNameAsParent_ThrowsException()
     {
-        var parentId = Guid.NewGuid();
         var existingAttributeId = Guid.NewGuid();
+
         Attribute parentTestAttribute = new Attribute
         {
             Id = existingAttributeId,
             Name = "TestAttribute",
         };
+
+        _parentClass.Attributes = [parentTestAttribute];
 
         var childAttributeId = Guid.NewGuid();
 
@@ -159,25 +164,13 @@ public class BuilderTest
             Name = "TestAttribute",
         };
 
-        var parentClass = new Class
-        {
-            Id = parentId,
-            Name = "ParentClass",
-            IsAbstract = false,
-            IsSealed = false,
-            IsInterface = false,
-            Methods = [],
-            Attributes = [parentTestAttribute],
-            Parent = null,
-        };
-
-        _classServiceMock!.Setup(m => m.GetById(parentId))
-            .Returns(parentClass);
+        _classServiceMock!.Setup(m => m.GetById(ParentId))
+            .Returns(_parentClass);
 
         _attributeServiceMock!.Setup(m => m.GetById(childAttributeId))
             .Returns(childTestAttribute);
 
-        _builder!.SetParent(parentId);
+        _builder!.SetParent(ParentId);
 
         Action action = () => _builder.SetAttributes([childAttributeId]);
 
@@ -190,21 +183,98 @@ public class BuilderTest
     #region Success
 
     [TestMethod]
+    public void CreateClass_WithEmptyAttributes_SetsEmptyAttributes()
+    {
+        _builder!.SetAttributes([]);
+
+        _builder.GetResult().Attributes.Should().BeEmpty();
+    }
+
+    [TestMethod]
     public void CreateClass_WithValidAttributes_SetsAttributes()
     {
-        var attributeId = Guid.NewGuid();
-        var testAttribute = new Attribute
+        _attributeServiceMock!.Setup(m => m.GetById(TestAttribute.Id))
+            .Returns(TestAttribute);
+
+        _builder!.SetAttributes([TestAttribute.Id]);
+
+        _builder.GetResult().Attributes.Should().Contain(TestAttribute);
+    }
+
+    [TestMethod]
+    public void CreateClass_WithParentWithoutAttributes_SetsAttributes()
+    {
+        _parentClass.Attributes = [];
+
+        _classServiceMock!.Setup(m => m.GetById(ParentId))
+            .Returns(_parentClass);
+
+        _attributeServiceMock!.Setup(m => m.GetById(TestAttribute.Id))
+            .Returns(TestAttribute);
+
+        _builder!.SetParent(ParentId);
+        _builder.SetAttributes([TestAttribute.Id]);
+
+        _builder.GetResult().Attributes.Should().Contain(TestAttribute);
+    }
+
+    [TestMethod]
+    public void CreateClass_WithMultipleValidAttributes_AddsAllAttributes()
+    {
+        var attribute1Id = Guid.NewGuid();
+        var attribute2Id = Guid.NewGuid();
+
+        var attribute1 = new Attribute { Id = attribute1Id, Name = "Attribute1" };
+        var attribute2 = new Attribute { Id = attribute2Id, Name = "Attribute2" };
+
+        _attributeServiceMock!.Setup(m => m.GetById(attribute1Id))
+            .Returns(attribute1);
+        _attributeServiceMock.Setup(m => m.GetById(attribute2Id))
+            .Returns(attribute2);
+
+        _builder!.SetAttributes([attribute1Id, attribute2Id]);
+
+        _builder.GetResult().Attributes.Should().HaveCount(2);
+        _builder.GetResult().Attributes.Should().Contain(attribute1);
+        _builder.GetResult().Attributes.Should().Contain(attribute2);
+    }
+
+    [TestMethod]
+    public void CreateClass_WithSameAndDifferentAttributeNameAsParent_SetsOnlyDifferentName()
+    {
+        var invalidAttributeId = Guid.NewGuid();
+        var validAttributeId = Guid.NewGuid();
+
+        Attribute invalidAttribute = new Attribute
         {
-            Id = attributeId,
-            Name = "TestAttribute",
+            Id = invalidAttributeId,
+            Name = "TestAttribute"
         };
 
-        _attributeServiceMock!.Setup(m => m.GetById(attributeId))
-            .Returns(testAttribute);
+        Attribute validAttribute = new Attribute
+        {
+            Id = validAttributeId,
+            Name = "NewAttribute"
+        };
 
-        _builder!.SetAttributes([attributeId]);
+        _classServiceMock!.Setup(m => m.GetById(ParentId))
+            .Returns(_parentClass);
 
-        _builder.GetResult().Attributes.Should().Contain(testAttribute);
+        _attributeServiceMock!.Setup(m => m.GetById(invalidAttributeId))
+            .Returns(invalidAttribute);
+
+        _attributeServiceMock!.Setup(m => m.GetById(validAttributeId))
+            .Returns(validAttribute);
+
+        _builder!.SetParent(ParentId);
+
+        Action invalidAction = () => _builder.SetAttributes([invalidAttributeId, validAttributeId]);
+        invalidAction.Should().Throw<ArgumentException>()
+            .WithMessage("Attribute name already exists in parent class");
+
+        _builder.SetAttributes([validAttributeId]);
+        _builder.GetResult().Attributes.Should().HaveCount(1);
+        _builder.GetResult().Attributes.Should().Contain(validAttribute);
     }
 
     #endregion

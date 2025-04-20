@@ -47,26 +47,45 @@ public abstract class Builder(IMethodService methodService, IClassService classS
             {
                 throw new ArgumentException("Attribute does not exist");
             }
-
-            if(Result.Parent is not null)
-            {
-                var parentAttr = Result.Parent;
-                foreach (var attribute in parentAttr.Attributes!)
-                {
-                    if (attribute.Id == attr.Id)
-                    {
-                       throw new ArgumentException("Attribute already exists in parent class");
-                    }
-
-                    if(attribute.Name == attr.Name)
-                    {
-                        throw new ArgumentException("Attribute name already exists in parent class");
-                    }
-                }
-            }
+            ValidateAttributeAgainstParentIfNeeded(attr);
             newAttributes.Add(attr);
         }
         Result.Attributes = newAttributes;
+    }
+
+    private void ValidateAttributeAgainstParentIfNeeded(Domain.Attribute attribute)
+    {
+        if (Result.Parent is null || Result.Parent.Attributes!.Count == 0)
+        {
+            return;
+        }
+
+        ValidateAttributeAgainstParent(Result.Parent, attribute);
+    }
+
+    private static void ValidateAttributeAgainstParent(Class parent, Domain.Attribute attribute)
+    {
+        foreach (var parentAttribute in parent.Attributes!)
+        {
+            ValidateParentDoesNotHaveAttribute(parentAttribute.Id, attribute.Id);
+            ValidateParentDoesNotHaveSameAttributeName(parentAttribute.Name!, attribute.Name!);
+        }
+    }
+
+    private static void ValidateParentDoesNotHaveAttribute(Guid parentAttributeId, Guid attributeId)
+    {
+        if(parentAttributeId == attributeId)
+        {
+            throw new ArgumentException("Attribute already exists in parent class");
+        }
+    }
+
+    private static void ValidateParentDoesNotHaveSameAttributeName(string parentAttributeName, string attributeName)
+    {
+        if (parentAttributeName == attributeName)
+        {
+            throw new ArgumentException("Attribute name already exists in parent class");
+        }
     }
 
     public virtual void SetMethods(List<Guid> methods)
