@@ -17,6 +17,7 @@ public abstract class Builder(IMethodService methodService, IClassService classS
     {
         var parent = classService.GetById(idParent);
         DoesParentExist(parent);
+        IsParentSealed(parent);
         Result.Parent = parent;
     }
 
@@ -25,6 +26,14 @@ public abstract class Builder(IMethodService methodService, IClassService classS
         if (parent is null)
         {
             throw new ArgumentException("Parent does not exist");
+        }
+    }
+
+    private static void IsParentSealed(Class parent)
+    {
+        if ((bool)parent.IsSealed!)
+        {
+            throw new ArgumentException("Cant have a sealed class as parent");
         }
     }
 
@@ -38,61 +47,54 @@ public abstract class Builder(IMethodService methodService, IClassService classS
         Result.IsSealed = sealedClass;
     }
 
-    public virtual void SetAttributes(List<Guid> attributes)
+    public virtual void SetAttributes(List<Attribute> attributes)
     {
         ArgumentNullException.ThrowIfNull(attributes);
-        var newAttributes = new List<Attribute>();
-        foreach (var attr in attributes.Select(attributeService.GetById))
+
+        if(attributes.Count == 0)
         {
-            if (attr is null)
+            Result.Attributes = [];
+        }
+        else
+        {
+            foreach (var attr in attributes.Select(attributeService.Create))
             {
-                throw new ArgumentException("Attribute does not exist");
+                try
+                {
+                    var newAttribute = attributeService.Create(attr);
+                    classService.AddAttribute(Result.Id, newAttribute);
+                }
+                catch(ArgumentException)
+                {
+                    continue;
+                }
             }
-            ValidateAttributeAgainstParentIfNeeded(attr);
-            newAttributes.Add(attr);
-        }
-        Result.Attributes = newAttributes;
-    }
-
-    private void ValidateAttributeAgainstParentIfNeeded(Attribute attribute)
-    {
-        if (Result.Parent is null || Result.Parent.Attributes!.Count == 0)
-        {
-            return;
-        }
-
-        ValidateAttributeAgainstParent(Result.Parent, attribute);
-    }
-
-    private static void ValidateAttributeAgainstParent(Class parent, Attribute attribute)
-    {
-        foreach (var parentAttribute in parent.Attributes!)
-        {
-            ValidateParentDoesNotHaveAttribute(parentAttribute.Id, attribute.Id);
-            ValidateParentDoesNotHaveSameAttributeName(parentAttribute.Name!, attribute.Name!);
         }
     }
 
-    private static void ValidateParentDoesNotHaveAttribute(Guid parentAttributeId, Guid attributeId)
+    public virtual void SetMethods(List<Method> methods)
     {
-        if(parentAttributeId == attributeId)
-        {
-            throw new ArgumentException("Attribute already exists in parent class");
-        }
-    }
-
-    private static void ValidateParentDoesNotHaveSameAttributeName(string parentAttributeName, string attributeName)
-    {
-        if (parentAttributeName == attributeName)
-        {
-            throw new ArgumentException("Attribute name already exists in parent class");
-        }
-    }
-
-    public virtual void SetMethods(List<Guid> methods)
-    {
-        methodService.GetById(methods.First());
         ArgumentNullException.ThrowIfNull(methods);
+
+        if(methods.Count == 0)
+        {
+            Result.Methods = [];
+        }
+        else
+        {
+            foreach (var method in methods.Select(methodService.Create))
+            {
+                try
+                {
+                    var newMethod = methodService.Create(method);
+                    classService.AddMethod(Result.Id, newMethod);
+                }
+                catch(ArgumentException)
+                {
+                    continue;
+                }
+            }
+        }
     }
 
     public Class GetResult()

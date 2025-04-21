@@ -68,29 +68,12 @@ public class ClassBuilderTest
     }
 
     [TestMethod]
-    public void SetMethods_WhenTryingToAddNonExistantMethodID_ThrowsException()
-    {
-        Guid nonExistentMethodId = Guid.NewGuid();
-
-        _methodServiceMock!.Setup(m => m.GetById(nonExistentMethodId))
-            .Returns((Method)null!);
-
-        Action action = () => _classBuilderTest!.SetMethods([nonExistentMethodId]);
-
-        action.Should().Throw<ArgumentException>()
-            .WithMessage("Method does not exist");
-    }
-
-    [TestMethod]
     public void SetMethods_WhenParentIsInterfaceAndMethodsAreNotImplemented_ThrowsException()
     {
-        var methodId = Guid.NewGuid();
-
         var notImplementedMethod = new Method
         {
-            Name = "NotImplementedMethod",
+            Name = "Method",
             Abstract = true,
-            Id = methodId
         };
 
         var parentClass = new Class
@@ -104,11 +87,8 @@ public class ClassBuilderTest
             Parent = null,
         };
 
-        _methodServiceMock!.Setup(m => m.GetById(methodId))
-            .Returns(notImplementedMethod);
-
         _classBuilderTest!.SetParent(parentClass.Id);
-        Action action = () => _classBuilderTest!.SetMethods([methodId]);
+        Action action = () => _classBuilderTest!.SetMethods([]);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Parent class is an interface and has methods that are not implemented");

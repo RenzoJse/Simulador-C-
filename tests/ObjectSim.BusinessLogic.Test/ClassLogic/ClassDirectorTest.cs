@@ -2,8 +2,10 @@
 using Moq;
 using ObjectSim.BusinessLogic.ClassLogic;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
+using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic;
 
@@ -14,8 +16,8 @@ public class ClassDirectorTest
     private const string ValidName = "ClassName";
     private const bool IsAbstract = true;
     private const bool IsSealed = true;
-    private static readonly List<Guid> Attributes = [Guid.NewGuid(), Guid.NewGuid()];
-    private static readonly List<Guid> Methods = [Guid.NewGuid(), Guid.NewGuid()];
+    private static readonly List<Attribute> Attributes = [new Attribute()];
+    private static readonly List<Method> Methods = [new Method()];
     private Mock<IMethodService> _methodServiceMock = new();
     private Mock<IClassService> _classServiceMock = new();
     private Mock<IAttributeService> _attributeServiceMock = new();
