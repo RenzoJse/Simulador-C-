@@ -9,8 +9,8 @@ public class MethodTest
     public void DataType_Property_SetAndGet_ShouldBeEqual()
     {
         var method = new Method();
-        method.DataType = Method.MethodDataType.Decimal;
-        method.DataType.Should().Be(Method.MethodDataType.Decimal);
+        method.Type = Method.MethodDataType.Decimal;
+        method.Type.Should().Be(Method.MethodDataType.Decimal);
     }
 
     [TestMethod]
@@ -18,23 +18,23 @@ public class MethodTest
     {
         var method = new Method();
 
-        method.Visibility = Method.MethodVisibility.ProtectedInternal;
+        method.Accessibility = Method.MethodAccessibility.ProtectedInternal;
 
-        method.Visibility.Should().Be(Method.MethodVisibility.ProtectedInternal);
+        method.Accessibility.Should().Be(Method.MethodAccessibility.ProtectedInternal);
     }
 
     [TestMethod]
     public void MethodDataTypeCreateMethod_OKTest()
     {
         var method = new Method();
-        method.DataType = Method.MethodDataType.String;
-        Assert.AreEqual(Attribute.MethodDataType.String, method.DataType);
+        method.Type = Method.MethodDataType.String;
+        Assert.AreEqual(Method.MethodDataType.String, method.Type);
     }
     [TestMethod]
     public void MethodVisibilityCreateMethod_OKTest()
     {
         var method = new Method();
-        method.Visibility = Method.MethodVisibility.Public;
-        Assert.AreEqual(Method.MethodVisibility.Public, method.Visibility);
+        method.Accessibility = Method.MethodAccessibility.Public;
+        Assert.AreEqual(Method.MethodAccessibility.Public, method.Accessibility);
     }
 }
