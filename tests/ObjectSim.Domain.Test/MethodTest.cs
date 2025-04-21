@@ -246,4 +246,51 @@ public class MethodTest
         Action act = method.ValidateFields;
         act.Should().Throw<ArgumentException>().WithMessage("Name cannot be null or start with a num.");
     }
+
+    [TestMethod]
+    public void MethodValidator_WithInvalidDataType_ShouldThrowArgumentException()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "test",
+            Accessibility = Method.MethodAccessibility.Public
+        };
+
+        var typeField = typeof(Method).GetField("_type", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        typeField!.SetValue(method, (Method.MethodDataType)999);
+
+        Action act = method.ValidateFields;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Invalid data type.");
+    }
+
+    [TestMethod]
+    public void ValidateFields_WithNullName_ShouldThrow()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Type = Method.MethodDataType.String,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+
+        var nameField = typeof(Method).GetField("_name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        nameField!.SetValue(method, null);
+
+        Action act = method.ValidateFields;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or whitespace.");
+    }
+
+    [TestMethod]
+    public void Constructor_ShouldInitializeParametersAndLocalVariables()
+    {
+        var method = new Method();
+
+        method.Parameters.Should().NotBeNull();
+        method.LocalVariables.Should().NotBeNull();
+    }
 }
