@@ -37,4 +37,12 @@ public class MethodTest
         method.Accessibility = Method.MethodAccessibility.Public;
         Assert.AreEqual(Method.MethodAccessibility.Public, method.Accessibility);
     }
+
+    [TestMethod]
+    public void Name_Property_SetAndGet_ShouldBeEqual()
+    {
+        var method = new Method();
+        method.Name = "TestMethod";
+        method.Name.Should().Be("TestMethod");
+    }
 }
