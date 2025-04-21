@@ -24,7 +24,7 @@ public class Method
         PrivateProtected
     }
     public Guid Id { get; set; } = Guid.NewGuid();
-    
+
     #region Name
 
     private string? _name;
