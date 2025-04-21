@@ -60,7 +60,7 @@ public class MethodTest
     {
         var method = new Method();
         method.Name = "TestMethod";
-        Assert.AreEqual("Testmethod", method.Name);
+        Assert.AreEqual("TestMethod", method.Name);
     }
 
     [TestMethod]
@@ -214,7 +214,7 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void MethodValidator_WithInvalidVisibility_ShouldThrowArgumentException()
+    public void MethodValidator_WithInvalidAccesibility_ShouldThrowArgumentException()
     {
         var method = new Method
         {
@@ -229,18 +229,19 @@ public class MethodTest
         act.Should().Throw<ArgumentException>()
             .WithMessage("Invalid accesibility type.");
     }
+
     [TestMethod]
-    public void AttributeValidator_WithValidVisibility_ShouldNotThrow()
+    public void MethodValidator_WithValidAccesibility_ShouldNotThrow()
     {
-        var attribute = new Attribute
+        var method = new Method
         {
             Id = Guid.NewGuid(),
-            Name = "Test",
-            DataType = Attribute.AttributeDataType.String,
-            Visibility = Attribute.AttributeVisibility.Internal
+            Name = "test",
+            Type = Method.MethodDataType.String,
+            Accessibility = Method.MethodAccessibility.Public
         };
 
-        Action act = attribute.Validate;
+        Action act = method.ValidateFields;
 
         act.Should().NotThrow();
     }
