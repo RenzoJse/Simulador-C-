@@ -99,7 +99,6 @@ public class MethodServiceTest
         };
 
         _methodRepositoryMock!.Setup(x => x.Get(It.Is<Func<Method, bool>>(filter => filter(testMethod!)))).Returns(testMethod);
-
         _methodRepositoryMock!.Setup(x => x.Update(It.IsAny<Method>())).Returns((Method m) => m);
 
         var result = _methodService!.Update(testMethod.Id, newMethod);
