@@ -85,7 +85,7 @@ public class MethodServiceTest
     [ExpectedException(typeof(Exception))]
     public void GetAllMethods_WhenNoMethods_ShouldThrowException()
     {
-        _methodRepositoryMock!.Setup(repo => repo.GetAll(It.IsAny<Func<Method, bool>>())).Returns(new List<Method>());
+        _methodRepositoryMock!.Setup(repo => repo.GetAll(It.IsAny<Func<Method, bool>>())).Returns([]);
 
         _methodService!.GetAll();
     }
@@ -122,7 +122,6 @@ public class MethodServiceTest
         _methodRepositoryMock!
             .Setup(x => x.Get(It.IsAny<Func<Method, bool>>()))
             .Returns((Method)null!);
-
         _methodService!.Delete(ClassId);
     }
 
