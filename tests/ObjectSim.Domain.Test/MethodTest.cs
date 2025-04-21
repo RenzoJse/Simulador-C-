@@ -178,4 +178,70 @@ public class MethodTest
 
         act.Should().NotThrow();
     }
+
+    [TestMethod]
+    public void MethodValidator_WithValidDataType_ShouldNotThrow()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "mmmm",
+            Type = Method.MethodDataType.String,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+
+        Action act = method.ValidateFields;
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void MethodValidator_WithInvalidDataType_ShouldThrowArgumentException()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "test",
+            Type = (Method.MethodDataType)999,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+
+
+        Action act = method.ValidateFields;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Invalid data type.");
+    }
+
+    [TestMethod]
+    public void MethodValidator_WithInvalidVisibility_ShouldThrowArgumentException()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "test",
+            Type = Method.MethodDataType.String,
+            Accessibility = (Method.MethodAccessibility)99
+        };
+
+        Action act = method.ValidateFields;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Invalid accesibility type.");
+    }
+    [TestMethod]
+    public void AttributeValidator_WithValidVisibility_ShouldNotThrow()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            DataType = Attribute.AttributeDataType.String,
+            Visibility = Attribute.AttributeVisibility.Internal
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().NotThrow();
+    }
 }
