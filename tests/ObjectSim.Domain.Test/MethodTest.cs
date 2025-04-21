@@ -107,6 +107,22 @@ public class MethodTest
             Accessibility = Method.MethodAccessibility.Public
         };
 
+        Action act = method.ValidateFields;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or whitespace.");
+    }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenNameIsWhiteSpace()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = " ",
+            Type = Method.MethodDataType.String,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+
         Action act = method.Validate;
 
         act.Should().Throw<ArgumentException>()
