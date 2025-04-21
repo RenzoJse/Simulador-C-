@@ -39,9 +39,9 @@ public class Attribute
             throw new ArgumentException("Name cannot be null or whitespace.");
         }
 
-        if(name.Length > 100)
+        if(name.Length > 10 || name.Length<1)
         {
-            throw new ArgumentException("Name cannot exceed 100 characters.");
+            throw new ArgumentException("Name cannot be less than 1 or more than 10 characters.");
         }
         if(Regex.IsMatch(name, @"^\d"))
         {

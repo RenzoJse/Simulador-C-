@@ -268,7 +268,7 @@ public class AttributeTest
         Action act = attribute.Validate;
 
         act.Should().Throw<ArgumentException>()
-            .WithMessage("Name cannot exceed 100 characters.");
+            .WithMessage("Name cannot be less than 1 or more than 10 characters.");
     }
     [TestMethod]
     public void Validate_ShouldNotThrow_WhenNameIsOk()
