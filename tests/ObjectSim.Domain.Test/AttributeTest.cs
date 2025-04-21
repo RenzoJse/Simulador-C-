@@ -377,4 +377,19 @@ public class AttributeTest
 
         act.Should().NotThrow();
     }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenNameStartWithANum()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            DataType = ReferenceType.Create("1Test"),
+            Visibility = Attribute.AttributeVisibility.Internal
+        };
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or start with a num.");
+    }
 }
