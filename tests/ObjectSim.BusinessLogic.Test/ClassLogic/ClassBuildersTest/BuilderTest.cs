@@ -24,17 +24,17 @@ public class BuilderTest
         Name = "TestAttribute",
     };
 
-    private readonly Class _parentClass = new Class
-        {
-            Id = ParentId,
-            Name = "ParentClass",
-            IsAbstract = false,
-            IsSealed = false,
-            IsInterface = false,
-            Methods = [],
-            Attributes = [TestAttribute],
-            Parent = null,
-        };
+    private readonly Class _parentClass = new()
+    {
+        Id = ParentId,
+        Name = "ParentClass",
+        IsAbstract = false,
+        IsSealed = false,
+        IsInterface = false,
+        Methods = [],
+        Attributes = [TestAttribute],
+        Parent = null
+    };
 
     [TestInitialize]
     public void Initialize()

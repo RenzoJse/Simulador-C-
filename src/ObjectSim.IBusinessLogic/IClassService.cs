@@ -9,4 +9,5 @@ public interface IClassService
     public void AddMethod(Guid id, Method method);
     public void AddAttribute(Guid id, Attribute attribute);
     public bool CanAddAttribute(Class classObj, Attribute attribute);
+    public bool CanAddMethod(Class classObj, Method method);
 }

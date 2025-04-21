@@ -26,16 +26,30 @@ public class ClassBuilder(IMethodService methodService, IClassService classServi
     public override void SetMethods(List<Method> methods)
     {
         base.SetMethods(methods);
-        foreach(var method in methods.Select(methodService.Create))
+
+        List<Method> newMethods = [];
+        foreach(var method in methods)
         {
-            try
+            var newMethod = methodService.Create(method);
+            if(classService.CanAddMethod(Result, newMethod))
             {
-                var newMethod = methodService.Create(method);
-                classService.AddMethod(Result.Id, newMethod);
-            }
-            catch(ArgumentException)
-            {
+                newMethods.Add(newMethod);
             }
         }
+
+        var parent = Result.Parent;
+        if (parent is not null && (bool)parent.IsInterface!)
+        {
+            foreach (var parentMethod in parent.Methods!)
+            {
+                var isImplemented = newMethods.Any(m => m.Name == parentMethod.Name);
+                if (!isImplemented)
+                {
+                    throw new ArgumentException("Parent class is an interface. Should implement all his methods");
+                }
+            }
+        }
+
+        Result.Methods = newMethods;
     }
 }
