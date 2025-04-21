@@ -392,4 +392,19 @@ public class AttributeTest
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or start with a num.");
     }
+    [TestMethod]
+    public void Attribute_ShouldHaveCorrectClassId()
+    {
+        var classId = Guid.NewGuid();
+
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttribute",
+            DataType = ReferenceType.Create("string"),
+            Visibility = Attribute.AttributeVisibility.Public,
+            ClassId = classId
+        };
+        attribute.ClassId.Should().Be(classId);
+    }
 }
