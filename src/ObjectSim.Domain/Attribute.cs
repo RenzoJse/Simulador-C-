@@ -17,6 +17,7 @@ public class Attribute
     public IDataType DataType { get; set; } = null!;
     public AttributeVisibility Visibility { get; set; }
     public Guid Id { get; set; }
+    public Guid ClassId { get; set; }
     public string? Name { get; set; } = null!;
     public void Validate()
     {
