@@ -2,15 +2,6 @@
 
 public class Attribute
 {
-    public enum AttributeDataType
-    {
-        String,
-        Char,
-        Int,
-        Decimal,
-        Bool,
-        DateTime
-    }
     public enum AttributeVisibility
     {
         Public,
@@ -20,7 +11,8 @@ public class Attribute
         ProtectedInternal,
         PrivateProtected
     }
-    public AttributeDataType DataType { get; set; }
+    //public AttributeDataType DataType { get; set; }
+    public IDataType DataType { get; set; } = null!;
     public AttributeVisibility Visibility { get; set; }
     public Guid Id { get; set; }
     public string? Name { get; set; } = null!;
@@ -50,11 +42,11 @@ public class Attribute
             throw new ArgumentException("Name cannot exceed 100 characters.");
         }
     }
-    private static void ValidateDataType(AttributeDataType dataType)
+    public static void ValidateDataType(IDataType DataType)
     {
-        if(!Enum.IsDefined(typeof(AttributeDataType), dataType))
+        if(DataType == null)
         {
-            throw new ArgumentException("Invalid data type.");
+            throw new ArgumentException("DataType is required.");
         }
     }
     private static void ValidateVisibility(AttributeVisibility visibility)
