@@ -191,4 +191,59 @@ public class MethodTest
 
         act.Should().NotThrow();
     }
+    [TestMethod]
+    public void Abstract_SetAndGet_ShouldBeEqual()
+    {
+        var method = new Method { Abstract = true };
+        method.Abstract.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void IsSealed_SetAndGet_ShouldBeEqual()
+    {
+        var method = new Method { IsSealed = true };
+        method.IsSealed.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void Parameters_AddParameter_ShouldContainParameter()
+    {
+        var method = new Method();
+        var param = new Parameter();
+        method.Parameters.Add(param);
+        method.Parameters.Should().Contain(param);
+    }
+
+    [TestMethod]
+    public void LocalVariables_AddLocalVariable_ShouldContainLocalVariable()
+    {
+        var method = new Method();
+        var localVar = new LocalVariable();
+        method.LocalVariables.Add(localVar);
+        method.LocalVariables.Should().Contain(localVar);
+    }
+
+    [TestMethod]
+    public void Id_DefaultValue_ShouldNotBeEmpty()
+    {
+        var method = new Method();
+        method.Id.Should().NotBe(Guid.Empty);
+    }
+
+    [TestMethod]
+    public void ValidateFields_WithInvalidName_ShouldThrow()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Type = Method.MethodDataType.String,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+
+        var nameField = typeof(Method).GetField("_name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        nameField!.SetValue(method, "1Invalid");
+
+        Action act = method.ValidateFields;
+        act.Should().Throw<ArgumentException>().WithMessage("Name cannot be null or start with a num.");
+    }
 }
