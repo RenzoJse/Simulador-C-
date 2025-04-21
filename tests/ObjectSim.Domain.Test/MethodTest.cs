@@ -95,4 +95,21 @@ public class MethodTest
         act.Should().Throw<ArgumentException>()
             .WithMessage("Id must be a valid non-empty GUID.");
     }
+
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenNameIsNull()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = string.Empty,
+            Type = Method.MethodDataType.String,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+
+        Action act = method.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or whitespace.");
+    }
 }
