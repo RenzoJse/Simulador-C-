@@ -383,8 +383,8 @@ public class AttributeTest
         var attribute = new Attribute
         {
             Id = Guid.NewGuid(),
-            Name = "Test",
-            DataType = ReferenceType.Create("1Test"),
+            Name = "1Test1",
+            DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Internal
         };
         Action act = attribute.Validate;

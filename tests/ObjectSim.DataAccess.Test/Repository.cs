@@ -80,7 +80,7 @@ public class RepositoryTest
 
         var result = _repository.GetAll(_ => true);
 
-        result.Should().Contain(new[] { _testEntity, element2 });
+        result.Should().Contain([_testEntity, element2]);
     }
 
     #endregion

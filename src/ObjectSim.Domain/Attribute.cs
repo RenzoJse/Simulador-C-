@@ -1,4 +1,6 @@
-﻿namespace ObjectSim.Domain;
+﻿using System.Text.RegularExpressions;
+
+namespace ObjectSim.Domain;
 
 public class Attribute
 {
@@ -41,6 +43,11 @@ public class Attribute
         {
             throw new ArgumentException("Name cannot exceed 100 characters.");
         }
+        if(Regex.IsMatch(name, @"^\d"))
+        {
+            throw new ArgumentException("Name cannot be null or start with a num.");
+        }
+
     }
     public static void ValidateDataType(IDataType DataType)
     {
