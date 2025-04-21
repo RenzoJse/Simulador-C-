@@ -14,24 +14,23 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void Visibility_Property_SetAndGet_ShouldBeEqual()
+    public void Accessibility_Property_SetAndGet_ShouldBeEqual()
     {
         var method = new Method();
-
         method.Accessibility = Method.MethodAccessibility.ProtectedInternal;
-
         method.Accessibility.Should().Be(Method.MethodAccessibility.ProtectedInternal);
     }
 
     [TestMethod]
-    public void MethodDataTypeCreateMethod_OKTest()
+    public void MethodDataType_CreateMethod_ShouldSetCorrectly()
     {
         var method = new Method();
         method.Type = Method.MethodDataType.String;
         Assert.AreEqual(Method.MethodDataType.String, method.Type);
     }
+
     [TestMethod]
-    public void MethodVisibilityCreateMethod_OKTest()
+    public void MethodAccessibility_CreateMethod_ShouldSetCorrectly()
     {
         var method = new Method();
         method.Accessibility = Method.MethodAccessibility.Public;
@@ -50,17 +49,52 @@ public class MethodTest
     public void Id_Property_SetAndGet_ShouldBeEqual()
     {
         var id = Guid.NewGuid();
-        var method = new Method();
-        method.Id = id;
+        var method = new Method { Id = id };
         method.Id.Should().Be(id);
     }
 
     [TestMethod]
-    public void MethodName_CreateAttribute_OKTest()
+    public void Name_SetToEmpty_ShouldThrowArgumentException()
     {
         var method = new Method();
-        method.Name = "TestMethod";
-        Assert.AreEqual("TestMethod", method.Name);
+
+        Action act = () => method.Name = string.Empty;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or whitespace.");
+    }
+
+    [TestMethod]
+    public void Name_SetToWhiteSpace_ShouldThrowArgumentException()
+    {
+        var method = new Method();
+
+        Action act = () => method.Name = " ";
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or whitespace.");
+    }
+
+    [TestMethod]
+    public void Name_SetToTooLongValue_ShouldThrowArgumentException()
+    {
+        var method = new Method();
+
+        Action act = () => method.Name = new string('t', 105);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot exceed 100 characters.");
+    }
+
+    [TestMethod]
+    public void Name_SetToValueStartingWithNumber_ShouldThrowArgumentException()
+    {
+        var method = new Method();
+
+        Action act = () => method.Name = "1Test";
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or start with a num.");
     }
 
     [TestMethod]
@@ -97,86 +131,14 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void Validate_ShouldThrow_WhenNameIsNull()
+    public void Setting_InvalidDataType_ShouldThrowArgumentException()
     {
-        var method = new Method
-        {
-            Id = Guid.NewGuid(),
-            Name = string.Empty,
-            Type = Method.MethodDataType.String,
-            Accessibility = Method.MethodAccessibility.Public
-        };
+        var method = new Method();
 
-        Action act = method.ValidateFields;
+        Action act = () => method.Type = (Method.MethodDataType)999;
 
         act.Should().Throw<ArgumentException>()
-            .WithMessage("Name cannot be null or whitespace.");
-    }
-    [TestMethod]
-    public void Validate_ShouldThrow_WhenNameIsWhiteSpace()
-    {
-        var method = new Method
-        {
-            Id = Guid.NewGuid(),
-            Name = " ",
-            Type = Method.MethodDataType.String,
-            Accessibility = Method.MethodAccessibility.Public
-        };
-
-        Action act = method.ValidateFields;
-
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Name cannot be null or whitespace.");
-    }
-
-    [TestMethod]
-    public void Validate_ShouldThrow_WhenNameStartWithANum()
-    {
-        var method = new Method
-        {
-            Id = Guid.NewGuid(),
-            Name = "1Test",
-            Type = Method.MethodDataType.String,
-            Accessibility = Method.MethodAccessibility.Public
-        };
-
-        Action act = method.ValidateFields;
-
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Name cannot be null or start with a num.");
-    }
-
-    [TestMethod]
-    public void Validate_ShouldThrow_WhenNameIsTooLong()
-    {
-        var method = new Method
-        {
-            Id = Guid.NewGuid(),
-            Name = new string('t', 105),
-            Type = Method.MethodDataType.String,
-            Accessibility = Method.MethodAccessibility.Public
-        };
-
-        Action act = method.ValidateFields;
-
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Name cannot exceed 100 characters.");
-    }
-
-    [TestMethod]
-    public void Validate_ShouldNotThrow_WhenNameIsOk()
-    {
-        var method = new Method
-        {
-            Id = Guid.NewGuid(),
-            Name = "mmmm",
-            Type = Method.MethodDataType.String,
-            Accessibility = Method.MethodAccessibility.Public
-        };
-
-        Action act = method.ValidateFields;
-
-        act.Should().NotThrow();
+            .WithMessage("Invalid data type.");
     }
 
     [TestMethod]
@@ -196,33 +158,17 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void MethodValidator_WithInvalidDataType_ShouldThrowArgumentException()
+    public void MethodValidator_WithInvalidAccessibility_ShouldThrowArgumentException()
     {
         var method = new Method
         {
             Id = Guid.NewGuid(),
             Name = "test",
-            Type = (Method.MethodDataType)999,
-            Accessibility = Method.MethodAccessibility.Public
+            Type = Method.MethodDataType.String
         };
 
-
-        Action act = method.ValidateFields;
-
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Invalid data type.");
-    }
-
-    [TestMethod]
-    public void MethodValidator_WithInvalidAccesibility_ShouldThrowArgumentException()
-    {
-        var method = new Method
-        {
-            Id = Guid.NewGuid(),
-            Name = "test",
-            Type = Method.MethodDataType.String,
-            Accessibility = (Method.MethodAccessibility)99
-        };
+        var accessibilityField = typeof(Method).GetField("_accessibility", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        accessibilityField!.SetValue(method, (Method.MethodAccessibility)99);
 
         Action act = method.ValidateFields;
 
@@ -231,7 +177,7 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void MethodValidator_WithValidAccesibility_ShouldNotThrow()
+    public void MethodValidator_WithValidAccessibility_ShouldNotThrow()
     {
         var method = new Method
         {
