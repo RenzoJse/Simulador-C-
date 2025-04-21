@@ -13,6 +13,7 @@ public class Method
         Bool,
         DateTime
     }
+
     public enum MethodAccessibility
     {
         Public,
@@ -22,15 +23,71 @@ public class Method
         ProtectedInternal,
         PrivateProtected
     }
-    public Guid Id { get; set; }
-    public string? Name { get; set; } = null;
-    public MethodDataType Type { get; set; }
-    public bool Abstract { get; set; } = false;
-    public bool IsSealed { get; set; } = false;
-    public MethodAccessibility Accessibility { get; set; }
-    public List<Parameter> Parameters { get; set; } = [];
-    public List<LocalVariable> LocalVariables { get; set; } = [];
+    public Guid Id { get; set; } = Guid.NewGuid();
+    
+    #region Name
 
+    private string? _name;
+
+    public string? Name
+    {
+        get => _name;
+        set
+        {
+            ValidateName(value!);
+            _name = value;
+        }
+    }
+
+    #endregion
+
+    #region Type
+
+    private MethodDataType _type;
+
+    public MethodDataType Type
+    {
+        get => _type;
+        set
+        {
+            ValidateDataType(value!);
+            _type = value;
+        }
+    }
+    #endregion
+
+    #region Abstract
+    public bool Abstract { get; set; } = false;
+    #endregion
+
+    #region IsSealed
+    public bool IsSealed { get; set; } = false;
+    #endregion 
+
+    #region Accesibility
+
+    private MethodAccessibility _accessibility;
+
+    public MethodAccessibility Accessibility
+    {
+        get => _accessibility;
+        set
+        {
+            ValidateAccesibility(value!);
+            _accessibility = value;
+        }
+    }
+    #endregion
+
+    #region Parameters
+    public List<Parameter> Parameters { get; set; } = [];
+    #endregion
+
+    #region LocalVariable
+    public List<LocalVariable> LocalVariables { get; set; } = [];
+    #endregion
+
+    #region Validations
     public void ValidateFields()
     {
         ValidateId(Id);
@@ -76,4 +133,5 @@ public class Method
             throw new ArgumentException("Invalid accesibility type.");
         }
     }
+    #endregion
 }
