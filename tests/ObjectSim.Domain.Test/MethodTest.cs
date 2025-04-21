@@ -45,4 +45,13 @@ public class MethodTest
         method.Name = "TestMethod";
         method.Name.Should().Be("TestMethod");
     }
+
+    [TestMethod]
+    public void Id_Property_SetAndGet_ShouldBeEqual()
+    {
+        var id = Guid.NewGuid();
+        var method = new Method();
+        method.Id = id;
+        method.Id.Should().Be(id);
+    }
 }
