@@ -76,7 +76,6 @@ public class MethodServiceTest
     public void DeleteMethod_WhenMethodNotFound_ShouldThrowException()
     {
         _methodRepositoryMock!.Setup(x => x.Get(It.IsAny<Func<Method, bool>>())).Returns((Method)null!);
-
         _methodService!.Delete(ClassId);
 
         _methodRepositoryMock.Verify(x => x.Get(It.IsAny<Func<Method, bool>>()), Times.Once);
