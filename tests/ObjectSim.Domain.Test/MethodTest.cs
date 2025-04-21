@@ -74,8 +74,25 @@ public class MethodTest
             Accessibility = Method.MethodAccessibility.Public
         };
 
-        Action act = attribute.Validate;
+        Action act = method.ValidateFields;
 
         act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenIdIsEmpty()
+    {
+        var method = new Method
+        {
+            Id = Guid.Empty,
+            Name = "Test",
+            Type = Method.MethodDataType.String,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+
+        Action act = method.ValidateFields;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Id must be a valid non-empty GUID.");
     }
 }
