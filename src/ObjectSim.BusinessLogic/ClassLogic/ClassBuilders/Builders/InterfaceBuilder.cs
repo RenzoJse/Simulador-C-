@@ -5,7 +5,7 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 
-public class InterfaceBuilder(IMethodService methodRepository,IClassService classService, IAttributeService attributeService) : Builder(methodRepository, classService, attributeService)
+public class InterfaceBuilder(IClassService classService) : Builder(classService)
 {
     public override void SetAttributes(List<Attribute> attributes)
     {

@@ -7,7 +7,7 @@ public class Class
     #region Name
 
     private string? _name;
-    private const int MaxNameLength = 15;
+    private const int MaxNameLength = 20;
     private const int MinNameLength = 3;
 
     public string? Name
@@ -36,7 +36,7 @@ public class Class
     {
         if(name.Length > MaxNameLength)
         {
-            throw new ArgumentException("Name cannot be longer than 15 characters");
+            throw new ArgumentException("Name cannot be longer than " + MaxNameLength + " characters");
         }
     }
 
@@ -44,7 +44,7 @@ public class Class
     {
         if(name.Length < MinNameLength)
         {
-            throw new ArgumentException("Name cannot be shorter than 3 characters");
+            throw new ArgumentException("Name cannot be shorter than " + MinNameLength + " characters");
         }
     }
 

@@ -50,19 +50,6 @@ public class BuilderTest
     #region Error
 
     [TestMethod]
-    public void SetParent_InvalidParentID_ThrowsException()
-    {
-        var invalidParentId = Guid.NewGuid();
-
-        _classServiceMock!.Setup(m => m.GetById(invalidParentId))
-            .Throws(new ArgumentException("Class does not exist"));
-
-        Action action = () => _builder!.SetParent(invalidParentId);
-
-        action.Should().Throw<ArgumentException>("Class does not exist");
-    }
-
-    [TestMethod]
     public void SetParent_SealedParent_ThrowsException()
     {
         var parentId = Guid.NewGuid();
@@ -85,10 +72,21 @@ public class BuilderTest
         action.Should().Throw<ArgumentException>("Cant have a sealed class as parent");
     }
 
-
     #endregion
 
     #region Success
+
+    [TestMethod]
+    public void SetParent_InvalidParentID_AddsNullParent()
+    {
+        var invalidParentId = Guid.NewGuid();
+
+        _classServiceMock!.Setup(m => m.GetById(invalidParentId))
+            .Throws(new ArgumentException("Class does not exist"));
+
+        _builder!.SetParent(invalidParentId);
+        _builder.GetResult().Parent.Should().BeNull();
+    }
 
     [TestMethod]
     public void SetParent_ValidParentID_AddsParent()
@@ -142,70 +140,6 @@ public class BuilderTest
         _builder.GetResult().Attributes.Should().BeEmpty();
     }
 
-    [TestMethod]
-    public void CreateClass_WithValidAttributes_SetsAttributes()
-    {
-        var validAttribute = new Attribute
-        {
-            Id = Guid.NewGuid(),
-            Name = "ValidAttribute",
-        };
-
-        _builder!.SetAttributes([validAttribute]);
-
-        _builder.GetResult().Attributes.Should().Contain(TestAttribute);
-    }
-
-    [TestMethod]
-    public void CreateClass_WithMultipleValidAttributes_AddsAllAttributes()
-    {
-        var attribute1 = new Attribute { Name = "Attribute1" };
-        var attribute2 = new Attribute { Name = "Attribute2" };
-
-        _attributeServiceMock!.Setup(m => m.Create(attribute1))
-            .Returns(attribute1);
-        _attributeServiceMock.Setup(m => m.Create(attribute1))
-            .Returns(attribute2);
-
-        _builder!.SetAttributes([attribute1, attribute2]);
-
-        _builder.GetResult().Attributes.Should().HaveCount(2);
-        _builder.GetResult().Attributes.Should().Contain(attribute1);
-        _builder.GetResult().Attributes.Should().Contain(attribute2);
-    }
-
-    [TestMethod]
-    public void CreateClass_WithSameAndDifferentAttributeNameAsParent_SetsOnlyDifferentName()
-    {
-        var invalidAttributeId = Guid.NewGuid();
-        var validAttributeId = Guid.NewGuid();
-
-        Attribute invalidAttribute = new Attribute
-        {
-            Id = invalidAttributeId,
-            Name = "TestAttribute"
-        };
-
-        Attribute validAttribute = new Attribute
-        {
-            Id = validAttributeId,
-            Name = "NewAttribute"
-        };
-
-        _attributeServiceMock!.Setup(m => m.Create(invalidAttribute))
-            .Throws(new ArgumentException("Attribute name already exists in parent class"));
-
-        _attributeServiceMock!.Setup(m => m.GetById(validAttributeId))
-            .Returns(validAttribute);
-
-        _builder!.SetParent(ParentId);
-
-        Action invalidAction = () => _builder.SetAttributes([invalidAttribute, validAttribute]);
-
-        _builder.GetResult().Attributes.Should().HaveCount(1);
-        _builder.GetResult().Attributes.Should().Contain(validAttribute);
-    }
-
     #endregion
 
     #endregion
@@ -222,93 +156,61 @@ public class BuilderTest
         action.Should().Throw<ArgumentNullException>();
     }
 
-    #region Success
-
     [TestMethod]
-    public void CreateClass_WithValidMethods_SetsMethods()
-    {
-        var method = new Method
-        {
-            Name = "TestMethod",
-        };
-
-        _methodServiceMock!.Setup(m => m.Create(method))
-            .Returns(method);
-
-        _builder!.SetMethods([method]);
-
-        _builder.GetResult().Methods.Should().Contain(method);
-    }
-
-    [TestMethod]
-    public void CreateClass_ValidOverrideMethod_SetsMethods()
+    public void CreateClass_WithEmptyMethodsButParentIsInterface_ThrowsException()
     {
         var parentId = Guid.NewGuid();
-        var existingMethodId = Guid.NewGuid();
-
-        var parentMethod = new Method
+        var interfaceMethod = new Method
         {
-            Id = existingMethodId,
-            Name = "TestMethod",
-        };
-
-        _parentClass.Methods = [parentMethod];
-
-        var childMethodId = Guid.NewGuid();
-
-        var childMethod = new Method
-        {
-            Id = childMethodId,
-            Name = "TestMethod",
-        };
-
-        _methodServiceMock!.Setup(m => m.Create(childMethod))
-            .Returns(childMethod);
-
-        _builder!.SetParent(parentId);
-        _builder.SetMethods([childMethod]);
-
-        _builder.GetResult().Methods.Should().Contain(childMethod);
-    }
-
-    [TestMethod]
-    public void CreateClass_WithEmptyMethodsButParentIsInterface_SetsInterfaceMethods()
-    {
-        //TENGO QUE CAMBIARR PARA QUE DEVUELVA NO T IMPLEMENTED
-        /*var parentId = Guid.NewGuid();
-        var existingMethodId = Guid.NewGuid();
-
-        var parentMethod = new Method
-        {
-            Id = existingMethodId,
-            Name = "TestMethod",
+            Id = Guid.NewGuid(),
+            Name = "InterfaceMethod",
             Accessibility = "public",
-            Parameters = [],
+            Abstract = true,
         };
 
-        _parentClass.Methods = [parentMethod];
-        _parentClass.IsInterface = true;
-
-        var childMethodId = Guid.NewGuid();
-
-        var childMethod = new Method
+        var interfaceClass = new Class
         {
-            Id = childMethodId,
-            Name = "TestMethod",
-            Accessibility = "public",
-            Parameters = []
+            Id = parentId,
+            Name = "IParentInterface",
+            IsAbstract = false,
+            IsSealed = false,
+            IsInterface = true,
+            Methods = [interfaceMethod],
+            Attributes = [],
+            Parent = null
         };
 
         _classServiceMock!.Setup(m => m.GetById(parentId))
-            .Returns(_parentClass);
-
-        _methodServiceMock!.Setup(m => m.GetById(childMethodId))
-            .Returns(childMethod);
+            .Returns(interfaceClass);
 
         _builder!.SetParent(parentId);
-        _builder.SetMethods([childMethodId]);
+        Action action = () => _builder.SetMethods([]);
 
-        _builder.GetResult().Methods.Should().Contain(childMethod);*/
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Parent class is an interface and has methods that are not implemented");
+    }
+
+    #region Success
+
+    [TestMethod]
+    public void CreateClass_WithEmptyMethodList_SetsMethods()
+    {
+        _builder!.SetMethods([]);
+
+        _builder.GetResult().Methods.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void CreateClass_WithEmptyMethodListWithParentNotBeingInterface_SetsEmptyMethods()
+    {
+        _classServiceMock!.Setup(m => m.GetById(_parentClass.Id))
+            .Returns(_parentClass);
+
+        _builder!.SetParent(_parentClass.Id);
+
+        _builder!.SetMethods([]);
+
+        _builder.GetResult().Methods.Should().BeEmpty();
     }
 
     #endregion

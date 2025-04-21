@@ -1,31 +1,35 @@
-﻿using ObjectSim.Domain;
+﻿using Azure.Core;
+using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
 
-public abstract class Builder(IMethodService methodService, IClassService classService, IAttributeService attributeService)
+public abstract class Builder(IClassService classService)
 {
-    private Class Result { get; } = new Class();
+    protected Class Result { get; } = new Class();
 
     public virtual void SetName(string name)
     {
         Result.Name = name;
     }
 
-    public virtual void SetParent(Guid idParent)
+    public virtual void SetParent(Guid? idParent)
     {
-        var parent = classService.GetById(idParent);
-        DoesParentExist(parent);
-        IsParentSealed(parent);
-        Result.Parent = parent;
-    }
-
-    private static void DoesParentExist(Class parent)
-    {
-        if (parent is null)
+        Class parent = null!;
+        try
         {
-            throw new ArgumentException("Parent does not exist");
+             parent = classService.GetById(idParent);
+        }
+        catch(ArgumentException)
+        {
+            Result.Parent = null;
+        }
+
+        if(parent != null)
+        {
+            IsParentSealed(parent);
+            Result.Parent = parent;
         }
     }
 
@@ -55,21 +59,6 @@ public abstract class Builder(IMethodService methodService, IClassService classS
         {
             Result.Attributes = [];
         }
-        else
-        {
-            foreach (var attr in attributes.Select(attributeService.Create))
-            {
-                try
-                {
-                    var newAttribute = attributeService.Create(attr);
-                    classService.AddAttribute(Result.Id, newAttribute);
-                }
-                catch(ArgumentException)
-                {
-                    continue;
-                }
-            }
-        }
     }
 
     public virtual void SetMethods(List<Method> methods)
@@ -78,22 +67,14 @@ public abstract class Builder(IMethodService methodService, IClassService classS
 
         if(methods.Count == 0)
         {
-            Result.Methods = [];
-        }
-        else
-        {
-            foreach (var method in methods.Select(methodService.Create))
+            if(Result.Parent is not null)
             {
-                try
+                if((bool)Result.Parent.IsInterface!)
                 {
-                    var newMethod = methodService.Create(method);
-                    classService.AddMethod(Result.Id, newMethod);
-                }
-                catch(ArgumentException)
-                {
-                    continue;
+                    throw new ArgumentException("Parent class is an interface and has methods that are not implemented");
                 }
             }
+            Result.Methods = [];
         }
     }
 

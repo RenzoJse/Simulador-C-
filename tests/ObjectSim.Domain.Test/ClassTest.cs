@@ -25,14 +25,14 @@ public class ClassTest
     }
 
     [TestMethod]
-    public void CreateClass_WithNameLongerThan15Characters_ThrowsException()
+    public void CreateClass_WithNameLongerThan20Characters_ThrowsException()
     {
-        const string longName = "15CharactersLongName";
+        const string longName = "20CharactersLongNameeeeeeeeeee";
 
         Action action = () => _testClass!.Name = longName;
 
         action.Should().Throw<ArgumentException>()
-            .WithMessage("Name cannot be longer than 15 characters");
+            .WithMessage("Name cannot be longer than 20 characters");
     }
 
     [TestMethod]
