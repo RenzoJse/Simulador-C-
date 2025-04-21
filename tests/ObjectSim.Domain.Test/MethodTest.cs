@@ -54,4 +54,28 @@ public class MethodTest
         method.Id = id;
         method.Id.Should().Be(id);
     }
+
+    [TestMethod]
+    public void MethodName_CreateAttribute_OKTest()
+    {
+        var method = new Method();
+        method.Name = "TestMethod";
+        Assert.AreEqual("Testmethod", method.Name);
+    }
+
+    [TestMethod]
+    public void Validate_ValidMethod_ShouldNotThrow()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            Type = Method.MethodDataType.String,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().NotThrow();
+    }
 }
