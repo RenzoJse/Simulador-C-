@@ -145,4 +145,37 @@ public class MethodTest
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or start with a num.");
     }
+
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenNameIsTooLong()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = new string('t', 105),
+            Type = Method.MethodDataType.String,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+
+        Action act = method.ValidateFields;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot exceed 100 characters.");
+    }
+
+    [TestMethod]
+    public void Validate_ShouldNotThrow_WhenNameIsOk()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "mmmm",
+            Type = Method.MethodDataType.String,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+
+        Action act = method.ValidateFields;
+
+        act.Should().NotThrow();
+    }
 }
