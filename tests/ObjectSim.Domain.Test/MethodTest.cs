@@ -123,9 +123,26 @@ public class MethodTest
             Accessibility = Method.MethodAccessibility.Public
         };
 
-        Action act = method.Validate;
+        Action act = method.ValidateFields;
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or whitespace.");
+    }
+
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenNameStartWithANum()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "1Test",
+            Type = Method.MethodDataType.String,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+
+        Action act = method.ValidateFields;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or start with a num.");
     }
 }
