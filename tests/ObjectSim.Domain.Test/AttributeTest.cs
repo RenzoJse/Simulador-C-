@@ -21,6 +21,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Edad",
+            ClassId = Guid.NewGuid(),
             DataType = null!,
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -79,6 +80,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Test",
             DataType = ValueType.Create("int"),
+            ClassId = Guid.NewGuid(),
             Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Public
         };
 
@@ -93,6 +95,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Edad",
+            ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
             DataType = ValueType.Create("int")
         };
@@ -107,6 +110,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Edad",
+            ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
             DataType = ReferenceType.Create("string")
         };
@@ -135,6 +139,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Nombre",
+            ClassId = Guid.NewGuid(),
             DataType = ReferenceType.Create("string"),
             Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
         };
@@ -150,6 +155,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Nombre",
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
         };
@@ -197,6 +203,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = null,
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -213,6 +220,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = null,
+            ClassId = Guid.NewGuid(),
             DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -229,6 +237,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "   ",
+            ClassId = Guid.NewGuid(),
             DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -245,6 +254,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "   ",
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -261,6 +271,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = new string('a', 101),
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -277,6 +288,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "aaa",
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -292,6 +304,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -307,6 +320,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
+            ClassId = Guid.NewGuid(),
             DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -338,6 +352,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = (Attribute.AttributeVisibility)999
         };
@@ -354,6 +369,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Internal
         };
@@ -369,6 +385,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
+            ClassId = Guid.NewGuid(),
             DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Internal
         };
@@ -384,6 +401,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "1Test1",
+            ClassId = Guid.NewGuid(),
             DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Internal
         };
