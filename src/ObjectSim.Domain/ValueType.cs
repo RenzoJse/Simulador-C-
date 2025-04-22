@@ -1,5 +1,5 @@
 ﻿namespace ObjectSim.Domain;
-public class ValueType: IDataType
+public class ValueType : IDataType
 {
     public static readonly List<string> BuiltinTypes = ["int", "bool", "char", "decimal", "DateTime"];
     public string Name { get; private set; }

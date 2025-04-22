@@ -1,4 +1,6 @@
-﻿namespace ObjectSim.Domain;
+﻿using System.Text.RegularExpressions;
+
+namespace ObjectSim.Domain;
 
 public class Attribute
 {
@@ -15,10 +17,12 @@ public class Attribute
     public IDataType DataType { get; set; } = null!;
     public AttributeVisibility Visibility { get; set; }
     public Guid Id { get; set; }
+    public Guid ClassId { get; set; }
     public string? Name { get; set; } = null!;
     public void Validate()
     {
         ValidateId(Id);
+        ValidateId(ClassId);
         ValidateName(Name);
         ValidateDataType(DataType);
         ValidateVisibility(Visibility);
@@ -37,10 +41,15 @@ public class Attribute
             throw new ArgumentException("Name cannot be null or whitespace.");
         }
 
-        if(name.Length > 100)
+        if(name.Length > 10 || name.Length < 1)
         {
-            throw new ArgumentException("Name cannot exceed 100 characters.");
+            throw new ArgumentException("Name cannot be less than 1 or more than 10 characters.");
         }
+        if(Regex.IsMatch(name, @"^\d"))
+        {
+            throw new ArgumentException("Name cannot be null or start with a num.");
+        }
+
     }
     public static void ValidateDataType(IDataType DataType)
     {
