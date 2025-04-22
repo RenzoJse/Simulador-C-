@@ -21,6 +21,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Edad",
+            ClassId = Guid.NewGuid(),
             DataType = null!,
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -79,6 +80,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Test",
             DataType = ValueType.Create("int"),
+            ClassId = Guid.NewGuid(),
             Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Public
         };
 
@@ -93,6 +95,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Edad",
+            ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
             DataType = ValueType.Create("int")
         };
@@ -107,6 +110,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Edad",
+            ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
             DataType = ReferenceType.Create("string")
         };
@@ -135,6 +139,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Nombre",
+            ClassId = Guid.NewGuid(),
             DataType = ReferenceType.Create("string"),
             Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
         };
@@ -150,6 +155,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Nombre",
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
         };
@@ -197,6 +203,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = null,
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -213,6 +220,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = null,
+            ClassId = Guid.NewGuid(),
             DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -229,6 +237,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "   ",
+            ClassId = Guid.NewGuid(),
             DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -245,6 +254,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "   ",
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -261,6 +271,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = new string('a', 101),
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -268,7 +279,7 @@ public class AttributeTest
         Action act = attribute.Validate;
 
         act.Should().Throw<ArgumentException>()
-            .WithMessage("Name cannot exceed 100 characters.");
+            .WithMessage("Name cannot be less than 1 or more than 10 characters.");
     }
     [TestMethod]
     public void Validate_ShouldNotThrow_WhenNameIsOk()
@@ -277,6 +288,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "aaa",
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -292,6 +304,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -307,6 +320,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
+            ClassId = Guid.NewGuid(),
             DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -338,6 +352,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = (Attribute.AttributeVisibility)999
         };
@@ -354,6 +369,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
+            ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Internal
         };
@@ -369,6 +385,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
+            ClassId = Guid.NewGuid(),
             DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Internal
         };
@@ -376,5 +393,53 @@ public class AttributeTest
         Action act = attribute.Validate;
 
         act.Should().NotThrow();
+    }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenNameStartWithANum()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "1Test1",
+            ClassId = Guid.NewGuid(),
+            DataType = ReferenceType.Create("string"),
+            Visibility = Attribute.AttributeVisibility.Internal
+        };
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or start with a num.");
+    }
+    [TestMethod]
+    public void Attribute_ShouldHaveCorrectClassId()
+    {
+        var classId = Guid.NewGuid();
+
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttribute",
+            DataType = ReferenceType.Create("string"),
+            Visibility = Attribute.AttributeVisibility.Public,
+            ClassId = classId
+        };
+        attribute.ClassId.Should().Be(classId);
+    }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenClassIdIsEmpty()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            ClassId = Guid.Empty,
+            Name = "ValidName",
+            DataType = ReferenceType.Create("string"),
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Id must be a valid non-empty GUID.");
     }
 }
