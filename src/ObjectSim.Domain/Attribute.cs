@@ -22,6 +22,7 @@ public class Attribute
     public void Validate()
     {
         ValidateId(Id);
+        ValidateId(ClassId);
         ValidateName(Name);
         ValidateDataType(DataType);
         ValidateVisibility(Visibility);
