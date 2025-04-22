@@ -7,20 +7,10 @@ public class MethodService(IRepository<Method> methodRepository) : IMethodServic
 {
     public Method Create(Method Entity)
     {
-        if(Entity == null)
-        {
-            throw new Exception("Method cannot be null");
-        }
-
         var existMethod = methodRepository.Exists(m => m.Name == Entity.Name);
         if(existMethod)
         {
             throw new Exception("Method already exist");
-        }
-
-        if(Entity.Name == string.Empty)
-        {
-            throw new Exception("Method name cannot be empty");
         }
 
         var methodToAdd = new Method

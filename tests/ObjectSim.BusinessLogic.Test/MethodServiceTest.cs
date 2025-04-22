@@ -12,33 +12,33 @@ public class MethodServiceTest
     private Mock<IRepository<Method>>? _methodRepositoryMock;
     private MethodService? _methodService;
     private static readonly Guid ClassId = Guid.NewGuid();
+    private Method? testMethod;
 
     [TestInitialize]
     public void Initialize()
     {
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
         _methodService = new MethodService(_methodRepositoryMock.Object);
-    }
-
-    [TestMethod]
-    public void CreateValidMethod()
-    {
-        var testMethod = new Method
+        testMethod = new Method
         {
-            Id = Guid.NewGuid(),
+            Id = ClassId,
             Name = "MetodoDePrueba",
-            Type = "boolean",
+            Type = Method.MethodDataType.String,
             Abstract = false,
             IsSealed = false,
-            Accessibility = "public",
+            Accessibility = Method.MethodAccessibility.Public,
             Parameters = [],
             LocalVariables = []
         };
+    }
 
+    [TestMethod]
+    public void CreateMethod_WhenValid_ShouldReturnMethod()
+    {
         _methodRepositoryMock!.Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
         _methodRepositoryMock.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
 
-        var result = _methodService!.Create(testMethod);
+        var result = _methodService!.Create(testMethod!);
 
         result.Should().NotBeNull();
         _methodRepositoryMock.VerifyAll();
@@ -46,160 +46,125 @@ public class MethodServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(Exception))]
-    public void CreateInvalidNameMethodData()
+    public void CreateMethod_WhenMethodAlreadyExists_ShouldThrowException()
     {
-        var testMethod = new Method
-        {
-            Name = string.Empty,
-            Type = "boolean",
-            Abstract = false,
-            IsSealed = false,
-            Accessibility = "public",
-            Parameters = [],
-            LocalVariables = []
-        };
+        _methodRepositoryMock!
+            .Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>()))
+            .Returns(true);
 
-        _methodRepositoryMock!.Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
-        _methodRepositoryMock.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
-
-        var result = _methodService!.Create(testMethod);
+        _methodService!.Create(testMethod!);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void CreateNullMethod()
-    {
-        _methodService!.Create(null!);
-    }
-
-    [TestMethod]
-    public void GetAllTest()
+    public void GetAllMethods_ShouldReturnMethods()
     {
         var methods = new List<Method>
         {
-            new Method{Name = "m1Test", Abstract = false, IsSealed =  false, Accessibility = "public", LocalVariables = [], Parameters = []},
-            new Method{Name = "m1Test2", Abstract = false, IsSealed =  false, Accessibility = "public", LocalVariables = [], Parameters = []}
+            new Method { Name = "m1Test", Abstract = false, IsSealed = false, Accessibility = Method.MethodAccessibility.Public, LocalVariables = [], Parameters = [] },
+            new Method { Name = "m2Test", Abstract = false, IsSealed = false, Accessibility = Method.MethodAccessibility.Public, LocalVariables = [], Parameters = [] }
         };
 
-        Assert.IsNotNull(_methodRepositoryMock);
-        Assert.IsNotNull(_methodService);
-        _methodRepositoryMock.Setup(repo => repo.GetAll(It.IsAny<Func<Method, bool>>()))
-            .Returns(methods);
-        var result = _methodService.GetAll();
+        _methodRepositoryMock!.Setup(repo => repo.GetAll(It.IsAny<Func<Method, bool>>())).Returns(methods);
+
+        var result = _methodService!.GetAll();
+
         result.Should().HaveCount(2);
         _methodRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Method, bool>>()), Times.Once);
     }
 
     [TestMethod]
     [ExpectedException(typeof(Exception))]
-    public void GetAllThrowsBusinessDataException()
+    public void GetAllMethods_ShouldThrowException_WhenRepositoryFails()
     {
-        _methodRepositoryMock!
-            .Setup(repo => repo.GetAll(It.IsAny<Func<Method, bool>>()))
-            .Throws(new Exception());
+        _methodRepositoryMock!.Setup(repo => repo.GetAll(It.IsAny<Func<Method, bool>>())).Throws(new Exception());
+
         _methodService!.GetAll();
-        _methodRepositoryMock.VerifyAll();
-    }
-
-    [TestMethod]
-    public void GetMethodById()
-    {
-        var testMethod = new Method
-        {
-            Id = ClassId,
-            Name = "M1Test",
-            Type = "boolean",
-            Abstract = false,
-            IsSealed = false,
-            Accessibility = "public",
-            Parameters = [],
-            LocalVariables = []
-        };
-
-        _methodRepositoryMock!.Setup(x => x.Get(It.Is<Func<Method, bool>>(filter => filter(testMethod))))
-            .Returns(testMethod);
-
-        var result = _methodService!.GetById(ClassId);
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(ClassId, result.Id);
-        Assert.AreEqual("M1Test", result.Name);
-
-        _methodRepositoryMock.Verify(x => x.Get(It.IsAny<Func<Method, bool>>()), Times.Once);
-    }
-
-    [TestMethod]
-    public void DeleteMethod()
-    {
-        var testMethod = new Method
-        {
-            Id = ClassId,
-            Name = "M1Test",
-            Type = "boolean",
-            Abstract = false,
-            IsSealed = false,
-            Accessibility = "public",
-            Parameters = [],
-            LocalVariables = []
-        };
-
-        _methodRepositoryMock!.Setup(x => x.Get(It.Is<Func<Method, bool>>(filter => filter(testMethod))))
-            .Returns(testMethod);
-        _methodRepositoryMock.Setup(x => x.Delete(It.Is<Method>(m => m.Id == ClassId)));
-
-        _methodService!.Delete(ClassId);
-
-        _methodRepositoryMock.Verify(x => x.Get(It.IsAny<Func<Method, bool>>()), Times.Once);
-        _methodRepositoryMock.Verify(x => x.Delete(It.Is<Method>(m => m.Id == ClassId)), Times.Once);
     }
 
     [TestMethod]
     [ExpectedException(typeof(Exception))]
-    public void DeleteNullMethod()
+    public void GetAllMethods_WhenNoMethods_ShouldThrowException()
     {
-        _methodRepositoryMock!.Setup(x => x.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns((Method)null!);
+        _methodRepositoryMock!.Setup(repo => repo.GetAll(It.IsAny<Func<Method, bool>>())).Returns([]);
 
-        _methodService!.Delete(ClassId);
-
-        _methodRepositoryMock.Verify(x => x.Get(It.IsAny<Func<Method, bool>>()), Times.Once);
-        _methodRepositoryMock.Verify(x => x.Delete(It.IsAny<Method>()), Times.Never);
+        _methodService!.GetAll();
     }
 
     [TestMethod]
-    public void UpdateUserTest()
+    public void GetById_WhenValid_ShouldReturnMethod()
     {
-        var testMethod = new Method
-        {
-            Id = ClassId,
-            Name = "M1Test",
-            Type = "boolean",
-            Abstract = false,
-            IsSealed = false,
-            Accessibility = "public",
-            Parameters = [],
-            LocalVariables = []
-        };
+        _methodRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns(testMethod!);
 
+        var result = _methodService!.GetById(ClassId);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(testMethod!.Id);
+        result.Name.Should().Be(testMethod.Name);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void GetById_WhenMethodNotFound_ShouldThrowInvalidOperationException()
+    {
+        _methodRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
+            .Throws(new Exception());
+
+        _methodService!.GetById(Guid.NewGuid());
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(Exception))]
+    public void DeleteMethod_WhenMethodNotFound_ShouldThrowException()
+    {
+        _methodRepositoryMock!
+            .Setup(x => x.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns((Method)null!);
+        _methodService!.Delete(ClassId);
+    }
+
+    [TestMethod]
+    public void DeleteMethod_WhenExists_ShouldDeleteAndReturnTrue()
+    {
+        _methodRepositoryMock!
+            .Setup(x => x.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns(testMethod!);
+
+        _methodRepositoryMock!
+            .Setup(x => x.Delete(It.IsAny<Method>()));
+
+        var result = _methodService!.Delete(testMethod!.Id);
+
+        result.Should().BeTrue();
+        _methodRepositoryMock.Verify(x => x.Delete(It.Is<Method>(m => m.Id == testMethod.Id)), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateMethod_WhenValid_ShouldReturnUpdatedMethod()
+    {
         var newMethod = new Method
         {
             Id = ClassId,
-            Name = "M1Updated",
-            Type = "string",
+            Name = "UpdatedMethod",
+            Type = Method.MethodDataType.String,
             Abstract = true,
             IsSealed = true,
-            Accessibility = "private",
+            Accessibility = Method.MethodAccessibility.Private,
             Parameters = [],
             LocalVariables = []
         };
 
-        _methodRepositoryMock!.Setup(x => x.Get(It.Is<Func<Method, bool>>(filter => filter(testMethod))))
+        _methodRepositoryMock!
+            .Setup(x => x.Get(It.Is<Func<Method, bool>>(filter => filter(testMethod!))))
             .Returns(testMethod);
 
-        _methodRepositoryMock!.Setup(x => x.Update(It.IsAny<Method>()))
+        _methodRepositoryMock!
+            .Setup(x => x.Update(It.IsAny<Method>()))
             .Returns((Method m) => m);
 
-        var result = _methodService!.Update(testMethod.Id, newMethod);
+        var result = _methodService!.Update(testMethod!.Id, newMethod);
 
         result.Should().NotBeNull();
         result.Id.Should().Be(testMethod.Id);
@@ -214,43 +179,25 @@ public class MethodServiceTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void UpdateInvalidMethodNameTest()
+    [ExpectedException(typeof(ArgumentException))]
+    public void UpdateMethod_WhenNameIsEmpty_ShouldThrowException()
     {
-        var testMethod = new Method
+        var invalidUpdate = new Method
         {
-            Id = ClassId,
-            Name = "M1Test",
-            Type = "boolean",
-            Abstract = false,
-            IsSealed = false,
-            Accessibility = "public",
-            Parameters = [],
-            LocalVariables = []
-        };
-
-        var secondClassId = Guid.NewGuid();
-
-        var newMethod = new Method
-        {
-            Id = secondClassId,
+            Id = testMethod!.Id,
             Name = "",
-            Type = "boolean",
-            Abstract = false,
+            Type = Method.MethodDataType.String,
+            Abstract = true,
             IsSealed = false,
-            Accessibility = "public",
+            Accessibility = Method.MethodAccessibility.Private,
             Parameters = [],
             LocalVariables = []
         };
 
-        _methodRepositoryMock!.Setup(x => x.Get(It.Is<Func<Method, bool>>(filter => filter(testMethod))))
+        _methodRepositoryMock!
+            .Setup(x => x.Get(It.Is<Func<Method, bool>>(f => f(testMethod!))))
             .Returns(testMethod);
 
-        _methodRepositoryMock.Setup(x => x.Update(It.IsAny<Method>()));
-
-        _methodService!.Update(testMethod.Id, newMethod);
-
-        _methodRepositoryMock.Verify(x => x.Get(It.IsAny<Func<Method, bool>>()), Times.Once);
-        _methodRepositoryMock.Verify(x => x.Update(It.IsAny<Method>()), Times.Never);
+        _methodService!.Update(testMethod.Id, invalidUpdate);
     }
 }
