@@ -407,4 +407,21 @@ public class AttributeTest
         };
         attribute.ClassId.Should().Be(classId);
     }
+    [TestMethod]
+    public void Validate_ShouldThrow_WhenClassIdIsEmpty()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            ClassId = Guid.Empty,
+            Name = "ValidName",
+            DataType = ReferenceType.Create("string"),
+            Visibility = Attribute.AttributeVisibility.Public
+        };
+
+        Action act = attribute.Validate;
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Id must be a valid non-empty GUID.");
+    }
 }
