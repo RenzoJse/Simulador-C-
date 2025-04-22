@@ -7,7 +7,7 @@ public class Class
     #region Name
 
     private string? _name;
-    private const int MaxNameLength = 15;
+    private const int MaxNameLength = 20;
     private const int MinNameLength = 3;
 
     public string? Name
@@ -36,7 +36,7 @@ public class Class
     {
         if(name.Length > MaxNameLength)
         {
-            throw new ArgumentException("Name cannot be longer than 15 characters");
+            throw new ArgumentException("Name cannot be longer than " + MaxNameLength + " characters");
         }
     }
 
@@ -44,7 +44,7 @@ public class Class
     {
         if(name.Length < MinNameLength)
         {
-            throw new ArgumentException("Name cannot be shorter than 3 characters");
+            throw new ArgumentException("Name cannot be shorter than " + MinNameLength + " characters");
         }
     }
 
@@ -61,6 +61,22 @@ public class Class
         {
             ArgumentNullException.ThrowIfNull(value);
             _isAbstract = value;
+        }
+    }
+
+    #endregion
+
+    #region Interface
+
+    private bool? _isInterface;
+
+    public bool? IsInterface
+    {
+        get => _isInterface;
+        set
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            _isInterface = value;
         }
     }
 
@@ -92,7 +108,7 @@ public class Class
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            _attributes = value.ToList();
+            _attributes = IsInterface == true ? [] : value.ToList();
         }
     }
 
@@ -108,6 +124,14 @@ public class Class
         set
         {
             ArgumentNullException.ThrowIfNull(value);
+            if (IsInterface == true)
+            {
+                if (value.Any(method => method.Abstract != true))
+                {
+                    throw new ArgumentException("Methods in an interface must be abstract");
+                }
+            }
+
             _methods = value.ToList();
         }
     }

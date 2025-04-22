@@ -16,4 +16,8 @@ public class AttributeService(IAttributeRepository attributeRepository) : IAttri
             return attribute;
         }
     }
+    public Domain.Attribute GetById(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 }

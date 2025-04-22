@@ -3,7 +3,7 @@ using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodService(IRepository<Method> methodRepository) : IMethodService<Method>
+public class MethodService(IRepository<Method> methodRepository) : IMethodService
 {
     public Method Create(Method Entity)
     {
