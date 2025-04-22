@@ -164,7 +164,7 @@ public class BuilderTest
         {
             Id = Guid.NewGuid(),
             Name = "InterfaceMethod",
-            Accessibility = "public",
+            Accessibility = Method.MethodAccessibility.Public,
             Abstract = true,
         };
 

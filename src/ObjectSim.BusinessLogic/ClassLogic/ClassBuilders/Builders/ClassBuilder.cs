@@ -6,6 +6,8 @@ namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 
 public class ClassBuilder(IMethodService methodService, IClassService classService, IAttributeService attributeService) : Builder(classService)
 {
+    private readonly IClassService _classService = classService;
+
     public override void SetAttributes(List<Attribute> attributes)
     {
         base.SetAttributes(attributes);
@@ -14,7 +16,7 @@ public class ClassBuilder(IMethodService methodService, IClassService classServi
         foreach(var attr in attributes)
         {
             var newAttribute = attributeService.Create(attr);
-            if(classService.CanAddAttribute(Result, newAttribute))
+            if(_classService.CanAddAttribute(Result, newAttribute))
             {
                 newAttributes.Add(newAttribute);
             }
@@ -31,7 +33,7 @@ public class ClassBuilder(IMethodService methodService, IClassService classServi
         foreach(var method in methods)
         {
             var newMethod = methodService.Create(method);
-            if(classService.CanAddMethod(Result, newMethod))
+            if(_classService.CanAddMethod(Result, newMethod))
             {
                 newMethods.Add(newMethod);
             }

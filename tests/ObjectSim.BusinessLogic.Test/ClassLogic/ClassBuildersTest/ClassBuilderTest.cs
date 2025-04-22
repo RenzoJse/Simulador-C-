@@ -21,7 +21,7 @@ public class ClassBuilderTest
     };
 
     [TestInitialize]
-    public new void Initialize()
+    public void Initialize()
     {
         _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
         _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);

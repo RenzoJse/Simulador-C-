@@ -110,8 +110,7 @@ public class ClassTest
             new Method
             {
                 Name = "TestMethod",
-                Abstract = false,
-                Type = "void"
+                Abstract = false
             }
         };
 
