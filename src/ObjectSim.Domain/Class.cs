@@ -124,9 +124,9 @@ public class Class
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            if (IsInterface == true)
+            if(IsInterface == true)
             {
-                if (value.Any(method => method.Abstract != true))
+                if(value.Any(method => method.Abstract != true))
                 {
                     throw new ArgumentException("Methods in an interface must be abstract");
                 }
