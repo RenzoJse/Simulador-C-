@@ -100,4 +100,16 @@ public class AttributeServiceTest
         result.Should().HaveCount(2);
         _attributeRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Domain.Attribute, bool>>()), Times.Once);
     }
+    [TestMethod]
+    public void GetAll_ShouldThrowException_WhenRepositoryReturnsEmptyList()
+    {
+        _attributeRepositoryMock!
+            .Setup(repo => repo.GetAll(It.IsAny<Func<Domain.Attribute, bool>>()))
+            .Returns([]);
+
+        Action act = () => _service!.GetAll();
+
+        act.Should().Throw<Exception>();
+        _attributeRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Domain.Attribute, bool>>()), Times.Once);
+    }
 }
