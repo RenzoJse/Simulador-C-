@@ -112,4 +112,18 @@ public class AttributeServiceTest
         act.Should().Throw<Exception>().WithMessage("No attributes found.");
         _attributeRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Domain.Attribute, bool>>()), Times.Once);
     }
+    [TestMethod]
+    public void GetAll_ShouldThrowException_WhenRepositoryReturnsNull()
+    {
+        _attributeRepositoryMock!
+            .Setup(repo => repo.GetAll(It.IsAny<Func<Domain.Attribute, bool>>()))
+            .Returns((List<Domain.Attribute>)(IEnumerable<Domain.Attribute>?)null);
+
+        Action act = () => _service!.GetAll();
+
+        act.Should().Throw<Exception>()
+           .WithMessage("No attributes found.");
+
+        _attributeRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Domain.Attribute, bool>>()), Times.Once);
+    }
 }
