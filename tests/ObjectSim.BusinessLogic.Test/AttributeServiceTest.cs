@@ -69,4 +69,35 @@ public class AttributeServiceTest
         act.Should().Throw<InvalidOperationException>();
         _attributeRepositoryMock!.Verify(repo => repo.Add(It.IsAny<ObjectSim.Domain.Attribute>()), Times.Never);
     }
+    [TestMethod]
+    public void GetAllTest()
+    {
+        var attributes = new List<Domain.Attribute>
+        {
+            new ObjectSim.Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Nombre",
+            ClassId = Guid.NewGuid(),
+            DataType = Domain.ValueType.Create("int"),
+            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
+        },
+            new ObjectSim.Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Nombre2",
+            ClassId = Guid.NewGuid(),
+            DataType = Domain.ValueType.Create("int"),
+            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
+            }
+        };
+
+        Assert.IsNotNull(_attributeRepositoryMock);
+        Assert.IsNotNull(_service);
+        _attributeRepositoryMock.Setup(repo => repo.GetAll(It.IsAny<Func<Domain.Attribute, bool>>()))
+            .Returns(attributes);
+        var result = _service.GetAll();
+        result.Should().HaveCount(2);
+        _attributeRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Domain.Attribute, bool>>()), Times.Once);
+    }
 }
