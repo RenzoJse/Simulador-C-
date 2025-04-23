@@ -3,7 +3,7 @@ using ObjectSim.Domain.Args;
 
 namespace ObjectSim.BusinessLogic.ClassLogic.Strategy;
 
-interface IBuilderStrategy
+public interface IBuilderStrategy
 {
     bool WhichIsMyBuilder(CreateClassArgs args);
     public Builder CreateBuilder();

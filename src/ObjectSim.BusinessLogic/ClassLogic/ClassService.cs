@@ -1,15 +1,26 @@
-﻿using ObjectSim.Domain;
+﻿using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
+using ObjectSim.BusinessLogic.ClassLogic.Strategy;
+using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.ClassLogic;
 
-public class ClassService : IClassService
+public class ClassService(List<IBuilderStrategy> strategies) : IClassService
 {
+
     public Class CreateClass(CreateClassArgs args)
     {
-        throw new NotImplementedException();
+       var builder = GetBuilder(args);
+        return null!;
+    }
+
+    private Builder GetBuilder(CreateClassArgs args)
+    {
+        var strategy = strategies.FirstOrDefault(x => x.WhichIsMyBuilder(args));
+
+        return strategy!.CreateBuilder();
     }
 
     public Class GetById(Guid? classId)
