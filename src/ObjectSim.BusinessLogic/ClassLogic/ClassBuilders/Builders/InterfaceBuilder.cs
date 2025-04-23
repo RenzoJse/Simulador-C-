@@ -1,5 +1,4 @@
-﻿using ObjectSim.DataAccess.Interface;
-using ObjectSim.Domain;
+﻿using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 

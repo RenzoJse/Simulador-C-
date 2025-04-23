@@ -40,12 +40,12 @@ public class ClassBuilder(IMethodService methodService, IClassService classServi
         }
 
         var parent = Result.Parent;
-        if (parent is not null && (bool)parent.IsInterface!)
+        if(parent is not null && (bool)parent.IsInterface!)
         {
-            foreach (var parentMethod in parent.Methods!)
+            foreach(var parentMethod in parent.Methods!)
             {
                 var isImplemented = newMethods.Any(m => m.Name == parentMethod.Name);
-                if (!isImplemented)
+                if(!isImplemented)
                 {
                     throw new ArgumentException("Parent class is an interface. Should implement all his methods");
                 }

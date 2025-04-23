@@ -51,13 +51,13 @@ public class ClassBuilderTest
         var invalidAttributeId = Guid.NewGuid();
         var validAttributeId = Guid.NewGuid();
 
-        Attribute invalidAttribute = new Attribute
+        var invalidAttribute = new Attribute
         {
             Id = invalidAttributeId,
             Name = "TestAttribute"
         };
 
-        Attribute validAttribute = new Attribute
+        var validAttribute = new Attribute
         {
             Id = validAttributeId,
             Name = "NewAttribute"
