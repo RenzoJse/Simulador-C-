@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using ObjectSim.Domain;
-using System;
 
 namespace ObjectSim.Domain.Test;
 

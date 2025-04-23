@@ -22,7 +22,7 @@ public class LocalVariableServiceTest
         {
             Id = ClassId,
             Name = "LocalVariable1",
-            Type = "int"
+            Type = Domain.LocalVariable.LocalVariableDataType.String
         };
     }
 
