@@ -76,4 +76,13 @@ public class LocalVariableTest
         act.Should().Throw<ArgumentException>()
            .WithMessage("Name cannot exceed 100 characters.");
     }
+
+    [TestMethod]
+    public void SetType_WhenInvalidEnum_ShouldThrowArgumentException()
+    {
+        var variable = new LocalVariable();
+        Action act = () => variable.Type = (LocalVariable.LocalVariableDataType)999;
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Invalid data type.");
+    }
 }
