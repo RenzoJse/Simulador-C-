@@ -1,8 +1,8 @@
-﻿using ObjectSim.IBusinessLogic;
-using ObjectSim.IDataAccess;
+﻿using ObjectSim.DataAccess.Interface;
+using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class AttributeService(IAttributeRepository attributeRepository) : IAttributeService
+public class AttributeService(IRepository<Domain.Attribute> attributeRepository) : IAttributeService<Domain.Attribute>
 {
     public Domain.Attribute Create(Domain.Attribute attribute)
     {
@@ -15,5 +15,16 @@ public class AttributeService(IAttributeRepository attributeRepository) : IAttri
             attributeRepository.Add(attribute!);
             return attribute;
         }
+    }
+
+    public List<Domain.Attribute> GetAll()
+    {
+        var attributes = attributeRepository.GetAll(att1 => att1.Id != Guid.Empty);
+        if(attributes == null || !attributes.Any())
+        {
+            throw new Exception("No attributes found.");
+        }
+
+        return (List<Domain.Attribute>)attributes;
     }
 }

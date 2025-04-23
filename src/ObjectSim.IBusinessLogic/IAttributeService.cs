@@ -1,5 +1,6 @@
 ﻿namespace ObjectSim.IBusinessLogic;
-public interface IAttributeService
+public interface IAttributeService<T>
 {
-    Domain.Attribute Create(Domain.Attribute attribute);
+    T Create(T attribute);
+    List<T> GetAll();
 }

@@ -1,21 +1,21 @@
 ﻿using FluentAssertions;
 using Moq;
+using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
-using ObjectSim.IDataAccess;
 using static ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test;
 [TestClass]
 public class AttributeServiceTest
 {
-    private Mock<IAttributeRepository>? _attributeRepositoryMock;
+    private Mock<IRepository<Domain.Attribute>>? _attributeRepositoryMock;
     private AttributeService? _service;
     private ObjectSim.Domain.Attribute? _attribute;
 
     [TestInitialize]
     public void Setup()
     {
-        _attributeRepositoryMock = new Mock<IAttributeRepository>(MockBehavior.Strict);
+        _attributeRepositoryMock = new Mock<IRepository<Domain.Attribute>>(MockBehavior.Strict);
         _service = new AttributeService(_attributeRepositoryMock.Object);
 
         _attribute = new ObjectSim.Domain.Attribute
