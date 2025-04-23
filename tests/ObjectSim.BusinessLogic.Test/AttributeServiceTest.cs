@@ -109,7 +109,7 @@ public class AttributeServiceTest
 
         Action act = () => _service!.GetAll();
 
-        act.Should().Throw<Exception>();
+        act.Should().Throw<Exception>().WithMessage("No attributes found.");
         _attributeRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Domain.Attribute, bool>>()), Times.Once);
     }
 }
