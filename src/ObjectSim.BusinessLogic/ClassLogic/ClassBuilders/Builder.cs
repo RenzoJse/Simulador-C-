@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using ObjectSim.Domain;
+﻿using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
@@ -19,7 +18,7 @@ public abstract class Builder(IClassService classService)
         Class parent = null!;
         try
         {
-             parent = classService.GetById(idParent);
+            parent = classService.GetById(idParent);
         }
         catch(ArgumentException)
         {
@@ -35,7 +34,7 @@ public abstract class Builder(IClassService classService)
 
     private static void IsParentSealed(Class parent)
     {
-        if ((bool)parent.IsSealed!)
+        if((bool)parent.IsSealed!)
         {
             throw new ArgumentException("Cant have a sealed class as parent");
         }
