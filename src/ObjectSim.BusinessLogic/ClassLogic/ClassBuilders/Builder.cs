@@ -46,6 +46,11 @@ public abstract class Builder(IClassService classService)
         Result.IsAbstract = abstraction;
     }
 
+    public virtual void SetInterface(bool? isInterface)
+    {
+        Result.IsInterface = isInterface;
+    }
+
     public virtual void SetSealed(bool? sealedClass)
     {
         Result.IsSealed = sealedClass;
