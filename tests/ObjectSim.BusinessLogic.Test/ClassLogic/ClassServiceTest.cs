@@ -167,4 +167,59 @@ public class ClassServiceTest
     #endregion
 
     #endregion
+
+    #region GetById
+
+    #region Error
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void GetById_WithNullId_ThrowsException()
+    {
+        _classServiceTest!.GetById(null!);
+    }
+
+    [TestMethod]
+    public void GetById_WithInexistantId_ThrowsException()
+    {
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns((Class?)null);
+
+        Action action = () => _classServiceTest!.GetById(Guid.NewGuid());
+        action.Should().Throw<ArgumentException>();
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void GetById_WithValidId_ReturnsClass()
+    {
+        var testClass = new Class
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestClass",
+            IsAbstract = false,
+            IsInterface = false,
+            IsSealed = false,
+            Attributes = [],
+            Methods = [],
+            Parent = null,
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(testClass);
+
+        var result = _classServiceTest!.GetById(testClass.Id);
+        result.Should().NotBeNull();
+        result.Should().BeOfType<Class>();
+        result.Should().Be(testClass);
+    }
+
+    #endregion
+
+    #endregion
 }
