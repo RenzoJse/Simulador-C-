@@ -296,13 +296,13 @@ public class ClassServiceTest
         var existingMethod = new Method
         {
             Name = "TestMethod1",
-            Parameters = [new Parameter { Name = "param1", Type = "int" }]
+            Parameters = [new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int }]
         };
 
         var newMethod = new Method
         {
             Name = "TestMethod2",
-            Parameters = [new Parameter { Name = "otherParam", Type = "bool" }]
+            Parameters = [new Parameter { Name = "otherParam", Type = Parameter.ParameterDataType.Bool }]
         };
 
         var testClass = new Class
@@ -330,8 +330,8 @@ public class ClassServiceTest
         {
             Name = "TestMethod",
             Parameters = [
-                new Parameter { Name = "param1", Type = "int" },
-                new Parameter { Name = "param2", Type = "string" }
+                new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int },
+                new Parameter { Name = "param2", Type = Parameter.ParameterDataType.String }
             ]
         };
 
@@ -339,8 +339,8 @@ public class ClassServiceTest
         {
             Name = "TestMethod",
             Parameters = [
-                new Parameter { Name = "param2", Type = "string" },
-                new Parameter { Name = "param1", Type = "int" }
+                new Parameter { Name = "param2", Type = Parameter.ParameterDataType.String },
+                new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int }
             ]
         };
 
@@ -370,7 +370,7 @@ public class ClassServiceTest
             Name = "TestMethod",
             Abstract = false,
             IsSealed = false,
-            Parameters = [new Parameter { Name = "param1", Type = "int" }]
+            Parameters = [new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int }]
         };
 
         var newMethod = new Method
@@ -378,7 +378,7 @@ public class ClassServiceTest
             Name = "TestMethod",
             Abstract = false,
             IsSealed = false,
-            Parameters = [new Parameter { Name = "param1", Type = "string" }]
+            Parameters = [new Parameter { Name = "param1", Type = Parameter.ParameterDataType.String }]
         };
 
         var testClass = new Class
@@ -405,15 +405,15 @@ public class ClassServiceTest
         var existingMethod = new Method
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", Type = "int" }]
+            Parameters = [new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int }]
         };
 
         var newMethod = new Method
         {
             Name = "TestMethod",
             Parameters = [
-                new Parameter { Name = "param1", Type = "int" },
-                new Parameter { Name = "param2", Type = "string" }
+                new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int },
+                new Parameter { Name = "param2", Type = Parameter.ParameterDataType.String }
             ]
         };
 
