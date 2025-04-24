@@ -222,4 +222,223 @@ public class ClassServiceTest
     #endregion
 
     #endregion
+
+    #region AddMethod
+
+    #region Error
+
+    [TestMethod]
+    public void AddMethod_WithNullClassId_ThrowsException()
+    {
+        Action action = () => _classServiceTest!.AddMethod(null!, new Method());
+        action.Should().Throw<ArgumentNullException>();
+    }
+
+    [TestMethod]
+    public void AddMethod_WithNullMethod_ThrowsException()
+    {
+        Action action = () => _classServiceTest!.AddMethod(Guid.NewGuid(), null!);
+        action.Should().Throw<ArgumentNullException>();
+    }
+
+    [TestMethod]
+    public void AddMethod_TryingToAddRepeatedMethodNotOverriding_ThrowsException()
+    {
+        var classId = Guid.NewGuid();
+        var method = new Method
+        {
+            Name = "TestMethod",
+            Abstract = false,
+            //ADD OVERRIDE
+            IsSealed = false,
+            Parameters = [],
+        };
+
+        var testClass = new Class
+        {
+            Id = classId,
+            Name = "TestClass",
+            IsAbstract = false,
+            IsInterface = false,
+            IsSealed = false,
+            Attributes = [],
+            Methods = [method],
+            Parent = null,
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(testClass);
+
+        Action action = () => _classServiceTest!.AddMethod(classId, method);
+        action.Should().Throw<ArgumentException>("Method already exists in class.");
+    }
+
+    [TestMethod]
+    public void AddMethod_TryingToAdd_ThrowsException()
+    {
+    }
+
+    [TestMethod]
+    public void AddMethod_Trying_ThrowsException()
+    {
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void AddMethod_WithCompletelyDifferentMethod_AddsMethods()
+    {
+        var classId = Guid.NewGuid();
+
+        var existingMethod = new Method
+        {
+            Name = "TestMethod1",
+            Parameters = [new Parameter { Name = "param1", Type = "int" }]
+        };
+
+        var newMethod = new Method
+        {
+            Name = "TestMethod2",
+            Parameters = [new Parameter { Name = "otherParam", Type = "bool" }]
+        };
+
+        var testClass = new Class
+        {
+            Id = classId,
+            Name = "TestClass",
+            Methods = [existingMethod]
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(testClass);
+
+        _classServiceTest!.AddMethod(classId, newMethod);
+
+        testClass.Methods.Should().Contain(newMethod);
+    }
+
+    [TestMethod]
+    public void AddMethod_WithSameParamsInDifferentOrder_ShouldNotThrowMethodExistsException()
+    {
+        var classId = Guid.NewGuid();
+
+        var existingMethod = new Method
+        {
+            Name = "TestMethod",
+            Parameters = [
+                new Parameter { Name = "param1", Type = "int" },
+                new Parameter { Name = "param2", Type = "string" }
+            ]
+        };
+
+        var newMethod = new Method
+        {
+            Name = "TestMethod",
+            Parameters = [
+                new Parameter { Name = "param2", Type = "string" },
+                new Parameter { Name = "param1", Type = "int" }
+            ]
+        };
+
+        var testClass = new Class
+        {
+            Id = classId,
+            Name = "TestClass",
+            Methods = [existingMethod]
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(testClass);
+
+        Action action = () => _classServiceTest!.AddMethod(classId, newMethod);
+
+        action.Should().Throw<NotImplementedException>();
+    }
+
+    [TestMethod]
+    public void AddMethod_WithSameNameAndTypeButDifferentParameters_AddsMethod()
+    {
+        var classId = Guid.NewGuid();
+
+        var existingMethod = new Method
+        {
+            Name = "TestMethod",
+            Abstract = false,
+            IsSealed = false,
+            Parameters = [new Parameter { Name = "param1", Type = "int" }]
+        };
+
+        var newMethod = new Method
+        {
+            Name = "TestMethod",
+            Abstract = false,
+            IsSealed = false,
+            Parameters = [new Parameter { Name = "param1", Type = "string" }]
+        };
+
+        var testClass = new Class
+        {
+            Id = classId,
+            Name = "TestClass",
+            Methods = [existingMethod]
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(testClass);
+
+        Action action = () => _classServiceTest!.AddMethod(classId, newMethod);
+
+        action.Should().Throw<NotImplementedException>();
+    }
+
+    [TestMethod]
+    public void AddMethod_WithDifferentParameterCount_ShouldNotThrowMethodExistsException()
+    {
+        var classId = Guid.NewGuid();
+
+        var existingMethod = new Method
+        {
+            Name = "TestMethod",
+            Parameters = [new Parameter { Name = "param1", Type = "int" }]
+        };
+
+        var newMethod = new Method
+        {
+            Name = "TestMethod",
+            Parameters = [
+                new Parameter { Name = "param1", Type = "int" },
+                new Parameter { Name = "param2", Type = "string" }
+            ]
+        };
+
+        var testClass = new Class
+        {
+            Id = classId,
+            Name = "TestClass",
+            Methods = [existingMethod]
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(testClass);
+
+        Action action = () => _classServiceTest!.AddMethod(classId, newMethod);
+
+        action.Should().Throw<NotImplementedException>();
+    }
+
+    [TestMethod]
+    public void AddMethod_TryingToAddOverridingParentMethod_AddsMethod()
+    {
+    }
+
+    #endregion
+
+    #endregion
 }
