@@ -21,6 +21,7 @@ public class MethodService(IRepository<Method> methodRepository) : IMethodServic
             IsSealed = Entity.IsSealed,
             Accessibility = Entity.Accessibility,
             Parameters = Entity.Parameters,
+            IsOverride = Entity.IsOverride,
             LocalVariables = Entity.LocalVariables,
         };
 

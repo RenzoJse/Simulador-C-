@@ -62,6 +62,10 @@ public class Method
 
     #region IsSealed
     public bool IsSealed { get; set; } = false;
+    #endregion
+
+    #region IsOverride
+    public bool IsOverride { get; set; } = false;
     #endregion 
 
     #region Accesibility
@@ -85,6 +89,10 @@ public class Method
 
     #region LocalVariable
     public List<LocalVariable> LocalVariables { get; set; } = [];
+    #endregion
+
+    #region MethodsInvoke
+    public List<Method> MethodsInvoke { get; set; } = [];
     #endregion
 
     #region Validations
