@@ -28,7 +28,8 @@ public class MethodServiceTest
             IsSealed = false,
             Accessibility = Method.MethodAccessibility.Public,
             Parameters = [],
-            LocalVariables = []
+            LocalVariables = [],
+            MethodsInvoke = []
         };
     }
 
@@ -60,8 +61,8 @@ public class MethodServiceTest
     {
         var methods = new List<Method>
         {
-            new Method { Name = "m1Test", Abstract = false, IsSealed = false, Accessibility = Method.MethodAccessibility.Public, LocalVariables = [], Parameters = [] },
-            new Method { Name = "m2Test", Abstract = false, IsSealed = false, Accessibility = Method.MethodAccessibility.Public, LocalVariables = [], Parameters = [] }
+            new Method { Name = "m1Test", Abstract = false, IsSealed = false, Accessibility = Method.MethodAccessibility.Public, LocalVariables = [], Parameters = [], MethodsInvoke = [] },
+            new Method { Name = "m2Test", Abstract = false, IsSealed = false, Accessibility = Method.MethodAccessibility.Public, LocalVariables = [], Parameters = [], MethodsInvoke = [] }
         };
 
         _methodRepositoryMock!.Setup(repo => repo.GetAll(It.IsAny<Func<Method, bool>>())).Returns(methods);

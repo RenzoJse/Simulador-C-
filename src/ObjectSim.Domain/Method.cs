@@ -91,6 +91,10 @@ public class Method
     public List<LocalVariable> LocalVariables { get; set; } = [];
     #endregion
 
+    #region MethodsInvoke
+    public List<Method> MethodsInvoke { get; set; } = [];
+    #endregion
+
     #region Validations
     public void ValidateFields()
     {
