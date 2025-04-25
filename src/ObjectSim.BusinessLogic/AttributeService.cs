@@ -37,6 +37,21 @@ public class AttributeService(IRepository<Domain.Attribute> attributeRepository)
         attributeRepository.Delete(attribute);
         return true;
     }
+    public Domain.Attribute GetById(Guid id)
+    {
+        if(id == Guid.Empty)
+        {
+            throw new ArgumentException("Id must be a valid non-empty GUID.", nameof(id));
+        }
+
+        var attribute = attributeRepository.Get(att => att.Id == id);
+        if(attribute == null)
+        {
+            throw new KeyNotFoundException($"Attribute with ID {id} not found.");
+        }
+
+        return attribute;
+    }
 
 
 }
