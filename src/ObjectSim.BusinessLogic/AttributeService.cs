@@ -27,4 +27,15 @@ public class AttributeService(IRepository<Domain.Attribute> attributeRepository)
 
         return (List<Domain.Attribute>)attributes;
     }
+    public bool Delete(Guid id)
+    {
+        var attribute = attributeRepository.Get(att1 => id == att1.Id);
+        if(attribute == null)
+        {
+            throw new Exception("Attribute cannot be null.");
+        }
+        attributeRepository.Delete(attribute);
+        return true;
+    }
+
 }
