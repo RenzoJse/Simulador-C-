@@ -1,8 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
 using ObjectSim.DataAccess.Interface;
-using ObjectSim.Domain;
-using static ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test;
 [TestClass]
@@ -20,9 +18,11 @@ public class AttributeServiceTest
 
         _attribute = new ObjectSim.Domain.Attribute
         {
-            Name = "Color",
-            DataType = ReferenceType.Create("string"),
-            Visibility = AttributeVisibility.Public
+            Id = Guid.NewGuid(),
+            Name = "Test",
+            DataType = Domain.ValueType.Create("int"),
+            ClassId = Guid.NewGuid(),
+            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Public
         };
     }
 
@@ -151,6 +151,19 @@ public class AttributeServiceTest
 
         _service!.Delete(Guid.Empty);
     }
+    [TestMethod]
+    public void GetById_ValidId_ShouldReturnAttribute()
+    {
+        _attributeRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()))
+            .Returns(_attribute);
 
+        var result = _service!.GetById(_attribute!.Id);
+
+        result.Should().NotBeNull();
+        result.Should().Be(_attribute);
+
+        _attributeRepositoryMock.Verify(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()), Times.Once);
+    }
 
 }
