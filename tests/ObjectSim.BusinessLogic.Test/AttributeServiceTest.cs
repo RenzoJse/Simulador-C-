@@ -126,4 +126,20 @@ public class AttributeServiceTest
 
         _attributeRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Domain.Attribute, bool>>()), Times.Once);
     }
+    [TestMethod]
+    public void DeleteAttribute_ValidId_ShouldCallDelete()
+    {
+        _attributeRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()))
+            .Returns(_attribute);
+
+        _attributeRepositoryMock!
+            .Setup(repo => repo.Delete(It.IsAny<Domain.Attribute>()));
+
+        _service!.Delete(_attribute!.Id);
+
+        _attributeRepositoryMock.Verify(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()), Times.Once);
+        _attributeRepositoryMock.Verify(repo => repo.Delete(It.IsAny<Domain.Attribute>()), Times.Once);
+    }
+
 }
