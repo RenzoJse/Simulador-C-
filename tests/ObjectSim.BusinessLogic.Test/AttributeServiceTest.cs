@@ -181,6 +181,26 @@ public class AttributeServiceTest
 
         _service!.GetById(Guid.NewGuid());
     }
+    [TestMethod]
+    public void UpdateAttribute_ValidAttribute_ShouldUpdateAndReturnAttribute()
+    {
+        _attributeRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()))
+            .Returns(_attribute);
+
+        _attributeRepositoryMock!
+            .Setup(repo => repo.Update(It.IsAny<Domain.Attribute>()));
+
+        _attribute!.Name = "UpdatedName";
+
+        var result = _service!.Update(_attribute);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("UpdatedName");
+
+        _attributeRepositoryMock.Verify(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()), Times.Once);
+        _attributeRepositoryMock.Verify(repo => repo.Update(It.IsAny<Domain.Attribute>()), Times.Once);
+    }
 
 
 }
