@@ -165,5 +165,22 @@ public class AttributeServiceTest
 
         _attributeRepositoryMock.Verify(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()), Times.Once);
     }
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void GetById_InvalidId_ShouldThrowArgumentException()
+    {
+        _service!.GetById(Guid.Empty);
+    }
+    [TestMethod]
+    [ExpectedException(typeof(KeyNotFoundException))]
+    public void GetById_NonExistentId_ShouldThrowKeyNotFoundException()
+    {
+        _attributeRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()))
+            .Returns((Domain.Attribute)null);
+
+        _service!.GetById(Guid.NewGuid());
+    }
+
 
 }
