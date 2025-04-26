@@ -8,7 +8,6 @@ using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
-using Attribute = System.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic;
 
@@ -316,7 +315,6 @@ public class ClassServiceTest
     [TestMethod]
     public void AddMethod_ClassIsInterfaceMethodIsOverriding_ThrowsException()
     {
-        var classId = Guid.NewGuid();
         var method = new Method
         {
             Name = "TestMethod",
@@ -337,7 +335,6 @@ public class ClassServiceTest
     [TestMethod]
     public void AddMethod_ClassIsInterfaceMethodAccesibilityIsPrivate_ThrowsException()
     {
-        var classId = Guid.NewGuid();
         var method = new Method
         {
             Name = "TestMethod",
@@ -358,7 +355,6 @@ public class ClassServiceTest
     [TestMethod]
     public void AddMethod_ClassIsInterfaceMethodThatHaveLocalVariables_ThrowsException()
     {
-        var classId = Guid.NewGuid();
         var method = new Method
         {
             Name = "TestMethod",
@@ -378,7 +374,6 @@ public class ClassServiceTest
     [TestMethod]
     public void AddMethod_ClassIsInterfaceMethodThatHaveMethodInvoke_ThrowsException()
     {
-        var classId = Guid.NewGuid();
         var method = new Method
         {
             Name = "TestMethod",
@@ -552,7 +547,6 @@ public class ClassServiceTest
     [TestMethod]
     public void AddMethod_ClassIsInterfaceMethodIsNotAbstract_MakeMethodAbstractAndAddsMethod()
     {
-        var classId = Guid.NewGuid();
         var method = new Method
         {
             Name = "TestMethod",
@@ -573,7 +567,6 @@ public class ClassServiceTest
     [TestMethod]
     public void AddMethod_ClassIsInterfaceValidMethod_AddsMethod()
     {
-        var classId = Guid.NewGuid();
         var method = new Method
         {
             Name = "TestMethod",
