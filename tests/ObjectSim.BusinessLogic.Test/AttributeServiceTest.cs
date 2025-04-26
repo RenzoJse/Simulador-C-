@@ -201,6 +201,10 @@ public class AttributeServiceTest
         _attributeRepositoryMock.Verify(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()), Times.Once);
         _attributeRepositoryMock.Verify(repo => repo.Update(It.IsAny<Domain.Attribute>()), Times.Once);
     }
-
-
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void UpdateAttribute_NullAttribute_ShouldThrowArgumentNullException()
+    {
+        _service!.Update(Guid.NewGuid(), null!);
+    }
 }
