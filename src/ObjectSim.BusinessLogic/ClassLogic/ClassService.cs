@@ -8,7 +8,7 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.ClassLogic;
 
-public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> classRepository) : IClassService
+public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> classRepository, IAttributeService attributeService) : IClassService
 {
     public Class CreateClass(CreateClassArgs args)
     {
@@ -127,11 +127,30 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
     public void AddAttribute(Guid? classId, Guid? idAttribute)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(classId);
+        ArgumentNullException.ThrowIfNull(idAttribute);
+
+        var classObj = GetById(classId);
+        var attribute = attributeService.GetById((Guid)idAttribute);
+
+        if (CanAddAttribute(classObj, attribute))
+        {
+            classObj.Attributes!.Add(attribute);
+        }
     }
 
     public bool CanAddAttribute(Class classObj, Attribute attribute)
     {
-        throw new NotImplementedException();
+        if(classObj.IsInterface == true)
+        {
+            throw new ArgumentException("Cannot add attribute to an interface.");
+        }
+
+        if (classObj.Attributes!.Any(classAttribute => classAttribute.Name == attribute.Name))
+        {
+            throw new ArgumentException("Attribute name already exists in class.");
+        }
+
+        return true;
     }
 }

@@ -82,7 +82,7 @@ public class ClassServiceTest
 
         var strategies = new List<IBuilderStrategy> { _builderStrategyMock!.Object };
 
-        _classServiceTest = new ClassService(strategies, _classRepositoryMock.Object);
+        _classServiceTest = new ClassService(strategies, _classRepositoryMock.Object, _attributeServiceMock.Object);
     }
 
     [TestCleanup]
@@ -580,6 +580,10 @@ public class ClassServiceTest
     [TestMethod]
     public void AddAttribute_AttributeDoesNotExist_ThrowsException()
     {
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testClass);
+
         _attributeServiceMock!
             .Setup(service => service.GetById(It.IsAny<Guid>()))
             .Throws(new ArgumentException("Attribute does not exist."));
@@ -598,6 +602,10 @@ public class ClassServiceTest
             Id = attributeId,
             Name = "TestAttribute",
         };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testInterfaceClass);
 
         _attributeServiceMock!
             .Setup(service => service.GetById(It.IsAny<Guid>()))
@@ -625,6 +633,10 @@ public class ClassServiceTest
 
         _testClass.Attributes!.Add(sameNameAttribute);
 
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testClass);
+
         _attributeServiceMock!
             .Setup(service => service.GetById(It.IsAny<Guid>()))
             .Returns(attribute);
@@ -646,6 +658,10 @@ public class ClassServiceTest
             Id = attributeId,
             Name = "TestAttribute",
         };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testClass);
 
         _attributeServiceMock!
             .Setup(service => service.GetById(It.IsAny<Guid>()))
