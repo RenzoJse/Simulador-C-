@@ -1,10 +1,12 @@
-﻿namespace ObjectSim.IBusinessLogic;
+﻿using ObjectSim.Domain;
 
-public interface IMethodService<T>
+namespace ObjectSim.IBusinessLogic;
+
+public interface IMethodService
 {
-    T Create(T Entity);
-    List<T> GetAll();
+    Method Create(Method method);
+    List<Method> GetAll();
     bool Delete(Guid id);
-    T GetById(Guid id);
-    T Update(Guid id, T entity);
+    Method GetById(Guid id);
+    Method Update(Guid id, Method entity);
 }

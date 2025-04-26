@@ -16,7 +16,6 @@ public class AttributeService(IRepository<Domain.Attribute> attributeRepository)
             return attribute;
         }
     }
-
     public List<Domain.Attribute> GetAll()
     {
         var attributes = attributeRepository.GetAll(att1 => att1.Id != Guid.Empty);
@@ -70,6 +69,5 @@ public class AttributeService(IRepository<Domain.Attribute> attributeRepository)
         existing.Visibility = entity.Visibility;
         attributeRepository.Update(existing);
         return existing;
-
     }
 }

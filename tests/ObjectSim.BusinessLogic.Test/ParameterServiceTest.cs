@@ -11,7 +11,7 @@ public class ParameterServiceTest
 {
     private Mock<IParameterRepository<Parameter>>? _parameterRepositoryMock;
     private ParameterService? _parameterService;
-    private static readonly Guid ClassId = Guid.NewGuid();
+    private static readonly Guid ParameterId = Guid.NewGuid();
     private Parameter? parameter;
 
 
@@ -22,9 +22,9 @@ public class ParameterServiceTest
         _parameterService = new ParameterService(_parameterRepositoryMock.Object);
         parameter = new Parameter
         {
-            Id = ClassId,
+            Id = ParameterId,
             Name = "Parameter1",
-            Type = "string"
+            Type = Parameter.ParameterDataType.String
         };
     }
 

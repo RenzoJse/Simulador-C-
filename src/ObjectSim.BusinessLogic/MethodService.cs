@@ -3,24 +3,14 @@ using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodService(IRepository<Method> methodRepository) : IMethodService<Method>
+public class MethodService(IRepository<Method> methodRepository) : IMethodService
 {
     public Method Create(Method Entity)
     {
-        if(Entity == null)
-        {
-            throw new Exception("Method cannot be null");
-        }
-
         var existMethod = methodRepository.Exists(m => m.Name == Entity.Name);
         if(existMethod)
         {
             throw new Exception("Method already exist");
-        }
-
-        if(Entity.Name == string.Empty)
-        {
-            throw new Exception("Method name cannot be empty");
         }
 
         var methodToAdd = new Method
@@ -31,6 +21,7 @@ public class MethodService(IRepository<Method> methodRepository) : IMethodServic
             IsSealed = Entity.IsSealed,
             Accessibility = Entity.Accessibility,
             Parameters = Entity.Parameters,
+            IsOverride = Entity.IsOverride,
             LocalVariables = Entity.LocalVariables,
         };
 
