@@ -59,20 +59,18 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         {
             ValidateInterfaceMethodConstraints(method);
         }
+
         classObj.Methods!.Add(method);
     }
 
     private static void ValidateMethodUniqueness(Class classObj, Method method)
     {
-        foreach (var classMethod in classObj.Methods!)
+        if (classObj.Methods!.Any(classMethod => classMethod.Name == method.Name &&
+                                                 classMethod.Type == method.Type &&
+                                                 method.IsOverride == false &&
+                                                 AreParametersEqual(classMethod.Parameters, method.Parameters)))
         {
-            if (classMethod.Name == method.Name &&
-                classMethod.Type == method.Type &&
-                AreParametersEqual(classMethod.Parameters, method.Parameters))
-            {
-                // Lo del override
-                throw new ArgumentException("Method already exists in class.");
-            }
+            throw new ArgumentException("Method already exists in class.");
         }
     }
 

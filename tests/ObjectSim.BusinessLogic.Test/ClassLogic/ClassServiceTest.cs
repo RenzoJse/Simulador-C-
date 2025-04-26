@@ -32,6 +32,23 @@ public class ClassServiceTest
         Parent = null,
     };
 
+    private readonly Class _testClass = new Class
+    {
+        Name = "TestClass",
+        IsAbstract = false,
+        IsInterface = false,
+        IsSealed = false,
+        Attributes = [],
+        Methods = [],
+        Parent = null,
+    };
+
+    private readonly Method _testMethod = new Method
+    {
+        Name = "TestMethod",
+    };
+
+
     //private static readonly Builder ClassBuilder = new ClassBuilder(null!, null!, null!);
 
     private readonly CreateClassArgs _args = new CreateClassArgs("TestClass",
@@ -216,26 +233,14 @@ public class ClassServiceTest
     [TestMethod]
     public void GetById_WithValidId_ReturnsClass()
     {
-        var testClass = new Class
-        {
-            Id = Guid.NewGuid(),
-            Name = "TestClass",
-            IsAbstract = false,
-            IsInterface = false,
-            IsSealed = false,
-            Attributes = [],
-            Methods = [],
-            Parent = null,
-        };
-
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(testClass);
+            .Returns(_testClass);
 
-        var result = _classServiceTest!.GetById(testClass.Id);
+        var result = _classServiceTest!.GetById(_testClass.Id);
         result.Should().NotBeNull();
         result.Should().BeOfType<Class>();
-        result.Should().Be(testClass);
+        result.Should().Be(_testClass);
     }
 
     #endregion
@@ -263,130 +268,78 @@ public class ClassServiceTest
     [TestMethod]
     public void AddMethod_TryingToAddRepeatedMethodNotOverriding_ThrowsException()
     {
-        var classId = Guid.NewGuid();
-        var method = new Method
-        {
-            Name = "TestMethod",
-            Abstract = false,
-            //ADD OVERRIDE
-            IsSealed = false,
-            Parameters = [],
-        };
-
-        var testClass = new Class
-        {
-            Id = classId,
-            Name = "TestClass",
-            IsAbstract = false,
-            IsInterface = false,
-            IsSealed = false,
-            Attributes = [],
-            Methods = [method],
-            Parent = null,
-        };
+        _testClass.Methods!.Add(_testMethod);
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(testClass);
+            .Returns(_testClass);
 
-        Action action = () => _classServiceTest!.AddMethod(classId, method);
+        Action action = () => _classServiceTest!.AddMethod(_testClass.Id, _testMethod);
         action.Should().Throw<ArgumentException>("Method already exists in class.");
     }
 
     [TestMethod]
     public void AddMethod_ClassIsInterfaceMethodIsSealed_ThrowsException()
     {
-        var method = new Method
-        {
-            Name = "TestMethod",
-            Abstract = false,
-            IsSealed = true,
-            Parameters = [],
-        };
+        _testMethod.IsSealed = true;
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testInterfaceClass);
 
-        Action action = () => _classServiceTest!.AddMethod(_testInterfaceClass.Id, method);
+        Action action = () => _classServiceTest!.AddMethod(_testInterfaceClass.Id, _testMethod);
         action.Should().Throw<ArgumentException>("Method cannot be sealed in an interface.");
     }
 
     [TestMethod]
     public void AddMethod_ClassIsInterfaceMethodIsOverriding_ThrowsException()
     {
-        var method = new Method
-        {
-            Name = "TestMethod",
-            Abstract = false,
-            IsSealed = false,
-            IsOverride = true,
-            Parameters = [],
-        };
+        _testMethod.IsOverride = true;
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testInterfaceClass);
 
-        Action action = () => _classServiceTest!.AddMethod(_testInterfaceClass.Id, method);
+        Action action = () => _classServiceTest!.AddMethod(_testInterfaceClass.Id, _testMethod);
         action.Should().Throw<ArgumentException>("Method cannot be overridden in an interface.");
     }
 
     [TestMethod]
     public void AddMethod_ClassIsInterfaceMethodAccesibilityIsPrivate_ThrowsException()
     {
-        var method = new Method
-        {
-            Name = "TestMethod",
-            Abstract = false,
-            IsSealed = false,
-            Accessibility = Method.MethodAccessibility.Private,
-            Parameters = [],
-        };
+        _testMethod.Accessibility = Method.MethodAccessibility.Private;
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testInterfaceClass);
 
-        Action action = () => _classServiceTest!.AddMethod(_testInterfaceClass.Id, method);
+        Action action = () => _classServiceTest!.AddMethod(_testInterfaceClass.Id, _testMethod);
         action.Should().Throw<ArgumentException>("Method cannot be private in an interface.");
     }
 
     [TestMethod]
     public void AddMethod_ClassIsInterfaceMethodThatHaveLocalVariables_ThrowsException()
     {
-        var method = new Method
-        {
-            Name = "TestMethod",
-            Abstract = false,
-            IsSealed = false,
-            LocalVariables = [new LocalVariable()]
-        };
+        _testMethod.LocalVariables = [new LocalVariable()];
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testInterfaceClass);
 
-        Action action = () => _classServiceTest!.AddMethod(_testInterfaceClass.Id, method);
+        Action action = () => _classServiceTest!.AddMethod(_testInterfaceClass.Id, _testMethod);
         action.Should().Throw<ArgumentException>("Method cannot be implemented in an interface.");
     }
 
     [TestMethod]
     public void AddMethod_ClassIsInterfaceMethodThatHaveMethodInvoke_ThrowsException()
     {
-        var method = new Method
-        {
-            Name = "TestMethod",
-            Abstract = false,
-            IsSealed = false,
-            MethodsInvoke = [new Method()]
-        };
+        _testMethod.MethodsInvoke = [new Method()];
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testInterfaceClass);
 
-        Action action = () => _classServiceTest!.AddMethod(_testInterfaceClass.Id, method);
+        Action action = () => _classServiceTest!.AddMethod(_testInterfaceClass.Id, _testMethod);
         action.Should().Throw<ArgumentException>("Method cannot be implemented in an interface.");
     }
 
@@ -411,20 +364,15 @@ public class ClassServiceTest
             Parameters = [new Parameter { Name = "otherParam", Type = Parameter.ParameterDataType.Bool }]
         };
 
-        var testClass = new Class
-        {
-            Id = classId,
-            Name = "TestClass",
-            Methods = [existingMethod]
-        };
+        _testClass.Methods!.Add(existingMethod);
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(testClass);
+            .Returns(_testClass);
 
         _classServiceTest!.AddMethod(classId, newMethod);
 
-        testClass.Methods.Should().Contain(newMethod);
+        _testClass.Methods.Should().Contain(newMethod);
     }
 
     [TestMethod]
@@ -450,16 +398,11 @@ public class ClassServiceTest
             ]
         };
 
-        var testClass = new Class
-        {
-            Id = classId,
-            Name = "TestClass",
-            Methods = [existingMethod]
-        };
+        _testClass.Methods!.Add(existingMethod);
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(testClass);
+            .Returns(_testClass);
 
         Action action = () => _classServiceTest!.AddMethod(classId, newMethod);
 
@@ -487,16 +430,11 @@ public class ClassServiceTest
             Parameters = [new Parameter { Name = "param1", Type = Parameter.ParameterDataType.String }]
         };
 
-        var testClass = new Class
-        {
-            Id = classId,
-            Name = "TestClass",
-            Methods = [existingMethod]
-        };
+        _testClass.Methods!.Add(existingMethod);
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(testClass);
+            .Returns(_testClass);
 
         Action action = () => _classServiceTest!.AddMethod(classId, newMethod);
 
@@ -504,7 +442,7 @@ public class ClassServiceTest
     }
 
     [TestMethod]
-    public void AddMethod_WithDifferentParameterCount_ShouldNotThrowMethodExistsException()
+    public void AddMethod_WithDifferentParameterCount_AddsMethod()
     {
         var classId = Guid.NewGuid();
 
@@ -547,27 +485,21 @@ public class ClassServiceTest
     [TestMethod]
     public void AddMethod_ClassIsInterfaceMethodIsNotAbstract_MakeMethodAbstractAndAddsMethod()
     {
-        var method = new Method
-        {
-            Name = "TestMethod",
-            Abstract = false,
-            IsSealed = false,
-            Parameters = [],
-        };
+        _testMethod.Abstract = false;
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testInterfaceClass);
 
-        _classServiceTest!.AddMethod(_testInterfaceClass.Id, method);
+        _classServiceTest!.AddMethod(_testInterfaceClass.Id, _testMethod);
 
-        _testInterfaceClass.Methods.Should().Contain(method);
+        _testInterfaceClass.Methods.Should().Contain(_testMethod);
     }
 
     [TestMethod]
     public void AddMethod_ClassIsInterfaceValidMethod_AddsMethod()
     {
-        var method = new Method
+        var validMethod = new Method
         {
             Name = "TestMethod",
             Abstract = true,
@@ -579,9 +511,9 @@ public class ClassServiceTest
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testInterfaceClass);
 
-        _classServiceTest!.AddMethod(_testInterfaceClass.Id, method);
+        _classServiceTest!.AddMethod(_testInterfaceClass.Id, validMethod);
 
-        _testInterfaceClass.Methods.Should().Contain(method);
+        _testInterfaceClass.Methods.Should().Contain(validMethod);
     }
 
     #endregion
