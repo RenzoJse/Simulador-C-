@@ -207,4 +207,23 @@ public class AttributeServiceTest
     {
         _service!.Update(Guid.NewGuid(), null!);
     }
+    [TestMethod]
+    [ExpectedException(typeof(KeyNotFoundException))]
+    public void UpdateAttribute_NonExistentAttribute_ShouldThrowKeyNotFoundException()
+    {
+        _attributeRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()))
+            .Returns((Domain.Attribute)null!);
+
+        var dummyAttribute = new Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Attr",
+            ClassId = Guid.NewGuid(),
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            DataType = new ValueType("int")
+        };
+
+        _service!.Update(dummyAttribute.Id, dummyAttribute);
+    }
 }
