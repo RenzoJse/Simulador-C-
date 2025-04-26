@@ -153,4 +153,20 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
         return true;
     }
+
+    public void DeleteClass(Guid? classId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DeleteMethod(Guid? classId, Guid? methodId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DeleteAttribute(Guid? classId, Guid? attributeId)
+    {
+        throw new NotImplementedException();
+    }
+
 }
