@@ -221,7 +221,7 @@ public class AttributeServiceTest
             Name = "Attr",
             ClassId = Guid.NewGuid(),
             Visibility = Domain.Attribute.AttributeVisibility.Public,
-            DataType =Domain.ValueType.Create("int")
+            DataType = Domain.ValueType.Create("int")
         };
 
         _service!.Update(dummyAttribute.Id, dummyAttribute);
