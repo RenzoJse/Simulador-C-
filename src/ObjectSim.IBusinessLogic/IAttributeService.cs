@@ -5,4 +5,5 @@ public interface IAttributeService<T>
     List<T> GetAll();
     bool Delete(Guid id);
     T GetById(Guid id);
+    T Update(Guid id, T entity);
 }

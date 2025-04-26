@@ -53,5 +53,23 @@ public class AttributeService(IRepository<Domain.Attribute> attributeRepository)
         return attribute;
     }
 
+    public Domain.Attribute Update(Guid id, Domain.Attribute entity)
+    {
+        if(entity == null)
+        {
+            throw new ArgumentNullException(nameof(entity), "Attribute cannot be null.");
+        }
+        var existing = attributeRepository.Get(att => att.Id == entity.Id);
+        if(existing == null)
+        {
+            throw new KeyNotFoundException($"Attribute with ID {entity.Id} not found.");
+        }
+        existing.Name = entity.Name;
+        existing.DataType = entity.DataType;
+        existing.ClassId = entity.ClassId;
+        existing.Visibility = entity.Visibility;
+        attributeRepository.Update(existing);
+        return existing;
 
+    }
 }

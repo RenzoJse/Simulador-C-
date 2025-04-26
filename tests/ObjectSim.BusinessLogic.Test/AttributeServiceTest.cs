@@ -184,16 +184,16 @@ public class AttributeServiceTest
     [TestMethod]
     public void UpdateAttribute_ValidAttribute_ShouldUpdateAndReturnAttribute()
     {
+        _attribute!.Name = "UpdatedName";
         _attributeRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()))
             .Returns(_attribute);
 
         _attributeRepositoryMock!
-            .Setup(repo => repo.Update(It.IsAny<Domain.Attribute>()));
+            .Setup(repo => repo.Update(It.IsAny<Domain.Attribute>()))
+            .Returns((Domain.Attribute attr) => attr);
 
-        _attribute!.Name = "UpdatedName";
-
-        var result = _service!.Update(_attribute);
+        var result = _service!.Update(_attribute.Id, _attribute);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("UpdatedName");
