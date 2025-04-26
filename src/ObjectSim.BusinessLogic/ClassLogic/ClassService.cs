@@ -48,7 +48,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
         var classObj = GetById(classId);
 
-        CanAddMethod(classObj, method);
+        CanAddMethod(classObj, method); //Tengo que ver lo de si abstract haga la clase abstract
 
         classObj.Methods!.Add(method);
     }
@@ -125,7 +125,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         return true;
     }
 
-    public void AddAttribute(Guid? classId, Attribute attribute)
+    public void AddAttribute(Guid? classId, Guid? idAttribute)
     {
         throw new NotImplementedException();
     }

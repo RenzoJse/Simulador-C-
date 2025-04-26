@@ -8,6 +8,7 @@ using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
+using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic;
 
@@ -182,6 +183,14 @@ public class ClassServiceTest
     [TestMethod]
     public void CreateClass_WithValidParameters_ReturnsClass()
     {
+        _args.Parent = null;
+        _args.Attributes = [];
+        _args.Methods = [];
+        _args.Name = "TestClass";
+        _args.IsAbstract = false;
+        _args.IsInterface = false;
+        _args.IsSealed = false;
+
         var classBuilder = GetMockedBuilder();
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
@@ -479,6 +488,37 @@ public class ClassServiceTest
     [TestMethod]
     public void AddMethod_TryingToAddOverridingParentMethod_AddsMethod()
     {
+        var classId = Guid.NewGuid();
+
+        var existingMethod = new Method
+        {
+            Name = "TestMethod",
+            Parameters = [new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int }]
+        };
+
+        var newMethod = new Method
+        {
+            Name = "TestMethod",
+            Parameters = [
+                new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int },
+            ],
+            IsOverride = true
+        };
+
+        var testClass = new Class
+        {
+            Id = classId,
+            Name = "TestClass",
+            Methods = [existingMethod]
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(testClass);
+
+        _classServiceTest!.AddMethod(classId, newMethod);
+
+        testClass.Methods.Should().Contain(newMethod);
     }
 
     [TestMethod]
@@ -513,6 +553,106 @@ public class ClassServiceTest
         _classServiceTest!.AddMethod(_testInterfaceClass.Id, validMethod);
 
         _testInterfaceClass.Methods.Should().Contain(validMethod);
+    }
+
+    #endregion
+
+    #endregion
+
+    #region AddAttribute
+
+    #region Error
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void AddAttribute_WithNullClassId_ThrowsException()
+    {
+        _classServiceTest!.AddAttribute(null!, Guid.NewGuid());
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void AddAttribute_NullAttributeId_ThrowsException()
+    {
+        _classServiceTest!.AddAttribute(_testClass.Id, null!);
+    }
+
+    [TestMethod]
+    public void AddAttribute_AttributeDoesNotExist_ThrowsException()
+    {
+        _attributeServiceMock!
+            .Setup(service => service.GetById(It.IsAny<Guid>()))
+            .Throws(new ArgumentException("Attribute does not exist."));
+
+        Action action = () => _classServiceTest!.AddAttribute(_testClass.Id, Guid.NewGuid());
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Attribute does not exist.");
+    }
+
+    [TestMethod]
+    public void AddAttribute_ClassIsInterface_ThrowsException()
+    {
+        var attributeId = Guid.NewGuid();
+        var attribute = new Attribute
+        {
+            Id = attributeId,
+            Name = "TestAttribute",
+        };
+
+        _attributeServiceMock!
+            .Setup(service => service.GetById(It.IsAny<Guid>()))
+            .Returns(attribute);
+
+        Action action = () => _classServiceTest!.AddAttribute(_testInterfaceClass.Id, attribute.Id);
+        action.Should().Throw<ArgumentException>().WithMessage("Cannot add attribute to an interface.");
+    }
+
+    [TestMethod]
+    public void AddAttribute_AttributeRepeatedName_ThrowsException()
+    {
+        var attributeId = Guid.NewGuid();
+        var attribute = new Attribute
+        {
+            Id = attributeId,
+            Name = "TestAttribute",
+        };
+
+        var sameNameAttribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttribute",
+        };
+
+        _testClass.Attributes!.Add(sameNameAttribute);
+
+        _attributeServiceMock!
+            .Setup(service => service.GetById(It.IsAny<Guid>()))
+            .Returns(attribute);
+
+        Action action = () => _classServiceTest!.AddAttribute(_testClass.Id, attribute.Id);
+        action.Should().Throw<ArgumentException>().WithMessage("Attribute name already exists in class.");
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void AddAttribute_ValidAttribute_AddsAttribute()
+    {
+        var attributeId = Guid.NewGuid();
+        var attribute = new Attribute
+        {
+            Id = attributeId,
+            Name = "TestAttribute",
+        };
+
+        _attributeServiceMock!
+            .Setup(service => service.GetById(It.IsAny<Guid>()))
+            .Returns(attribute);
+
+        _classServiceTest!.AddAttribute(_testClass.Id, attribute.Id);
+        _testClass.Attributes.Should().Contain(attribute);
     }
 
     #endregion
