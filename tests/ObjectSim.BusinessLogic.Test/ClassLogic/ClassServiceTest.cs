@@ -674,4 +674,41 @@ public class ClassServiceTest
     #endregion
 
     #endregion
+
+    #region Delete
+
+    #region Error
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void DeleteClass_WithNullClassId_ThrowsException()
+    {
+        _classServiceTest!.DeleteClass(null!);
+    }
+
+    [TestMethod]
+    public void DeleteClass_WhenSomeOtherClassImplementsIt_ThrowsException()
+    {
+        _testClass.Parent = _testInterfaceClass;
+
+        Action action = () => _classServiceTest!.DeleteClass(_testInterfaceClass.Id);
+        action.Should().Throw<ArgumentException>().WithMessage("Cannot delete class that is implemented by another class.");
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void DeleteClass_WithValidClassIdAndIsNotImplemented_DeleteClass()
+    {
+        _classRepositoryMock!
+            .Verify(repo => repo.Delete(It.IsAny<Class>()), Times.Once);
+
+        _classServiceTest!.DeleteClass(_testClass.Id);
+    }
+
+    #endregion
+
+    #endregion
 }
