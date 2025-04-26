@@ -48,17 +48,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
         var classObj = GetById(classId);
 
-        if(classObj is { IsAbstract: false, IsInterface: false })
-        {
-
-        }
-
-        ValidateMethodUniqueness(classObj, method);
-
-        if(classObj.IsInterface == true)
-        {
-            ValidateInterfaceMethodConstraints(method);
-        }
+        CanAddMethod(classObj, method);
 
         classObj.Methods!.Add(method);
     }
@@ -123,17 +113,24 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         return true;
     }
 
+    public bool CanAddMethod(Class classObj, Method method)
+    {
+        ValidateMethodUniqueness(classObj, method);
+
+        if(classObj.IsInterface == true)
+        {
+            ValidateInterfaceMethodConstraints(method);
+        }
+
+        return true;
+    }
+
     public void AddAttribute(Guid? classId, Attribute attribute)
     {
         throw new NotImplementedException();
     }
 
     public bool CanAddAttribute(Class classObj, Attribute attribute)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool CanAddMethod(Class classObj, Method method)
     {
         throw new NotImplementedException();
     }

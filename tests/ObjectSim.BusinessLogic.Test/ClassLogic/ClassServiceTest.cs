@@ -122,7 +122,6 @@ public class ClassServiceTest
     public void CreateClass_WithNoMatchingStrategy_ThrowsException()
     {
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(false);
-        _builderStrategyMock.Setup(x => x.CreateBuilder());
 
         _classServiceTest!.CreateClass(_args);
     }
@@ -404,9 +403,9 @@ public class ClassServiceTest
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testClass);
 
-        Action action = () => _classServiceTest!.AddMethod(classId, newMethod);
+        _classServiceTest!.AddMethod(classId, newMethod);
 
-        action.Should().Throw<NotImplementedException>();
+        _testClass.Methods.Should().Contain(newMethod);
     }
 
     [TestMethod]
@@ -436,9 +435,9 @@ public class ClassServiceTest
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testClass);
 
-        Action action = () => _classServiceTest!.AddMethod(classId, newMethod);
+        _classServiceTest!.AddMethod(classId, newMethod);
 
-        action.Should().Throw<NotImplementedException>();
+       _testClass.Methods.Should().Contain(newMethod);
     }
 
     [TestMethod]
@@ -472,9 +471,9 @@ public class ClassServiceTest
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(testClass);
 
-        Action action = () => _classServiceTest!.AddMethod(classId, newMethod);
+        _classServiceTest!.AddMethod(classId, newMethod);
 
-        action.Should().Throw<NotImplementedException>();
+        testClass.Methods.Should().Contain(newMethod);
     }
 
     [TestMethod]
