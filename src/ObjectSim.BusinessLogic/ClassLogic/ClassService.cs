@@ -53,46 +53,55 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
         }
 
+        ValidateMethodUniqueness(classObj, method);
+
+        if(classObj.IsInterface == true)
+        {
+            ValidateInterfaceMethodConstraints(method);
+        }
+        classObj.Methods!.Add(method);
+    }
+
+    private static void ValidateMethodUniqueness(Class classObj, Method method)
+    {
         foreach (var classMethod in classObj.Methods!)
         {
             if (classMethod.Name == method.Name &&
                 classMethod.Type == method.Type &&
                 AreParametersEqual(classMethod.Parameters, method.Parameters))
             {
-                //Falta lo de Overriding
+                // Lo del override
                 throw new ArgumentException("Method already exists in class.");
             }
         }
-        if(classObj.IsInterface == true)
+    }
+
+    private static void ValidateInterfaceMethodConstraints(Method method)
+    {
+        if (method.IsSealed)
         {
-            if(method.IsSealed == true)
-            {
-                throw new ArgumentException("Method cannot be sealed in an interface.");
-            }
-            if(method.IsOverride == true)
-            {
-                throw new ArgumentException("Method cannot be override in an interface.");
-            }
-            if(method.Accessibility == Method.MethodAccessibility.Private)
-            {
-                throw new ArgumentException("Method cannot be private in an interface.");
-            }
-            if(method.LocalVariables.Count > 0)
-            {
-                throw new ArgumentException("Method cannot have local variables in an interface.");
-            }
-            if(method.MethodsInvoke.Count > 0)
-            {
-                throw new ArgumentException("Method cannot invoke other methods in an interface.");
-            }
-            if(method.Abstract == false)
-            {
-                method.Abstract = true;
-                classObj.Methods!.Add(method);
-            }
-            classObj.Methods!.Add(method);
+            throw new ArgumentException("Method cannot be sealed in an interface.");
         }
-        classObj.Methods!.Add(method);
+        if (method.IsOverride)
+        {
+            throw new ArgumentException("Method cannot be override in an interface.");
+        }
+        if (method.Accessibility == Method.MethodAccessibility.Private)
+        {
+            throw new ArgumentException("Method cannot be private in an interface.");
+        }
+        if (method.LocalVariables.Count > 0)
+        {
+            throw new ArgumentException("Method cannot have local variables in an interface.");
+        }
+        if (method.MethodsInvoke.Count > 0)
+        {
+            throw new ArgumentException("Method cannot invoke other methods in an interface.");
+        }
+        if (!method.Abstract)
+        {
+            method.Abstract = true;
+        }
     }
 
     private static bool AreParametersEqual(List<Parameter> parameters1, List<Parameter> parameters2)
