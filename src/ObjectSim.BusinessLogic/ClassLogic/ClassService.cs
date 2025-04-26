@@ -52,6 +52,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         {
 
         }
+
         if(classObj is { IsAbstract: false, IsInterface: false })
         {
 
