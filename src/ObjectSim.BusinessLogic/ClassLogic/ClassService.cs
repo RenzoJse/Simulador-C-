@@ -156,7 +156,17 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
     public void DeleteClass(Guid? classId)
     {
-        throw new NotImplementedException();
+        var classObj = GetById(classId);
+
+        var hasDependentClasses = classRepository.GetAll(c => c.Parent != null)
+            .Any(c => c.Parent != null && c.Parent.Id == classId);
+
+        if (hasDependentClasses)
+        {
+            throw new ArgumentException("Cannot delete class that is implemented by another class.");
+        }
+
+        classRepository.Delete(classObj);
     }
 
     public void DeleteMethod(Guid? classId, Guid? methodId)

@@ -687,8 +687,27 @@ public class ClassServiceTest
     }
 
     [TestMethod]
+    public void DeleteClass_WhenClassDoesNotExist_ThrowsException()
+    {
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns((Class?)null);
+
+        Action action = () => _classServiceTest!.DeleteClass(_testInterfaceClass.Id);
+        action.Should().Throw<ArgumentException>().WithMessage("Class not found.");
+    }
+
+    [TestMethod]
     public void DeleteClass_WhenSomeOtherClassImplementsIt_ThrowsException()
     {
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testInterfaceClass);
+
+        _classRepositoryMock!
+            .Setup(repo => repo.GetAll(It.IsAny<Func<Class, bool>>()))
+            .Returns([_testClass]);
+
         _testClass.Parent = _testInterfaceClass;
 
         Action action = () => _classServiceTest!.DeleteClass(_testInterfaceClass.Id);
@@ -703,9 +722,20 @@ public class ClassServiceTest
     public void DeleteClass_WithValidClassIdAndIsNotImplemented_DeleteClass()
     {
         _classRepositoryMock!
-            .Verify(repo => repo.Delete(It.IsAny<Class>()), Times.Once);
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testClass);
+
+        _classRepositoryMock!
+            .Setup(repo => repo.GetAll(It.IsAny<Func<Class, bool>>()))
+            .Returns([]);
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Delete(It.IsAny<Class>()));
 
         _classServiceTest!.DeleteClass(_testClass.Id);
+
+        _classRepositoryMock!
+            .Verify(repo => repo.Delete(It.IsAny<Class>()), Times.Once);
     }
 
     #endregion
