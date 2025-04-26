@@ -373,7 +373,7 @@ public class ClassServiceTest
     }
 
     [TestMethod]
-    public void AddMethod_ClassIsInterfaceMethodThatIsImplemented_ThrowsException()
+    public void AddMethod_ClassIsInterfaceMethodThatHaveLocalVariables_ThrowsException()
     {
         var classId = Guid.NewGuid();
         var method = new Method
@@ -381,7 +381,39 @@ public class ClassServiceTest
             Name = "TestMethod",
             Abstract = false,
             IsSealed = false,
-            Parameters = [new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int }],
+            LocalVariables = [new LocalVariable()]
+        };
+
+        var testInterfaceClass = new Class
+        {
+            Id = classId,
+            Name = "TestClass",
+            IsAbstract = false,
+            IsInterface = true,
+            IsSealed = false,
+            Attributes = [],
+            Methods = [],
+            Parent = null,
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(testInterfaceClass);
+
+        Action action = () => _classServiceTest!.AddMethod(classId, method);
+        action.Should().Throw<ArgumentException>("Method cannot be implemented in an interface.");
+    }
+
+    [TestMethod]
+    public void AddMethod_ClassIsInterfaceMethodThatHaveMethodInvoke_ThrowsException()
+    {
+        var classId = Guid.NewGuid();
+        var method = new Method
+        {
+            Name = "TestMethod",
+            Abstract = false,
+            IsSealed = false,
+            MethodsInvoke = [new Method()]
         };
 
         var testInterfaceClass = new Class

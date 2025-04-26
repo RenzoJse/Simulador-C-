@@ -48,11 +48,6 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
         var classObj = GetById(classId);
 
-        if(classObj.IsInterface == true)
-        {
-
-        }
-
         if(classObj is { IsAbstract: false, IsInterface: false })
         {
 
@@ -67,6 +62,35 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
                 //Falta lo de Overriding
                 throw new ArgumentException("Method already exists in class.");
             }
+        }
+        if(classObj.IsInterface == true)
+        {
+            if(method.IsSealed == true)
+            {
+                throw new ArgumentException("Method cannot be sealed in an interface.");
+            }
+            if(method.IsOverride == true)
+            {
+                throw new ArgumentException("Method cannot be override in an interface.");
+            }
+            if(method.Accessibility == Method.MethodAccessibility.Private)
+            {
+                throw new ArgumentException("Method cannot be private in an interface.");
+            }
+            if(method.LocalVariables.Count > 0)
+            {
+                throw new ArgumentException("Method cannot have local variables in an interface.");
+            }
+            if(method.MethodsInvoke.Count > 0)
+            {
+                throw new ArgumentException("Method cannot invoke other methods in an interface.");
+            }
+            if(method.Abstract == false)
+            {
+                method.Abstract = true;
+                classObj.Methods!.Add(method);
+            }
+            classObj.Methods!.Add(method);
         }
         classObj.Methods!.Add(method);
     }
