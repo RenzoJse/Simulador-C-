@@ -1,6 +1,8 @@
-﻿namespace ObjectSim.IBusinessLogic;
+﻿using ObjectSim.Domain;
 
-public interface IParameterService<T>
+namespace ObjectSim.IBusinessLogic;
+
+public interface IParameterService
 {
-    T Create(T Entity);
+    Parameter Create(Parameter entity);
 }
