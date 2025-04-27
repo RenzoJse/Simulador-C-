@@ -87,7 +87,6 @@ public class MethodServiceTest
     public void GetAllMethods_WhenNoMethods_ShouldThrowException()
     {
         _methodRepositoryMock!.Setup(repo => repo.GetAll(It.IsAny<Func<Method, bool>>())).Returns([]);
-
         _methodService!.GetAll();
     }
 

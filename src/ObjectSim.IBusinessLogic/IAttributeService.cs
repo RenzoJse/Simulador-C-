@@ -2,5 +2,8 @@
 public interface IAttributeService
 {
     Domain.Attribute Create(Domain.Attribute attribute);
-    Domain.Attribute GetById(Guid id); //TO-DO
+    List<Domain.Attribute> GetAll();
+    bool Delete(Guid id);
+    Domain.Attribute GetById(Guid id);
+    Domain.Attribute Update(Guid id, Domain.Attribute entity);
 }

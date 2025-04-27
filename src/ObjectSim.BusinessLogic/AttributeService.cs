@@ -1,8 +1,7 @@
-﻿using ObjectSim.IBusinessLogic;
-using ObjectSim.IDataAccess;
-
+﻿using ObjectSim.DataAccess.Interface;
+using ObjectSim.IBusinessLogic;
 namespace ObjectSim.BusinessLogic;
-public class AttributeService(IAttributeRepository attributeRepository) : IAttributeService
+public class AttributeService(IRepository<Domain.Attribute> attributeRepository) : IAttributeService
 {
     public Domain.Attribute Create(Domain.Attribute attribute)
     {
@@ -16,8 +15,58 @@ public class AttributeService(IAttributeRepository attributeRepository) : IAttri
             return attribute;
         }
     }
+    public List<Domain.Attribute> GetAll()
+    {
+        var attributes = attributeRepository.GetAll(att1 => att1.Id != Guid.Empty);
+        if(attributes == null || !attributes.Any())
+        {
+            throw new Exception("No attributes found.");
+        }
+
+        return (List<Domain.Attribute>)attributes;
+    }
+    public bool Delete(Guid id)
+    {
+        var attribute = attributeRepository.Get(att1 => id == att1.Id);
+        if(attribute == null)
+        {
+            throw new Exception("Attribute cannot be null.");
+        }
+        attributeRepository.Delete(attribute);
+        return true;
+    }
     public Domain.Attribute GetById(Guid id)
     {
-        throw new NotImplementedException();
+        if(id == Guid.Empty)
+        {
+            throw new ArgumentException("Id must be a valid non-empty GUID.", nameof(id));
+        }
+
+        var attribute = attributeRepository.Get(att => att.Id == id);
+        if(attribute == null)
+        {
+            throw new KeyNotFoundException($"Attribute with ID {id} not found.");
+        }
+
+        return attribute;
+    }
+
+    public Domain.Attribute Update(Guid id, Domain.Attribute entity)
+    {
+        if(entity == null)
+        {
+            throw new ArgumentNullException(nameof(entity), "Attribute cannot be null.");
+        }
+        var existing = attributeRepository.Get(att => att.Id == entity.Id);
+        if(existing == null)
+        {
+            throw new KeyNotFoundException($"Attribute with ID {entity.Id} not found.");
+        }
+        existing.Name = entity.Name;
+        existing.DataType = entity.DataType;
+        existing.ClassId = entity.ClassId;
+        existing.Visibility = entity.Visibility;
+        attributeRepository.Update(existing);
+        return existing;
     }
 }
