@@ -22,7 +22,7 @@ public class AttributeServiceTest
             Name = "Test",
             DataType = Domain.ValueType.Create("int"),
             ClassId = Guid.NewGuid(),
-            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Public
+            Visibility = Domain.Attribute.AttributeVisibility.Public
         };
     }
 
@@ -80,7 +80,7 @@ public class AttributeServiceTest
             Name = "Nombre",
             ClassId = Guid.NewGuid(),
             DataType = Domain.ValueType.Create("int"),
-            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
+            Visibility = Domain.Attribute.AttributeVisibility.Private
         },
             new ObjectSim.Domain.Attribute
         {
@@ -88,7 +88,7 @@ public class AttributeServiceTest
             Name = "Nombre2",
             ClassId = Guid.NewGuid(),
             DataType = Domain.ValueType.Create("int"),
-            Visibility = ObjectSim.Domain.Attribute.AttributeVisibility.Private
+            Visibility = Domain.Attribute.AttributeVisibility.Private
             }
         };
 
@@ -117,7 +117,7 @@ public class AttributeServiceTest
     {
         _attributeRepositoryMock!
             .Setup(repo => repo.GetAll(It.IsAny<Func<Domain.Attribute, bool>>()))
-            .Returns((List<Domain.Attribute>)(IEnumerable<Domain.Attribute>?)null);
+            .Returns(((List<Domain.Attribute>)(null!)));
 
         Action act = () => _service!.GetAll();
 
@@ -147,7 +147,7 @@ public class AttributeServiceTest
     {
         _attributeRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()))
-            .Returns((Domain.Attribute)null);
+            .Returns((Domain.Attribute)null!);
 
         _service!.Delete(Guid.Empty);
     }
@@ -177,7 +177,7 @@ public class AttributeServiceTest
     {
         _attributeRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Domain.Attribute, bool>>()))
-            .Returns((Domain.Attribute)null);
+            .Returns((Domain.Attribute)null!);
 
         _service!.GetById(Guid.NewGuid());
     }

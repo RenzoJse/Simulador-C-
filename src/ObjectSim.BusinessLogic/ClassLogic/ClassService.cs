@@ -22,7 +22,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         builder.SetSealed(args.IsSealed);
         builder.SetAttributes(args.Attributes);
         builder.SetMethods(args.Methods);
-        return builder.GetResult()!;
+        return builder.GetResult();
     }
 
     private Builder GetBuilder(CreateClassArgs args)
