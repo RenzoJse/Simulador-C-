@@ -747,25 +747,35 @@ public class ClassServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void DeleteMethod_WithNullClassId_ThrowsException()
+    public void RemoveMethod_WithNullClassId_ThrowsException()
     {
         _classServiceTest!.RemoveMethod(null!, Guid.NewGuid());
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void DeleteMethod_WithNullMethodId_ThrowsException()
+    public void RemoveMethod_WithNullMethodId_ThrowsException()
     {
         _classServiceTest!.RemoveMethod(Guid.NewGuid(), null!);
     }
 
     [TestMethod]
-    public void DeleteMethod_WhenOtherMethodIsUsingIt_ThrowsException()
+    public void RemoveMethod_WhenClassHasNoMethods_ThrowsException()
+    {
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testClass);
+
+        Action action = () => _classServiceTest!.RemoveMethod(_testClass.Id, Guid.NewGuid());
+        action.Should().Throw<ArgumentException>().WithMessage("Class has no methods.");
+    }
+
+    [TestMethod]
+    public void RemoveMethod_WhenMethodIsNotInClass_ThrowsException()
     {
         var method = new Method
         {
-            Name = "TestMethod",
-            MethodsInvoke = [_testMethod]
+            Name = "OtherTestMethod",
         };
 
         _testClass.Methods!.Add(method);
@@ -774,26 +784,47 @@ public class ClassServiceTest
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testClass);
 
-        Action action = () => _classServiceTest!.RemoveMethod(_testClass.Id, _testMethod.Id);
-        action.Should().Throw<ArgumentException>().WithMessage("Cannot delete method that is being used by another method.");
+        Action action = () => _classServiceTest!.RemoveMethod(_testClass.Id, Guid.NewGuid());
+        action.Should().Throw<ArgumentException>().WithMessage("Method not found in class.");
     }
 
     [TestMethod]
-    public void DeleteMethod_WhenIsImplementedInterfaceMethod_ThrowsException()
+    public void RemoveMethod_WhenOtherMethodIsUsingIt_ThrowsException()
     {
-        _testInterfaceClass.Methods!.Add(_testMethod);
+        var method = new Method
+        {
+            Name = "TestMethod",
+            MethodsInvoke = [_testMethod]
+        };
+
+        _testClass.Methods!.Add(method);
         _testClass.Methods!.Add(_testMethod);
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(_testInterfaceClass);
+            .Returns(_testClass);
 
         Action action = () => _classServiceTest!.RemoveMethod(_testClass.Id, _testMethod.Id);
-        action.Should().Throw<ArgumentException>().WithMessage("Cannot delete method that is in an interface you implement.");
+        action.Should().Throw<ArgumentException>().WithMessage("Cannot remove method that is invoked by another method.");
     }
 
     [TestMethod]
-    public void DeleteMethod_WhenIsImplementedAbstractMethod_ThrowsException()
+    public void RemoveMethod_WhenIsImplementedInterfaceMethod_ThrowsException()
+    {
+        _testInterfaceClass.Methods!.Add(_testMethod);
+        _testClass.Methods!.Add(_testMethod);
+        _testClass.Parent = _testInterfaceClass;
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testClass);
+
+        Action action = () => _classServiceTest!.RemoveMethod(_testClass.Id, _testMethod.Id);
+        action.Should().Throw<ArgumentException>().WithMessage("Cannot remove method that is in an interface you implement.");
+    }
+
+    [TestMethod]
+    public void RemoveMethod_WhenIsImplementedAbstractOverridingMethod_ThrowsException()
     {
         var abstractClass = new Class
         {
@@ -807,14 +838,15 @@ public class ClassServiceTest
         };
 
         _testClass.Parent = abstractClass;
+        _testMethod.IsOverride = true;
         _testClass.Methods!.Add(_testMethod);
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(_testInterfaceClass);
+            .Returns(_testClass);
 
         Action action = () => _classServiceTest!.RemoveMethod(_testClass.Id, _testMethod.Id);
-        action.Should().Throw<ArgumentException>().WithMessage("Cannot delete method that is abstract in a parent you implement.");
+        action.Should().Throw<ArgumentException>().WithMessage("Cannot remove method that is overriding abstract parent method you implement.");
     }
 
     #endregion
@@ -822,7 +854,7 @@ public class ClassServiceTest
     #region Success
 
     [TestMethod]
-    public void DeleteMethod_WhenCriteriaIsValid_DeleteMethod()
+    public void RemoveMethod_WhenCriteriaIsValid_DeleteMethod()
     {
         _testClass.Methods!.Add(_testMethod);
 

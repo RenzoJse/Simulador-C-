@@ -171,7 +171,63 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
     public void RemoveMethod(Guid? classId, Guid? methodId)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(classId);
+        ArgumentNullException.ThrowIfNull(methodId);
+
+        var classObj = GetById(classId);
+        var methodList = classObj.Methods;
+        if (methodList == null || methodList.Count == 0)
+        {
+            throw new ArgumentException("Class has no methods.");
+        }
+
+        var method = methodList!.FirstOrDefault(m => m.Id == methodId);
+        if (method == null)
+        {
+            throw new ArgumentException("Method not found in class.");
+        }
+
+        if(classObj.Parent != null)
+        {
+            var parentClass = classObj.Parent;
+            if(parentClass.IsInterface == true)
+            {
+                try
+                {
+                    ValidateMethodUniqueness(parentClass, method);
+                }
+                catch(Exception)
+                {
+                    throw new ArgumentException("Cannot remove method that is in an interface you implement.");
+                }
+            }
+
+            if(parentClass.IsAbstract == true)
+            {
+                if(method.IsOverride)
+                {
+                    ValidateIfItsNotOverridingParentMethod(parentClass, method);
+                }
+            }
+        }
+
+        foreach(var methodInClass in methodList)
+        {
+            if (methodInClass.MethodsInvoke != null && methodInClass.MethodsInvoke.Contains(method!))
+            {
+                throw new ArgumentException("Cannot remove method that is invoked by another method.");
+            }
+        }
+
+        methodList.Remove(method);
+    }
+
+    private static void ValidateIfItsNotOverridingParentMethod(Class parentClass, Method method)
+    {
+        if (parentClass.Methods != null && parentClass.Methods.Any(m => m.Name == method.Name && m.Type == method.Type))
+        {
+            throw new ArgumentException("Cannot remove method that is overriding abstract parent method you implement.");
+        }
     }
 
     public void DeleteAttribute(Guid? classId, Guid? attributeId)
