@@ -13,7 +13,7 @@ public interface IClassService
     public bool CanAddAttribute(Class classObj, Attribute idAttribute);
     public bool CanAddMethod(Class classObj, Method method);
     public void DeleteClass(Guid? classId);
-    public void DeleteMethod(Guid? classId, Guid? methodId);
+    public void RemoveMethod(Guid? classId, Guid? methodId);
     public void DeleteAttribute(Guid? classId, Guid? attributeId);
 
 }

@@ -49,7 +49,6 @@ public class ClassServiceTest
         Name = "TestMethod",
     };
 
-
     //private static readonly Builder ClassBuilder = new ClassBuilder(null!, null!, null!);
 
     private readonly CreateClassArgs _args = new CreateClassArgs("TestClass",
@@ -675,7 +674,7 @@ public class ClassServiceTest
 
     #endregion
 
-    #region Delete
+    #region DeleteClass
 
     #region Error
 
@@ -736,6 +735,104 @@ public class ClassServiceTest
 
         _classRepositoryMock!
             .Verify(repo => repo.Delete(It.IsAny<Class>()), Times.Once);
+    }
+
+    #endregion
+
+    #endregion
+
+    #region DeleteMethod
+
+    #region Error
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void DeleteMethod_WithNullClassId_ThrowsException()
+    {
+        _classServiceTest!.RemoveMethod(null!, Guid.NewGuid());
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void DeleteMethod_WithNullMethodId_ThrowsException()
+    {
+        _classServiceTest!.RemoveMethod(Guid.NewGuid(), null!);
+    }
+
+    [TestMethod]
+    public void DeleteMethod_WhenOtherMethodIsUsingIt_ThrowsException()
+    {
+        var method = new Method
+        {
+            Name = "TestMethod",
+            MethodsInvoke = [_testMethod]
+        };
+
+        _testClass.Methods!.Add(method);
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testClass);
+
+        Action action = () => _classServiceTest!.RemoveMethod(_testClass.Id, _testMethod.Id);
+        action.Should().Throw<ArgumentException>().WithMessage("Cannot delete method that is being used by another method.");
+    }
+
+    [TestMethod]
+    public void DeleteMethod_WhenIsImplementedInterfaceMethod_ThrowsException()
+    {
+        _testInterfaceClass.Methods!.Add(_testMethod);
+        _testClass.Methods!.Add(_testMethod);
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testInterfaceClass);
+
+        Action action = () => _classServiceTest!.RemoveMethod(_testClass.Id, _testMethod.Id);
+        action.Should().Throw<ArgumentException>().WithMessage("Cannot delete method that is in an interface you implement.");
+    }
+
+    [TestMethod]
+    public void DeleteMethod_WhenIsImplementedAbstractMethod_ThrowsException()
+    {
+        var abstractClass = new Class
+        {
+            Name = "AbstractClass",
+            IsAbstract = true,
+            IsInterface = false,
+            IsSealed = false,
+            Methods = [_testMethod],
+            Attributes = [],
+            Parent = null
+        };
+
+        _testClass.Parent = abstractClass;
+        _testClass.Methods!.Add(_testMethod);
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testInterfaceClass);
+
+        Action action = () => _classServiceTest!.RemoveMethod(_testClass.Id, _testMethod.Id);
+        action.Should().Throw<ArgumentException>().WithMessage("Cannot delete method that is abstract in a parent you implement.");
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void DeleteMethod_WhenCriteriaIsValid_DeleteMethod()
+    {
+        _testClass.Methods!.Add(_testMethod);
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testClass);
+
+        _classServiceTest!.RemoveMethod(_testClass.Id, _testMethod.Id);
+
+        _testClass.Methods.Should().NotContain(_testMethod);
     }
 
     #endregion

@@ -169,7 +169,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         classRepository.Delete(classObj);
     }
 
-    public void DeleteMethod(Guid? classId, Guid? methodId)
+    public void RemoveMethod(Guid? classId, Guid? methodId)
     {
         throw new NotImplementedException();
     }
