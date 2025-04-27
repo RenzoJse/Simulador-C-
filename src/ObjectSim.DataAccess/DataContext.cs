@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ObjectSim.Domain;
 using Attribute = ObjectSim.Domain.Attribute;
+using ValueType = System.ValueType;
 
 namespace ObjectSim.DataAccess;
 
@@ -11,6 +12,9 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<Class> Classes { get; set; }
     public DbSet<Method> Methods { get; set; }
     public DbSet<Attribute> Attributes { get; set; }
+    public DbSet<LocalVariable> LocalVariables { get; set; }
+    public DbSet<Parameter> Parameters { get; set; }
+    public DbSet<ReferenceType> ReferenceTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -49,11 +53,15 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             m.HasMany(m => m.LocalVariables)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+            m.HasMany(m => m.MethodsInvoke)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Attribute>(a =>
         {
             a.HasKey(a => a.Id);
+            a.Ignore(a => a.DataType);
         });
 
         modelBuilder.Entity<Parameter>(p =>
@@ -64,6 +72,11 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<LocalVariable>(lv =>
         {
             lv.HasKey(lv => lv.Id);
+        });
+
+        modelBuilder.Entity<ReferenceType>(rt =>
+        {
+            rt.HasNoKey();
         });
 
         base.OnModelCreating(modelBuilder);
