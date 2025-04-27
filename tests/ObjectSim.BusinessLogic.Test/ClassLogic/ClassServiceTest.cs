@@ -867,6 +867,48 @@ public class ClassServiceTest
         _testClass.Methods.Should().NotContain(_testMethod);
     }
 
+    [TestMethod]
+    public void RemoveMethod_WhenCriteriaIsValidHasInterfaceParent_DeleteMethod()
+    {
+        _testClass.Methods!.Add(_testMethod);
+        _testClass.Parent = _testInterfaceClass;
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testClass);
+
+        _classServiceTest!.RemoveMethod(_testClass.Id, _testMethod.Id);
+
+        _testClass.Methods.Should().NotContain(_testMethod);
+    }
+
+    [TestMethod]
+    public void RemoveMethod_WhenCriteriaIsValidHasAbstractParent_DeleteMethod()
+    {
+        _testClass.Methods!.Add(_testMethod);
+
+        var abstractClass = new Class
+        {
+            Name = "AbstractClass",
+            IsAbstract = true,
+            IsInterface = false,
+            IsSealed = false,
+            Methods = [],
+            Attributes = [],
+            Parent = null
+        };
+
+        _testClass.Parent = abstractClass;
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(_testClass);
+
+        _classServiceTest!.RemoveMethod(_testClass.Id, _testMethod.Id);
+
+        _testClass.Methods.Should().NotContain(_testMethod);
+    }
+
     #endregion
 
     #endregion

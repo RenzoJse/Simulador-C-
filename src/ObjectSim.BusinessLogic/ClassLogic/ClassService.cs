@@ -218,7 +218,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
         if ((bool)parentClass.IsAbstract! && method.IsOverride)
         {
-            ValidateIfItsNotOverridingParentMethod(parentClass, method);
+            throw new ArgumentException("Cannot remove method that is overriding abstract parent method you implement.");
         }
     }
 
@@ -245,17 +245,9 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         }
     }
 
-    private static void ValidateIfItsNotOverridingParentMethod(Class parentClass, Method method)
-    {
-        if (parentClass.Methods != null && parentClass.Methods.Any(m => m.Name == method.Name && m.Type == method.Type))
-        {
-            throw new ArgumentException("Cannot remove method that is overriding abstract parent method you implement.");
-        }
-    }
-
     public void DeleteAttribute(Guid? classId, Guid? attributeId)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException();//Hay que ver por que para mi los atributos tambien son local variables q pueden usar los metodos.
     }
 
 }
