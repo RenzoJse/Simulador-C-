@@ -59,7 +59,7 @@ public class ClassControllerTest
         _classServiceMock.VerifyAll();
     }
 
-    #region CreateClass
+    #region CreateClass-POST
 
     [TestMethod]
     public void CreateClass_WhenIsValid_MakesValidPost()
