@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
+using ObjectSim.WebApi.DTOs.Out;
 
 namespace ObjectSim.WebApi.Controllers;
 
@@ -13,7 +14,11 @@ public class ClassController(IClassService classService)
     [HttpPost]
     public IActionResult CreateClass(CreateClassDtoIn createClassDto)
     {
-        return NotImplementedException();
+        var classInfo = classService.CreateClass(createClassDto.ToArgs());
+
+        var response = ClassInformationDtoOut.ToInfo(classInfo);
+
+        return Ok(response);
     }
 
 }

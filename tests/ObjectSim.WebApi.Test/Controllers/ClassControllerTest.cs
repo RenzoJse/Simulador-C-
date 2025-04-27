@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -7,6 +8,7 @@ using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.Controllers;
 using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
+using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.WebApi.Test.Controllers;
 
@@ -16,14 +18,24 @@ public class ClassControllerTest
     private Mock<IClassService> _classServiceMock = null!;
     private ClassController _classController = null!;
 
+    private static readonly Attribute TestAttribute = new Attribute
+    {
+        Name = "TestAttribute",
+    };
+
+    private static readonly Method TestMethod = new Method
+    {
+        Name = "TestMethod",
+    };
+
     private readonly Class _testClass = new Class
     {
         Name = "TestClass",
         IsAbstract = false,
         IsInterface = false,
         IsSealed = false,
-        Attributes = [],
-        Methods = [],
+        Attributes = [TestAttribute],
+        Methods = [TestMethod],
         Parent = null,
     };
 
@@ -36,9 +48,9 @@ public class ClassControllerTest
     [TestInitialize]
     public void Setup()
     {
-        SetupHttpContext();
         _classServiceMock = new Mock<IClassService>();
         _classController = new ClassController(_classServiceMock.Object);
+        SetupHttpContext();
     }
 
     [TestCleanup]
@@ -71,10 +83,15 @@ public class ClassControllerTest
         var statusCode = resultObject?.StatusCode;
         statusCode.Should().Be(200);
 
-        var answer = resultObject?.Value as CreateClassDtoOut;
+        var answer = resultObject?.Value as ClassInformationDtoOut;
         answer.Should().NotBeNull();
-        answer?.Name.Should().Be(_testClass.Name);
-        answer?.IsAbstract.Should().Be(_testClass.IsAbstract);
+        answer.Name.Should().Be(_testClass.Name);
+        answer?.IsAbstract.Should().Be((bool)_testClass.IsAbstract!);
+        answer?.IsInterface.Should().Be((bool)_testClass.IsInterface!);
+        answer?.IsSealed.Should().Be((bool)_testClass.IsSealed!);
+        answer?.Attributes.Should().BeEquivalentTo(_testClass.Attributes!.Select(attribute => attribute.Name));
+        answer?.Methods.Should().BeEquivalentTo(_testClass.Methods!.Select(method => method.Name));
+        answer?.Parent.Should().Be(_testClass.Parent?.Id);
     }
 
     #endregion
