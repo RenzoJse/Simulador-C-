@@ -70,7 +70,7 @@ public class AttributeServiceTest
         _attributeRepositoryMock!.Verify(repo => repo.Add(It.IsAny<ObjectSim.Domain.Attribute>()), Times.Never);
     }
     [TestMethod]
-    public void GetAllTest()
+    public void GetAllAttribute_CorrectAttrubtes_ShouldThrowAllOfThem()
     {
         var attributes = new List<Domain.Attribute>
         {
