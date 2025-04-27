@@ -86,12 +86,12 @@ public class ClassControllerTest
         var answer = resultObject?.Value as ClassInformationDtoOut;
         answer.Should().NotBeNull();
         answer.Name.Should().Be(_testClass.Name);
-        answer?.IsAbstract.Should().Be((bool)_testClass.IsAbstract!);
-        answer?.IsInterface.Should().Be((bool)_testClass.IsInterface!);
-        answer?.IsSealed.Should().Be((bool)_testClass.IsSealed!);
-        answer?.Attributes.Should().BeEquivalentTo(_testClass.Attributes!.Select(attribute => attribute.Name));
-        answer?.Methods.Should().BeEquivalentTo(_testClass.Methods!.Select(method => method.Name));
-        answer?.Parent.Should().Be(_testClass.Parent?.Id);
+        answer.IsAbstract.Should().Be((bool)_testClass.IsAbstract!);
+        answer.IsInterface.Should().Be((bool)_testClass.IsInterface!);
+        answer.IsSealed.Should().Be((bool)_testClass.IsSealed!);
+        answer.Attributes.Should().BeEquivalentTo(_testClass.Attributes!.Select(attribute => attribute.Name));
+        answer.Methods.Should().BeEquivalentTo(_testClass.Methods!.Select(method => method.Name));
+        answer.Parent.Should().Be(_testClass.Parent?.Id);
     }
 
     #endregion
