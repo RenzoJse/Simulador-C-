@@ -1,13 +1,19 @@
 ﻿using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.IBusinessLogic;
 
 public interface IClassService
 {
-    public Class GetById(Guid? id);
-    public void AddMethod(Guid id, Method method);
-    public void AddAttribute(Guid id, Attribute attribute);
-    public bool CanAddAttribute(Class classObj, Attribute attribute);
+    public Class CreateClass(CreateClassArgs args);
+    public Class GetById(Guid? classId);
+    public void AddMethod(Guid? classId, Method method);
+    public void AddAttribute(Guid? classId, Guid? idAttribute);
+    public bool CanAddAttribute(Class classObj, Attribute idAttribute);
     public bool CanAddMethod(Class classObj, Method method);
+    public void DeleteClass(Guid? classId);
+    public void RemoveMethod(Guid? classId, Guid? methodId);
+    public void DeleteAttribute(Guid? classId, Guid? attributeId);
+
 }
