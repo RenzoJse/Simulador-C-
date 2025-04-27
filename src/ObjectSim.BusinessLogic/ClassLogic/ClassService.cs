@@ -175,51 +175,74 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         ArgumentNullException.ThrowIfNull(methodId);
 
         var classObj = GetById(classId);
-        var methodList = classObj.Methods;
-        if (methodList == null || methodList.Count == 0)
+        ValidateIfClassHasMethods(classObj);
+
+        var method = GetMethodFromClass(classObj, methodId);
+        ValidateParentClassConstraints(classObj, method);
+        ValidateMethodDependencies(classObj.Methods!, method);
+
+        classObj.Methods!.Remove(method);
+    }
+
+    private static void ValidateIfClassHasMethods(Class classObj)
+    {
+        if (classObj.Methods == null || classObj.Methods.Count == 0)
         {
             throw new ArgumentException("Class has no methods.");
         }
+    }
 
-        var method = methodList!.FirstOrDefault(m => m.Id == methodId);
+    private static Method GetMethodFromClass(Class classObj, Guid? methodId)
+    {
+        var method = classObj.Methods!.FirstOrDefault(m => m.Id == methodId);
         if (method == null)
         {
             throw new ArgumentException("Method not found in class.");
         }
+        return method;
+    }
 
-        if(classObj.Parent != null)
+    private static void ValidateParentClassConstraints(Class classObj, Method method)
+    {
+        if (classObj.Parent == null)
         {
-            var parentClass = classObj.Parent;
-            if(parentClass.IsInterface == true)
-            {
-                try
-                {
-                    ValidateMethodUniqueness(parentClass, method);
-                }
-                catch(Exception)
-                {
-                    throw new ArgumentException("Cannot remove method that is in an interface you implement.");
-                }
-            }
-
-            if(parentClass.IsAbstract == true)
-            {
-                if(method.IsOverride)
-                {
-                    ValidateIfItsNotOverridingParentMethod(parentClass, method);
-                }
-            }
+            return;
         }
 
-        foreach(var methodInClass in methodList)
+        var parentClass = classObj.Parent;
+
+        if ((bool)parentClass.IsInterface!)
         {
-            if (methodInClass.MethodsInvoke != null && methodInClass.MethodsInvoke.Contains(method!))
+            ValidateInterfaceMethod(parentClass, method);
+        }
+
+        if ((bool)parentClass.IsAbstract! && method.IsOverride)
+        {
+            ValidateIfItsNotOverridingParentMethod(parentClass, method);
+        }
+    }
+
+    private static void ValidateInterfaceMethod(Class parentClass, Method method)
+    {
+        try
+        {
+            ValidateMethodUniqueness(parentClass, method);
+        }
+        catch (Exception)
+        {
+            throw new ArgumentException("Cannot remove method that is in an interface you implement.");
+        }
+    }
+
+    private static void ValidateMethodDependencies(List<Method> methodList, Method method)
+    {
+        foreach (var methodInClass in methodList)
+        {
+            if (methodInClass.MethodsInvoke != null && methodInClass.MethodsInvoke.Contains(method))
             {
                 throw new ArgumentException("Cannot remove method that is invoked by another method.");
             }
         }
-
-        methodList.Remove(method);
     }
 
     private static void ValidateIfItsNotOverridingParentMethod(Class parentClass, Method method)
