@@ -1,8 +1,7 @@
 ﻿using ObjectSim.DataAccess.Interface;
 using ObjectSim.IBusinessLogic;
-
 namespace ObjectSim.BusinessLogic;
-public class AttributeService(IRepository<Domain.Attribute> attributeRepository) : IAttributeService<Domain.Attribute>
+public class AttributeService(IRepository<Domain.Attribute> attributeRepository) : IAttributeService
 {
     public Domain.Attribute Create(Domain.Attribute attribute)
     {

@@ -1,9 +1,9 @@
 ﻿namespace ObjectSim.IBusinessLogic;
-public interface IAttributeService<T>
+public interface IAttributeService
 {
-    T Create(T attribute);
-    List<T> GetAll();
+    Domain.Attribute Create(Domain.Attribute attribute);
+    List<Domain.Attribute> GetAll();
     bool Delete(Guid id);
-    T GetById(Guid id);
-    T Update(Guid id, T entity);
+    Domain.Attribute GetById(Guid id);
+    Domain.Attribute Update(Guid id, Domain.Attribute entity);
 }
