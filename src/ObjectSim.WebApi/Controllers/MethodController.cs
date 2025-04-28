@@ -43,4 +43,28 @@ public class MethodController (IMethodService methodService) : ControllerBase
         var response = new MethodOutModel(updatedMethod);
         return Ok(response);
     }
+
+    [HttpGet("{id}")]
+    public IActionResult GetMethodById(Guid id)
+    {
+        var methodInfo = methodService.GetById(id);
+
+        if(methodInfo == null)
+        {
+            return NotFound($"Method with id {id} not found.");
+        }
+
+        var response = new MethodOutModel(methodInfo);
+        return Ok(response);
+    }
+
+    [HttpGet]
+    public IActionResult GetAllMethods()
+    {
+        var methods = methodService.GetAll();
+
+        var response = methods.Select(m => new MethodOutModel(m)).ToList();
+
+        return Ok(response);
+    }
 }
