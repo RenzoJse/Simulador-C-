@@ -18,15 +18,9 @@ public class ClassControllerTest
     private Mock<IClassService> _classServiceMock = null!;
     private ClassController _classController = null!;
 
-    private static readonly Attribute TestAttribute = new()
-    {
-        Name = "TestAttribute",
-    };
+    private static readonly Attribute TestAttribute = new() { Name = "TestAttribute", };
 
-    private static readonly Method TestMethod = new()
-    {
-        Name = "TestMethod",
-    };
+    private static readonly Method TestMethod = new() { Name = "TestMethod", };
 
     private readonly Class _testClass = new()
     {
@@ -64,7 +58,7 @@ public class ClassControllerTest
     [TestMethod]
     public void CreateClass_WhenIsValid_MakesValidPost()
     {
-       _classServiceMock
+        _classServiceMock
             .Setup(service => service.CreateClass(It.IsAny<CreateClassArgs>()))
             .Returns(_testClass);
 
@@ -163,4 +157,23 @@ public class ClassControllerTest
     }
 
     #endregion
+
+    #region RemoveAttribute-PATCH
+
+    [TestMethod]
+    public void RemoveAttribute_WhenIsValid_MakesValidPatch()
+    {
+        var attributeId = Guid.NewGuid();
+
+        _classServiceMock
+            .Setup(service => service.RemoveAttribute(_testClass.Id, attributeId));
+
+        var result = _classController.RemoveAttribute(_testClass.Id, attributeId);
+
+        var resultObject = result as OkResult;
+        var statusCode = resultObject?.StatusCode;
+        statusCode.Should().Be(200);
+    }
+
+#endregion
 }
