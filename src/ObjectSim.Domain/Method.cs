@@ -143,9 +143,7 @@ public class Method
     }
     #endregion
 
-    #region ClassRelation
-
-    public Class Class { get; set; } = null!;
+    #region ClassId
 
     public Guid ClassId { get; init; }
 

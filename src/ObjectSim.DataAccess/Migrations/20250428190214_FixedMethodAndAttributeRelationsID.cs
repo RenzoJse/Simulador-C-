@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ObjectSim.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class FixedMethodAndAttributeRelations : Migration
+    public partial class FixedMethodAndAttributeRelationsID : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

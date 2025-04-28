@@ -23,11 +23,6 @@ public class AttributeServiceTest
             Name = "Test",
             DataType = Domain.ValueType.Create("int"),
             ClassId = Guid.NewGuid(),
-            Class = new Class
-            {
-                Id = Guid.NewGuid(),
-                Name = "TestClass",
-            },
             Visibility = Domain.Attribute.AttributeVisibility.Public
         };
     }
@@ -85,7 +80,6 @@ public class AttributeServiceTest
             Id = Guid.NewGuid(),
             Name = "Name",
             ClassId = Guid.NewGuid(),
-            Class = new Class(),
             DataType = Domain.ValueType.Create("int"),
             Visibility = Domain.Attribute.AttributeVisibility.Private
         },
@@ -94,7 +88,6 @@ public class AttributeServiceTest
             Id = Guid.NewGuid(),
             Name = "Name2",
             ClassId = Guid.NewGuid(),
-            Class = new Class(),
             DataType = Domain.ValueType.Create("int"),
             Visibility = Domain.Attribute.AttributeVisibility.Private
             }

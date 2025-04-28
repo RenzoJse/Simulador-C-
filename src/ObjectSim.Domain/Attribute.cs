@@ -18,7 +18,6 @@ public class Attribute
     public AttributeVisibility Visibility { get; set; }
     public Guid Id { get; set; }
     public Guid ClassId { get; set; }
-    public Class Class { get; set; } = null!;
     public string? Name { get; set; } = null!;
     public void Validate()
     {

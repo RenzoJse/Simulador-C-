@@ -12,8 +12,8 @@ using ObjectSim.DataAccess;
 namespace ObjectSim.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250428170800_FixedMethodAndAttributeRelations")]
-    partial class FixedMethodAndAttributeRelations
+    [Migration("20250428190214_FixedMethodAndAttributeRelationsID")]
+    partial class FixedMethodAndAttributeRelationsID
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -180,13 +180,11 @@ namespace ObjectSim.DataAccess.Migrations
 
             modelBuilder.Entity("ObjectSim.Domain.Attribute", b =>
                 {
-                    b.HasOne("ObjectSim.Domain.Class", "Class")
+                    b.HasOne("ObjectSim.Domain.Class", null)
                         .WithMany("Attributes")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Class");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Class", b =>
@@ -209,7 +207,7 @@ namespace ObjectSim.DataAccess.Migrations
 
             modelBuilder.Entity("ObjectSim.Domain.Method", b =>
                 {
-                    b.HasOne("ObjectSim.Domain.Class", "Class")
+                    b.HasOne("ObjectSim.Domain.Class", null)
                         .WithMany("Methods")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -219,8 +217,6 @@ namespace ObjectSim.DataAccess.Migrations
                         .WithMany("MethodsInvoke")
                         .HasForeignKey("MethodId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Class");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Parameter", b =>
