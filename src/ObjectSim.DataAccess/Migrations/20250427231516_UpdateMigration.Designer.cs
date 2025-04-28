@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ObjectSim.DataAccess;
 
@@ -11,9 +12,11 @@ using ObjectSim.DataAccess;
 namespace ObjectSim.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250427231516_UpdateMigration")]
+    partial class UpdateMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,6 +28,7 @@ namespace ObjectSim.DataAccess.Migrations
             modelBuilder.Entity("ObjectSim.Domain.Attribute", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClassId")
@@ -37,6 +41,8 @@ namespace ObjectSim.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
 
                     b.ToTable("Attributes");
                 });
@@ -94,6 +100,7 @@ namespace ObjectSim.DataAccess.Migrations
             modelBuilder.Entity("ObjectSim.Domain.Method", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Abstract")
@@ -101,6 +108,9 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.Property<int>("Accessibility")
                         .HasColumnType("int");
+
+                    b.Property<Guid?>("ClassId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsOverride")
                         .HasColumnType("bit");
@@ -118,6 +128,8 @@ namespace ObjectSim.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
 
                     b.HasIndex("MethodId");
 
@@ -149,28 +161,17 @@ namespace ObjectSim.DataAccess.Migrations
             modelBuilder.Entity("ObjectSim.Domain.ReferenceType", b =>
                 {
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Name");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.ToTable("ReferenceTypes");
-                });
-
-            modelBuilder.Entity("ObjectSim.Domain.ValueType", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Name");
-
-                    b.ToTable("ValueTypes");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Attribute", b =>
                 {
                     b.HasOne("ObjectSim.Domain.Class", null)
                         .WithMany("Attributes")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -197,9 +198,8 @@ namespace ObjectSim.DataAccess.Migrations
                 {
                     b.HasOne("ObjectSim.Domain.Class", null)
                         .WithMany("Methods")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ObjectSim.Domain.Method", null)
                         .WithMany("MethodsInvoke")
