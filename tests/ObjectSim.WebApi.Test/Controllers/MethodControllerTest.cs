@@ -55,8 +55,9 @@ public class MethodControllerTest
         _methodServiceMock.VerifyAll();
     }
 
+    #region Create-Method-Test
     [TestMethod]
-    public void CreateClass_WhenIsValid_MakesValidPost()
+    public void CreateMethod_WhenIsValid_MakesValidPost()
     {
         _methodServiceMock
              .Setup(service => service.Create(It.IsAny<Method>()))
@@ -92,4 +93,40 @@ public class MethodControllerTest
         answer.Methods.Select(m => m.Name)
             .Should().BeEquivalentTo(_testMethod.MethodsInvoke!.Select(m => m.Name));
     }
+    #endregion
+
+    #region Delete-Method-Test
+    [TestMethod]
+    public void DeleteMethod_WhenMethodExists_ShouldReturnOk()
+    {
+        var methodId = Guid.NewGuid();
+        _methodServiceMock
+            .Setup(service => service.Delete(methodId))
+            .Returns(true);
+
+        var result = _methodController.DeleteMethod(methodId);
+
+        var okResult = result as OkObjectResult;
+        okResult.Should().NotBeNull();
+        okResult!.StatusCode.Should().Be(200);
+        okResult.Value.Should().Be($"Method with id {methodId} deleted successfully.");
+    }
+
+    [TestMethod]
+    public void DeleteMethod_WhenMethodDoesNotExist_ShouldReturnNotFound()
+    {
+        var methodId = Guid.NewGuid();
+        _methodServiceMock
+            .Setup(service => service.Delete(methodId))
+            .Returns(false);
+
+        var result = _methodController.DeleteMethod(methodId);
+
+        var notFoundResult = result as NotFoundObjectResult;
+        notFoundResult.Should().NotBeNull();
+        notFoundResult!.StatusCode.Should().Be(404);
+        notFoundResult.Value.Should().Be($"Method with id {methodId} not found.");
+    }
+    #endregion
+
 }
