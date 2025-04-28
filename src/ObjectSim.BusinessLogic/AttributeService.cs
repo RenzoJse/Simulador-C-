@@ -1,9 +1,10 @@
 ﻿using ObjectSim.DataAccess.Interface;
 using ObjectSim.IBusinessLogic;
+using Attribute = ObjectSim.Domain.Attribute;
 namespace ObjectSim.BusinessLogic;
-public class AttributeService(IRepository<Domain.Attribute> attributeRepository) : IAttributeService
+public class AttributeService(IRepository<Attribute> attributeRepository) : IAttributeService
 {
-    public Domain.Attribute Create(Domain.Attribute attribute)
+    public Attribute Create(Attribute attribute)
     {
         if(attribute == null)
         {
@@ -15,7 +16,7 @@ public class AttributeService(IRepository<Domain.Attribute> attributeRepository)
             return attribute;
         }
     }
-    public List<Domain.Attribute> GetAll()
+    public List<Attribute> GetAll()
     {
         var attributes = attributeRepository.GetAll(att1 => att1.Id != Guid.Empty);
         if(attributes == null || !attributes.Any())
@@ -35,7 +36,7 @@ public class AttributeService(IRepository<Domain.Attribute> attributeRepository)
         attributeRepository.Delete(attribute);
         return true;
     }
-    public Domain.Attribute GetById(Guid id)
+    public Attribute GetById(Guid id)
     {
         if(id == Guid.Empty)
         {
@@ -51,7 +52,7 @@ public class AttributeService(IRepository<Domain.Attribute> attributeRepository)
         return attribute;
     }
 
-    public Domain.Attribute Update(Guid id, Domain.Attribute entity)
+    public Attribute Update(Guid id, Attribute entity)
     {
         if(entity == null)
         {
