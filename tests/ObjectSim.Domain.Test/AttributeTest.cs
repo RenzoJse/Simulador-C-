@@ -20,7 +20,7 @@ public class AttributeTest
         var attribute = new Attribute
         {
             Id = Guid.NewGuid(),
-            Name = "Edad",
+            Name = "Age",
             ClassId = Guid.NewGuid(),
             DataType = null!,
             Visibility = Attribute.AttributeVisibility.Public
@@ -89,7 +89,7 @@ public class AttributeTest
         var attr = new Attribute
         {
             Id = Guid.NewGuid(),
-            Name = "Edad",
+            Name = "Age",
             ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
             DataType = ValueType.Create("int")
@@ -104,7 +104,7 @@ public class AttributeTest
         var attr = new Attribute
         {
             Id = Guid.NewGuid(),
-            Name = "Edad",
+            Name = "Age",
             ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
             DataType = ReferenceType.Create("string")
@@ -116,8 +116,7 @@ public class AttributeTest
     [TestMethod]
     public void AttributeVisibilityCreateAttribute_OKTest()
     {
-        var attribute = new Attribute();
-        attribute.Visibility = Attribute.AttributeVisibility.Public;
+        var attribute = new Attribute { Visibility = Attribute.AttributeVisibility.Public };
         Assert.AreEqual(Attribute.AttributeVisibility.Public, attribute.Visibility);
     }
     [TestMethod]
@@ -132,7 +131,7 @@ public class AttributeTest
         var attribute = new Attribute
         {
             Id = Guid.NewGuid(),
-            Name = "Nombre",
+            Name = "Name",
             ClassId = Guid.NewGuid(),
             DataType = ReferenceType.Create("string"),
             Visibility = Attribute.AttributeVisibility.Private
@@ -148,7 +147,7 @@ public class AttributeTest
         var attribute = new Attribute
         {
             Id = Guid.NewGuid(),
-            Name = "Nombre",
+            Name = "Name",
             ClassId = Guid.NewGuid(),
             DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Private

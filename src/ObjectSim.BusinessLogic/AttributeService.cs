@@ -23,7 +23,7 @@ public class AttributeService(IRepository<Domain.Attribute> attributeRepository)
             throw new Exception("No attributes found.");
         }
 
-        return (List<Domain.Attribute>)attributes;
+        return attributes;
     }
     public bool Delete(Guid id)
     {

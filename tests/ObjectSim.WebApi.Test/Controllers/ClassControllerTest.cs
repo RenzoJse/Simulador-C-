@@ -175,5 +175,5 @@ public class ClassControllerTest
         statusCode.Should().Be(200);
     }
 
-#endregion
+    #endregion
 }

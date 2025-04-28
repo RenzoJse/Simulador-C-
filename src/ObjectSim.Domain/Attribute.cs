@@ -18,6 +18,7 @@ public class Attribute
     public AttributeVisibility Visibility { get; set; }
     public Guid Id { get; set; }
     public Guid ClassId { get; set; }
+    public Class Class { get; set; } = null!;
     public string? Name { get; set; } = null!;
     public void Validate()
     {
@@ -65,10 +66,4 @@ public class Attribute
             throw new ArgumentException("Invalid visibility type.");
         }
     }
-
-    #region ClassRelation
-
-    public Class Class { get; set; } = null!;
-
-    #endregion
 }

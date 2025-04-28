@@ -49,8 +49,6 @@ public class ClassServiceTest
         Name = "TestMethod",
     };
 
-    //private static readonly Builder ClassBuilder = new ClassBuilder(null!, null!, null!);
-
     private readonly CreateClassArgs _args = new CreateClassArgs("TestClass",
         false,
         false,
@@ -159,6 +157,7 @@ public class ClassServiceTest
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(_args)).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>(), It.IsAny<IAttributeService>())).Returns(classBuilder);
+        _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c);
 
         Action action = () => _classServiceTest!.CreateClass(_args);
 
@@ -173,6 +172,7 @@ public class ClassServiceTest
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>(), It.IsAny<IAttributeService>())).Returns(classBuilder);
+        _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c).Verifiable();
 
         Action action = () => _classServiceTest!.CreateClass(_args);
 
@@ -194,6 +194,7 @@ public class ClassServiceTest
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>(), It.IsAny<IAttributeService>())).Returns(classBuilder);
+        _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c).Verifiable();
 
         var result = _classServiceTest!.CreateClass(_args);
         result.Should().NotBeNull();
@@ -205,6 +206,7 @@ public class ClassServiceTest
         result.Attributes.Should().BeEquivalentTo(_args.Attributes);
         result.Methods.Should().BeEquivalentTo(_args.Methods);
         result.Parent.Should().Be(null);
+        _classRepositoryMock.Verify(repo => repo.Add(It.IsAny<Class>()), Times.Once);
     }
 
     #endregion
