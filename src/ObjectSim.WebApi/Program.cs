@@ -1,6 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using ObjectSim.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
 {
@@ -27,3 +30,8 @@ app.UseCors("AllowSpecificOrigin");
 app.MapControllers();
 
 app.Run();
+
+[ExcludeFromCodeCoverage]
+public partial class Program
+{
+}

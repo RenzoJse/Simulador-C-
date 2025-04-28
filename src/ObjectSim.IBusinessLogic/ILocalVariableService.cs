@@ -1,6 +1,8 @@
-﻿namespace ObjectSim.IBusinessLogic;
+﻿using ObjectSim.Domain;
 
-public interface ILocalVariableService<T>
+namespace ObjectSim.IBusinessLogic;
+
+public interface ILocalVariableService
 {
-    T Create(T Entity);
+    LocalVariable Create(LocalVariable entity);
 }
