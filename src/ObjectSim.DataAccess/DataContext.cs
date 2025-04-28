@@ -11,6 +11,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<Class> Classes { get; set; }
     public DbSet<Method> Methods { get; set; }
     public DbSet<Attribute> Attributes { get; set; }
+    public DbSet<DataType> DataTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -54,6 +55,18 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<Attribute>(a =>
         {
             a.HasKey(a => a.Id);
+            a.HasOne(a => a.DataType)
+                .WithMany()
+                .HasForeignKey("DataTypeId")
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<DataType>(dt =>
+        {
+            dt.HasKey(d => d.Id);
+            dt.HasDiscriminator<string>("Discriminator")
+                .HasValue<Domain.ValueType>("ValueType")
+                .HasValue<ReferenceType>("ReferenceType");
         });
 
         modelBuilder.Entity<Parameter>(p =>
