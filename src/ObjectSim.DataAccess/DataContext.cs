@@ -7,8 +7,10 @@ using ValueType = ObjectSim.Domain.ValueType;
 namespace ObjectSim.DataAccess;
 
 [ExcludeFromCodeCoverage]
-public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
+public class DataContext : DbContext
 {
+    public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+    public DataContext() { }
     public DbSet<Class> Classes { get; set; }
     public DbSet<Method> Methods { get; set; }
     public DbSet<Attribute> Attributes { get; set; }
@@ -20,7 +22,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if(!optionsBuilder.IsConfigured)
+        if (!optionsBuilder.IsConfigured)
         {
             optionsBuilder
                 .UseSqlServer(
@@ -48,13 +50,11 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
         modelBuilder.Entity<ReferenceType>(rt =>
         {
-            rt.HasKey(r => r.Name);
             rt.Property(r => r.Name).IsRequired();
         });
 
         modelBuilder.Entity<ValueType>(vt =>
         {
-            vt.HasKey(v => v.Name);
             vt.Property(v => v.Name).IsRequired();
         });
 
@@ -85,7 +85,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             dt.HasKey(d => d.Id);
             dt.HasDiscriminator<string>("Discriminator")
-                .HasValue<Domain.ValueType>("ValueType")
+                .HasValue<ValueType>("ValueType")
                 .HasValue<ReferenceType>("ReferenceType");
         });
 
