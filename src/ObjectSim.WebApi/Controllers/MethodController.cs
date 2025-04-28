@@ -16,4 +16,17 @@ public class MethodController (IMethodService methodService) : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeleteMethod(Guid id)
+    {
+        var deleted = methodService.Delete(id);
+
+        if(!deleted)
+        {
+            return NotFound($"Method with id {id} not found.");
+        }
+
+        return Ok($"Method with id {id} deleted successfully.");
+    }
 }
