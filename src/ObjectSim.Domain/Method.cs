@@ -25,6 +25,10 @@ public class Method
     }
     public Guid Id { get; set; } = Guid.NewGuid();
 
+    public Guid? ClassId { get; set; }
+
+    public Class? Class { get; set; }
+
     #region Name
 
     private string? _name;

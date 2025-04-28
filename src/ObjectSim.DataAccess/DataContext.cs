@@ -23,7 +23,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             optionsBuilder
                 .UseSqlServer(
-                    "Server=.\\SQLEXPRESS;Database=ObjectSim; Integrated Security=True; Trusted_Connection=True; MultipleActiveResultSets=True; TrustServerCertificate=True")
+                    "Server=.\\SQLEXPRESS;Database=ObjectSim;Integrated Security=True;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True")
                 .EnableSensitiveDataLogging();
         }
     }
@@ -33,39 +33,35 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<Class>(c =>
         {
             c.HasKey(c => c.Id);
+
             c.HasMany(c => c.Methods)
-                .WithOne().HasForeignKey(m => m.Id)
+                .WithOne(m => m.Class)
+                .HasForeignKey(m => m.ClassId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             c.HasMany(c => c.Attributes)
-                .WithOne().HasForeignKey(a => a.Id)
+                .WithOne()
+                .HasForeignKey(a => a.Id)
                 .OnDelete(DeleteBehavior.Cascade);
+
             c.HasOne(c => c.Parent)
                 .WithMany()
                 .HasForeignKey("ParentId")
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        modelBuilder.Entity<ReferenceType>(rt =>
-        {
-            rt.HasKey(r => r.Name);
-            rt.Property(r => r.Name).IsRequired();
-        });
-
-        modelBuilder.Entity<ValueType>(vt =>
-        {
-            vt.HasKey(v => v.Name);
-            vt.Property(v => v.Name).IsRequired();
-        });
-
         modelBuilder.Entity<Method>(m =>
         {
             m.HasKey(m => m.Id);
+
             m.HasMany(m => m.Parameters)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+
             m.HasMany(m => m.LocalVariables)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+
             m.HasMany(m => m.MethodsInvoke)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
@@ -74,7 +70,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<Attribute>(a =>
         {
             a.HasKey(a => a.Id);
-
             a.Ignore(a => a.DataType);
         });
 
@@ -86,6 +81,18 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<LocalVariable>(lv =>
         {
             lv.HasKey(lv => lv.Id);
+        });
+
+        modelBuilder.Entity<ValueType>(vt =>
+        {
+            vt.HasKey(vt => vt.Name);
+            vt.Property(vt => vt.Name).IsRequired();
+        });
+
+        modelBuilder.Entity<ReferenceType>(rt =>
+        {
+            rt.HasKey(rt => rt.Name);
+            rt.Property(rt => rt.Name).IsRequired();
         });
 
         base.OnModelCreating(modelBuilder);
