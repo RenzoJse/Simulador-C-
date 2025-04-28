@@ -1,12 +1,11 @@
 ﻿using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
-using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
 public class MethodService(IRepository<Method> methodRepository) : IMethodService
 {
-    public Method Create(CreateMethodArgs Entity)
+    public Method Create(Method Entity)
     {
         var existMethod = methodRepository.Exists(m => m.Name == Entity.Name);
         if(existMethod)
@@ -16,14 +15,14 @@ public class MethodService(IRepository<Method> methodRepository) : IMethodServic
 
         var methodToAdd = new Method
         {
-            Name = Entity.Name!,
-            Type = Enum.Parse<Method.MethodDataType>(Entity.Type!),
-            Abstract = Entity.IsAbstract ?? false,
-            IsSealed = Entity.IsSealed ?? false,
-            IsOverride = Entity.IsOverride ?? false,
-            Accessibility = Enum.Parse<Method.MethodAccessibility>(Entity.Accessibility!),
-            LocalVariables = Entity.LocalVariables ?? [],
-            MethodsInvoke = Entity.Methods ?? []
+            Name = Entity.Name,
+            Type = Entity.Type,
+            Abstract = Entity.Abstract,
+            IsSealed = Entity.IsSealed,
+            Accessibility = Entity.Accessibility,
+            Parameters = Entity.Parameters,
+            IsOverride = Entity.IsOverride,
+            LocalVariables = Entity.LocalVariables,
         };
 
         methodRepository.Add(methodToAdd);

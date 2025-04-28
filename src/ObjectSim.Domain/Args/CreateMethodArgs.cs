@@ -12,8 +12,8 @@ public class CreateMethodArgs(
 {
     public string? Name { get; set; } = name;
 
-    public string? Type { get; set; } = type;
-    public string? Accessibility { get; set; } = accessibility;
+    public string Type { get; set; } = type;
+    public string Accessibility { get; set; } = accessibility;
     public bool? IsAbstract { get; set; } = isAbstract;
     public bool? IsSealed { get; set; } = isSealed;
     public bool? IsOverride { get; set; } = isOverride;

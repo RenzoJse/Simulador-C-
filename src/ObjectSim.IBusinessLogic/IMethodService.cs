@@ -1,11 +1,10 @@
 ﻿using ObjectSim.Domain;
-using ObjectSim.Domain.Args;
 
 namespace ObjectSim.IBusinessLogic;
 
 public interface IMethodService
 {
-    Method Create(CreateMethodArgs method);
+    Method Create(Method method);
     List<Method> GetAll();
     bool Delete(Guid id);
     Method GetById(Guid id);
