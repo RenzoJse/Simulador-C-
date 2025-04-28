@@ -252,7 +252,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         }
     }
 
-    public void DeleteAttribute(Guid? classId, Guid? attributeId)
+    public void RemoveAttribute(Guid? classId, Guid? attributeId)
     {
         throw new NotImplementedException();//Hay que ver por que para mi los atributos tambien son local variables q pueden usar los metodos.
     }

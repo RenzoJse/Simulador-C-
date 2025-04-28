@@ -48,4 +48,12 @@ public class ClassController(IClassService classService)
         return Ok();
     }
 
+    [HttpPatch]
+    [Route("{classId:guid}/{attributeId:guid}")]
+    public IActionResult RemoveAttribute([FromRoute] Guid classId, [FromRoute] Guid attributeId)
+    {
+        classService.RemoveAttribute(classId, attributeId);
+        return Ok();
+    }
+
 }
