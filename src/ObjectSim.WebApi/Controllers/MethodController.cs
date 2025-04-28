@@ -5,6 +5,8 @@ using ObjectSim.WebApi.DTOs.Out;
 
 namespace ObjectSim.WebApi.Controllers;
 
+[ApiController]
+[Route("api/methods")]
 public class MethodController (IMethodService methodService) : ControllerBase
 {
     [HttpPost]
