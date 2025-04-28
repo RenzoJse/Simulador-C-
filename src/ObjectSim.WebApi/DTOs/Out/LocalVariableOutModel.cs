@@ -1,16 +1,11 @@
-﻿namespace ObjectSim.WebApi.DTOs.Out;
-
-public class LocalVariableOutModel
+﻿public class LocalVariableOutModel
 {
-    public required string Name { get; init; }
-    public required string Type { get; init; }
+    public string Name { get; init; } = string.Empty;
+    public string Type { get; init; } = string.Empty;
 
-    public static LocalVariableOutModel ToInfo(ObjectSim.Domain.Parameter parameter)
+    public LocalVariableOutModel(ObjectSim.Domain.LocalVariable localVariable)
     {
-        return new LocalVariableOutModel
-        {
-            Name = parameter.Name!,
-            Type = parameter.Type.ToString()
-        };
+        Name = localVariable.Name!;
+        Type = localVariable.Type.ToString();
     }
 }

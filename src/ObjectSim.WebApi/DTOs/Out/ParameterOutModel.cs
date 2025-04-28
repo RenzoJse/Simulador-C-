@@ -2,15 +2,12 @@
 
 public class ParameterOutModel
 {
-    public required string Name { get; init; }
-    public required string Type { get; init; }
+    public string Name { get; init; } = string.Empty;
+    public string Type { get; init; } = string.Empty;
 
-    public static ParameterOutModel ToInfo(ObjectSim.Domain.Parameter parameter)
+    public ParameterOutModel(ObjectSim.Domain.Parameter parameter)
     {
-        return new ParameterOutModel
-        {
-            Name = parameter.Name!,
-            Type = parameter.Type.ToString()
-        };
+        Name = parameter.Name!;
+        Type = parameter.Type.ToString();
     }
 }
