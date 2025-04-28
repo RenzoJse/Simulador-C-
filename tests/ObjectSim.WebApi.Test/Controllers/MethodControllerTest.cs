@@ -244,4 +244,27 @@ public class MethodControllerTest
         notFoundResult!.StatusCode.Should().Be(404);
     }
     #endregion
+
+    #region GetAll-Methods-Test
+    [TestMethod]
+    public void GetAllMethods_ShouldReturnAllMethods()
+    {
+        var methods = new List<Method> { _testMethod };
+
+        _methodServiceMock
+            .Setup(service => service.GetAll())
+            .Returns(methods);
+
+        var result = _methodController.GetAllMethods();
+
+        var okResult = result as OkObjectResult;
+        okResult.Should().NotBeNull();
+        okResult!.StatusCode.Should().Be(200);
+
+        var response = okResult.Value as List<MethodOutModel>;
+        response.Should().NotBeNull();
+        response!.Count.Should().Be(methods.Count);
+        response.First().Name.Should().Be(_testMethod.Name);
+    }
+    #endregion 
 }
