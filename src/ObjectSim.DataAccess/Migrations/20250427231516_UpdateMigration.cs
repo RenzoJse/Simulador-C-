@@ -15,6 +15,14 @@ namespace ObjectSim.DataAccess.Migrations
                 name: "FK_LocalVariable_Methods_MethodId",
                 table: "LocalVariable");
 
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Attributes",
+                table: "Attributes");
+
+            migrationBuilder.DropColumn(
+                name: "Id",
+                table: "Attributes");
+
             migrationBuilder.DropForeignKey(
                 name: "FK_Parameter_Methods_MethodId",
                 table: "Parameter");
@@ -98,14 +106,17 @@ namespace ObjectSim.DataAccess.Migrations
                 oldType: "uniqueidentifier",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<Guid>(
+            migrationBuilder.AddColumn<Guid>(
                 name: "Id",
                 table: "Attributes",
                 type: "uniqueidentifier",
                 nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("SqlServer:Identity", "1, 1");
+                defaultValue: Guid.NewGuid());
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Attributes",
+                table: "Attributes",
+                column: "Id");
 
             migrationBuilder.AlterColumn<int>(
                 name: "Type",
@@ -166,7 +177,7 @@ namespace ObjectSim.DataAccess.Migrations
                 column: "MethodId",
                 principalTable: "Methods",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Parameters_Methods_MethodId",

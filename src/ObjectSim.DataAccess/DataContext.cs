@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ObjectSim.Domain;
 using Attribute = ObjectSim.Domain.Attribute;
-using ValueType = System.ValueType;
+using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.DataAccess;
 
@@ -14,6 +14,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<Attribute> Attributes { get; set; }
     public DbSet<LocalVariable> LocalVariables { get; set; }
     public DbSet<Parameter> Parameters { get; set; }
+    public DbSet<ValueType> ValueTypes { get; set; }
     public DbSet<ReferenceType> ReferenceTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -33,15 +34,27 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             c.HasKey(c => c.Id);
             c.HasMany(c => c.Methods)
-                .WithOne()
+                .WithOne().HasForeignKey(m => m.Id)
                 .OnDelete(DeleteBehavior.Cascade);
             c.HasMany(c => c.Attributes)
-                .WithOne()
+                .WithOne().HasForeignKey(a => a.Id)
                 .OnDelete(DeleteBehavior.Cascade);
             c.HasOne(c => c.Parent)
                 .WithMany()
                 .HasForeignKey("ParentId")
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<ReferenceType>(rt =>
+        {
+            rt.HasKey(r => r.Name);
+            rt.Property(r => r.Name).IsRequired();
+        });
+
+        modelBuilder.Entity<ValueType>(vt =>
+        {
+            vt.HasKey(v => v.Name);
+            vt.Property(v => v.Name).IsRequired();
         });
 
         modelBuilder.Entity<Method>(m =>
@@ -61,6 +74,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<Attribute>(a =>
         {
             a.HasKey(a => a.Id);
+
             a.Ignore(a => a.DataType);
         });
 
@@ -72,11 +86,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<LocalVariable>(lv =>
         {
             lv.HasKey(lv => lv.Id);
-        });
-
-        modelBuilder.Entity<ReferenceType>(rt =>
-        {
-            rt.HasNoKey();
         });
 
         base.OnModelCreating(modelBuilder);
