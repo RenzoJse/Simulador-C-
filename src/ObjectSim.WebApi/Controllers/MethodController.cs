@@ -1,5 +1,8 @@
-﻿namespace ObjectSim.WebApi.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
+using ObjectSim.IBusinessLogic;
 
-public class MethodController
+namespace ObjectSim.WebApi.Controllers;
+
+public class MethodController (IMethodService methodService) : ControllerBase
 {
 }
