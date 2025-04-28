@@ -18,6 +18,6 @@ public class ClassBuilderStrategy(
 
     public Builder CreateBuilder()
     {
-       return new ClassBuilder(methodService, classService, attributeService);
+        return new ClassBuilder(methodService, classService, attributeService);
     }
 }

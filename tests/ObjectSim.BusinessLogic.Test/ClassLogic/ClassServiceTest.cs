@@ -101,7 +101,7 @@ public class ClassServiceTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void CreateClass_WithNullArgs_ThrowsException()
     {
-       _classServiceTest!.CreateClass(null!);
+        _classServiceTest!.CreateClass(null!);
     }
 
     [TestMethod]
@@ -445,7 +445,7 @@ public class ClassServiceTest
 
         _classServiceTest!.AddMethod(classId, newMethod);
 
-       _testClass.Methods.Should().Contain(newMethod);
+        _testClass.Methods.Should().Contain(newMethod);
     }
 
     [TestMethod]
