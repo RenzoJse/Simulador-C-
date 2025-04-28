@@ -18,17 +18,17 @@ public class ClassControllerTest
     private Mock<IClassService> _classServiceMock = null!;
     private ClassController _classController = null!;
 
-    private static readonly Attribute TestAttribute = new Attribute
+    private static readonly Attribute TestAttribute = new()
     {
         Name = "TestAttribute",
     };
 
-    private static readonly Method TestMethod = new Method
+    private static readonly Method TestMethod = new()
     {
         Name = "TestMethod",
     };
 
-    private readonly Class _testClass = new Class
+    private readonly Class _testClass = new()
     {
         Name = "TestClass",
         IsAbstract = false,

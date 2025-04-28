@@ -29,7 +29,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
     {
         var strategy = strategies.FirstOrDefault(x => x.WhichIsMyBuilder(args));
 
-        return strategy!.CreateBuilder();
+        return strategy!.CreateBuilder(this, attributeService);
     }
 
     public Class GetById(Guid? classId)
