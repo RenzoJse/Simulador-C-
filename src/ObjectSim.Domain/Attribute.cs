@@ -65,4 +65,10 @@ public class Attribute
             throw new ArgumentException("Invalid visibility type.");
         }
     }
+
+    #region ClassRelation
+
+    public Class Class { get; set; } = null!;
+
+    #endregion
 }

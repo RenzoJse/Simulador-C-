@@ -34,10 +34,12 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             c.HasKey(c => c.Id);
             c.HasMany(c => c.Methods)
-                .WithOne().HasForeignKey(m => m.Id)
+                .WithOne(m => m.Class)
+                .HasForeignKey(m => m.ClassId)
                 .OnDelete(DeleteBehavior.Cascade);
             c.HasMany(c => c.Attributes)
-                .WithOne().HasForeignKey(a => a.Id)
+                .WithOne(m => m.Class)
+                .HasForeignKey(a => a.ClassId)
                 .OnDelete(DeleteBehavior.Cascade);
             c.HasOne(c => c.Parent)
                 .WithMany()

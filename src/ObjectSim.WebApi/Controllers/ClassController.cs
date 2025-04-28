@@ -21,4 +21,15 @@ public class ClassController(IClassService classService)
         return Ok(response);
     }
 
+    [HttpGet]
+    [Route("{classId:guid}")]
+    public IActionResult GetClass([FromRoute] Guid classId)
+    {
+        var classInfo = classService.GetById(classId);
+
+        var response = ClassInformationDtoOut.ToInfo(classInfo);
+
+        return Ok(response);
+    }
+
 }

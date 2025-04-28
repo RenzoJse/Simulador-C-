@@ -22,7 +22,14 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         builder.SetSealed(args.IsSealed);
         builder.SetAttributes(args.Attributes);
         builder.SetMethods(args.Methods);
-        return builder.GetResult();
+        var classObj = builder.GetResult();
+        AddClassToRepository(classObj);
+        return classObj;
+    }
+
+    private void AddClassToRepository(Class classObj)
+    {
+        classRepository.Add(classObj);
     }
 
     private Builder GetBuilder(CreateClassArgs args)

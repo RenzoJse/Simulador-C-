@@ -66,7 +66,7 @@ public class Method
 
     #region IsOverride
     public bool IsOverride { get; set; } = false;
-    #endregion 
+    #endregion
 
     #region Accesibility
 
@@ -141,5 +141,13 @@ public class Method
             throw new ArgumentException("Invalid accesibility type.");
         }
     }
+    #endregion
+
+    #region ClassRelation
+
+    public Class Class { get; set; } = null!;
+
+    public Guid ClassId { get; init; }
+
     #endregion
 }
