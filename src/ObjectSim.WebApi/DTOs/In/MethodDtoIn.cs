@@ -16,5 +16,6 @@ public class MethodDtoIn
 
     public Method ToArgs()
     {
+        return new Method();
     }
 }
