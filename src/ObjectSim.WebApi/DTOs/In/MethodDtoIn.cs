@@ -1,4 +1,5 @@
 ﻿using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 
 namespace ObjectSim.WebApi.DTOs.In;
 
@@ -14,8 +15,9 @@ public class MethodDtoIn
     public List<Parameter> Parameters { get; init; } = [];
     public List<Method> Methods { get; init; } = [];
 
-    public Method ToArgs()
+    public CreateMethodArgs ToArgs()
     {
-        return new Method();
+        ArgumentNullException.ThrowIfNull(Name, nameof(Name));
+        return new CreateMethodArgs(Name, Type, Accessibility, IsAbstract, IsSealed, IsOverride, LocalVariables, Parameters, Methods);
     }
 }
