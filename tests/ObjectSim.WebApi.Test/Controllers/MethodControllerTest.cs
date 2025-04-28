@@ -205,4 +205,43 @@ public class MethodControllerTest
         notFoundResult.Value.Should().Be($"Method with id {methodId} not found.");
     }
     #endregion
+
+    #region GetById-Method-Test
+    [TestMethod]
+    public void GetMethodById_WhenMethodExists_ShouldReturnOk()
+    {
+        var methodId = Guid.NewGuid();
+        var expectedMethod = _testMethod;
+
+        _methodServiceMock
+            .Setup(service => service.GetById(methodId))
+            .Returns(expectedMethod);
+
+        var result = _methodController.GetMethodById(methodId);
+
+        var okResult = result as OkObjectResult;
+        okResult.Should().NotBeNull();
+        okResult!.StatusCode.Should().Be(200);
+
+        var response = okResult.Value as MethodOutModel;
+        response.Should().NotBeNull();
+        response!.Name.Should().Be(expectedMethod.Name);
+    }
+
+    [TestMethod]
+    public void GetMethodById_WhenMethodDoesNotExist_ShouldReturnNotFound()
+    {
+        var methodId = Guid.NewGuid();
+
+        _methodServiceMock
+            .Setup(service => service.GetById(methodId))
+            .Returns((Method?)null);
+
+        var result = _methodController.GetMethodById(methodId);
+
+        var notFoundResult = result as NotFoundObjectResult;
+        notFoundResult.Should().NotBeNull();
+        notFoundResult!.StatusCode.Should().Be(404);
+    }
+    #endregion
 }
