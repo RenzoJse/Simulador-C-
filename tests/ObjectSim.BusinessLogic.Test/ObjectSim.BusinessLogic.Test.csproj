@@ -27,7 +27,6 @@
       <ProjectReference Include="..\..\src\ObjectSim.DataAccess\ObjectSim.DataAccess.csproj" />
       <ProjectReference Include="..\..\src\ObjectSim.Domain\ObjectSim.Domain.csproj" />
       <ProjectReference Include="..\..\src\ObjectSim.IBusinessLogic\ObjectSim.IBusinessLogic.csproj" />
-      <ProjectReference Include="..\..\src\ObjectSim.IDataAccess\ObjectSim.IDataAccess.csproj" />
     </ItemGroup>
 
 </Project>

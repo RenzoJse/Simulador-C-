@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ObjectSim.BusinessLogic\ObjectSim.BusinessLogic.csproj" />
       <ProjectReference Include="..\ObjectSim.DataAccess\ObjectSim.DataAccess.csproj" />
       <ProjectReference Include="..\ObjectSim.IBusinessLogic\ObjectSim.IBusinessLogic.csproj" />
     </ItemGroup>

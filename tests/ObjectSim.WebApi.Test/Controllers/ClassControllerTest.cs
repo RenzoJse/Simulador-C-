@@ -1,0 +1,99 @@
+using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
+using ObjectSim.IBusinessLogic;
+using ObjectSim.WebApi.Controllers;
+using ObjectSim.WebApi.DTOs.In;
+using ObjectSim.WebApi.DTOs.Out;
+using Attribute = ObjectSim.Domain.Attribute;
+
+namespace ObjectSim.WebApi.Test.Controllers;
+
+[TestClass]
+public class ClassControllerTest
+{
+    private Mock<IClassService> _classServiceMock = null!;
+    private ClassController _classController = null!;
+
+    private static readonly Attribute TestAttribute = new Attribute
+    {
+        Name = "TestAttribute",
+    };
+
+    private static readonly Method TestMethod = new Method
+    {
+        Name = "TestMethod",
+    };
+
+    private readonly Class _testClass = new Class
+    {
+        Name = "TestClass",
+        IsAbstract = false,
+        IsInterface = false,
+        IsSealed = false,
+        Attributes = [TestAttribute],
+        Methods = [TestMethod],
+        Parent = null,
+    };
+
+    private void SetupHttpContext()
+    {
+        var context = new DefaultHttpContext();
+        _classController.ControllerContext.HttpContext = context;
+    }
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _classServiceMock = new Mock<IClassService>();
+        _classController = new ClassController(_classServiceMock.Object);
+        SetupHttpContext();
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _classServiceMock.VerifyAll();
+    }
+
+    #region CreateClass-POST
+
+    [TestMethod]
+    public void CreateClass_WhenIsValid_MakesValidPost()
+    {
+       _classServiceMock
+            .Setup(service => service.CreateClass(It.IsAny<CreateClassArgs>()))
+            .Returns(_testClass);
+
+        var result = _classController.CreateClass(new CreateClassDtoIn
+        {
+            Name = "TestClass",
+            IsAbstract = false,
+            IsInterface = false,
+            IsSealed = false,
+            Attributes = [],
+            Methods = [],
+            Parent = null,
+        });
+
+        var resultObject = result as OkObjectResult;
+        var statusCode = resultObject?.StatusCode;
+        statusCode.Should().Be(200);
+
+        var answer = resultObject?.Value as ClassInformationDtoOut;
+        answer.Should().NotBeNull();
+        answer.Name.Should().Be(_testClass.Name);
+        answer.IsAbstract.Should().Be((bool)_testClass.IsAbstract!);
+        answer.IsInterface.Should().Be((bool)_testClass.IsInterface!);
+        answer.IsSealed.Should().Be((bool)_testClass.IsSealed!);
+        answer.Attributes.Should().BeEquivalentTo(_testClass.Attributes!.Select(attribute => attribute.Name));
+        answer.Methods.Should().BeEquivalentTo(_testClass.Methods!.Select(method => method.Name));
+        answer.Parent.Should().Be(_testClass.Parent?.Id);
+    }
+
+    #endregion
+
+}

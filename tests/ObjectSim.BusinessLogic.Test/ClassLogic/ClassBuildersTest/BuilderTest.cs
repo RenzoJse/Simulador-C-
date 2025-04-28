@@ -257,10 +257,17 @@ public class BuilderTest
     }
 
     [TestMethod]
-    public void CreateClass_WithNullAbstraction_SetsAbstraction()
+    public void CreateClass_WithValidAbstraction_SetsAbstraction()
     {
         _builder!.SetAbstraction(true);
         _builder.GetResult().IsAbstract.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void CreateClass_WithValidInterface_SetsInterface()
+    {
+        _builder!.SetInterface(true);
+        _builder.GetResult().IsInterface.Should().BeTrue();
     }
 
     [TestMethod]

@@ -1,18 +1,18 @@
-﻿using ObjectSim.Domain;
+﻿using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
-using ObjectSim.IDataAccess;
 
 namespace ObjectSim.BusinessLogic;
-public class LocalVariableService(ILocalVariableRepository<LocalVariable> localVariableRepostiroy) : ILocalVariableService<LocalVariable>
+public class LocalVariableService(IRepository<LocalVariable> localVariableRepository) : ILocalVariableService
 {
-    public LocalVariable Create(LocalVariable Entity)
+    public LocalVariable Create(LocalVariable entity)
     {
-        if(Entity == null)
+        if(entity == null)
         {
             throw new Exception("LocalVariable cannot be null");
         }
 
-        var existLocalVariable = localVariableRepostiroy.Exist(m => m.Name == Entity.Name);
+        var existLocalVariable = localVariableRepository.Exists(m => m.Name == entity.Name);
         if(existLocalVariable)
         {
             throw new Exception("LocalVariable already exist");
@@ -20,12 +20,12 @@ public class LocalVariableService(ILocalVariableRepository<LocalVariable> localV
 
         var localVariableToAdd = new LocalVariable
         {
-            Id = Entity.Id,
-            Name = Entity.Name,
-            Type = Entity.Type,
+            Id = entity.Id,
+            Name = entity.Name,
+            Type = entity.Type,
         };
 
-        localVariableRepostiroy.Add(localVariableToAdd);
+        localVariableRepository.Add(localVariableToAdd);
         return localVariableToAdd;
     }
 }

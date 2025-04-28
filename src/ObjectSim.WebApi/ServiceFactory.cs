@@ -1,5 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using ObjectSim.BusinessLogic;
+using ObjectSim.BusinessLogic.ClassLogic;
+using ObjectSim.BusinessLogic.ClassLogic.Strategy;
 using ObjectSim.DataAccess;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.DataAccess.Repositories;
@@ -26,7 +29,15 @@ public static class ServiceFactory
 
     public static void AddServices(IServiceCollection services)
     {
-        services.AddScoped<IMethodService>();
+        services.AddScoped<IMethodService, MethodService>();
+        services.AddScoped<IAttributeService, AttributeService>();
+        services.AddScoped<ILocalVariableService, LocalVariableService>();
+        services.AddScoped<IParameterService, ParameterService>();
+
+        services.AddScoped<IBuilderStrategy, ClassBuilderStrategy>();
+        services.AddScoped(provider =>
+            provider.GetServices<IBuilderStrategy>().ToList());
+        services.AddScoped<IClassService, ClassService>();
     }
 
     public static void AddDataAccess(IServiceCollection services)
@@ -34,5 +45,7 @@ public static class ServiceFactory
         services.AddScoped<IRepository<Class>, Repository<Class>>();
         services.AddScoped<IRepository<Method>, Repository<Method>>();
         services.AddScoped<IRepository<Attribute>, Repository<Attribute>>();
+        services.AddScoped<IRepository<LocalVariable>, Repository<LocalVariable>>();
+        services.AddScoped<IRepository<Parameter>, Repository<Parameter>>();
     }
 }
