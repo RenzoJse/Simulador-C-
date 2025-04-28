@@ -32,4 +32,12 @@ public class ClassController(IClassService classService)
         return Ok(response);
     }
 
+    [HttpDelete]
+    [Route("{classId:guid}")]
+    public IActionResult DeleteClass([FromRoute] Guid classId)
+    {
+        classService.DeleteClass(classId);
+        return Ok();
+    }
+
 }
