@@ -68,7 +68,7 @@ public class Method
     public bool IsOverride { get; set; } = false;
     #endregion 
 
-    #region Accesibility
+    #region Accessibility
 
     private MethodAccessibility _accessibility;
 
