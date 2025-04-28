@@ -127,7 +127,7 @@ public class ClassControllerTest
 
     #endregion
 
-    #region DeleteClass_Delete
+    #region DeleteClass_DELETE
 
     [TestMethod]
     public void DeleteClass_WhenIsValid_MakesValidDelete()
@@ -137,6 +137,25 @@ public class ClassControllerTest
             .Setup(service => service.DeleteClass(classId));
 
         var result = _classController.DeleteClass(classId);
+
+        var resultObject = result as OkResult;
+        var statusCode = resultObject?.StatusCode;
+        statusCode.Should().Be(200);
+    }
+
+    #endregion
+
+    #region RemoveMethod-PATCH
+
+    [TestMethod]
+    public void RemoveMethod_WhenIsValid_MakesValidPatch()
+    {
+        var methodId = Guid.NewGuid();
+
+        _classServiceMock
+            .Setup(service => service.RemoveMethod(_testClass.Id, methodId));
+
+        var result = _classController.RemoveMethod(_testClass.Id, methodId);
 
         var resultObject = result as OkResult;
         var statusCode = resultObject?.StatusCode;
