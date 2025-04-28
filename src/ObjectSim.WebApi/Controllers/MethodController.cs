@@ -7,7 +7,7 @@ namespace ObjectSim.WebApi.Controllers;
 
 [ApiController]
 [Route("api/methods")]
-public class MethodController (IMethodService methodService) : ControllerBase
+public class MethodController(IMethodService methodService) : ControllerBase
 {
     [HttpPost]
     public IActionResult CreateMethod(MethodDtoIn createMethodDtoIn)

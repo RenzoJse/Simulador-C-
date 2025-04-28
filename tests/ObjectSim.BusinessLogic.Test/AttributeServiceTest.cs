@@ -117,7 +117,7 @@ public class AttributeServiceTest
     {
         _attributeRepositoryMock!
             .Setup(repo => repo.GetAll(It.IsAny<Func<Domain.Attribute, bool>>()))
-            .Returns(((List<Domain.Attribute>)(null!)));
+            .Returns((List<Domain.Attribute>)null!);
 
         Action act = () => _service!.GetAll();
 

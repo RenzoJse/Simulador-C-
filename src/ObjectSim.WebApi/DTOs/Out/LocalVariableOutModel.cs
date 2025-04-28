@@ -1,11 +1,5 @@
-﻿public class LocalVariableOutModel
+﻿public class LocalVariableOutModel(ObjectSim.Domain.LocalVariable localVariable)
 {
-    public string Name { get; init; } = string.Empty;
-    public string Type { get; init; } = string.Empty;
-
-    public LocalVariableOutModel(ObjectSim.Domain.LocalVariable localVariable)
-    {
-        Name = localVariable.Name!;
-        Type = localVariable.Type.ToString();
-    }
+    public string Name { get; init; } = localVariable.Name!;
+    public string Type { get; init; } = localVariable.Type.ToString();
 }

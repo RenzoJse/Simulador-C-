@@ -2,37 +2,21 @@
 
 namespace ObjectSim.WebApi.DTOs.Out;
 
-public class MethodOutModel
+public class MethodOutModel(Method methodInfo)
 {
-    public string Name { get; init; } = null!;
-    public string Type { get; init; } = null!;
-    public string Accessibility { get; init; } = null!;
-    public bool IsAbstract { get; init; }
-    public bool IsSealed { get; init; }
-    public bool IsOverride { get; init; }
-    public List<LocalVariableOutModel> LocalVariables { get; init; } = [];
-    public List<ParameterOutModel> Parameters { get; init; } = [];
-    public List<MethodOutModel> Methods { get; init; } = [];
-
-    public MethodOutModel(Method methodInfo)
-    {
-        Name = methodInfo.Name!;
-        Type = methodInfo.Type.ToString();
-        Accessibility = methodInfo.Accessibility.ToString();
-        IsAbstract = methodInfo.Abstract;
-        IsSealed = methodInfo.IsSealed;
-        IsOverride = methodInfo.IsOverride;
-
-        LocalVariables = methodInfo.LocalVariables != null
+    public string Name { get; init; } = methodInfo.Name!;
+    public string Type { get; init; } = methodInfo.Type.ToString();
+    public string Accessibility { get; init; } = methodInfo.Accessibility.ToString();
+    public bool IsAbstract { get; init; } = methodInfo.Abstract;
+    public bool IsSealed { get; init; } = methodInfo.IsSealed;
+    public bool IsOverride { get; init; } = methodInfo.IsOverride;
+    public List<LocalVariableOutModel> LocalVariables { get; init; } = methodInfo.LocalVariables != null
             ? methodInfo.LocalVariables.Select(lv => new LocalVariableOutModel(lv)).ToList()
             : [];
-
-        Parameters = methodInfo.Parameters != null
+    public List<ParameterOutModel> Parameters { get; init; } = methodInfo.Parameters != null
             ? methodInfo.Parameters.Select(p => new ParameterOutModel(p)).ToList()
             : [];
-
-        Methods = methodInfo.MethodsInvoke != null
+    public List<MethodOutModel> Methods { get; init; } = methodInfo.MethodsInvoke != null
             ? methodInfo.MethodsInvoke.Select(m => new MethodOutModel(m)).ToList()
             : [];
-    }
 }
