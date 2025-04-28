@@ -8,6 +8,7 @@ using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
 
 namespace ObjectSim.WebApi.Test.Controllers;
+[TestClass]
 public class MethodControllerTest
 {
     private Mock<IMethodService> _methodServiceMock = null!;
@@ -80,12 +81,15 @@ public class MethodControllerTest
 
         var answer = resultObject?.Value as MethodOutModel;
         answer.Should().NotBeNull();
-        answer.Name.Should().Be(_testMethod.Name);
-        answer.IsAbstract.Should().Be((bool)_testMethod.Abstract!);
-        answer.IsOverride.Should().Be((bool)_testMethod.IsOverride!);
-        answer.IsSealed.Should().Be((bool)_testMethod.IsSealed!);
-        answer.LocalVariables.Should().BeEquivalentTo(_testMethod.LocalVariables!.Select(localVariable => localVariable.Name));
-        answer.Parameters.Should().BeEquivalentTo(_testMethod.Parameters!.Select(parameter => parameter.Name));
-        answer.Methods.Should().BeEquivalentTo(_testMethod.MethodsInvoke!.Select(method => method.Name));
+        answer!.Name.Should().Be(_testMethod.Name);
+        answer.IsAbstract.Should().Be(_testMethod.Abstract);
+        answer.IsOverride.Should().Be(_testMethod.IsOverride);
+        answer.IsSealed.Should().Be(_testMethod.IsSealed);
+        answer.LocalVariables.Select(lv => lv.Name)
+            .Should().BeEquivalentTo(_testMethod.LocalVariables!.Select(lv => lv.Name));
+        answer.Parameters.Select(p => p.Name)
+            .Should().BeEquivalentTo(_testMethod.Parameters!.Select(p => p.Name));
+        answer.Methods.Select(m => m.Name)
+            .Should().BeEquivalentTo(_testMethod.MethodsInvoke!.Select(m => m.Name));
     }
 }
