@@ -40,4 +40,12 @@ public class ClassController(IClassService classService)
         return Ok();
     }
 
+    [HttpPatch]
+    [Route("{classId:guid}/{methodId:guid}")]
+    public IActionResult RemoveMethod([FromRoute] Guid classId, [FromRoute] Guid methodId)
+    {
+        classService.RemoveMethod(classId, methodId);
+        return Ok();
+    }
+
 }
