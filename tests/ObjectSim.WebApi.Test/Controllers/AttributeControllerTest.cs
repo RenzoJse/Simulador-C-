@@ -1,8 +1,11 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.Controllers;
+using ObjectSim.WebApi.DTOs.In;
+using ObjectSim.WebApi.DTOs.Out;
 namespace ObjectSim.WebApi.Test.Controllers;
 [TestClass]
 public class AttributeControllerTest
@@ -70,16 +73,52 @@ public class AttributeControllerTest
     [TestMethod]
     public void GetAll_ShouldThrowException_WhenNoAttributesExist()
     {
-        // Arrange
         _attributeServiceMock
             .Setup(service => service.GetAll())
             .Throws(new Exception("No attributes found."));
 
-        // Act
         Action act = () => _attributeController.GetAll();
 
-        // Assert
         act.Should().Throw<Exception>()
            .WithMessage("No attributes found.");
     }
+    [TestMethod]
+    public void Create_ValidModel_ShouldReturnCreatedResult()
+    {
+        var modelIn = new CreateAttributeDtoIn
+        {
+            Name = "Color",
+            Visibility = "Public",
+            DataTypeName = "string",
+            DataTypeKind = "Reference",
+            ClassId = Guid.NewGuid()
+        };
+
+        var domainAttribute = new Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Color",
+
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            DataType = ReferenceType.Create("string"),
+            ClassId = modelIn.ClassId
+        };
+
+        _attributeServiceMock
+            .Setup(s => s.Create(It.IsAny<Domain.Attribute>()))
+            .Returns(domainAttribute);
+
+        var result = _attributeController.Create(modelIn);
+
+        var created = result as CreatedAtActionResult;
+        Assert.IsNotNull(created);
+        var outModel = created.Value as AttributeDtoOut;
+        Assert.IsNotNull(outModel);
+        Assert.AreEqual("Color", outModel.Name);
+        Assert.AreEqual("Public", outModel.Visibility);
+        Assert.AreEqual("Reference", outModel.DataTypeKind);
+        Assert.AreEqual("string", outModel.DataTypeName);
+        _attributeServiceMock.Verify(x => x.Create(It.IsAny<Domain.Attribute>()), Times.Once);
+    }
+
 }
