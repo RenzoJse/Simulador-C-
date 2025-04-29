@@ -92,6 +92,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             dt.HasKey(d => d.Id);
             dt.HasDiscriminator<string>("Discriminator")
+                .HasValue<DataType>("DataType")
                 .HasValue<ValueType>("ValueType")
                 .HasValue<ReferenceType>("ReferenceType");
         });
@@ -108,13 +109,11 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
         modelBuilder.Entity<ValueType>(vt =>
         {
-            vt.HasKey(vt => vt.Name);
             vt.Property(vt => vt.Name).IsRequired();
         });
 
         modelBuilder.Entity<ReferenceType>(rt =>
         {
-            rt.HasKey(rt => rt.Name);
             rt.Property(rt => rt.Name).IsRequired();
         });
 
