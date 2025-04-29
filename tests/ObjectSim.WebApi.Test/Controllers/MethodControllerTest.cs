@@ -55,7 +55,7 @@ public class MethodControllerTest
         _methodServiceMock.VerifyAll();
     }
 
-    #region Create-Method-Test
+    #region CreateAttribute-Method-Test
     [TestMethod]
     public void CreateMethod_WhenIsValid_MakesValidPost()
     {
@@ -266,5 +266,5 @@ public class MethodControllerTest
         response!.Count.Should().Be(methods.Count);
         response.First().Name.Should().Be(_testMethod.Name);
     }
-    #endregion 
+    #endregion
 }

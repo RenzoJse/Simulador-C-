@@ -2,6 +2,7 @@
 using Moq;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain.Args;
+using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test;
@@ -9,22 +10,23 @@ namespace ObjectSim.BusinessLogic.Test;
 public class AttributeServiceTest
 {
     private Mock<IRepository<Attribute>>? _attributeRepositoryMock;
+    private Mock<IClassService> _classServiceMock = null!;
     private AttributeService? _attributeService;
     private Attribute? _attribute;
 
-    private CreateAttributeArgs _testAttribute = new()
-    {
-        Name = "Test",
-        ClassId = Guid.NewGuid(),
-        DataType = Domain.ValueType.Create("int"),
-        Visibility = Attribute.AttributeVisibility.Public
-    };
+    private CreateAttributeArgs _testArgsAttribute = new CreateAttributeArgs(
+        Domain.ValueType.Create("int"),
+        Attribute.AttributeVisibility.Public,
+        Guid.NewGuid(),
+        "Test"
+    );
 
     [TestInitialize]
     public void Setup()
     {
+        _classServiceMock = new Mock<IClassService>();
         _attributeRepositoryMock = new Mock<IRepository<Attribute>>(MockBehavior.Strict);
-        _attributeService = new AttributeService(_attributeRepositoryMock.Object);
+        _attributeService = new AttributeService(_attributeRepositoryMock.Object, _classServiceMock.Object);
 
         _attribute = new Attribute
         {
@@ -51,15 +53,13 @@ public class AttributeServiceTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void CreateAttribute_NullArgs_ThrowsException()
     {
-        _attributeService!.Create(null!);
+        _attributeService!.CreateAttribute(null!);
     }
 
     [TestMethod]
-    public void CreateAttribute_NullAttribute_ShouldNotCallRepository()
+    public void CreateAttribute_AttributeWithSameNameAlreadyExistsInClass_ThrowsException()
     {
-        Action act = () => _attributeService!.Create(null!);
-
-        act.Should().Throw<InvalidOperationException>();
+        _
     }
 
     #endregion
@@ -73,7 +73,7 @@ public class AttributeServiceTest
             .Setup(repo => repo.Add(It.IsAny<Attribute>()))
             .Returns(_attribute!);
 
-        var result = _attributeService!.Create(_attribute!);
+        var result = _attributeService!.CreateAttribute(_attribute!);
 
         result.Should().NotBeNull();
         result.Should().Be(_attribute);

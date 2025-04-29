@@ -1,20 +1,20 @@
 ﻿using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 namespace ObjectSim.BusinessLogic;
 public class AttributeService(IRepository<Attribute> attributeRepository) : IAttributeService
 {
-    public Attribute Create(CreateAttributeArgs attribute)
+    public Attribute CreateAttribute(CreateAttributeArgs attribute)
     {
         if(attribute == null)
         {
-            throw new InvalidOperationException("Attribute cannot be null.");
+            throw new ArgumentNullException(nameof(attribute), "Attribute cannot be null.");
         }
-        else
-        {
-            attributeRepository.Add(attribute!);
-            return attribute;
-        }
+
+        var
+        attributeRepository.Add(attribute!);
+        return attribute;
     }
     public List<Attribute> GetAll()
     {

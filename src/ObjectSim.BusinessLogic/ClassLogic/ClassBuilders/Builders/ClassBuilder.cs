@@ -15,7 +15,7 @@ public class ClassBuilder(IMethodService methodService, IClassService classServi
         List<Attribute> newAttributes = [];
         foreach(var attr in attributes)
         {
-            var newAttribute = attributeService.Create(attr);
+            var newAttribute = attributeService.CreateAttribute(attr);
             if(_classService.CanAddAttribute(Result, newAttribute))
             {
                 newAttributes.Add(newAttribute);

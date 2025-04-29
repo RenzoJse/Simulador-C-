@@ -1,7 +1,7 @@
 ﻿namespace ObjectSim.IBusinessLogic;
 public interface IAttributeService
 {
-    Domain.Attribute Create(Domain.Attribute attribute);
+    Domain.Attribute CreateAttribute(Domain.Attribute attribute);
     List<Domain.Attribute> GetAll();
     bool Delete(Guid id);
     Domain.Attribute GetById(Guid id);
