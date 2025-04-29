@@ -16,6 +16,6 @@ public class ClassBuilderStrategy(
 
     public Builder CreateBuilder(IClassService classService, IAttributeService attributeService)
     {
-       return new ClassBuilder(methodService, classService, attributeService);
+        return new ClassBuilder(methodService, classService, attributeService);
     }
 }

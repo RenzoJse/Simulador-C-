@@ -41,7 +41,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
     public Class GetById(Guid? classId)
     {
-        if (classId == null)
+        if(classId == null)
         {
             throw new ArgumentNullException(nameof(classId));
         }
@@ -62,7 +62,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
     private static void ValidateMethodUniqueness(Class classObj, Method method)
     {
-        if (classObj.Methods!.Any(classMethod => classMethod.Name == method.Name &&
+        if(classObj.Methods!.Any(classMethod => classMethod.Name == method.Name &&
                                                  classMethod.Type == method.Type &&
                                                  method.IsOverride == false &&
                                                  AreParametersEqual(classMethod.Parameters, method.Parameters)))
@@ -73,27 +73,27 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
     private static void ValidateInterfaceMethodConstraints(Method method)
     {
-        if (method.IsSealed)
+        if(method.IsSealed)
         {
             throw new ArgumentException("Method cannot be sealed in an interface.");
         }
-        if (method.IsOverride)
+        if(method.IsOverride)
         {
             throw new ArgumentException("Method cannot be override in an interface.");
         }
-        if (method.Accessibility == Method.MethodAccessibility.Private)
+        if(method.Accessibility == Method.MethodAccessibility.Private)
         {
             throw new ArgumentException("Method cannot be private in an interface.");
         }
-        if (method.LocalVariables.Count > 0)
+        if(method.LocalVariables.Count > 0)
         {
             throw new ArgumentException("Method cannot have local variables in an interface.");
         }
-        if (method.MethodsInvoke.Count > 0)
+        if(method.MethodsInvoke.Count > 0)
         {
             throw new ArgumentException("Method cannot invoke other methods in an interface.");
         }
-        if (!method.Abstract)
+        if(!method.Abstract)
         {
             method.Abstract = true;
         }
@@ -106,12 +106,12 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
             return false;
         }
 
-        for (var i = 0; i < parameters1.Count; i++)
+        for(var i = 0; i < parameters1.Count; i++)
         {
             var p1 = parameters1[i];
             var p2 = parameters2[i];
 
-            if (p1.Name != p2.Name || p1.Type != p2.Type)
+            if(p1.Name != p2.Name || p1.Type != p2.Type)
             {
                 return false;
             }
@@ -140,7 +140,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         var classObj = GetById(classId);
         var attribute = attributeService.GetById((Guid)idAttribute);
 
-        if (CanAddAttribute(classObj, attribute))
+        if(CanAddAttribute(classObj, attribute))
         {
             classObj.Attributes!.Add(attribute);
         }
@@ -153,7 +153,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
             throw new ArgumentException("Cannot add attribute to an interface.");
         }
 
-        if (classObj.Attributes!.Any(classAttribute => classAttribute.Name == attribute.Name))
+        if(classObj.Attributes!.Any(classAttribute => classAttribute.Name == attribute.Name))
         {
             throw new ArgumentException("Attribute name already exists in class.");
         }
@@ -168,7 +168,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         var hasDependentClasses = classRepository.GetAll(c => c.Parent != null)
             .Any(c => c.Parent != null && c.Parent.Id == classId);
 
-        if (hasDependentClasses)
+        if(hasDependentClasses)
         {
             throw new ArgumentException("Cannot delete class that is implemented by another class.");
         }
@@ -193,7 +193,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
     private static void ValidateIfClassHasMethods(Class classObj)
     {
-        if (classObj.Methods == null || classObj.Methods.Count == 0)
+        if(classObj.Methods == null || classObj.Methods.Count == 0)
         {
             throw new ArgumentException("Class has no methods.");
         }
@@ -202,7 +202,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
     private static Method GetMethodFromClass(Class classObj, Guid? methodId)
     {
         var method = classObj.Methods!.FirstOrDefault(m => m.Id == methodId);
-        if (method == null)
+        if(method == null)
         {
             throw new ArgumentException("Method not found in class.");
         }
@@ -211,19 +211,19 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
     private static void ValidateParentClassConstraints(Class classObj, Method method)
     {
-        if (classObj.Parent == null)
+        if(classObj.Parent == null)
         {
             return;
         }
 
         var parentClass = classObj.Parent;
 
-        if ((bool)parentClass.IsInterface!)
+        if((bool)parentClass.IsInterface!)
         {
             ValidateInterfaceMethod(parentClass, method);
         }
 
-        if ((bool)parentClass.IsAbstract! && method.IsOverride)
+        if((bool)parentClass.IsAbstract! && method.IsOverride)
         {
             throw new ArgumentException("Cannot remove method that is overriding abstract parent method you implement.");
         }
@@ -235,7 +235,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         {
             ValidateMethodUniqueness(parentClass, method);
         }
-        catch (Exception)
+        catch(Exception)
         {
             throw new ArgumentException("Cannot remove method that is in an interface you implement.");
         }
@@ -243,9 +243,9 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
 
     private static void ValidateMethodDependencies(List<Method> methodList, Method method)
     {
-        foreach (var methodInClass in methodList)
+        foreach(var methodInClass in methodList)
         {
-            if (methodInClass.MethodsInvoke != null && methodInClass.MethodsInvoke.Contains(method))
+            if(methodInClass.MethodsInvoke != null && methodInClass.MethodsInvoke.Contains(method))
             {
                 throw new ArgumentException("Cannot remove method that is invoked by another method.");
             }
