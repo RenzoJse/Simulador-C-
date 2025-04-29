@@ -147,9 +147,4 @@ public class Method
     }
     #endregion
 
-    #region ClassId
-
-    public Guid ClassId { get; init; }
-
-    #endregion
 }
