@@ -117,6 +117,9 @@ public class AttributeServiceTest
     {
         _testArgsAttribute.ClassId = _testAttribute!.ClassId;
         _testArgsAttribute.Id = _testAttribute.Id;
+        _testArgsAttribute.Name = _testAttribute.Name!;
+        _testArgsAttribute.Visibility = _testAttribute.Visibility.ToString();
+        _testArgsAttribute.DataType = TestArgsDataType;
 
         _dataTypeServiceMock
             .Setup(x => x.CreateDataType(_testArgsAttribute.DataType)).Returns(_testDataType!);
