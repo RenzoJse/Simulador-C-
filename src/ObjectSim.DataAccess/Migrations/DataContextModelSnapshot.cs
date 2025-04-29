@@ -135,7 +135,7 @@ namespace ObjectSim.DataAccess.Migrations
                     b.Property<int>("Accessibility")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("ClassId")
+                    b.Property<Guid?>("ClassId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsOverride")
@@ -200,16 +200,16 @@ namespace ObjectSim.DataAccess.Migrations
 
             modelBuilder.Entity("ObjectSim.Domain.Attribute", b =>
                 {
-                    b.HasOne("ObjectSim.Domain.DataType", "DataType")
-                        .WithMany()
-                        .HasForeignKey("DataTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("ObjectSim.Domain.Class", null)
                         .WithMany("Attributes")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ObjectSim.Domain.DataType", "DataType")
+                        .WithMany()
+                        .HasForeignKey("DataTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("DataType");
