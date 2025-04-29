@@ -1,6 +1,6 @@
 ﻿namespace ObjectSim.Domain;
 public abstract class DataType
 {
-    public Guid Id { get; set; }
-    public string Name { get; protected set; } = null!;
+    public Guid Id { get; init; }
+    public string Name { get; protected init; } = null!;
 }
