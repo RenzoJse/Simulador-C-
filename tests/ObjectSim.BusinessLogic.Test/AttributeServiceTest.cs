@@ -12,22 +12,29 @@ public class AttributeServiceTest
 {
     private Mock<IRepository<Attribute>>? _attributeRepositoryMock;
     private Mock<IClassService> _classServiceMock = null!;
+    private Mock<IDataTypeService> _dataTypeServiceMock = null!;
     private AttributeService? _attributeService;
     private Attribute? _attribute;
 
+    private static CreateDataTypeArgs _testArgsDataType = new CreateDataTypeArgs(
+        "int");
+
     private CreateAttributeArgs _testArgsAttribute = new CreateAttributeArgs(
-        Domain.ValueType.Create("int"),
-        Attribute.AttributeVisibility.Public,
+        _testArgsDataType,
+        "public",
         Guid.NewGuid(),
         "Test"
     );
+
+    private readonly IDataType? _testDataType = ReferenceType.Create("int");
 
     [TestInitialize]
     public void Setup()
     {
         _classServiceMock = new Mock<IClassService>();
+        _dataTypeServiceMock = new Mock<IDataTypeService>();
         _attributeRepositoryMock = new Mock<IRepository<Attribute>>(MockBehavior.Strict);
-        _attributeService = new AttributeService(_attributeRepositoryMock.Object, _classServiceMock.Object);
+        _attributeService = new AttributeService(_attributeRepositoryMock.Object, _classServiceMock.Object, _dataTypeServiceMock.Object);
 
         _attribute = new Attribute
         {
@@ -61,7 +68,7 @@ public class AttributeServiceTest
     public void CreateAttribute_AttributeWithSameNameAlreadyExistsInClass_ThrowsException()
     {
         _classServiceMock.Setup(x => x.CanAddAttribute(It.IsAny<Class>(), It.IsAny<Attribute>())).Returns(false);
-        Action act = () => _attributeService!.CreateAttribute(_testArgsAttribute);
+        Action act = () => _attributeService!.GetAll();
 
         act.Should().Throw<ArgumentException>();
     }
@@ -70,7 +77,7 @@ public class AttributeServiceTest
     public void CreateAttribute_NotValidDataType_ThrowsException()
     {
         _classServiceMock.Setup(x => x.CanAddAttribute(It.IsAny<Class>(), It.IsAny<Attribute>())).Returns(true);
-        _dataTypeServiceMock.Setup(x => x.CreateDataType()).Returns(_testDataType);
+        _dataTypeServiceMock.Setup(x => x.CreateDataType(_testArgsAttribute.DataType)).Returns(_testDataType!);
         Action act = () => _attributeService!.CreateAttribute(_testArgsAttribute);
 
         act.Should().Throw<ArgumentException>();

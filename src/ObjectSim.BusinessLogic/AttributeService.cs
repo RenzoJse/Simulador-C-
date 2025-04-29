@@ -20,22 +20,18 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
 
         var dataType = dataTypeService.CreateDataType(args.DataType);
 
-        var newAttribute = new Attribute
+        var attribute = new Attribute
         {
-            Id = attribute.Id,
-            Name = attribute.Name,
+            Id = args.Id,
+            Name = args.Name,
             DataType = dataType,
-            ClassId = attribute.ClassId,
-            Visibility = attribute.Visibility
+            ClassId = args.ClassId,
+            Visibility = visibility
         };
 
-        if(classService.CanAddAttribute())
-        {
+        classService.AddAttribute(args.ClassId, attribute);
 
-        }
-
-        attributeRepository.Add(attribute!);
-        return attribute;
+        return null!;
     }
 
     public List<Attribute> GetAll()

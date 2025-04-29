@@ -1,4 +1,5 @@
 ﻿using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
@@ -55,7 +56,7 @@ public abstract class Builder(IClassService classService)
         Result.IsSealed = sealedClass;
     }
 
-    public virtual void SetAttributes(List<Attribute> attributes)
+    public virtual void SetAttributes(List<CreateAttributeArgs> attributes)
     {
         ArgumentNullException.ThrowIfNull(attributes);
 

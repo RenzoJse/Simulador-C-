@@ -2,6 +2,7 @@
 using Moq;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
@@ -19,6 +20,16 @@ public class ClassBuilderTest
     {
         Name = "TestMethod",
     };
+
+    private static readonly CreateDataTypeArgs TestArgsDataType = new CreateDataTypeArgs(
+        "int");
+
+    private static readonly CreateAttributeArgs TestCreateAttributeArgs = new CreateAttributeArgs(
+        TestArgsDataType,
+        "public",
+        Guid.NewGuid(),
+        "Test"
+    );
 
     [TestInitialize]
     public void Initialize()
@@ -63,10 +74,10 @@ public class ClassBuilderTest
             Name = "NewAttribute"
         };
 
-        _attributeServiceMock!.Setup(m => m.CreateAttribute(invalidAttribute))
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(TestCreateAttributeArgs))
             .Returns(invalidAttribute);
 
-        _attributeServiceMock!.Setup(m => m.CreateAttribute(validAttribute))
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(TestCreateAttributeArgs))
             .Returns(validAttribute);
 
         _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), invalidAttribute))
@@ -87,10 +98,10 @@ public class ClassBuilderTest
         var attribute1 = new Attribute { Name = "Attribute1" };
         var attribute2 = new Attribute { Name = "Attribute2" };
 
-        _attributeServiceMock!.Setup(m => m.CreateAttribute(attribute1))
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(TestCreateAttributeArgs))
             .Returns(attribute1);
 
-        _attributeServiceMock!.Setup(m => m.CreateAttribute(attribute2))
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(TestCreateAttributeArgs))
             .Returns(attribute2);
 
         _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), attribute1))
@@ -111,7 +122,7 @@ public class ClassBuilderTest
     {
         var attribute1 = new Attribute { Name = "Attribute1" };
 
-        _attributeServiceMock!.Setup(m => m.CreateAttribute(attribute1))
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(TestCreateAttributeArgs))
             .Returns(attribute1);
 
         _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), attribute1))
