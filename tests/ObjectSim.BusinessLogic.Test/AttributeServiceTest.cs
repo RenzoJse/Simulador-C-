@@ -33,16 +33,11 @@ public class AttributeServiceTest
         _attribute = null;
     }
 
-    public ObjectSim.Domain.Attribute? Get_attribute()
-    {
-        return _attribute;
-    }
-
     [TestMethod]
     public void CreateAttribute_ValidAttribute_ShouldCallAddAndReturnAttribute()
     {
         _attributeRepositoryMock!
-            .Setup(repo => repo.Add(It.IsAny<ObjectSim.Domain.Attribute>()))
+            .Setup(repo => repo.Add(It.IsAny<Domain.Attribute>()))
             .Returns(_attribute!);
 
         var result = _service!.Create(_attribute!);
@@ -50,7 +45,7 @@ public class AttributeServiceTest
         result.Should().NotBeNull();
         result.Should().Be(_attribute);
 
-        _attributeRepositoryMock.Verify(repo => repo.Add(It.IsAny<ObjectSim.Domain.Attribute>()), Times.Once);
+        _attributeRepositoryMock.Verify(repo => repo.Add(It.IsAny<Domain.Attribute>()), Times.Once);
     }
 
     [TestMethod]
@@ -68,14 +63,14 @@ public class AttributeServiceTest
         Action act = () => _service!.Create(null!);
 
         act.Should().Throw<InvalidOperationException>();
-        _attributeRepositoryMock!.Verify(repo => repo.Add(It.IsAny<ObjectSim.Domain.Attribute>()), Times.Never);
+        _attributeRepositoryMock!.Verify(repo => repo.Add(It.IsAny<Domain.Attribute>()), Times.Never);
     }
     [TestMethod]
     public void GetAllAttribute_CorrectAttributes_ShouldThrowAllOfThem()
     {
         var attributes = new List<Domain.Attribute>
         {
-            new ObjectSim.Domain.Attribute
+            new Domain.Attribute
         {
             Id = Guid.NewGuid(),
             Name = "Name",
@@ -83,7 +78,7 @@ public class AttributeServiceTest
             DataType = Domain.ValueType.Create("int"),
             Visibility = Domain.Attribute.AttributeVisibility.Private
         },
-            new ObjectSim.Domain.Attribute
+            new Domain.Attribute
         {
             Id = Guid.NewGuid(),
             Name = "Name2",

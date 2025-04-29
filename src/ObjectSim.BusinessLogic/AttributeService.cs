@@ -4,7 +4,7 @@ using Attribute = ObjectSim.Domain.Attribute;
 namespace ObjectSim.BusinessLogic;
 public class AttributeService(IRepository<Attribute> attributeRepository) : IAttributeService
 {
-    public Attribute Create(Attribute attribute)
+    public Attribute Create(CreateAttributeArgs attribute)
     {
         if(attribute == null)
         {
