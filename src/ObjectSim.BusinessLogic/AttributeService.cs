@@ -27,7 +27,13 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
             DataType = dataType,
             ClassId = attribute.ClassId,
             Visibility = attribute.Visibility
+        };
+
+        if(classService.CanAddAttribute())
+        {
+
         }
+
         attributeRepository.Add(attribute!);
         return attribute;
     }
