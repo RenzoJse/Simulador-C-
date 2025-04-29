@@ -3,6 +3,7 @@ using FluentAssertions;
 using Moq;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 
 namespace ObjectSim.BusinessLogic.Test;
 
@@ -12,14 +13,25 @@ public class MethodServiceTest
     private Mock<IRepository<Method>>? _methodRepositoryMock;
     private MethodService? _methodService;
     private static readonly Guid ClassId = Guid.NewGuid();
-    private Method? testMethod;
+    private Method? _testMethod;
+    private CreateMethodArgs _testCreateMethodArgs = new CreateMethodArgs(
+        "TestMethod",
+        "string",
+        "public",
+        false,
+        false,
+        false,
+        [],
+        [],
+        []
+    );
 
     [TestInitialize]
     public void Initialize()
     {
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
         _methodService = new MethodService(_methodRepositoryMock.Object);
-        testMethod = new Method
+        _testMethod = new Method
         {
             Id = ClassId,
             Name = "MetodoDePrueba",
@@ -33,17 +45,9 @@ public class MethodServiceTest
         };
     }
 
-    [TestMethod]
-    public void CreateMethod_WhenValid_ShouldReturnMethod()
-    {
-        _methodRepositoryMock!.Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
-        _methodRepositoryMock.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
+    #region CreateMethod
 
-        var result = _methodService!.CreateMethod(testMethod!);
-
-        result.Should().NotBeNull();
-        _methodRepositoryMock.VerifyAll();
-    }
+    #region Error
 
     [TestMethod]
     [ExpectedException(typeof(Exception))]
@@ -53,8 +57,28 @@ public class MethodServiceTest
             .Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>()))
             .Returns(true);
 
-        _methodService!.CreateMethod(testMethod!);
+        _methodService!.CreateMethod(_testCreateMethodArgs);
     }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void CreateMethod_WhenValid_ShouldReturnMethod()
+    {
+        _methodRepositoryMock!.Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
+        _methodRepositoryMock.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
+
+        var result = _methodService!.CreateMethod(_testCreateMethodArgs);
+
+        result.Should().NotBeNull();
+        _methodRepositoryMock.VerifyAll();
+    }
+
+    #endregion
+
+    #endregion
 
     [TestMethod]
     public void GetAllMethods_ShouldReturnMethods()
@@ -95,13 +119,13 @@ public class MethodServiceTest
     {
         _methodRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns(testMethod!);
+            .Returns(_testMethod!);
 
         var result = _methodService!.GetById(ClassId);
 
         result.Should().NotBeNull();
-        result.Id.Should().Be(testMethod!.Id);
-        result.Name.Should().Be(testMethod.Name);
+        result.Id.Should().Be(_testMethod!.Id);
+        result.Name.Should().Be(_testMethod.Name);
     }
 
     [TestMethod]
@@ -130,15 +154,15 @@ public class MethodServiceTest
     {
         _methodRepositoryMock!
             .Setup(x => x.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns(testMethod!);
+            .Returns(_testMethod!);
 
         _methodRepositoryMock!
             .Setup(x => x.Delete(It.IsAny<Method>()));
 
-        var result = _methodService!.Delete(testMethod!.Id);
+        var result = _methodService!.Delete(_testMethod!.Id);
 
         result.Should().BeTrue();
-        _methodRepositoryMock.Verify(x => x.Delete(It.Is<Method>(m => m.Id == testMethod.Id)), Times.Once);
+        _methodRepositoryMock.Verify(x => x.Delete(It.Is<Method>(m => m.Id == _testMethod.Id)), Times.Once);
     }
 
     [TestMethod]
@@ -157,17 +181,17 @@ public class MethodServiceTest
         };
 
         _methodRepositoryMock!
-            .Setup(x => x.Get(It.Is<Func<Method, bool>>(filter => filter(testMethod!))))
-            .Returns(testMethod);
+            .Setup(x => x.Get(It.Is<Func<Method, bool>>(filter => filter(_testMethod!))))
+            .Returns(_testMethod);
 
         _methodRepositoryMock!
             .Setup(x => x.Update(It.IsAny<Method>()))
             .Returns((Method m) => m);
 
-        var result = _methodService!.Update(testMethod!.Id, newMethod);
+        var result = _methodService!.Update(_testMethod!.Id, newMethod);
 
         result.Should().NotBeNull();
-        result.Id.Should().Be(testMethod.Id);
+        result.Id.Should().Be(_testMethod.Id);
         result.Name.Should().Be(newMethod.Name);
         result.Type.Should().Be(newMethod.Type);
         result.Abstract.Should().Be(newMethod.Abstract);
@@ -184,7 +208,7 @@ public class MethodServiceTest
     {
         var invalidUpdate = new Method
         {
-            Id = testMethod!.Id,
+            Id = _testMethod!.Id,
             Name = "",
             Type = Method.MethodDataType.String,
             Abstract = true,
@@ -195,9 +219,9 @@ public class MethodServiceTest
         };
 
         _methodRepositoryMock!
-            .Setup(x => x.Get(It.Is<Func<Method, bool>>(f => f(testMethod!))))
-            .Returns(testMethod);
+            .Setup(x => x.Get(It.Is<Func<Method, bool>>(f => f(_testMethod!))))
+            .Returns(_testMethod);
 
-        _methodService!.Update(testMethod.Id, invalidUpdate);
+        _methodService!.Update(_testMethod.Id, invalidUpdate);
     }
 }

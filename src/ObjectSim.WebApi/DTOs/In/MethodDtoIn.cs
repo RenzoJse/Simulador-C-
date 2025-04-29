@@ -1,4 +1,5 @@
 ﻿using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 
 namespace ObjectSim.WebApi.DTOs.In;
 
@@ -14,21 +15,9 @@ public class  MethodDtoIn
     public List<Parameter> Parameters { get; init; } = [];
     public List<Method> Methods { get; init; } = [];
 
-    public Method ToEntity()
+    public CreateMethodArgs ToArgs()
     {
-        var result = new Method
-        {
-            Name = Name,
-            Type = Enum.Parse<Method.MethodDataType>(Type),
-            Accessibility = Enum.Parse<Method.MethodAccessibility>(Accessibility),
-            Abstract = IsAbstract,
-            IsSealed = IsSealed,
-            IsOverride = IsOverride,
-            LocalVariables = LocalVariables,
-            Parameters = Parameters,
-            MethodsInvoke = Methods
-        };
-
-        return result;
+        return new CreateMethodArgs(Name, Type, Accessibility,
+            IsAbstract, IsSealed, IsOverride, LocalVariables, Parameters, Methods);
     }
 }

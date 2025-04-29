@@ -12,7 +12,7 @@ public class MethodController(IMethodService methodService) : ControllerBase
     [HttpPost]
     public IActionResult CreateMethod(MethodDtoIn createMethodDtoIn)
     {
-        var methodInfo = methodService.CreateMethod(createMethodDtoIn.ToEntity());
+        var methodInfo = methodService.CreateMethod(createMethodDtoIn.ToArgs());
 
         var response = new MethodOutModel(methodInfo);
 
@@ -32,7 +32,7 @@ public class MethodController(IMethodService methodService) : ControllerBase
         return Ok($"Method with id {id} deleted successfully.");
     }
 
-    [HttpPut("{id}")]
+    /*[HttpPut("{id}")]
     public IActionResult UpdateMethod(Guid id, MethodDtoIn updateMethodDtoIn)
     {
         var updatedMethod = methodService.Update(id, updateMethodDtoIn.ToEntity());
@@ -44,7 +44,7 @@ public class MethodController(IMethodService methodService) : ControllerBase
 
         var response = new MethodOutModel(updatedMethod);
         return Ok(response);
-    }
+    }*/
 
     [HttpGet("{id}")]
     public IActionResult GetMethodById(Guid id)

@@ -203,7 +203,7 @@ public class ClassBuilderTest
 
         _classBuilderTest!.SetMethods([validMethod, invalidMethod]);
 
-        _classBuilderTest.GetResult().Methods.Should().HaveCount(1);
+        _classBuilderTest!.GetResult().Methods.Should().HaveCount(1);
         _classBuilderTest.GetResult().Methods.Should().Contain(validMethod);
         _classBuilderTest.GetResult().Methods.Should().NotContain(invalidMethod);
     }
@@ -225,7 +225,7 @@ public class ClassBuilderTest
 
         _classBuilderTest!.SetMethods([method1, method2]);
 
-        _classBuilderTest.GetResult().Methods.Should().HaveCount(2);
+        _classBuilderTest!.GetResult().Methods.Should().HaveCount(2);
         _classBuilderTest.GetResult().Methods.Should().Contain(method1);
         _classBuilderTest.GetResult().Methods.Should().Contain(method2);
     }
