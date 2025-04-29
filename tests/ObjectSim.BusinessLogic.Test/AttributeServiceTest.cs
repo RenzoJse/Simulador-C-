@@ -92,6 +92,22 @@ public class AttributeServiceTest
         act.Should().Throw<ArgumentException>();
     }
 
+    [TestMethod]
+    public void CreateAttribute_InvalidVisibility_ThrowsException()
+    {
+        var invalidArgs = new CreateAttributeArgs(
+            new CreateDataTypeArgs("int"),
+            "invalid_visibility",
+            Guid.NewGuid(),
+            "TestAttribute"
+        );
+
+        Action act = () => _attributeService!.CreateAttribute(invalidArgs);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Invalid visibility value: invalid_visibility");
+    }
+
     #endregion
 
     #region Success
