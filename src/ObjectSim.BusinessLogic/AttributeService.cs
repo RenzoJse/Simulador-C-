@@ -16,7 +16,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
         var attribute = BuildAttribute(args, dataType, visibility);
 
         classService.AddAttribute(args.ClassId, attribute);
-        AddAttributetoRepository(attribute);
+        AddAttributeToRepository(attribute);
 
         return attribute;
     }
@@ -50,7 +50,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
         };
     }
 
-    private void AddAttributetoRepository(Attribute attribute)
+    private void AddAttributeToRepository(Attribute attribute)
     {
         attributeRepository.Add(attribute);
     }
