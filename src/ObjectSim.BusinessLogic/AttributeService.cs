@@ -1,21 +1,60 @@
 ﻿using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 namespace ObjectSim.BusinessLogic;
-public class AttributeService(IRepository<Attribute> attributeRepository) : IAttributeService
+public class AttributeService(IRepository<Attribute> attributeRepository, IClassService classService, IDataTypeService dataTypeService) : IAttributeService
 {
-    public Attribute Create(Attribute attribute)
+    public Attribute CreateAttribute(CreateAttributeArgs args)
     {
-        if(attribute == null)
+        ValidateNullArgs(args);
+
+        var visibility = ParseVisibility(args.Visibility);
+        var dataType = dataTypeService.CreateDataType(args.DataType);
+
+        var attribute = BuildAttribute(args, dataType, visibility);
+
+        classService.AddAttribute(args.ClassId, attribute);
+        AddAttributeToRepository(attribute);
+
+        return attribute;
+    }
+
+    private static void ValidateNullArgs(CreateAttributeArgs args)
+    {
+        if (args == null)
         {
-            throw new InvalidOperationException("Attribute cannot be null.");
-        }
-        else
-        {
-            attributeRepository.Add(attribute!);
-            return attribute;
+            throw new ArgumentNullException(nameof(args), "Attribute cannot be null.");
         }
     }
+
+    private static Attribute.AttributeVisibility ParseVisibility(string visibilityValue)
+    {
+        if (!Enum.TryParse(visibilityValue, true, out Attribute.AttributeVisibility visibility))
+        {
+            throw new ArgumentException($"Invalid visibility value: {visibilityValue}");
+        }
+        return visibility;
+    }
+
+    private static Attribute BuildAttribute(CreateAttributeArgs args, DataType dataType, Attribute.AttributeVisibility visibility)
+    {
+        return new Attribute
+        {
+            Id = args.Id,
+            Name = args.Name,
+            DataType = dataType,
+            ClassId = args.ClassId,
+            Visibility = visibility
+        };
+    }
+
+    private void AddAttributeToRepository(Attribute attribute)
+    {
+        attributeRepository.Add(attribute);
+    }
+
     public List<Attribute> GetAll()
     {
         var attributes = attributeRepository.GetAll(att1 => att1.Id != Guid.Empty);

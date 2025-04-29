@@ -49,6 +49,11 @@ public class ClassServiceTest
         Name = "TestMethod",
     };
 
+    private readonly Attribute _testAttribute = new Attribute
+    {
+        Name = "TestAttribute",
+    };
+
     private readonly CreateClassArgs _args = new CreateClassArgs("TestClass",
         false,
         false,
@@ -568,7 +573,7 @@ public class ClassServiceTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void AddAttribute_WithNullClassId_ThrowsException()
     {
-        _classServiceTest!.AddAttribute(null!, Guid.NewGuid());
+        _classServiceTest!.AddAttribute(null!, _testAttribute);
     }
 
     [TestMethod]
@@ -576,22 +581,6 @@ public class ClassServiceTest
     public void AddAttribute_NullAttributeId_ThrowsException()
     {
         _classServiceTest!.AddAttribute(_testClass.Id, null!);
-    }
-
-    [TestMethod]
-    public void AddAttribute_AttributeDoesNotExist_ThrowsException()
-    {
-        _classRepositoryMock!
-            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(_testClass);
-
-        _attributeServiceMock!
-            .Setup(service => service.GetById(It.IsAny<Guid>()))
-            .Throws(new ArgumentException("Attribute does not exist."));
-
-        Action action = () => _classServiceTest!.AddAttribute(_testClass.Id, Guid.NewGuid());
-        action.Should().Throw<ArgumentException>()
-            .WithMessage("Attribute does not exist.");
     }
 
     [TestMethod]
@@ -608,11 +597,7 @@ public class ClassServiceTest
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testInterfaceClass);
 
-        _attributeServiceMock!
-            .Setup(service => service.GetById(It.IsAny<Guid>()))
-            .Returns(attribute);
-
-        Action action = () => _classServiceTest!.AddAttribute(_testInterfaceClass.Id, attribute.Id);
+        Action action = () => _classServiceTest!.AddAttribute(_testInterfaceClass.Id, _testAttribute);
         action.Should().Throw<ArgumentException>().WithMessage("Cannot add attribute to an interface.");
     }
 
@@ -638,11 +623,7 @@ public class ClassServiceTest
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testClass);
 
-        _attributeServiceMock!
-            .Setup(service => service.GetById(It.IsAny<Guid>()))
-            .Returns(attribute);
-
-        Action action = () => _classServiceTest!.AddAttribute(_testClass.Id, attribute.Id);
+        Action action = () => _classServiceTest!.AddAttribute(_testClass.Id, _testAttribute);
         action.Should().Throw<ArgumentException>().WithMessage("Attribute name already exists in class.");
     }
 
@@ -653,23 +634,12 @@ public class ClassServiceTest
     [TestMethod]
     public void AddAttribute_ValidAttribute_AddsAttribute()
     {
-        var attributeId = Guid.NewGuid();
-        var attribute = new Attribute
-        {
-            Id = attributeId,
-            Name = "TestAttribute",
-        };
-
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testClass);
 
-        _attributeServiceMock!
-            .Setup(service => service.GetById(It.IsAny<Guid>()))
-            .Returns(attribute);
-
-        _classServiceTest!.AddAttribute(_testClass.Id, attribute.Id);
-        _testClass.Attributes.Should().Contain(attribute);
+        _classServiceTest!.AddAttribute(_testClass.Id, _testAttribute);
+        _testClass.Attributes.Should().Contain(_testAttribute);
     }
 
     #endregion

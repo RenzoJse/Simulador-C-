@@ -1,4 +1,5 @@
 ﻿using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
@@ -8,14 +9,14 @@ public class ClassBuilder(IMethodService methodService, IClassService classServi
 {
     private readonly IClassService _classService = classService;
 
-    public override void SetAttributes(List<Attribute> attributes)
+    public override void SetAttributes(List<CreateAttributeArgs> attributes)
     {
         base.SetAttributes(attributes);
 
         List<Attribute> newAttributes = [];
         foreach(var attr in attributes)
         {
-            var newAttribute = attributeService.Create(attr);
+            var newAttribute = attributeService.CreateAttribute(attr);
             if(_classService.CanAddAttribute(Result, newAttribute))
             {
                 newAttributes.Add(newAttribute);

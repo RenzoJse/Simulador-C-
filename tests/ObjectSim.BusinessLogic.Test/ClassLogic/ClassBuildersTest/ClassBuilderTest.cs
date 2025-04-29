@@ -2,6 +2,7 @@
 using Moq;
 using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
@@ -19,6 +20,16 @@ public class ClassBuilderTest
     {
         Name = "TestMethod",
     };
+
+    private static readonly CreateDataTypeArgs TestArgsDataType = new CreateDataTypeArgs(
+        "int");
+
+    private static readonly CreateAttributeArgs TestCreateAttributeArgs = new CreateAttributeArgs(
+        TestArgsDataType,
+        "public",
+        Guid.NewGuid(),
+        "Test"
+    );
 
     [TestInitialize]
     public void Initialize()
@@ -63,10 +74,13 @@ public class ClassBuilderTest
             Name = "NewAttribute"
         };
 
-        _attributeServiceMock!.Setup(m => m.Create(invalidAttribute))
+        var invalidAttributeArgs = new CreateAttributeArgs(null!, "public", Guid.NewGuid(), "TestAttribute");
+        var validAttributeArgs = new CreateAttributeArgs(null!, "public", Guid.NewGuid(), "NewAttribute");
+
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(invalidAttributeArgs))
             .Returns(invalidAttribute);
 
-        _attributeServiceMock!.Setup(m => m.Create(validAttribute))
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(validAttributeArgs))
             .Returns(validAttribute);
 
         _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), invalidAttribute))
@@ -75,7 +89,7 @@ public class ClassBuilderTest
         _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), validAttribute))
             .Returns(true);
 
-        _classBuilderTest!.SetAttributes([invalidAttribute, validAttribute]);
+        _classBuilderTest!.SetAttributes([invalidAttributeArgs, validAttributeArgs]);
 
         _classBuilderTest.GetResult().Attributes.Should().HaveCount(1);
         _classBuilderTest.GetResult().Attributes.Should().Contain(validAttribute);
@@ -87,10 +101,10 @@ public class ClassBuilderTest
         var attribute1 = new Attribute { Name = "Attribute1" };
         var attribute2 = new Attribute { Name = "Attribute2" };
 
-        _attributeServiceMock!.Setup(m => m.Create(attribute1))
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute1")))
             .Returns(attribute1);
 
-        _attributeServiceMock!.Setup(m => m.Create(attribute2))
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
             .Returns(attribute2);
 
         _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), attribute1))
@@ -99,7 +113,10 @@ public class ClassBuilderTest
         _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), attribute2))
             .Returns(true);
 
-        _classBuilderTest!.SetAttributes([attribute1, attribute2]);
+        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataType, "public", Guid.NewGuid(), "Attribute1");
+        var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataType, "public", Guid.NewGuid(), "Attribute2");
+
+        _classBuilderTest!.SetAttributes([attributeArgs1, attributeArgs2]);
 
         _classBuilderTest.GetResult().Attributes.Should().HaveCount(2);
         _classBuilderTest.GetResult().Attributes.Should().Contain(attribute1);
@@ -111,13 +128,13 @@ public class ClassBuilderTest
     {
         var attribute1 = new Attribute { Name = "Attribute1" };
 
-        _attributeServiceMock!.Setup(m => m.Create(attribute1))
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(TestCreateAttributeArgs))
             .Returns(attribute1);
 
         _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), attribute1))
             .Returns(false);
 
-        _classBuilderTest!.SetAttributes([attribute1]);
+        _classBuilderTest!.SetAttributes([TestCreateAttributeArgs]);
 
         _classBuilderTest.GetResult().Attributes.Should().BeEmpty();
     }

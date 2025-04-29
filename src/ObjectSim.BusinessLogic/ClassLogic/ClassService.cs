@@ -132,13 +132,12 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         return true;
     }
 
-    public void AddAttribute(Guid? classId, Guid? idAttribute)
+    public void AddAttribute(Guid? classId, Attribute attribute)
     {
         ArgumentNullException.ThrowIfNull(classId);
-        ArgumentNullException.ThrowIfNull(idAttribute);
+        ArgumentNullException.ThrowIfNull(attribute);
 
         var classObj = GetById(classId);
-        var attribute = attributeService.GetById((Guid)idAttribute);
 
         if(CanAddAttribute(classObj, attribute))
         {

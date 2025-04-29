@@ -280,6 +280,7 @@ public class BuilderTest
     [TestMethod]
     public void CreateClass_GetResultWhenCreationIsValid_ReturnsClass()
     {
+        //TODO
         /*_builder!.SetName("ValidName");
         _builder.SetAbstraction(true);
         _builder.SetSealed(true);
