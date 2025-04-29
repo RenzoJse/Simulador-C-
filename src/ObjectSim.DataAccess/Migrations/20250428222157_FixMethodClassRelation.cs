@@ -11,28 +11,6 @@ namespace ObjectSim.DataAccess.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Methods_Classes_Id",
-                table: "Methods");
-
-            migrationBuilder.AddColumn<Guid>(
-                name: "ClassId",
-                table: "Methods",
-                type: "uniqueidentifier",
-                nullable: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Methods_ClassId",
-                table: "Methods",
-                column: "ClassId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Methods_Classes_ClassId",
-                table: "Methods",
-                column: "ClassId",
-                principalTable: "Classes",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />

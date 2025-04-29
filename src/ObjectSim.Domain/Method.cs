@@ -70,7 +70,7 @@ public class Method
 
     #region IsOverride
     public bool IsOverride { get; set; } = false;
-    #endregion 
+    #endregion
 
     #region Accessibility
 
@@ -146,4 +146,5 @@ public class Method
         }
     }
     #endregion
+
 }

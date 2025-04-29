@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain;
 
 namespace ObjectSim.BusinessLogic.Test;
 [TestClass]
@@ -8,7 +9,7 @@ public class AttributeServiceTest
 {
     private Mock<IRepository<Domain.Attribute>>? _attributeRepositoryMock;
     private AttributeService? _service;
-    private ObjectSim.Domain.Attribute? _attribute;
+    private Domain.Attribute? _attribute;
 
     [TestInitialize]
     public void Setup()
@@ -16,7 +17,7 @@ public class AttributeServiceTest
         _attributeRepositoryMock = new Mock<IRepository<Domain.Attribute>>(MockBehavior.Strict);
         _service = new AttributeService(_attributeRepositoryMock.Object);
 
-        _attribute = new ObjectSim.Domain.Attribute
+        _attribute = new Domain.Attribute
         {
             Id = Guid.NewGuid(),
             Name = "Test",
@@ -70,14 +71,14 @@ public class AttributeServiceTest
         _attributeRepositoryMock!.Verify(repo => repo.Add(It.IsAny<ObjectSim.Domain.Attribute>()), Times.Never);
     }
     [TestMethod]
-    public void GetAllAttribute_CorrectAttrubtes_ShouldThrowAllOfThem()
+    public void GetAllAttribute_CorrectAttributes_ShouldThrowAllOfThem()
     {
         var attributes = new List<Domain.Attribute>
         {
             new ObjectSim.Domain.Attribute
         {
             Id = Guid.NewGuid(),
-            Name = "Nombre",
+            Name = "Name",
             ClassId = Guid.NewGuid(),
             DataType = Domain.ValueType.Create("int"),
             Visibility = Domain.Attribute.AttributeVisibility.Private
@@ -85,7 +86,7 @@ public class AttributeServiceTest
             new ObjectSim.Domain.Attribute
         {
             Id = Guid.NewGuid(),
-            Name = "Nombre2",
+            Name = "Name2",
             ClassId = Guid.NewGuid(),
             DataType = Domain.ValueType.Create("int"),
             Visibility = Domain.Attribute.AttributeVisibility.Private

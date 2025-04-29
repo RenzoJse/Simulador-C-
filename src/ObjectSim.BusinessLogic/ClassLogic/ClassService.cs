@@ -22,14 +22,21 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         builder.SetSealed(args.IsSealed);
         builder.SetAttributes(args.Attributes);
         builder.SetMethods(args.Methods);
-        return builder.GetResult();
+        var classObj = builder.GetResult();
+        AddClassToRepository(classObj);
+        return classObj;
+    }
+
+    private void AddClassToRepository(Class classObj)
+    {
+        classRepository.Add(classObj);
     }
 
     private Builder GetBuilder(CreateClassArgs args)
     {
         var strategy = strategies.FirstOrDefault(x => x.WhichIsMyBuilder(args));
 
-        return strategy!.CreateBuilder();
+        return strategy!.CreateBuilder(this, attributeService);
     }
 
     public Class GetById(Guid? classId)
@@ -245,7 +252,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         }
     }
 
-    public void DeleteAttribute(Guid? classId, Guid? attributeId)
+    public void RemoveAttribute(Guid? classId, Guid? attributeId)
     {
         throw new NotImplementedException();//Hay que ver por que para mi los atributos tambien son local variables q pueden usar los metodos.
     }
