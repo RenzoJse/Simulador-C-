@@ -38,7 +38,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
         return visibility;
     }
 
-    private static Attribute BuildAttribute(CreateAttributeArgs args, IDataType dataType, Attribute.AttributeVisibility visibility)
+    private static Attribute BuildAttribute(CreateAttributeArgs args, DataType dataType, Attribute.AttributeVisibility visibility)
     {
         return new Attribute
         {

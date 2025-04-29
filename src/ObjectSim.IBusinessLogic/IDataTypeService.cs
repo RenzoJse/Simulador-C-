@@ -5,5 +5,5 @@ namespace ObjectSim.IBusinessLogic;
 
 public interface IDataTypeService
 {
-    IDataType CreateDataType(CreateDataTypeArgs dataType);
+    DataType CreateDataType(CreateDataTypeArgs dataType);
 }

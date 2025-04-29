@@ -19,7 +19,7 @@ public class AttributeServiceTest
     private static readonly CreateDataTypeArgs TestArgsDataType = new(
         "int");
 
-    private readonly IDataType? _testDataType = ValueType.Create("int");
+    private readonly DataType? _testDataType = ValueType.Create("int");
 
     private static readonly Guid TestAttributeId = Guid.NewGuid();
 
