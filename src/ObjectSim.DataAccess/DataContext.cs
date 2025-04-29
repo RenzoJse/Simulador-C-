@@ -7,10 +7,8 @@ using ValueType = ObjectSim.Domain.ValueType;
 namespace ObjectSim.DataAccess;
 
 [ExcludeFromCodeCoverage]
-public class DataContext : DbContext
+public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
 {
-    public DataContext(DbContextOptions<DataContext> options) : base(options) { }
-    public DataContext() { }
     public DbSet<Class> Classes { get; set; }
     public DbSet<Method> Methods { get; set; }
     public DbSet<Attribute> Attributes { get; set; }
@@ -36,12 +34,17 @@ public class DataContext : DbContext
         modelBuilder.Entity<Class>(c =>
         {
             c.HasKey(c => c.Id);
+
             c.HasMany(c => c.Methods)
-                .WithOne().HasForeignKey(m => m.Id)
+                .WithOne(m => m.Class)
+                .HasForeignKey(m => m.ClassId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             c.HasMany(c => c.Attributes)
-                .WithOne().HasForeignKey(a => a.Id)
+                .WithOne()
+                .HasForeignKey(a => a.ClassId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             c.HasOne(c => c.Parent)
                 .WithMany()
                 .HasForeignKey("ParentId")
@@ -61,12 +64,15 @@ public class DataContext : DbContext
         modelBuilder.Entity<Method>(m =>
         {
             m.HasKey(m => m.Id);
+
             m.HasMany(m => m.Parameters)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+
             m.HasMany(m => m.LocalVariables)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+
             m.HasMany(m => m.MethodsInvoke)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
@@ -75,6 +81,7 @@ public class DataContext : DbContext
         modelBuilder.Entity<Attribute>(a =>
         {
             a.HasKey(a => a.Id);
+            a.Ignore(a => a.DataType);
             a.HasOne(a => a.DataType)
                 .WithMany()
                 .HasForeignKey("DataTypeId")
@@ -97,6 +104,18 @@ public class DataContext : DbContext
         modelBuilder.Entity<LocalVariable>(lv =>
         {
             lv.HasKey(lv => lv.Id);
+        });
+
+        modelBuilder.Entity<ValueType>(vt =>
+        {
+            vt.HasKey(vt => vt.Name);
+            vt.Property(vt => vt.Name).IsRequired();
+        });
+
+        modelBuilder.Entity<ReferenceType>(rt =>
+        {
+            rt.HasKey(rt => rt.Name);
+            rt.Property(rt => rt.Name).IsRequired();
         });
 
         base.OnModelCreating(modelBuilder);

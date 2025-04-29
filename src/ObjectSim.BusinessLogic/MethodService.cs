@@ -49,7 +49,7 @@ public class MethodService(IRepository<Method> methodRepository) : IMethodServic
             throw new Exception("No methods found.");
         }
 
-        return (List<Method>)methods;
+        return methods;
     }
 
     public Method GetById(Guid id)

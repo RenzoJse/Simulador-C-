@@ -21,4 +21,39 @@ public class ClassController(IClassService classService)
         return Ok(response);
     }
 
+    [HttpGet]
+    [Route("{classId:guid}")]
+    public IActionResult GetClass([FromRoute] Guid classId)
+    {
+        var classInfo = classService.GetById(classId);
+
+        var response = ClassInformationDtoOut.ToInfo(classInfo);
+
+        return Ok(response);
+    }
+
+    [HttpDelete]
+    [Route("{classId:guid}")]
+    public IActionResult DeleteClass([FromRoute] Guid classId)
+    {
+        classService.DeleteClass(classId);
+        return Ok();
+    }
+
+    [HttpPatch]
+    [Route("{classId:guid}/{methodId:guid}")]
+    public IActionResult RemoveMethod([FromRoute] Guid classId, [FromRoute] Guid methodId)
+    {
+        classService.RemoveMethod(classId, methodId);
+        return Ok();
+    }
+
+    [HttpPatch]
+    [Route("{classId:guid}/{attributeId:guid}")]
+    public IActionResult RemoveAttribute([FromRoute] Guid classId, [FromRoute] Guid attributeId)
+    {
+        classService.RemoveAttribute(classId, attributeId);
+        return Ok();
+    }
+
 }

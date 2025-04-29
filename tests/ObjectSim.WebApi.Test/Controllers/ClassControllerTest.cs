@@ -18,17 +18,11 @@ public class ClassControllerTest
     private Mock<IClassService> _classServiceMock = null!;
     private ClassController _classController = null!;
 
-    private static readonly Attribute TestAttribute = new Attribute
-    {
-        Name = "TestAttribute",
-    };
+    private static readonly Attribute TestAttribute = new() { Name = "TestAttribute", };
 
-    private static readonly Method TestMethod = new Method
-    {
-        Name = "TestMethod",
-    };
+    private static readonly Method TestMethod = new() { Name = "TestMethod", };
 
-    private readonly Class _testClass = new Class
+    private readonly Class _testClass = new()
     {
         Name = "TestClass",
         IsAbstract = false,
@@ -65,8 +59,8 @@ public class ClassControllerTest
     public void CreateClass_WhenIsValid_MakesValidPost()
     {
         _classServiceMock
-             .Setup(service => service.CreateClass(It.IsAny<CreateClassArgs>()))
-             .Returns(_testClass);
+            .Setup(service => service.CreateClass(It.IsAny<CreateClassArgs>()))
+            .Returns(_testClass);
 
         var result = _classController.CreateClass(new CreateClassDtoIn
         {
@@ -92,6 +86,93 @@ public class ClassControllerTest
         answer.Attributes.Should().BeEquivalentTo(_testClass.Attributes!.Select(attribute => attribute.Name));
         answer.Methods.Should().BeEquivalentTo(_testClass.Methods!.Select(method => method.Name));
         answer.Parent.Should().Be(_testClass.Parent?.Id);
+        answer.Id.Should().Be(_testClass.Id);
+    }
+
+    #endregion
+
+    #region GetClass-GET
+
+    [TestMethod]
+    public void GetClass_WhenIsValid_MakesValidGet()
+    {
+        var classId = Guid.NewGuid();
+        _classServiceMock
+            .Setup(service => service.GetById(classId))
+            .Returns(_testClass);
+
+        var result = _classController.GetClass(classId);
+
+        var resultObject = result as OkObjectResult;
+        var statusCode = resultObject?.StatusCode;
+        statusCode.Should().Be(200);
+
+        var answer = resultObject?.Value as ClassInformationDtoOut;
+        answer.Should().NotBeNull();
+        answer.Name.Should().Be(_testClass.Name);
+        answer.IsAbstract.Should().Be((bool)_testClass.IsAbstract!);
+        answer.IsInterface.Should().Be((bool)_testClass.IsInterface!);
+        answer.IsSealed.Should().Be((bool)_testClass.IsSealed!);
+        answer.Attributes.Should().BeEquivalentTo(_testClass.Attributes!.Select(attribute => attribute.Name));
+        answer.Methods.Should().BeEquivalentTo(_testClass.Methods!.Select(method => method.Name));
+        answer.Parent.Should().Be(_testClass.Parent?.Id);
+        answer.Id.Should().Be(_testClass.Id);
+    }
+
+    #endregion
+
+    #region DeleteClass_DELETE
+
+    [TestMethod]
+    public void DeleteClass_WhenIsValid_MakesValidDelete()
+    {
+        var classId = Guid.NewGuid();
+        _classServiceMock
+            .Setup(service => service.DeleteClass(classId));
+
+        var result = _classController.DeleteClass(classId);
+
+        var resultObject = result as OkResult;
+        var statusCode = resultObject?.StatusCode;
+        statusCode.Should().Be(200);
+    }
+
+    #endregion
+
+    #region RemoveMethod-PATCH
+
+    [TestMethod]
+    public void RemoveMethod_WhenIsValid_MakesValidPatch()
+    {
+        var methodId = Guid.NewGuid();
+
+        _classServiceMock
+            .Setup(service => service.RemoveMethod(_testClass.Id, methodId));
+
+        var result = _classController.RemoveMethod(_testClass.Id, methodId);
+
+        var resultObject = result as OkResult;
+        var statusCode = resultObject?.StatusCode;
+        statusCode.Should().Be(200);
+    }
+
+    #endregion
+
+    #region RemoveAttribute-PATCH
+
+    [TestMethod]
+    public void RemoveAttribute_WhenIsValid_MakesValidPatch()
+    {
+        var attributeId = Guid.NewGuid();
+
+        _classServiceMock
+            .Setup(service => service.RemoveAttribute(_testClass.Id, attributeId));
+
+        var result = _classController.RemoveAttribute(_testClass.Id, attributeId);
+
+        var resultObject = result as OkResult;
+        var statusCode = resultObject?.StatusCode;
+        statusCode.Should().Be(200);
     }
 
     #endregion

@@ -4,7 +4,7 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.WebApi.DTOs.In;
 
-public class CreateClassDtoIn
+public record CreateClassDtoIn
 {
     public required string Name { get; init; }
     public bool IsAbstract { get; init; }
@@ -17,6 +17,6 @@ public class CreateClassDtoIn
     public CreateClassArgs ToArgs()
     {
         ArgumentNullException.ThrowIfNull(Name, nameof(Name));
-        return new CreateClassArgs(Name, IsAbstract, IsInterface, IsSealed, Attributes, Methods, Parent);
+        return new CreateClassArgs(Name, IsAbstract, IsSealed, IsInterface, Attributes, Methods, Parent);
     }
 }
