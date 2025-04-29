@@ -1,21 +1,37 @@
 ﻿using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 namespace ObjectSim.BusinessLogic;
-public class AttributeService(IRepository<Attribute> attributeRepository) : IAttributeService
+public class AttributeService(IRepository<Attribute> attributeRepository, IClassService classService) : IAttributeService
 {
-    public Attribute CreateAttribute(CreateAttributeArgs attribute)
+    public Attribute CreateAttribute(CreateAttributeArgs args)
     {
-        if(attribute == null)
+        if(args == null)
         {
-            throw new ArgumentNullException(nameof(attribute), "Attribute cannot be null.");
+            throw new ArgumentNullException(nameof(args), "Attribute cannot be null.");
         }
 
-        var
+        if (!Enum.TryParse(args.Visibility, true, out Attribute.AttributeVisibility visibility))
+        {
+            throw new ArgumentException($"Invalid visibility value: {args.Visibility}");
+        }
+
+        var dataType = _dataTypeService.CreateDataType(args.DataType);
+
+        var newAttribute = new Attribute
+        {
+            Id = attribute.Id,
+            Name = attribute.Name,
+            DataType = dataType,
+            ClassId = attribute.ClassId,
+            Visibility = attribute.Visibility
+        }
         attributeRepository.Add(attribute!);
         return attribute;
     }
+
     public List<Attribute> GetAll()
     {
         var attributes = attributeRepository.GetAll(att1 => att1.Id != Guid.Empty);

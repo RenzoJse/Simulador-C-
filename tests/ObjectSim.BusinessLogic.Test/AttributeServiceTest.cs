@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
@@ -59,7 +60,20 @@ public class AttributeServiceTest
     [TestMethod]
     public void CreateAttribute_AttributeWithSameNameAlreadyExistsInClass_ThrowsException()
     {
-        _
+        _classServiceMock.Setup(x => x.CanAddAttribute(It.IsAny<Class>(), It.IsAny<Attribute>())).Returns(false);
+        Action act = () => _attributeService!.CreateAttribute(_testArgsAttribute);
+
+        act.Should().Throw<ArgumentException>();
+    }
+
+    [TestMethod]
+    public void CreateAttribute_NotValidDataType_ThrowsException()
+    {
+        _classServiceMock.Setup(x => x.CanAddAttribute(It.IsAny<Class>(), It.IsAny<Attribute>())).Returns(true);
+        _dataTypeServiceMock.Setup(x => x.CreateDataType()).Returns(_testDataType);
+        Action act = () => _attributeService!.CreateAttribute(_testArgsAttribute);
+
+        act.Should().Throw<ArgumentException>();
     }
 
     #endregion
@@ -72,11 +86,6 @@ public class AttributeServiceTest
         _attributeRepositoryMock!
             .Setup(repo => repo.Add(It.IsAny<Attribute>()))
             .Returns(_attribute!);
-
-        var result = _attributeService!.CreateAttribute(_attribute!);
-
-        result.Should().NotBeNull();
-        result.Should().Be(_attribute);
 
         _attributeRepositoryMock.Verify(repo => repo.Add(It.IsAny<Attribute>()), Times.Once);
     }
