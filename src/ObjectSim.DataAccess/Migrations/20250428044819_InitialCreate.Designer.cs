@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ObjectSim.DataAccess;
 
@@ -11,9 +12,11 @@ using ObjectSim.DataAccess;
 namespace ObjectSim.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250428044819_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +28,6 @@ namespace ObjectSim.DataAccess.Migrations
             modelBuilder.Entity("ObjectSim.Domain.Attribute", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClassId")
@@ -41,8 +43,6 @@ namespace ObjectSim.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
 
                     b.HasIndex("DataTypeId");
 
@@ -126,7 +126,6 @@ namespace ObjectSim.DataAccess.Migrations
             modelBuilder.Entity("ObjectSim.Domain.Method", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Abstract")
@@ -134,9 +133,6 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.Property<int>("Accessibility")
                         .HasColumnType("int");
-
-                    b.Property<Guid?>("ClassId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsOverride")
                         .HasColumnType("bit");
@@ -154,8 +150,6 @@ namespace ObjectSim.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
 
                     b.HasIndex("MethodId");
 
@@ -200,16 +194,16 @@ namespace ObjectSim.DataAccess.Migrations
 
             modelBuilder.Entity("ObjectSim.Domain.Attribute", b =>
                 {
-                    b.HasOne("ObjectSim.Domain.Class", null)
-                        .WithMany("Attributes")
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ObjectSim.Domain.DataType", "DataType")
                         .WithMany()
                         .HasForeignKey("DataTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ObjectSim.Domain.Class", null)
+                        .WithMany("Attributes")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("DataType");
@@ -235,17 +229,16 @@ namespace ObjectSim.DataAccess.Migrations
 
             modelBuilder.Entity("ObjectSim.Domain.Method", b =>
                 {
-                    b.HasOne("ObjectSim.Domain.Class", "Class")
+                    b.HasOne("ObjectSim.Domain.Class", null)
                         .WithMany("Methods")
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ObjectSim.Domain.Method", null)
                         .WithMany("MethodsInvoke")
                         .HasForeignKey("MethodId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Class");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Parameter", b =>

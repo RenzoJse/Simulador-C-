@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ObjectSim.DataAccess.Repositories;
 using ObjectSim.Domain;
 using Attribute = ObjectSim.Domain.Attribute;
+using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.DataAccess.Test;
 
@@ -43,8 +44,31 @@ public class ClassRepositoryTest
         {
             Id = classId,
             Name = "TestClass",
-            Methods = [new Method { Id = Guid.NewGuid(), Name = "TestMethod", ClassId = classId }],
-            Attributes = [new Attribute { Id = Guid.NewGuid(), Name = "TestAttribute", ClassId = classId }]
+            Methods =
+            [
+                new Method
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "TestMethod",
+                    ClassId = classId,
+                    Accessibility = 0,
+                    Abstract = false,
+                    IsOverride = false,
+                    IsSealed = false,
+                    Type = 0
+                }
+            ],
+            Attributes =
+            [
+                new Attribute
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "TestAttribute",
+                    ClassId = classId,
+                    DataType = ValueType.Create("int"),
+                    Visibility = 0
+                }
+            ]
         };
 
         _context.Set<Class>().Add(classEntity);

@@ -12,6 +12,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<Class> Classes { get; set; }
     public DbSet<Method> Methods { get; set; }
     public DbSet<Attribute> Attributes { get; set; }
+    public DbSet<DataType> DataTypes { get; set; }
     public DbSet<LocalVariable> LocalVariables { get; set; }
     public DbSet<Parameter> Parameters { get; set; }
     public DbSet<ValueType> ValueTypes { get; set; }
@@ -50,6 +51,16 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
+        modelBuilder.Entity<ReferenceType>(rt =>
+        {
+            rt.Property(r => r.Name).IsRequired();
+        });
+
+        modelBuilder.Entity<ValueType>(vt =>
+        {
+            vt.Property(v => v.Name).IsRequired();
+        });
+
         modelBuilder.Entity<Method>(m =>
         {
             m.HasKey(m => m.Id);
@@ -71,6 +82,19 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             a.HasKey(a => a.Id);
             a.Ignore(a => a.DataType);
+            a.HasOne(a => a.DataType)
+                .WithMany()
+                .HasForeignKey("DataTypeId")
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<DataType>(dt =>
+        {
+            dt.HasKey(d => d.Id);
+            dt.HasDiscriminator<string>("Discriminator")
+                .HasValue<DataType>("DataType")
+                .HasValue<ValueType>("ValueType")
+                .HasValue<ReferenceType>("ReferenceType");
         });
 
         modelBuilder.Entity<Parameter>(p =>
@@ -85,13 +109,11 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
         modelBuilder.Entity<ValueType>(vt =>
         {
-            vt.HasKey(vt => vt.Name);
             vt.Property(vt => vt.Name).IsRequired();
         });
 
         modelBuilder.Entity<ReferenceType>(rt =>
         {
-            rt.HasKey(rt => rt.Name);
             rt.Property(rt => rt.Name).IsRequired();
         });
 

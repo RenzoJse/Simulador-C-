@@ -44,9 +44,13 @@ public class AttributeTest
         var expectedType = ReferenceType.Create("string");
         var attribute = new Attribute { DataType = expectedType };
 
+        attribute.DataType = expectedType;
+        attribute.DataType.Should().NotBeNull();
         attribute.DataType.Should().Be(expectedType);
+        attribute.DataType.Name.Should().NotBeNullOrEmpty();
         attribute.DataType.Name.Should().Be("string");
     }
+
     [TestMethod]
     public void Visibility_Property_SetAndGet_ShouldBeEqual()
     {

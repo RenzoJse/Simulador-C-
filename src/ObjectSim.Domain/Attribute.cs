@@ -13,8 +13,7 @@ public class Attribute
         ProtectedInternal,
         PrivateProtected
     }
-    //public AttributeDataType DataType { get; set; }
-    public IDataType DataType { get; set; } = null!;
+    public DataType DataType { get; set; } = null!;
     public AttributeVisibility Visibility { get; set; }
     public Guid Id { get; set; }
     public Guid ClassId { get; set; }
@@ -51,7 +50,7 @@ public class Attribute
         }
 
     }
-    public static void ValidateDataType(IDataType DataType)
+    public static void ValidateDataType(DataType DataType)
     {
         if(DataType == null)
         {

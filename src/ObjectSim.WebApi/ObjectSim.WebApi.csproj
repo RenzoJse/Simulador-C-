@@ -23,4 +23,8 @@
       <ProjectReference Include="..\ObjectSim.IBusinessLogic\ObjectSim.IBusinessLogic.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Mappers\" />
+    </ItemGroup>
+
 </Project>
