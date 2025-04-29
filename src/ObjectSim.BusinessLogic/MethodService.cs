@@ -1,32 +1,14 @@
 ﻿using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
 public class MethodService(IRepository<Method> methodRepository) : IMethodService
 {
-    public Method Create(Method Entity)
+    public Method CreateMethod(CreateMethodArgs methodsArgs)
     {
-        var existMethod = methodRepository.Exists(m => m.Name == Entity.Name);
-        if(existMethod)
-        {
-            throw new Exception("Method already exist");
-        }
-
-        var methodToAdd = new Method
-        {
-            Name = Entity.Name,
-            Type = Entity.Type,
-            Abstract = Entity.Abstract,
-            IsSealed = Entity.IsSealed,
-            Accessibility = Entity.Accessibility,
-            Parameters = Entity.Parameters,
-            IsOverride = Entity.IsOverride,
-            LocalVariables = Entity.LocalVariables,
-        };
-
-        methodRepository.Add(methodToAdd);
-        return methodToAdd;
+        throw new NotImplementedException();
     }
 
     public bool Delete(Guid id)

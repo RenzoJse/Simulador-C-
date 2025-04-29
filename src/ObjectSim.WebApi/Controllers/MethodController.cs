@@ -12,7 +12,7 @@ public class MethodController(IMethodService methodService) : ControllerBase
     [HttpPost]
     public IActionResult CreateMethod(MethodDtoIn createMethodDtoIn)
     {
-        var methodInfo = methodService.Create(createMethodDtoIn.ToEntity());
+        var methodInfo = methodService.CreateMethod(createMethodDtoIn.ToEntity());
 
         var response = new MethodOutModel(methodInfo);
 

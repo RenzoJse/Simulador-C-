@@ -2,7 +2,7 @@
 
 namespace ObjectSim.WebApi.DTOs.In;
 
-public class MethodDtoIn
+public class  MethodDtoIn
 {
     public required string Name { get; init; }
     public required string Type { get; init; }

@@ -60,7 +60,7 @@ public class MethodControllerTest
     public void CreateMethod_WhenIsValid_MakesValidPost()
     {
         _methodServiceMock
-             .Setup(service => service.Create(It.IsAny<Method>()))
+             .Setup(service => service.CreateMethod(It.IsAny<Method>()))
              .Returns(_testMethod);
 
         var result = _methodController.CreateMethod(new MethodDtoIn

@@ -12,7 +12,7 @@ public class InterfaceBuilder(IClassService classService) : Builder(classService
         base.SetAttributes(attributes);
     }
 
-    public override void SetMethods(List<Method> methods)
+    public override void SetMethods(List<CreateMethodArgs> methods)
     {
         base.SetMethods(methods);
     }

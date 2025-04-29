@@ -66,7 +66,7 @@ public abstract class Builder(IClassService classService)
         }
     }
 
-    public virtual void SetMethods(List<Method> methods)
+    public virtual void SetMethods(List<CreateMethodArgs> methods)
     {
         ArgumentNullException.ThrowIfNull(methods);
 

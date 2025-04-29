@@ -26,14 +26,14 @@ public class ClassBuilder(IMethodService methodService, IClassService classServi
         Result.Attributes = newAttributes;
     }
 
-    public override void SetMethods(List<Method> methods)
+    public override void SetMethods(List<CreateMethodArgs> methods)
     {
         base.SetMethods(methods);
 
         List<Method> newMethods = [];
         foreach(var method in methods)
         {
-            var newMethod = methodService.Create(method);
+            var newMethod = methodService.CreateMethod(method);
             if(_classService.CanAddMethod(Result, newMethod))
             {
                 newMethods.Add(newMethod);

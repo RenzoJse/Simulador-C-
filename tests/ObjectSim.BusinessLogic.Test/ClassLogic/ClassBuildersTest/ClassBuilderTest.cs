@@ -180,7 +180,7 @@ public class ClassBuilderTest
 
         _classBuilderTest!.SetParent(parentClass.Id);
 
-        _methodServiceMock!.Setup(m => m.Create(TestMethod)).Returns(TestMethod);
+        _methodServiceMock!.Setup(m => m.CreateMethod(TestMethod)).Returns(TestMethod);
 
         _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), TestMethod)).Returns(true);
 
@@ -196,8 +196,8 @@ public class ClassBuilderTest
         var validMethod = new Method { Name = "ValidMethod" };
         var invalidMethod = new Method { Name = "InvalidMethod" };
 
-        _methodServiceMock!.Setup(m => m.Create(validMethod)).Returns(validMethod);
-        _methodServiceMock!.Setup(m => m.Create(invalidMethod)).Returns(invalidMethod);
+        _methodServiceMock!.Setup(m => m.CreateMethod(validMethod)).Returns(validMethod);
+        _methodServiceMock!.Setup(m => m.CreateMethod(invalidMethod)).Returns(invalidMethod);
         _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), validMethod)).Returns(true);
         _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), invalidMethod)).Returns(false);
 
@@ -218,8 +218,8 @@ public class ClassBuilderTest
         var method1 = new Method { Name = "Method1" };
         var method2 = new Method { Name = "Method2" };
 
-        _methodServiceMock!.Setup(m => m.Create(method1)).Returns(method1);
-        _methodServiceMock!.Setup(m => m.Create(method2)).Returns(method2);
+        _methodServiceMock!.Setup(m => m.CreateMethod(method1)).Returns(method1);
+        _methodServiceMock!.Setup(m => m.CreateMethod(method2)).Returns(method2);
         _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), method1)).Returns(true);
         _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), method2)).Returns(true);
 
@@ -255,7 +255,7 @@ public class ClassBuilderTest
 
         _classBuilderTest!.SetParent(parentClass.Id);
 
-        _methodServiceMock!.Setup(m => m.Create(interfaceMethod)).Returns(interfaceMethod);
+        _methodServiceMock!.Setup(m => m.CreateMethod(interfaceMethod)).Returns(interfaceMethod);
         _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), interfaceMethod)).Returns(true);
 
         _classBuilderTest!.SetMethods([interfaceMethod]);
