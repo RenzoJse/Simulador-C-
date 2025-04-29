@@ -45,4 +45,23 @@ public class AttributeControllerTest
         Assert.AreEqual("Attribute1", returnedAttributes[0].Name);
         Assert.AreEqual("Attribute2", returnedAttributes[1].Name);
     }
+    [TestMethod]
+    public void GetAll_ShouldReturnEmptyList_WhenNoAttributesExist()
+    {
+        var emptyAttributes = new List<ObjectSim.Domain.Attribute>();
+
+        _attributeServiceMock
+            .Setup(service => service.GetAll())
+            .Returns(emptyAttributes);
+
+        var result = _attributeController.GetAll() as OkObjectResult;
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(200, result.StatusCode);
+
+        var returnedAttributes = result.Value as List<ObjectSim.Domain.Attribute>;
+        Assert.IsNotNull(returnedAttributes);
+        Assert.AreEqual(0, returnedAttributes.Count);
+    }
+
 }
