@@ -22,7 +22,7 @@ public class DataContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (!optionsBuilder.IsConfigured)
+        if(!optionsBuilder.IsConfigured)
         {
             optionsBuilder
                 .UseSqlServer(

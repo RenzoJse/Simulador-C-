@@ -64,9 +64,9 @@ public class ClassControllerTest
     [TestMethod]
     public void CreateClass_WhenIsValid_MakesValidPost()
     {
-       _classServiceMock
-            .Setup(service => service.CreateClass(It.IsAny<CreateClassArgs>()))
-            .Returns(_testClass);
+        _classServiceMock
+             .Setup(service => service.CreateClass(It.IsAny<CreateClassArgs>()))
+             .Returns(_testClass);
 
         var result = _classController.CreateClass(new CreateClassDtoIn
         {
