@@ -16,15 +16,15 @@ public class ClassBuilderTest
     private Mock<IClassService>? _classServiceMock;
     private Mock<IAttributeService>? _attributeServiceMock;
 
-    private static readonly Method TestMethod = new Method
+    private static readonly Method TestMethod = new()
     {
         Name = "TestMethod",
     };
 
-    private static readonly CreateDataTypeArgs TestArgsDataType = new CreateDataTypeArgs(
+    private static readonly CreateDataTypeArgs TestArgsDataType = new(
         "int");
 
-    private static readonly CreateAttributeArgs TestCreateAttributeArgs = new CreateAttributeArgs(
+    private static readonly CreateAttributeArgs TestCreateAttributeArgs = new(
         TestArgsDataType,
         "public",
         Guid.NewGuid(),
