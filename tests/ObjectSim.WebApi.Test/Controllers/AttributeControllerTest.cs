@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.Controllers;
@@ -21,14 +22,15 @@ public class AttributeControllerTest
     {
         _attributeServiceMock.VerifyAll();
     }
+
     [TestMethod]
     public void GetAll_ShouldReturnAttributes_WhenThereAreElements()
     {
         var attributes = new List<ObjectSim.Domain.Attribute>
-            {
-                new ObjectSim.Domain.Attribute { Name = "Attribute1" },
-                new ObjectSim.Domain.Attribute { Name = "Attribute2" }
-            };
+        {
+            new ObjectSim.Domain.Attribute { Name = "Attribute1" },
+            new ObjectSim.Domain.Attribute { Name = "Attribute2" }
+        };
 
         _attributeServiceMock
             .Setup(service => service.GetAll())
@@ -45,6 +47,7 @@ public class AttributeControllerTest
         Assert.AreEqual("Attribute1", returnedAttributes[0].Name);
         Assert.AreEqual("Attribute2", returnedAttributes[1].Name);
     }
+
     [TestMethod]
     public void GetAll_ShouldReturnEmptyList_WhenNoAttributesExist()
     {
@@ -64,4 +67,19 @@ public class AttributeControllerTest
         Assert.AreEqual(0, returnedAttributes.Count);
     }
 
+    [TestMethod]
+    public void GetAll_ShouldThrowException_WhenNoAttributesExist()
+    {
+        // Arrange
+        _attributeServiceMock
+            .Setup(service => service.GetAll())
+            .Throws(new Exception("No attributes found."));
+
+        // Act
+        Action act = () => _attributeController.GetAll();
+
+        // Assert
+        act.Should().Throw<Exception>()
+           .WithMessage("No attributes found.");
+    }
 }
