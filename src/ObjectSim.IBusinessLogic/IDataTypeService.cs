@@ -1,9 +1,9 @@
 ﻿using ObjectSim.Domain;
-using Attribute = System.Attribute;
+using ObjectSim.Domain.Args;
 
 namespace ObjectSim.IBusinessLogic;
 
 public interface IDataTypeService
 {
-    IDataType CreateDataType(Attribute dataType);
+    IDataType CreateDataType(CreateDataTypeArgs dataType);
 }

@@ -4,7 +4,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 namespace ObjectSim.BusinessLogic;
-public class AttributeService(IRepository<Attribute> attributeRepository, IClassService classService) : IAttributeService
+public class AttributeService(IRepository<Attribute> attributeRepository, IClassService classService, IDataTypeService dataTypeService) : IAttributeService
 {
     public Attribute CreateAttribute(CreateAttributeArgs args)
     {
@@ -18,7 +18,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
             throw new ArgumentException($"Invalid visibility value: {args.Visibility}");
         }
 
-        var dataType = _dataTypeService.CreateDataType(args.DataType);
+        var dataType = dataTypeService.CreateDataType(args.DataType);
 
         var newAttribute = new Attribute
         {
