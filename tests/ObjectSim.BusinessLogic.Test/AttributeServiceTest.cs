@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain.Args;
 using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.Test;
@@ -11,7 +12,13 @@ public class AttributeServiceTest
     private AttributeService? _attributeService;
     private Attribute? _attribute;
 
-    private
+    private CreateAttributeArgs _testAttribute = new()
+    {
+        Name = "Test",
+        ClassId = Guid.NewGuid(),
+        DataType = Domain.ValueType.Create("int"),
+        Visibility = Attribute.AttributeVisibility.Public
+    };
 
     [TestInitialize]
     public void Setup()
