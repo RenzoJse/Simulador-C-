@@ -28,12 +28,12 @@ public class Repository<TEntity>(DbContext context) : IRepository<TEntity> where
         return element;
     }
 
-    public TEntity? Get(Func<TEntity, bool> filter)
+    public virtual TEntity? Get(Func<TEntity, bool> filter)
     {
         return _entities.FirstOrDefault(filter);
     }
 
-    public List<TEntity> GetAll(Func<TEntity, bool> filter)
+    public virtual List<TEntity> GetAll(Func<TEntity, bool> filter)
     {
         return _entities.Where(filter).ToList();
     }

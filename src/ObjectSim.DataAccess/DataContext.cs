@@ -23,7 +23,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             optionsBuilder
                 .UseSqlServer(
-                    "Server=.\\SQLEXPRESS;Database=ObjectSim;Integrated Security=True;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True")
+                    "Server=.\\SQLEXPRESS;Database=ObjectSim; Integrated Security=True; Trusted_Connection=True; MultipleActiveResultSets=True; TrustServerCertificate=True")
                 .EnableSensitiveDataLogging();
         }
     }
@@ -41,7 +41,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
             c.HasMany(c => c.Attributes)
                 .WithOne()
-                .HasForeignKey(a => a.Id)
+                .HasForeignKey(a => a.ClassId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             c.HasOne(c => c.Parent)
