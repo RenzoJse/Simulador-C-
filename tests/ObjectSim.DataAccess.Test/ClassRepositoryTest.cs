@@ -74,7 +74,7 @@ public class ClassRepositoryTest
         _context.Set<Class>().Add(classEntity);
         _context.SaveChanges();
 
-        Class? result = _classRepository.Get(c => c.Id == classId);
+        var result = _classRepository.Get(c => c.Id == classId);
 
         Assert.IsNotNull(result);
         Assert.AreEqual(classId, result.Id);
