@@ -31,7 +31,13 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
 
         classService.AddAttribute(args.ClassId, attribute);
 
-        return null!;
+        AddAttributetoRepository(attribute);
+        return attribute;
+    }
+
+    private void AddAttributetoRepository(Attribute attribute)
+    {
+        attributeRepository.Add(attribute);
     }
 
     public List<Attribute> GetAll()
