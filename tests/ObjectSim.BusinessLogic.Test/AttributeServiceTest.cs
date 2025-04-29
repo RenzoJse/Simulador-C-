@@ -16,21 +16,21 @@ public class AttributeServiceTest
     private Mock<IDataTypeService> _dataTypeServiceMock = null!;
     private AttributeService? _attributeService;
 
-    private static readonly CreateDataTypeArgs TestArgsDataType = new CreateDataTypeArgs(
+    private static readonly CreateDataTypeArgs TestArgsDataType = new(
         "int");
 
     private readonly IDataType? _testDataType = ValueType.Create("int");
 
     private static readonly Guid TestAttributeId = Guid.NewGuid();
 
-    private readonly CreateAttributeArgs _testArgsAttribute = new CreateAttributeArgs(
+    private readonly CreateAttributeArgs _testArgsAttribute = new(
         TestArgsDataType,
         "public",
         TestAttributeId,
         "Test"
     );
 
-    private readonly Attribute? _testAttribute = new Attribute
+    private readonly Attribute? _testAttribute = new()
     {
         Id = TestAttributeId,
         Name = "Test",
@@ -142,20 +142,20 @@ public class AttributeServiceTest
     {
         var attributes = new List<Attribute>
         {
-            new Attribute
-        {
+            new()
+            {
             Id = Guid.NewGuid(),
             Name = "Name",
             ClassId = Guid.NewGuid(),
-            DataType = Domain.ValueType.Create("int"),
+            DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Private
         },
-            new Attribute
-        {
+            new()
+            {
             Id = Guid.NewGuid(),
             Name = "Name2",
             ClassId = Guid.NewGuid(),
-            DataType = Domain.ValueType.Create("int"),
+            DataType = ValueType.Create("int"),
             Visibility = Attribute.AttributeVisibility.Private
             }
         };
@@ -289,7 +289,7 @@ public class AttributeServiceTest
             Name = "Attr",
             ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
-            DataType = Domain.ValueType.Create("int")
+            DataType = ValueType.Create("int")
         };
 
         _attributeService!.Update(dummyAttribute.Id, dummyAttribute);
