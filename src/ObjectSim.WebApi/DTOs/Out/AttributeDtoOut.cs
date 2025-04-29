@@ -1,6 +1,6 @@
 ﻿namespace ObjectSim.WebApi.DTOs.Out;
 
-public class AtributeModelOut
+public class AttributeDtoOut
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
