@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ObjectSim.DataAccess;
 
@@ -11,9 +12,11 @@ using ObjectSim.DataAccess;
 namespace ObjectSim.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250428222157_FixMethodClassRelation")]
+    partial class FixMethodClassRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,9 +33,6 @@ namespace ObjectSim.DataAccess.Migrations
                     b.Property<Guid>("ClassId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DataTypeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -40,8 +40,6 @@ namespace ObjectSim.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DataTypeId");
 
                     b.ToTable("Attributes");
                 });
@@ -72,30 +70,6 @@ namespace ObjectSim.DataAccess.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Classes");
-                });
-
-            modelBuilder.Entity("ObjectSim.Domain.DataType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DataTypes");
-
-                    b.HasDiscriminator().HasValue("DataType");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.LocalVariable", b =>
@@ -183,33 +157,31 @@ namespace ObjectSim.DataAccess.Migrations
 
             modelBuilder.Entity("ObjectSim.Domain.ReferenceType", b =>
                 {
-                    b.HasBaseType("ObjectSim.Domain.DataType");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasDiscriminator().HasValue("ReferenceType");
+                    b.HasKey("Name");
+
+                    b.ToTable("ReferenceTypes");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.ValueType", b =>
                 {
-                    b.HasBaseType("ObjectSim.Domain.DataType");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasDiscriminator().HasValue("ValueType");
+                    b.HasKey("Name");
+
+                    b.ToTable("ValueTypes");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Attribute", b =>
                 {
-                    b.HasOne("ObjectSim.Domain.DataType", "DataType")
-                        .WithMany()
-                        .HasForeignKey("DataTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("ObjectSim.Domain.Class", null)
                         .WithMany("Attributes")
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("DataType");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Class", b =>
