@@ -8,19 +8,39 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
 {
     public Attribute CreateAttribute(CreateAttributeArgs args)
     {
-        if(args == null)
+        ValidateNullArgs(args);
+
+        var visibility = ParseVisibility(args.Visibility);
+        var dataType = dataTypeService.CreateDataType(args.DataType);
+
+        var attribute = BuildAttribute(args, dataType, visibility);
+
+        classService.AddAttribute(args.ClassId, attribute);
+        AddAttributetoRepository(attribute);
+
+        return attribute;
+    }
+
+    private static void ValidateNullArgs(CreateAttributeArgs args)
+    {
+        if (args == null)
         {
             throw new ArgumentNullException(nameof(args), "Attribute cannot be null.");
         }
+    }
 
-        if (!Enum.TryParse(args.Visibility, true, out Attribute.AttributeVisibility visibility))
+    private static Attribute.AttributeVisibility ParseVisibility(string visibilityValue)
+    {
+        if (!Enum.TryParse(visibilityValue, true, out Attribute.AttributeVisibility visibility))
         {
-            throw new ArgumentException($"Invalid visibility value: {args.Visibility}");
+            throw new ArgumentException($"Invalid visibility value: {visibilityValue}");
         }
+        return visibility;
+    }
 
-        var dataType = dataTypeService.CreateDataType(args.DataType);
-
-        var attribute = new Attribute
+    private static Attribute BuildAttribute(CreateAttributeArgs args, IDataType dataType, Attribute.AttributeVisibility visibility)
+    {
+        return new Attribute
         {
             Id = args.Id,
             Name = args.Name,
@@ -28,11 +48,6 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
             ClassId = args.ClassId,
             Visibility = visibility
         };
-
-        classService.AddAttribute(args.ClassId, attribute);
-
-        AddAttributetoRepository(attribute);
-        return attribute;
     }
 
     private void AddAttributetoRepository(Attribute attribute)
