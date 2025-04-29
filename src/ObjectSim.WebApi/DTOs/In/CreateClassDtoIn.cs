@@ -10,7 +10,7 @@ public record CreateClassDtoIn
     public bool IsAbstract { get; init; }
     public bool IsInterface { get; init; }
     public bool IsSealed { get; init; }
-    public List<Attribute> Attributes { get; init; } = [];
+    public List<CreateAttributeArgs> Attributes { get; init; } = [];
     public List<Method> Methods { get; init; } = [];
     public Guid? Parent { get; init; }
 

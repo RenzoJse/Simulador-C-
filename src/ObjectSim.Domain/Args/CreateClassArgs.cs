@@ -5,7 +5,7 @@ public class CreateClassArgs(
     bool? isAbstract,
     bool? isSealed,
     bool? isInterface,
-    List<Attribute> attributes,
+    List<CreateAttributeArgs> attributes,
     List<Method> methods,
     Guid? parent)
 {
@@ -13,7 +13,7 @@ public class CreateClassArgs(
     public bool? IsAbstract { get; set; } = isAbstract;
     public bool? IsSealed { get; set; } = isSealed;
     public bool? IsInterface { get; set; } = isInterface;
-    public List<Attribute> Attributes { get; set; } = attributes;
+    public List<CreateAttributeArgs> Attributes { get; set; } = attributes;
     public List<Method> Methods { get; set; } = methods;
     public Guid? Parent { get; set; } = parent;
 }

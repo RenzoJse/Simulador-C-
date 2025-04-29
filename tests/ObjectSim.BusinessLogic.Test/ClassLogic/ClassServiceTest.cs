@@ -584,22 +584,6 @@ public class ClassServiceTest
     }
 
     [TestMethod]
-    public void AddAttribute_AttributeDoesNotExist_ThrowsException()
-    {
-        _classRepositoryMock!
-            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(_testClass);
-
-        _attributeServiceMock!
-            .Setup(service => service.GetById(It.IsAny<Guid>()))
-            .Throws(new ArgumentException("Attribute does not exist."));
-
-        Action action = () => _classServiceTest!.AddAttribute(_testClass.Id, _testAttribute);
-        action.Should().Throw<ArgumentException>()
-            .WithMessage("Attribute does not exist.");
-    }
-
-    [TestMethod]
     public void AddAttribute_ClassIsInterface_ThrowsException()
     {
         var attributeId = Guid.NewGuid();
@@ -612,10 +596,6 @@ public class ClassServiceTest
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testInterfaceClass);
-
-        _attributeServiceMock!
-            .Setup(service => service.GetById(It.IsAny<Guid>()))
-            .Returns(attribute);
 
         Action action = () => _classServiceTest!.AddAttribute(_testInterfaceClass.Id, _testAttribute);
         action.Should().Throw<ArgumentException>().WithMessage("Cannot add attribute to an interface.");
@@ -643,10 +623,6 @@ public class ClassServiceTest
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testClass);
 
-        _attributeServiceMock!
-            .Setup(service => service.GetById(It.IsAny<Guid>()))
-            .Returns(attribute);
-
         Action action = () => _classServiceTest!.AddAttribute(_testClass.Id, _testAttribute);
         action.Should().Throw<ArgumentException>().WithMessage("Attribute name already exists in class.");
     }
@@ -661,10 +637,6 @@ public class ClassServiceTest
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(_testClass);
-
-        _attributeServiceMock!
-            .Setup(service => service.GetById(It.IsAny<Guid>()))
-            .Returns(_testAttribute);
 
         _classServiceTest!.AddAttribute(_testClass.Id, _testAttribute);
         _testClass.Attributes.Should().Contain(_testAttribute);
