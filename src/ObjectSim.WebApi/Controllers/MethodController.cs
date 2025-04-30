@@ -92,7 +92,7 @@ public class MethodController(IMethodService methodService) : ControllerBase
         try
         {
             var localVar = methodService.AddLocalVariable(methodId, dto.ToEntity());
-            return Ok(localVar);
+            return Ok(new LocalVariableOutModel(localVar));
         }
         catch(Exception ex)
         {
