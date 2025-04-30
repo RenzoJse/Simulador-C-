@@ -201,62 +201,120 @@ public class MethodServiceTest
         _methodService!.Update(testMethod.Id, invalidUpdate);
     }
 
+    #region Add-Parameter-Test
     [TestMethod]
-    public void AddLocalVariable_WhenValid_ShouldAddToMethod()
+    public void AddParameter_WhenValid_ShouldAdd()
     {
-        var methodId = Guid.NewGuid();
-        var method = new Method
+        var param = new Parameter
         {
-            Id = methodId,
-            Name = "TestMethod",
-            Type = Method.MethodDataType.Int,
-            Accessibility = Method.MethodAccessibility.Public,
-            Abstract = false,
-            IsOverride = false,
-            IsSealed = false,
-            LocalVariables = []
+            Name = "parameterTest",
+            Type = Parameter.ParameterDataType.String
         };
 
-        var newLocalVar = new LocalVariable
-        {
-            Name = "counter",
-            Type = LocalVariable.LocalVariableDataType.Int
-        };
+        var repoMock = new Mock<IRepository<Method>>();
+        repoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+                .Returns(testMethod);
 
-        var methodRepositoryMock = new Mock<IRepository<Method>>();
-        methodRepositoryMock
-            .Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns(method);
+        var service = new MethodService(repoMock.Object);
 
-        var service = new MethodService(methodRepositoryMock.Object);
-
-
-        var result = service.AddLocalVariable(methodId, newLocalVar);
+        var result = service.AddParameter(testMethod.Id, param);
 
         result.Should().NotBeNull();
-        result.Name.Should().Be("counter");
-        method.LocalVariables.Should().ContainSingle(lv => lv.Name == "counter");
-
-        methodRepositoryMock.Verify(r => r.Update(method), Times.Once);
+        result.Name.Should().Be("parameterTest");
+        testMethod.Parameters.Should().ContainSingle(p => p.Name == "parameterTest");
+        repoMock.Verify(r => r.Update(testMethod), Times.Once);
     }
 
     [TestMethod]
-    public void AddLocalVariable_WhenMethodDoesNotExist_ShouldThrow()
+    public void AddParameter_WhenMethodNotFound_ShouldThrow()
     {
-        var methodId = Guid.NewGuid();
-        var newLocalVar = new LocalVariable
+        var param = new Parameter
         {
-            Name = "temp",
-            Type = LocalVariable.LocalVariableDataType.Bool
+            Name = "parameterTest",
+            Type = Parameter.ParameterDataType.String
         };
 
-        var methodRepositoryMock = new Mock<IRepository<Method>>();
-        methodRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-                            .Returns((Method?)null);
+        var repoMock = new Mock<IRepository<Method>>();
+        repoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+                .Returns((Method?)null);
 
-        var service = new MethodService(methodRepositoryMock.Object);
+        var service = new MethodService(repoMock.Object);
 
-        Action act = () => service.AddLocalVariable(methodId, newLocalVar);
+        Action act = () => service.AddParameter(testMethod.Id, param);
+
+        act.Should().Throw<Exception>().WithMessage("Method not found");
+    }
+
+    [TestMethod]
+    public void AddParameter_WhenDuplicate_ShouldThrow()
+    {
+        var existing = new Parameter
+        {
+            Name = "parameterTest",
+            Type = Parameter.ParameterDataType.String
+        };
+
+        var param = new Parameter
+        {
+            Name = "parameterTest",
+            Type = Parameter.ParameterDataType.String
+        };
+
+        testMethod.Parameters = [existing];
+
+        var repoMock = new Mock<IRepository<Method>>();
+        repoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+                .Returns(testMethod);
+
+        var service = new MethodService(repoMock.Object);
+
+        Action act = () => service.AddParameter(testMethod.Id, param);
+
+        act.Should().Throw<Exception>().WithMessage("Parameter already exists in this method");
+    }
+
+    #endregion
+
+    #region Add-LocalVariable-Test
+    [TestMethod]
+    public void AddLocalVariable_WhenValid_ShouldAddToMethod()
+    {
+        var localVariable = new LocalVariable
+        {
+            Name = "lvTest",
+            Type = LocalVariable.LocalVariableDataType.Int
+        };
+
+        var methodRepoMock = new Mock<IRepository<Method>>();
+        methodRepoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+                      .Returns(testMethod);
+
+        var service = new MethodService(methodRepoMock.Object);
+
+        var result = service.AddLocalVariable(testMethod.Id, localVariable);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("lvTest");
+        testMethod.LocalVariables.Should().ContainSingle(v => v.Name == "lvTest");
+        methodRepoMock.Verify(r => r.Update(testMethod), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddLocalVariable_WhenMethodNotFound_ShouldThrow()
+    {
+        var localVariable = new LocalVariable
+        {
+            Name = "lvTest",
+            Type = LocalVariable.LocalVariableDataType.String
+        };
+
+        var methodRepoMock = new Mock<IRepository<Method>>();
+        methodRepoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+                      .Returns((Method?)null);
+
+        var service = new MethodService(methodRepoMock.Object);
+
+        Action act = () => service.AddLocalVariable(testMethod.Id, localVariable);
 
         act.Should().Throw<Exception>().WithMessage("Method not found");
     }
@@ -264,36 +322,29 @@ public class MethodServiceTest
     [TestMethod]
     public void AddLocalVariable_WhenDuplicateName_ShouldThrow()
     {
-        var methodId = Guid.NewGuid();
-        var existingLocalVar = new LocalVariable
+        var existing = new LocalVariable
         {
-            Name = "temp",
-            Type = LocalVariable.LocalVariableDataType.String
+            Name = "lvTest1",
+            Type = LocalVariable.LocalVariableDataType.Bool
         };
 
-        var method = new Method
+        var newVar = new LocalVariable
         {
-            Id = methodId,
-            Name = "Method1",
-            Type = Method.MethodDataType.String,
-            Accessibility = Method.MethodAccessibility.Public,
-            LocalVariables = [existingLocalVar]
+            Name = "lvTest1",
+            Type = LocalVariable.LocalVariableDataType.Bool
         };
 
-        var newLocalVar = new LocalVariable
-        {
-            Name = "temp",
-            Type = LocalVariable.LocalVariableDataType.String
-        };
+        testMethod.LocalVariables = [existing];
 
-        var methodRepositoryMock = new Mock<IRepository<Method>>();
-        methodRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-                            .Returns(method);
+        var methodRepoMock = new Mock<IRepository<Method>>();
+        methodRepoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+                      .Returns(testMethod);
 
-        var service = new MethodService(methodRepositoryMock.Object);
+        var service = new MethodService(methodRepoMock.Object);
 
-        Action act = () => service.AddLocalVariable(methodId, newLocalVar);
+        Action act = () => service.AddLocalVariable(testMethod.Id, newVar);
 
         act.Should().Throw<Exception>().WithMessage("LocalVariable already exists in this method");
     }
+    #endregion
 }

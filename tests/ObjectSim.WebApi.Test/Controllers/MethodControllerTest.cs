@@ -270,20 +270,19 @@ public class MethodControllerTest
 
     #region Add-LocalVariable-Test
     [TestMethod]
-    public void AddLocalVariable_WhenValid_ShouldAddToMethod()
+    public void AddLocalVariable_WhenValid_ShouldReturnOk()
     {
         var methodId = Guid.NewGuid();
-
         var dto = new LocalVariableDtoIn
         {
-            Name = "localV1",
+            Name = "lvTest",
             Type = "Int"
         };
 
         var localVarEntity = dto.ToEntity();
 
         _methodServiceMock
-            .Setup(service => service.AddLocalVariable(methodId, It.IsAny<LocalVariable>()))
+            .Setup(s => s.AddLocalVariable(methodId, It.IsAny<LocalVariable>()))
             .Returns(localVarEntity);
 
         var result = _methodController.AddLocalVariable(methodId, dto);
@@ -292,9 +291,10 @@ public class MethodControllerTest
         okResult.Should().NotBeNull();
         okResult!.StatusCode.Should().Be(200);
 
-        var returned = okResult.Value as LocalVariable;
+        var returned = okResult.Value as LocalVariableOutModel;
         returned.Should().NotBeNull();
-        returned!.Name.Should().Be("localV1");
+        returned!.Name.Should().Be("lvTest");
+        returned.Type.Should().Be("Int");
     }
 
     [TestMethod]
@@ -304,7 +304,7 @@ public class MethodControllerTest
         var dto = new LocalVariableDtoIn
         {
             Name = "lvTest",
-            Type = "Int"
+            Type = "Bool"
         };
 
         _methodServiceMock
@@ -320,12 +320,12 @@ public class MethodControllerTest
     }
 
     [TestMethod]
-    public void AddLocalVariable_WhenNameAlreadyExists_ShouldReturnBadRequest()
+    public void AddLocalVariable_WhenDuplicate_ShouldReturnBadRequest()
     {
         var methodId = Guid.NewGuid();
         var dto = new LocalVariableDtoIn
         {
-            Name = "lvDto",
+            Name = "lvTest",
             Type = "Int"
         };
 
@@ -340,5 +340,80 @@ public class MethodControllerTest
         badRequest!.StatusCode.Should().Be(400);
         badRequest.Value.Should().Be("LocalVariable already exists in this method");
     }
+    #endregion
+
+    #region Add-Parameter-Test
+    [TestMethod]
+    public void AddParameter_WhenValid_ShouldReturnOk()
+    {
+        var methodId = Guid.NewGuid();
+        var dto = new ParameterDtoIn
+        {
+            Name = "parameterTest",
+            Type = "String"
+        };
+
+        var paramEntity = dto.ToEntity();
+
+        _methodServiceMock
+            .Setup(s => s.AddParameter(methodId, It.IsAny<Parameter>()))
+            .Returns(paramEntity);
+
+        var result = _methodController.AddParameter(methodId, dto);
+
+        var ok = result as OkObjectResult;
+        ok.Should().NotBeNull();
+        ok!.StatusCode.Should().Be(200);
+
+        var returned = ok.Value as ParameterOutModel;
+        returned.Should().NotBeNull();
+        returned!.Name.Should().Be("parameterTest");
+        returned.Type.Should().Be("String");
+    }
+
+    [TestMethod]
+    public void AddParameter_WhenMethodNotFound_ShouldReturnBadRequest()
+    {
+        var methodId = Guid.NewGuid();
+        var dto = new ParameterDtoIn
+        {
+            Name = "parameterTest",
+            Type = "Int"
+        };
+
+        _methodServiceMock
+            .Setup(s => s.AddParameter(methodId, It.IsAny<Parameter>()))
+            .Throws(new Exception("Method not found"));
+
+        var result = _methodController.AddParameter(methodId, dto);
+
+        var badRequest = result as BadRequestObjectResult;
+        badRequest.Should().NotBeNull();
+        badRequest!.StatusCode.Should().Be(400);
+        badRequest.Value.Should().Be("Method not found");
+    }
+
+    [TestMethod]
+    public void AddParameter_WhenDuplicate_ShouldReturnBadRequest()
+    {
+        var methodId = Guid.NewGuid();
+        var dto = new ParameterDtoIn
+        {
+            Name = "parameterTest",
+            Type = "Bool"
+        };
+
+        _methodServiceMock
+            .Setup(s => s.AddParameter(methodId, It.IsAny<Parameter>()))
+            .Throws(new Exception("Parameter already exists in this method"));
+
+        var result = _methodController.AddParameter(methodId, dto);
+
+        var badRequest = result as BadRequestObjectResult;
+        badRequest.Should().NotBeNull();
+        badRequest!.StatusCode.Should().Be(400);
+        badRequest.Value.Should().Be("Parameter already exists in this method");
+    }
+
     #endregion
 }
