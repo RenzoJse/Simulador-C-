@@ -341,8 +341,7 @@ public class MethodServiceTest
             .Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns(method);
 
-        var service = new MethodService(methodRepositoryMock.Object);
-
+        var service = new MethodService(methodRepositoryMock.Object, _classServiceMock!.Object);
 
         var result = service.AddLocalVariable(methodId, newLocalVar);
 
@@ -367,7 +366,7 @@ public class MethodServiceTest
         methodRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
                             .Returns((Method?)null);
 
-        var service = new MethodService(methodRepositoryMock.Object);
+        var service = new MethodService(methodRepositoryMock.Object, _classServiceMock!.Object);
 
         Action act = () => service.AddLocalVariable(methodId, newLocalVar);
 
@@ -403,7 +402,7 @@ public class MethodServiceTest
         methodRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
                             .Returns(method);
 
-        var service = new MethodService(methodRepositoryMock.Object);
+        var service = new MethodService(methodRepositoryMock.Object, _classServiceMock!.Object!);
 
         Action act = () => service.AddLocalVariable(methodId, newLocalVar);
 
