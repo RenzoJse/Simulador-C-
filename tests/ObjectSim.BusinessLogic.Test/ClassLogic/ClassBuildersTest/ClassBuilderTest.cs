@@ -22,7 +22,7 @@ public class ClassBuilderTest
     };
 
     private static readonly CreateDataTypeArgs TestArgsDataType = new CreateDataTypeArgs(
-        "int","value");
+        "int", "value");
 
     private static readonly CreateAttributeArgs TestCreateAttributeArgs = new CreateAttributeArgs(
         TestArgsDataType,
