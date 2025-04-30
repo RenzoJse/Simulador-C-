@@ -272,83 +272,74 @@ public class MethodControllerTest
 
     #region Add-Parameter-Test
     [TestMethod]
-    public void AddParameter_WhenValid_ShouldAddToMethod()
+    public void AddParameter_WhenValid_ShouldReturnOk()
     {
-        var newParam = new Parameter
+        var methodId = Guid.NewGuid();
+        var dto = new ParameterDtoIn
         {
-            Name = "testParam1",
-            Type = Parameter.ParameterDataType.String
+            Name = "testParameter",
+            Type = "String"
         };
 
-        var methodRepoMock = new Mock<IRepository<Method>>();
-        methodRepoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-                      .Returns(_testMethod);
+        var parameterEntity = dto.ToEntity();
 
-        var service = new MethodService(methodRepoMock.Object);
+        _methodServiceMock
+            .Setup(s => s.AddParameter(methodId, It.IsAny<Parameter>()))
+            .Returns(parameterEntity);
 
-        var result = service.AddParameter(_testMethod.Id, newParam);
+        var result = _methodController.AddParameter(methodId, dto);
 
-        result.Should().NotBeNull();
-        result.Name.Should().Be("testParam1");
-        _testMethod.Parameters.Should().ContainSingle(p => p.Name == "testParam1");
-        methodRepoMock.Verify(r => r.Update(_testMethod), Times.Once);
+        var ok = result as OkObjectResult;
+        ok.Should().NotBeNull();
+        ok!.StatusCode.Should().Be(200);
+
+        var returned = ok.Value as Parameter;
+        returned.Should().NotBeNull();
+        returned!.Name.Should().Be("testParameter");
     }
 
     [TestMethod]
-    public void AddParameter_WhenMethodNotFound_ShouldThrow()
+    public void AddParameter_WhenMethodNotFound_ShouldReturnBadRequest()
     {
         var methodId = Guid.NewGuid();
-        var newParam = new Parameter
+        var dto = new ParameterDtoIn
         {
-            Name = "testParam",
-            Type = Parameter.ParameterDataType.Int
+            Name = "testParameter",
+            Type = "String"
         };
 
-        var methodRepoMock = new Mock<IRepository<Method>>();
-        methodRepoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-                      .Returns((Method?)null);
+        _methodServiceMock
+            .Setup(s => s.AddParameter(methodId, It.IsAny<Parameter>()))
+            .Throws(new Exception("Method not found"));
 
-        var service = new MethodService(methodRepoMock.Object);
+        var result = _methodController.AddParameter(methodId, dto);
 
-        Action act = () => service.AddParameter(methodId, newParam);
-
-        act.Should().Throw<Exception>().WithMessage("Method not found");
+        var badRequest = result as BadRequestObjectResult;
+        badRequest.Should().NotBeNull();
+        badRequest!.StatusCode.Should().Be(400);
+        badRequest.Value.Should().Be("Method not found");
     }
 
     [TestMethod]
-    public void AddParameter_WhenDuplicateName_ShouldThrow()
+    public void AddParameter_WhenDuplicate_ShouldReturnBadRequest()
     {
         var methodId = Guid.NewGuid();
-        var existingParam = new Parameter
+        var dto = new ParameterDtoIn
         {
-            Name = "testParam1",
-            Type = Parameter.ParameterDataType.Int
+            Name = "testParameter",
+            Type = "String"
         };
 
-        var method = new Method
-        {
-            Id = methodId,
-            Name = "MethodA",
-            Type = Method.MethodDataType.Int,
-            Accessibility = Method.MethodAccessibility.Public,
-            Parameters = new List<Parameter> { existingParam }
-        };
+        _methodServiceMock
+            .Setup(s => s.AddParameter(methodId, It.IsAny<Parameter>()))
+            .Throws(new Exception("Parameter already exists in this method"));
 
-        var newParam = new Parameter
-        {
-            Name = "testParam1",
-            Type = Parameter.ParameterDataType.Int
-        };
+        var result = _methodController.AddParameter(methodId, dto);
 
-        var methodRepoMock = new Mock<IRepository<Method>>();
-        methodRepoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-                      .Returns(method);
-
-        var service = new MethodService(methodRepoMock.Object);
-
-        Action act = () => service.AddParameter(methodId, newParam);
-
-        act.Should().Throw<Exception>().WithMessage("Parameter already exists in this method");
+        var badRequest = result as BadRequestObjectResult;
+        badRequest.Should().NotBeNull();
+        badRequest!.StatusCode.Should().Be(400);
+        badRequest.Value.Should().Be("Parameter already exists in this method");
     }
     #endregion
 }
