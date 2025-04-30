@@ -4,7 +4,7 @@ using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
 
-public class AbstractBuilder(IClassService classService) : Builder(classService)
+public class AbstractBuilder(IClassService classService, IAttributeService attributeService) : Builder(classService, attributeService)
 {
     public override void SetAttributes(List<CreateAttributeArgs> attributes)
     {
