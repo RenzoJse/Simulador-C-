@@ -10,4 +10,5 @@ public interface IMethodService
     bool Delete(Guid id);
     Method GetById(Guid id);
     Method Update(Guid id, Method entity);
+    LocalVariable AddLocalVariable(Guid methodId, LocalVariable localVariable);
 }
