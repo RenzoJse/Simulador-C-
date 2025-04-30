@@ -122,5 +122,14 @@ public class AttributeControllerTest
 
         _attributeServiceMock.Verify(x => x.CreateAttribute(It.IsAny<CreateAttributeArgs>()), Times.Once);
     }
+    [TestMethod]
+    public void Create_NullModel_ShouldReturnBadRequest()
+    {
+        var result = _attributeController.Create(null!);
+        var badRequest = result as BadRequestResult;
+        Assert.IsNotNull(badRequest);
+        Assert.AreEqual(400, badRequest.StatusCode);
+    }
+
 
 }
