@@ -39,8 +39,7 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
             IsOverride = methodsArgs.IsOverride ?? false,
             //Type = methodsArgs.Type, No se puede hacer aun.
             Parameters = methodsArgs.Parameters,
-            LocalVariables = methodsArgs.LocalVariables,
-            //MethodsInvoke = invokeMethodList
+            LocalVariables = methodsArgs.LocalVariables
         };
 
         List<Method> invokeMethodList = [];
@@ -58,6 +57,7 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
             }
         }
 
+        method.MethodsInvoke = invokeMethodList;
         return method;
     }
 

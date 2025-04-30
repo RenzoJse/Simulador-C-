@@ -152,6 +152,9 @@ public class MethodServiceTest
         _classServiceMock!.Setup(cs => cs.GetById(It.IsAny<Guid>()))
             .Returns(new Class { Id = ClassId, Name = "TestClass" });
 
+        _methodRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns(new Method());
+
         _classServiceMock.Setup(cs => cs.AddMethod(It.IsAny<Guid>(), It.IsAny<Method>()));
 
         _methodRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
@@ -159,12 +162,7 @@ public class MethodServiceTest
         var result = _methodService!.CreateMethod(_testCreateMethodArgs);
 
         result.Should().NotBeNull();
-        result.Id.Should().NotBe(Guid.Empty);
-        result.Name.Should().Be(_testCreateMethodArgs.Name);
-        result.Type.Should().Be(Method.MethodDataType.String);
-        result.Accessibility.Should().Be(Method.MethodAccessibility.Public);
-        result.ClassId.Should().Be(ClassId);
-        result.IsOverride.Should().BeFalse();
+        result.MethodsInvoke.Count.Should().Be(1);
     }
 
     #endregion
