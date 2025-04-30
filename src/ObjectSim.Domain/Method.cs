@@ -97,6 +97,7 @@ public class Method
 
     #region MethodsInvoke
     public List<Method> MethodsInvoke { get; set; } = [];
+
     #endregion
 
     #region Validations

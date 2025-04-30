@@ -293,4 +293,23 @@ public class MethodTest
         method.Parameters.Should().NotBeNull();
         method.LocalVariables.Should().NotBeNull();
     }
+
+    #region InvokeMethod
+
+    #region Error
+
+    [TestMethod]
+    public void InvokeMethod_WhenMethodsInvokeAreNull_ThrowsNullException()
+    {
+        var method = new Method();
+
+        Action act = () => method.InvokeMethod(null!);
+
+        act.Should().Throw<ArgumentNullException>()
+            .WithMessage("Value cannot be null. (Parameter 'method')");
+    }
+
+    #endregion
+
+    #endregion
 }
