@@ -51,6 +51,13 @@ public class MethodServiceTest
         };
     }
 
+    [TestCleanup]
+    public void CleanUp()
+    {
+        _methodRepositoryMock!.VerifyAll();
+        _classServiceMock!.VerifyAll();
+    }
+
     #region CreateMethod
 
     #region Error
@@ -91,7 +98,7 @@ public class MethodServiceTest
     #region Success
 
     [TestMethod]
-    public void CreateMethod_WhenValid_ReturnsNewMethod()
+    public void CreateMethod_WhenValid_ReturnsNewMethodAndAddItToDataBase()
     {
         _methodRepositoryMock!.Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
         _methodRepositoryMock.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
@@ -99,7 +106,6 @@ public class MethodServiceTest
         var result = _methodService!.CreateMethod(_testCreateMethodArgs);
 
         result.Should().NotBeNull();
-        _methodRepositoryMock.VerifyAll();
     }
 
     #endregion
