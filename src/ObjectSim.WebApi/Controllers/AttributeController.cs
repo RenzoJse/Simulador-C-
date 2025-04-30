@@ -34,22 +34,28 @@ public class AttributeController(IAttributeService attributeService) : Controlle
     [HttpPut("{id}")]
     public IActionResult Update(Guid id, [FromBody] CreateAttributeDtoIn modelIn)
     {
-        var updated = _attributeService.Update(id, new Domain.Attribute
+        if(!ModelState.IsValid)
         {
-            Id = id,
-            Name = modelIn.Name,
-            Visibility = Enum.Parse<Domain.Attribute.AttributeVisibility>(modelIn.Visibility),
-            ClassId = modelIn.ClassId,
-            DataType = modelIn.DataTypeKind switch
+            return BadRequest(ModelState);
+        }
+
+        if(id == Guid.Empty)
+        {
+            return BadRequest("Invalid ID.");
+        }
+            var attributeToUpdate = new Domain.Attribute
             {
-                "Value" => ValueType.Create(modelIn.DataTypeName),
-                "Reference" => ReferenceType.Create(modelIn.DataTypeName),
-                _ => throw new ArgumentException("Invalid DataTypeKind")
-            }
-        });
+                Id = id,
+                Name = modelIn.Name,
+                ClassId = modelIn.ClassId,
+                Visibility = Enum.Parse<Domain.Attribute.AttributeVisibility>(modelIn.Visibility),
+                DataType = modelIn.DataTypeKind == "Value"
+                    ? ValueType.Create(modelIn.DataTypeName)
+                    : ReferenceType.Create(modelIn.DataTypeName)
+            };
 
-        var response = AttributeDtoOut.ToInfo(updated);
-        return Ok(response);
+            var updated = _attributeService.Update(id, attributeToUpdate);
+            var response = AttributeDtoOut.ToInfo(updated);
+            return Ok(response);
     }
-
 }

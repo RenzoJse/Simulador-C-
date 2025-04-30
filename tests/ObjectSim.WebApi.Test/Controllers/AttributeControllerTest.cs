@@ -204,4 +204,26 @@ public class AttributeControllerTest
         Assert.AreEqual("Public", dtoOut.Visibility);
         _attributeServiceMock.Verify(x => x.Update(id, It.IsAny<Domain.Attribute>()), Times.Once);
     }
+    [TestMethod]
+    public void Update_InvalidModel_ShouldReturnBadRequest()
+    {
+        var id = Guid.NewGuid();
+        var modelIn = new CreateAttributeDtoIn
+        {
+            Name = "",
+            Visibility = "Public",
+            DataTypeName = "int",
+            DataTypeKind = "Value",
+            ClassId = Guid.NewGuid()
+        };
+
+        _attributeController.ModelState.AddModelError("Name", "Name is required.");
+
+        var result = _attributeController.Update(id, modelIn);
+
+        var badRequest = result as BadRequestObjectResult;
+        Assert.IsNotNull(badRequest);
+        Assert.AreEqual(400, badRequest.StatusCode);
+    }
+
 }
