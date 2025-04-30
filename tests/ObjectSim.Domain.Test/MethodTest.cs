@@ -7,6 +7,12 @@ public class MethodTest
 {
     private Method? _testMethod;
 
+    private Class? _testClass = new Class
+    {
+        Id = Guid.NewGuid(),
+        Name = "TestClass",
+    };
+
     [TestInitialize]
     public void Initialize()
     {
@@ -309,7 +315,13 @@ public class MethodTest
     [TestMethod]
     public void SetInvokeMethod_WhenOtherMethodIsNotInClass_ThrowsException()
     {
+        var otherMethod = new Method { Id = Guid.NewGuid() };
+        _testMethod!.Class = _testClass;
 
+        Action act = () => _testMethod!.MethodsInvoke.Add(otherMethod);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Method not in class.");
     }
 
     #endregion
