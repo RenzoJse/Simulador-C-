@@ -324,6 +324,24 @@ public class MethodTest
             .WithMessage("The invoked method must be reachable from the current method.");
     }
 
+    [TestMethod]
+    public void SetInvokeMethod_WhenIsTryingToUseWrongAttributeMethod_ThrowsException()
+    {
+        // nose puede hacer aun
+    }
+
+    [TestMethod]
+    public void SetInvokeMethod_WhenUsingMethodThatIsNotInClassNeitherParentClass_ThrowsException()
+    {
+        var otherMethod = new Method { Id = Guid.NewGuid() };
+        _testMethod!.Class = _testClass;
+
+        Action act = () => _testMethod!.MethodsInvoke = [otherMethod];
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("The invoked method must be reachable from the current method.");
+    }
+
     #endregion
 
     #endregion
