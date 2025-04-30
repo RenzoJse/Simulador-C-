@@ -249,5 +249,19 @@ public class AttributeControllerTest
         var dto = okResult.Value as AttributeDtoOut;
         Assert.IsNotNull(dto);
     }
+    [TestMethod]
+    public void GetById_ShouldReturnBadRequest_WhenServiceThrowsGeneralException()
+    {
+        var id = Guid.NewGuid();
+        _attributeServiceMock
+            .Setup(s => s.GetById(id))
+            .Throws(new Exception("Unexpected error."));
 
+        var result = _attributeController.GetById(id);
+
+        var badRequest = result as BadRequestObjectResult;
+        Assert.IsNotNull(badRequest);
+        Assert.AreEqual(400, badRequest.StatusCode);
+        Assert.AreEqual("Unexpected error.", badRequest.Value);
+    }
 }
