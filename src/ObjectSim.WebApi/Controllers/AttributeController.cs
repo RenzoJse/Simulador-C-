@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
+using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.WebApi.Controllers;
 [ApiController]
@@ -29,4 +31,25 @@ public class AttributeController(IAttributeService attributeService) : Controlle
         var attributes = _attributeService.GetAll();
         return Ok(attributes);
     }
+    [HttpPut("{id}")]
+    public IActionResult Update(Guid id, [FromBody] CreateAttributeDtoIn modelIn)
+    {
+        var updated = _attributeService.Update(id, new Domain.Attribute
+        {
+            Id = id,
+            Name = modelIn.Name,
+            Visibility = Enum.Parse<Domain.Attribute.AttributeVisibility>(modelIn.Visibility),
+            ClassId = modelIn.ClassId,
+            DataType = modelIn.DataTypeKind switch
+            {
+                "Value" => ValueType.Create(modelIn.DataTypeName),
+                "Reference" => ReferenceType.Create(modelIn.DataTypeName),
+                _ => throw new ArgumentException("Invalid DataTypeKind")
+            }
+        });
+
+        var response = AttributeDtoOut.ToInfo(updated);
+        return Ok(response);
+    }
+
 }

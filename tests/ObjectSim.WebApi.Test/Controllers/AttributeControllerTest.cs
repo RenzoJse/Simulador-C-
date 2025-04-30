@@ -168,9 +168,9 @@ public class AttributeControllerTest
         var id = Guid.NewGuid();
         var modelIn = new CreateAttributeDtoIn
         {
-            Name = "ColorUpdated",
-            Visibility = "Private",
-            DataTypeName = "bool",
+            Name = "Size",
+            Visibility = "Public",
+            DataTypeName = "int",
             DataTypeKind = "Value",
             ClassId = Guid.NewGuid()
         };
@@ -178,25 +178,30 @@ public class AttributeControllerTest
         var updatedAttribute = new Domain.Attribute
         {
             Id = id,
-            Name = "ColorUpdated",
-            Visibility = Domain.Attribute.AttributeVisibility.Private,
-            DataType = Domain.ValueType.Create("bool"),
-            ClassId = modelIn.ClassId
+            Name = modelIn.Name,
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            ClassId = modelIn.ClassId,
+            DataType = Domain.ValueType.Create(modelIn.DataTypeName)
         };
 
         _attributeServiceMock
-            .Setup(s => s.UpdateAttribute(id, It.IsAny<CreateAttributeArgs>()))
+            .Setup(s => s.Update(id, It.Is<Domain.Attribute>(a =>
+                a.Name == modelIn.Name &&
+                a.ClassId == modelIn.ClassId &&
+                a.Visibility == Domain.Attribute.AttributeVisibility.Public &&
+                a.DataType.Name == modelIn.DataTypeName)))
             .Returns(updatedAttribute);
 
         var result = _attributeController.Update(id, modelIn);
 
         var okResult = result as OkObjectResult;
         Assert.IsNotNull(okResult);
+        Assert.AreEqual(200, okResult.StatusCode);
+
         var dtoOut = okResult.Value as AttributeDtoOut;
         Assert.IsNotNull(dtoOut);
-
-        _attributeServiceMock.Verify(s => s.UpdateAttribute(id, It.IsAny<CreateAttributeArgs>()), Times.Once);
+        Assert.AreEqual("Size", dtoOut.Name);
+        Assert.AreEqual("Public", dtoOut.Visibility);
+        _attributeServiceMock.Verify(x => x.Update(id, It.IsAny<Domain.Attribute>()), Times.Once);
     }
-
-
 }
