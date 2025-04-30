@@ -104,15 +104,12 @@ public class Method
         get => _methodsInvoke;
         set
         {
-            _methodsInvoke = value;
-        }
-    }
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value), "InvokeMethod cannot be null.");
+            }
 
-    public static void InvokeMethod(Method method)
-    {
-        if (method == null)
-        {
-            throw new ArgumentNullException(nameof(method), "InvokeMethod cannot be null.");
+            _methodsInvoke = value;
         }
     }
 

@@ -299,13 +299,10 @@ public class MethodTest
     #region Error
 
     [TestMethod]
-    public void InvokeMethod_WhenMethodsInvokeAreNull_ThrowsNullException()
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void SetInvokeMethod_WhenMethodsInvokeAreNull_ThrowsNullException()
     {
-        var method = new Method();
-
-        Action act = () => Method.InvokeMethod(null!);
-
-        act.Should().Throw<ArgumentNullException>(nameof(method), "InvokeMethod cannot be null.");
+        var method = new Method { MethodsInvoke = null! };
     }
 
     #endregion
