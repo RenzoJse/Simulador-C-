@@ -74,7 +74,7 @@ public class MethodControllerTest
             IsSealed = false,
             LocalVariables = [],
             Parameters = [],
-            Methods = [],
+            InvokeMethodsId = [],
         });
 
         var resultObject = result as OkObjectResult;
@@ -162,7 +162,7 @@ public class MethodControllerTest
             IsSealed = false,
             LocalVariables = [],
             Parameters = [],
-            Methods = []
+            InvokeMethodsId = []
         };
 
         var result = _methodController.UpdateMethod(methodId, updateDto);
@@ -195,7 +195,7 @@ public class MethodControllerTest
             IsSealed = false,
             LocalVariables = [],
             Parameters = [],
-            Methods = []
+            InvokeMethodsId = []
         };
 
         var result = _methodController.UpdateMethod(methodId, updateDto);
