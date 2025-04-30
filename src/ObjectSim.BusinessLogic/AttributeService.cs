@@ -23,7 +23,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
 
     private static void ValidateNullArgs(CreateAttributeArgs args)
     {
-        if (args == null)
+        if(args == null)
         {
             throw new ArgumentNullException(nameof(args), "Attribute cannot be null.");
         }
@@ -31,7 +31,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
 
     private static Attribute.AttributeVisibility ParseVisibility(string visibilityValue)
     {
-        if (!Enum.TryParse(visibilityValue, true, out Attribute.AttributeVisibility visibility))
+        if(!Enum.TryParse(visibilityValue, true, out Attribute.AttributeVisibility visibility))
         {
             throw new ArgumentException($"Invalid visibility value: {visibilityValue}");
         }
