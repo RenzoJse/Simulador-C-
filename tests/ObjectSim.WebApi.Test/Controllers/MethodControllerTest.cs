@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.Controllers;
 using ObjectSim.WebApi.DTOs.In;
@@ -60,7 +61,7 @@ public class MethodControllerTest
     public void CreateMethod_WhenIsValid_MakesValidPost()
     {
         _methodServiceMock
-             .Setup(service => service.CreateMethod(It.IsAny<Method>()))
+             .Setup(service => service.CreateMethod(It.IsAny<CreateMethodArgs>()))
              .Returns(_testMethod);
 
         var result = _methodController.CreateMethod(new MethodDtoIn

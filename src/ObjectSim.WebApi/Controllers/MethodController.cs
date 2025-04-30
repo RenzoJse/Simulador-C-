@@ -32,10 +32,10 @@ public class MethodController(IMethodService methodService) : ControllerBase
         return Ok($"Method with id {id} deleted successfully.");
     }
 
-    /*[HttpPut("{id}")]
+    [HttpPut("{id}")]
     public IActionResult UpdateMethod(Guid id, MethodDtoIn updateMethodDtoIn)
     {
-        var updatedMethod = methodService.Update(id, updateMethodDtoIn.ToEntity());
+        /*var updatedMethod = methodService.Update(id, updateMethodDtoIn.ToEntity());
 
         if(updatedMethod == null)
         {
@@ -43,8 +43,9 @@ public class MethodController(IMethodService methodService) : ControllerBase
         }
 
         var response = new MethodOutModel(updatedMethod);
-        return Ok(response);
-    }*/
+        return Ok(response);*/
+        return Ok();
+    }
 
     [HttpGet("{id}")]
     public IActionResult GetMethodById(Guid id)
