@@ -16,19 +16,32 @@ public class ClassBuilderTest
     private Mock<IClassService>? _classServiceMock;
     private Mock<IAttributeService>? _attributeServiceMock;
 
-    private static readonly Method TestMethod = new Method
+    private static readonly Method TestMethod = new()
     {
         Name = "TestMethod",
     };
 
-    private static readonly CreateDataTypeArgs TestArgsDataType = new CreateDataTypeArgs(
+    private static readonly CreateDataTypeArgs TestArgsDataType = new(
         "int", "value");
 
-    private static readonly CreateAttributeArgs TestCreateAttributeArgs = new CreateAttributeArgs(
+    private static readonly CreateAttributeArgs TestCreateAttributeArgs = new(
         TestArgsDataType,
         "public",
         Guid.NewGuid(),
         "Test"
+    );
+
+    private static readonly CreateMethodArgs TestCreateMethodArgs = new(
+        "TestMethod",
+        "int",
+        "public",
+        false,
+        false,
+        false,
+        Guid.NewGuid(),
+        [],
+        [],
+        []
     );
 
     [TestInitialize]
@@ -180,11 +193,11 @@ public class ClassBuilderTest
 
         _classBuilderTest!.SetParent(parentClass.Id);
 
-        _methodServiceMock!.Setup(m => m.Create(TestMethod)).Returns(TestMethod);
+        _methodServiceMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
 
         _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), TestMethod)).Returns(true);
 
-        Action action = () => _classBuilderTest!.SetMethods([TestMethod]);
+        Action action = () => _classBuilderTest!.SetMethods([TestCreateMethodArgs]);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Parent class is an interface. Should implement all his methods");
@@ -193,19 +206,34 @@ public class ClassBuilderTest
     [TestMethod]
     public void SetMethods_WithMethodsThatCannotBeAdded_DoesNotSetInvalidMethods()
     {
-        var validMethod = new Method { Name = "ValidMethod" };
-        var invalidMethod = new Method { Name = "InvalidMethod" };
+        var invalidMethodArgs = new CreateMethodArgs(
+            "InvalidMethod",
+            "int",
+            "public",
+            false,
+            false,
+            false,
+            Guid.NewGuid(),
+            [],
+            [],
+            []
+        );
 
-        _methodServiceMock!.Setup(m => m.Create(validMethod)).Returns(validMethod);
-        _methodServiceMock!.Setup(m => m.Create(invalidMethod)).Returns(invalidMethod);
-        _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), validMethod)).Returns(true);
-        _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), invalidMethod)).Returns(false);
+        var inValidMethod = new Method
+        {
+            Name = "InvalidMethod",
+        };
 
-        _classBuilderTest!.SetMethods([validMethod, invalidMethod]);
+        _methodServiceMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
+        _methodServiceMock!.Setup(m => m.CreateMethod(invalidMethodArgs)).Returns(inValidMethod);
+        _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), TestMethod)).Returns(true);
+        _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), inValidMethod)).Returns(false);
 
-        _classBuilderTest.GetResult().Methods.Should().HaveCount(1);
-        _classBuilderTest.GetResult().Methods.Should().Contain(validMethod);
-        _classBuilderTest.GetResult().Methods.Should().NotContain(invalidMethod);
+        _classBuilderTest!.SetMethods([TestCreateMethodArgs, invalidMethodArgs]);
+
+        _classBuilderTest!.GetResult().Methods.Should().HaveCount(1);
+        _classBuilderTest.GetResult().Methods.Should().Contain(TestMethod);
+        _classBuilderTest.GetResult().Methods.Should().NotContain(inValidMethod);
     }
 
     #endregion
@@ -216,16 +244,30 @@ public class ClassBuilderTest
     public void SetMethods_WithValidMethods_SetMethods()
     {
         var method1 = new Method { Name = "Method1" };
+
+        var methodCreateArgs2 = new CreateMethodArgs(
+            "Method2",
+            "int",
+            "public",
+            false,
+            false,
+            false,
+            Guid.NewGuid(),
+            [],
+            [],
+            []
+        );
+
         var method2 = new Method { Name = "Method2" };
 
-        _methodServiceMock!.Setup(m => m.Create(method1)).Returns(method1);
-        _methodServiceMock!.Setup(m => m.Create(method2)).Returns(method2);
+        _methodServiceMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(method1);
+        _methodServiceMock!.Setup(m => m.CreateMethod(methodCreateArgs2)).Returns(method2);
         _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), method1)).Returns(true);
         _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), method2)).Returns(true);
 
-        _classBuilderTest!.SetMethods([method1, method2]);
+        _classBuilderTest!.SetMethods([TestCreateMethodArgs, methodCreateArgs2]);
 
-        _classBuilderTest.GetResult().Methods.Should().HaveCount(2);
+        _classBuilderTest!.GetResult().Methods.Should().HaveCount(2);
         _classBuilderTest.GetResult().Methods.Should().Contain(method1);
         _classBuilderTest.GetResult().Methods.Should().Contain(method2);
     }
@@ -238,6 +280,8 @@ public class ClassBuilderTest
             Name = "Method",
             Abstract = true,
         };
+
+        TestCreateMethodArgs.IsAbstract = true;
 
         var parentClass = new Class
         {
@@ -255,10 +299,10 @@ public class ClassBuilderTest
 
         _classBuilderTest!.SetParent(parentClass.Id);
 
-        _methodServiceMock!.Setup(m => m.Create(interfaceMethod)).Returns(interfaceMethod);
+        _methodServiceMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(interfaceMethod);
         _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), interfaceMethod)).Returns(true);
 
-        _classBuilderTest!.SetMethods([interfaceMethod]);
+        _classBuilderTest!.SetMethods([TestCreateMethodArgs]);
 
         _classBuilderTest.GetResult().Methods.Should().HaveCount(1);
         _classBuilderTest.GetResult().Methods.Should().Contain(interfaceMethod);

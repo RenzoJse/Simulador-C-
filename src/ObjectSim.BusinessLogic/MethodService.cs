@@ -1,32 +1,72 @@
 ﻿using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodService(IRepository<Method> methodRepository) : IMethodService
+public class MethodService(IRepository<Method> methodRepository, IClassService classService) : IMethodService
 {
-    public Method Create(Method Entity)
+    public Method CreateMethod(CreateMethodArgs methodsArgs)
     {
-        var existMethod = methodRepository.Exists(m => m.Name == Entity.Name);
-        if(existMethod)
-        {
-            throw new Exception("Method already exist");
-        }
+        ValidateNullMethodArgs(methodsArgs);
 
-        var methodToAdd = new Method
+        var method = BuildMethod(methodsArgs);
+
+        classService.AddMethod(methodsArgs.ClassId, method);
+
+        methodRepository.Add(method);
+
+        return method;
+    }
+
+    private static void ValidateNullMethodArgs(CreateMethodArgs methodsArgs)
+    {
+        if (methodsArgs is null)
         {
-            Name = Entity.Name,
-            Type = Entity.Type,
-            Abstract = Entity.Abstract,
-            IsSealed = Entity.IsSealed,
-            Accessibility = Entity.Accessibility,
-            Parameters = Entity.Parameters,
-            IsOverride = Entity.IsOverride,
-            LocalVariables = Entity.LocalVariables,
+            throw new ArgumentNullException(nameof(methodsArgs), "Method arguments cannot be null.");
+        }
+    }
+
+    private Method BuildMethod(CreateMethodArgs methodsArgs)
+    {
+        var method = new Method
+        {
+            Name = methodsArgs.Name,
+            ClassId = methodsArgs.ClassId,
+            Class = classService.GetById(methodsArgs.ClassId),
+            Abstract = methodsArgs.IsAbstract ?? false,
+            IsSealed = methodsArgs.IsSealed ?? false,
+            IsOverride = methodsArgs.IsOverride ?? false,
+            //Type = methodsArgs.Type, No se puede hacer aun.
+            Parameters = methodsArgs.Parameters,
+            LocalVariables = methodsArgs.LocalVariables,
+            MethodsInvoke = GetInvokeMethods(methodsArgs.InvokeMethods)
         };
 
-        methodRepository.Add(methodToAdd);
-        return methodToAdd;
+        return method;
+    }
+
+    private List<Method> GetInvokeMethods(List<Guid> invokeMethodIds)
+    {
+        if (invokeMethodIds.Count == 0)
+        {
+            return [];
+        }
+
+        var invokeMethods = new List<Method>();
+
+        foreach (var methodId in invokeMethodIds)
+        {
+            var invokeMethod = methodRepository.Get(m => m.Id == methodId);
+            if (invokeMethod == null)
+            {
+                throw new Exception($"Method with ID {methodId} not found.");
+            }
+
+            invokeMethods.Add(invokeMethod);
+        }
+
+        return invokeMethods;
     }
 
     public bool Delete(Guid id)

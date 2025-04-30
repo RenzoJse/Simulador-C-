@@ -84,7 +84,7 @@ public class ClassServiceTest
 
         var strategies = new List<IBuilderStrategy> { _builderStrategyMock!.Object };
 
-        _classServiceTest = new ClassService(strategies, _classRepositoryMock.Object, _attributeServiceMock.Object);
+        _classServiceTest = new ClassService(strategies, _classRepositoryMock.Object);
     }
 
     [TestCleanup]
@@ -114,7 +114,7 @@ public class ClassServiceTest
         var classBuilder = GetMockedBuilder();
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
-        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>(), It.IsAny<IAttributeService>())).Returns(classBuilder);
+        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>())).Returns(classBuilder);
 
         _args.Name = null;
         _classServiceTest!.CreateClass(_args);
@@ -144,7 +144,7 @@ public class ClassServiceTest
 
         var classBuilder = GetMockedBuilder();
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
-        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>(), It.IsAny<IAttributeService>())).Returns(classBuilder);
+        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>())).Returns(classBuilder);
 
         Action action = () => _classServiceTest!.CreateClass(argsWithNullAttributes);
 
@@ -161,7 +161,7 @@ public class ClassServiceTest
         var classBuilder = GetMockedBuilder();
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(_args)).Returns(true);
-        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>(), It.IsAny<IAttributeService>())).Returns(classBuilder);
+        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>())).Returns(classBuilder);
         _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c);
 
         Action action = () => _classServiceTest!.CreateClass(_args);
@@ -176,7 +176,7 @@ public class ClassServiceTest
         var classBuilder = GetMockedBuilder();
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
-        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>(), It.IsAny<IAttributeService>())).Returns(classBuilder);
+        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>())).Returns(classBuilder);
         _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c).Verifiable();
 
         Action action = () => _classServiceTest!.CreateClass(_args);
@@ -198,7 +198,7 @@ public class ClassServiceTest
         var classBuilder = GetMockedBuilder();
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
-        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>(), It.IsAny<IAttributeService>())).Returns(classBuilder);
+        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>())).Returns(classBuilder);
         _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c).Verifiable();
 
         var result = _classServiceTest!.CreateClass(_args);

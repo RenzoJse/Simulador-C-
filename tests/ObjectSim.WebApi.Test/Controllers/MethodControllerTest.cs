@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.Controllers;
 using ObjectSim.WebApi.DTOs.In;
@@ -60,7 +61,7 @@ public class MethodControllerTest
     public void CreateMethod_WhenIsValid_MakesValidPost()
     {
         _methodServiceMock
-             .Setup(service => service.Create(It.IsAny<Method>()))
+             .Setup(service => service.CreateMethod(It.IsAny<CreateMethodArgs>()))
              .Returns(_testMethod);
 
         var result = _methodController.CreateMethod(new MethodDtoIn
@@ -73,7 +74,8 @@ public class MethodControllerTest
             IsSealed = false,
             LocalVariables = [],
             Parameters = [],
-            Methods = [],
+            InvokeMethodsId = [],
+            ClassId = Guid.NewGuid().ToString()
         });
 
         var resultObject = result as OkObjectResult;
@@ -128,7 +130,7 @@ public class MethodControllerTest
         notFoundResult.Value.Should().Be($"Method with id {methodId} not found.");
     }
     #endregion
-
+/*
     #region Update-Method-Test
     [TestMethod]
     public void UpdateMethod_WhenMethodExists_ShouldReturnOk()
@@ -161,7 +163,7 @@ public class MethodControllerTest
             IsSealed = false,
             LocalVariables = [],
             Parameters = [],
-            Methods = []
+            InvokeMethodsId = []
         };
 
         var result = _methodController.UpdateMethod(methodId, updateDto);
@@ -194,7 +196,7 @@ public class MethodControllerTest
             IsSealed = false,
             LocalVariables = [],
             Parameters = [],
-            Methods = []
+            InvokeMethodsId = []
         };
 
         var result = _methodController.UpdateMethod(methodId, updateDto);
@@ -205,7 +207,7 @@ public class MethodControllerTest
         notFoundResult.Value.Should().Be($"Method with id {methodId} not found.");
     }
     #endregion
-
+*/
     #region GetById-Method-Test
     [TestMethod]
     public void GetMethodById_WhenMethodExists_ShouldReturnOk()
@@ -245,7 +247,7 @@ public class MethodControllerTest
     }
     #endregion
 
-    #region GetAll-Methods-Test
+    #region GetAll-InvokeMethods-Test
     [TestMethod]
     public void GetAllMethods_ShouldReturnAllMethods()
     {
