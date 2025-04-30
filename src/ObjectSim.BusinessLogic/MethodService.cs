@@ -4,7 +4,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodService(IRepository<Method> methodRepository) : IMethodService
+public class MethodService(IRepository<Method> methodRepository, IClassService classService) : IMethodService
 {
     public Method CreateMethod(CreateMethodArgs methodsArgs)
     {
@@ -13,9 +13,12 @@ public class MethodService(IRepository<Method> methodRepository) : IMethodServic
             throw new ArgumentNullException(nameof(methodsArgs), "Method arguments cannot be null.");
         }
 
+        var classObj = classService.GetById(methodsArgs.ClassId);
+
         var method = new Method
         {
             ClassId = methodsArgs.ClassId,
+            Class = classObj,
             Name = methodsArgs.Name,
             Abstract = methodsArgs.IsAbstract ?? false,
             IsSealed = methodsArgs.IsSealed ?? false,
@@ -23,6 +26,8 @@ public class MethodService(IRepository<Method> methodRepository) : IMethodServic
             LocalVariables = methodsArgs.LocalVariables,
             MethodsInvoke = methodsArgs.InvokeMethods
         };
+
+        classService.AddMethod(methodsArgs.ClassId, method);
 
         return method;
     }

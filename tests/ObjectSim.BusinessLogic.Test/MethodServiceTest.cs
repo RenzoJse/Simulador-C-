@@ -4,6 +4,7 @@ using Moq;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
+using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic.Test;
 
@@ -11,10 +12,13 @@ namespace ObjectSim.BusinessLogic.Test;
 public class MethodServiceTest
 {
     private Mock<IRepository<Method>>? _methodRepositoryMock;
+    private Mock<IClassService>? _classServiceMock;
     private MethodService? _methodService;
-    private static readonly Guid ClassId = Guid.NewGuid();
     private Method? _testMethod;
-    private CreateMethodArgs _testCreateMethodArgs = new CreateMethodArgs(
+
+    private static readonly Guid ClassId = Guid.NewGuid();
+
+    private readonly CreateMethodArgs _testCreateMethodArgs = new CreateMethodArgs(
         "TestMethod",
         "string",
         "public",
@@ -31,7 +35,8 @@ public class MethodServiceTest
     public void Initialize()
     {
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
-        _methodService = new MethodService(_methodRepositoryMock.Object);
+        _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
+        _methodService = new MethodService(_methodRepositoryMock.Object, _classServiceMock.Object);
         _testMethod = new Method
         {
             Id = ClassId,
@@ -68,16 +73,17 @@ public class MethodServiceTest
     }
 
     [TestMethod]
-    public void CreateMethod_WhenMethodAlreadyExistsInClass_ShouldThrowException()
+    public void CreateMethod_WhenMethodAlreadyExistsInClass_ThrowsException()
     {
-        _methodRepositoryMock!
-            .Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>()))
-            .Returns(true);
+        _classServiceMock!.Setup(cs => cs.GetById(It.IsAny<Guid>()))
+            .Returns(new Class { Id = ClassId });
+
+        _classServiceMock!.Setup(cs => cs.AddMethod(It.IsAny<Guid>(), It.IsAny<Method>()))
+            .Throws(new InvalidOperationException());
 
         Action act = () => _methodService!.CreateMethod(_testCreateMethodArgs);
 
-        act.Should().Throw<InvalidOperationException>()
-            .WithMessage("Method already exists in class.");
+        act.Should().Throw<InvalidOperationException>();
     }
 
     #endregion
