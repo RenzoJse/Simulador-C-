@@ -225,5 +225,29 @@ public class AttributeControllerTest
         Assert.IsNotNull(badRequest);
         Assert.AreEqual(400, badRequest.StatusCode);
     }
+    [TestMethod]
+    public void GetById_ValidId_ShouldReturnAttribute()
+    {
+        var id = Guid.NewGuid();
+        var attribute = new Domain.Attribute
+        {
+            Id = id,
+            Name = "Test",
+            ClassId = Guid.NewGuid(),
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            DataType = ReferenceType.Create("string")
+        };
+
+        _attributeServiceMock
+            .Setup(s => s.GetById(id))
+            .Returns(attribute);
+
+        var result = _attributeController.GetById(id);
+
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        var dto = okResult.Value as AttributeDtoOut;
+        Assert.IsNotNull(dto);
+    }
 
 }
