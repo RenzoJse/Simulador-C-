@@ -42,23 +42,32 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
             LocalVariables = methodsArgs.LocalVariables
         };
 
-        List<Method> invokeMethodList = [];
+        method.MethodsInvoke = GetInvokeMethods(methodsArgs.InvokeMethods);
 
-        foreach (var methodId in methodsArgs.InvokeMethods)
+        return method;
+    }
+
+    private List<Method> GetInvokeMethods(List<Guid> invokeMethodIds)
+    {
+        if (invokeMethodIds.Count == 0)
+        {
+            return [];
+        }
+
+        var invokeMethods = new List<Method>();
+
+        foreach (var methodId in invokeMethodIds)
         {
             var invokeMethod = methodRepository.Get(m => m.Id == methodId);
-            if (invokeMethod != null)
-            {
-                invokeMethodList.Add(method);
-            }
-            else
+            if (invokeMethod == null)
             {
                 throw new Exception($"Method with ID {methodId} not found.");
             }
+
+            invokeMethods.Add(invokeMethod);
         }
 
-        method.MethodsInvoke = invokeMethodList;
-        return method;
+        return invokeMethods;
     }
 
     public bool Delete(Guid id)
