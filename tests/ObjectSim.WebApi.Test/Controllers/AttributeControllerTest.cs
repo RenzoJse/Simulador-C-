@@ -130,6 +130,38 @@ public class AttributeControllerTest
         Assert.IsNotNull(badRequest);
         Assert.AreEqual(400, badRequest.StatusCode);
     }
+    [TestMethod]
+    public void Create_ShouldReturnCreatedAtAction_WithCorrectActionName()
+    {
+        var modelIn = new CreateAttributeDtoIn
+        {
+            Name = "TestAttr",
+            Visibility = "Public",
+            DataTypeName = "string",
+            DataTypeKind = "Reference",
+            ClassId = Guid.NewGuid()
+        };
+
+        var domainAttr = new Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttr",
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            DataType = ReferenceType.Create("string"),
+            ClassId = modelIn.ClassId
+        };
+
+        _attributeServiceMock
+            .Setup(s => s.CreateAttribute(It.IsAny<CreateAttributeArgs>()))
+            .Returns(domainAttr);
+
+        var result = _attributeController.Create(modelIn);
+
+        var created = result as CreatedAtActionResult;
+        Assert.IsNotNull(created);
+        Assert.AreEqual("Create", created.ActionName);
+        Assert.AreEqual(domainAttr.Id, ((AttributeDtoOut)created.Value!).Id);
+    }
 
 
 }
