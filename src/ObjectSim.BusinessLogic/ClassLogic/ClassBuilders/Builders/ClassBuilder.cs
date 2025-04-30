@@ -14,14 +14,7 @@ public class ClassBuilder(IMethodService methodService, IClassService classServi
         base.SetAttributes(attributes);
 
         List<Attribute> newAttributes = [];
-        foreach(var attr in attributes)
-        {
-            var newAttribute = attributeService.CreateAttribute(attr);
-            if(_classService.CanAddAttribute(Result, newAttribute))
-            {
-                newAttributes.Add(newAttribute);
-            }
-        }
+        newAttributes.AddRange(attributes.Select(attributeService.CreateAttribute).Where(newAttribute => _classService.CanAddAttribute(Result, newAttribute)));
 
         Result.Attributes = newAttributes;
     }
@@ -31,25 +24,14 @@ public class ClassBuilder(IMethodService methodService, IClassService classServi
         base.SetMethods(methods);
 
         List<Method> newMethods = [];
-        foreach(var method in methods)
-        {
-            var newMethod = methodService.Create(method);
-            if(_classService.CanAddMethod(Result, newMethod))
-            {
-                newMethods.Add(newMethod);
-            }
-        }
+        newMethods.AddRange(methods.Select(methodService.Create).Where(newMethod => _classService.CanAddMethod(Result, newMethod)));
 
         var parent = Result.Parent;
         if(parent is not null && (bool)parent.IsInterface!)
         {
-            foreach(var parentMethod in parent.Methods!)
+            if (parent.Methods!.Select(parentMethod => newMethods.Any(m => m.Name == parentMethod.Name)).Any(isImplemented => !isImplemented))
             {
-                var isImplemented = newMethods.Any(m => m.Name == parentMethod.Name);
-                if(!isImplemented)
-                {
-                    throw new ArgumentException("Parent class is an interface. Should implement all his methods");
-                }
+                throw new ArgumentException("Parent class is an interface. Should implement all his methods");
             }
         }
 
