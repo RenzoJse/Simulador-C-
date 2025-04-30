@@ -303,10 +303,9 @@ public class MethodTest
     {
         var method = new Method();
 
-        Action act = () => method.InvokeMethod(null!);
+        Action act = () => Method.InvokeMethod(null!);
 
-        act.Should().Throw<ArgumentNullException>()
-            .WithMessage("Value cannot be null. (Parameter 'method')");
+        act.Should().Throw<ArgumentNullException>(nameof(method), "InvokeMethod cannot be null.");
     }
 
     #endregion

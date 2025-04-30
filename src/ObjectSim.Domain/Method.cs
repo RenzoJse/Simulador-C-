@@ -96,7 +96,25 @@ public class Method
     #endregion
 
     #region MethodsInvoke
-    public List<Method> MethodsInvoke { get; set; } = [];
+
+    private List<Method> _methodsInvoke = [];
+
+    public List<Method> MethodsInvoke
+    {
+        get => _methodsInvoke;
+        set
+        {
+            _methodsInvoke = value;
+        }
+    }
+
+    public static void InvokeMethod(Method method)
+    {
+        if (method == null)
+        {
+            throw new ArgumentNullException(nameof(method), "InvokeMethod cannot be null.");
+        }
+    }
 
     #endregion
 
