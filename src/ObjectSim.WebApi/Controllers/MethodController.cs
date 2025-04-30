@@ -70,6 +70,7 @@ public class MethodController(IMethodService methodService) : ControllerBase
         return Ok(response);
     }
 
+
     [HttpPost("{methodId}/parameters")]
     public IActionResult AddParameter(Guid methodId, ParameterDtoIn dto)
     {
@@ -78,6 +79,20 @@ public class MethodController(IMethodService methodService) : ControllerBase
             var parameter = methodService.AddParameter(methodId, dto.ToEntity());
             var response = new ParameterOutModel(parameter);
             return Ok(response);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost("{methodId}/local-variables")]
+    public IActionResult AddLocalVariable(Guid methodId, LocalVariableDtoIn dto)
+    {
+        try
+        {
+            var localVar = methodService.AddLocalVariable(methodId, dto.ToEntity());
+            return Ok(localVar);
         }
         catch(Exception ex)
         {

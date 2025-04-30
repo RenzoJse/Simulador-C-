@@ -3,5 +3,5 @@
 public class CreateDataTypeArgs(
     string name)
 {
-    public string Name { get; set; } = name;
+    public string? Name { get; set; } = name;
 }

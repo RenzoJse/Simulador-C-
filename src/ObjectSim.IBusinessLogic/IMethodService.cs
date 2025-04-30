@@ -10,4 +10,5 @@ public interface IMethodService
     Method GetById(Guid id);
     Method Update(Guid id, Method entity);
     Parameter AddParameter(Guid methodId, Parameter parameter);
+    LocalVariable AddLocalVariable(Guid methodId, LocalVariable localVariable);
 }
