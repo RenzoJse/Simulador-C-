@@ -13,6 +13,10 @@ public class AttributeController(IAttributeService attributeService) : Controlle
     [HttpPost]
     public IActionResult Create([FromBody] CreateAttributeDtoIn modelIn)
     {
+        if(modelIn == null)
+        {
+            return BadRequest();
+        }
         var attribute = _attributeService.CreateAttribute(modelIn.ToArgs());
 
         var response = AttributeDtoOut.ToInfo(attribute);
