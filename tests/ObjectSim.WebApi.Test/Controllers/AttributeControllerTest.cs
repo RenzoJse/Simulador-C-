@@ -162,6 +162,41 @@ public class AttributeControllerTest
         Assert.AreEqual("Create", created.ActionName);
         Assert.AreEqual(domainAttr.Id, ((AttributeDtoOut)created.Value!).Id);
     }
+    [TestMethod]
+    public void Update_ValidModel_ShouldReturnUpdatedAttribute()
+    {
+        var id = Guid.NewGuid();
+        var modelIn = new CreateAttributeDtoIn
+        {
+            Name = "ColorUpdated",
+            Visibility = "Private",
+            DataTypeName = "bool",
+            DataTypeKind = "Value",
+            ClassId = Guid.NewGuid()
+        };
+
+        var updatedAttribute = new Domain.Attribute
+        {
+            Id = id,
+            Name = "ColorUpdated",
+            Visibility = Domain.Attribute.AttributeVisibility.Private,
+            DataType = Domain.ValueType.Create("bool"),
+            ClassId = modelIn.ClassId
+        };
+
+        _attributeServiceMock
+            .Setup(s => s.UpdateAttribute(id, It.IsAny<CreateAttributeArgs>()))
+            .Returns(updatedAttribute);
+
+        var result = _attributeController.Update(id, modelIn);
+
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        var dtoOut = okResult.Value as AttributeDtoOut;
+        Assert.IsNotNull(dtoOut);
+
+        _attributeServiceMock.Verify(s => s.UpdateAttribute(id, It.IsAny<CreateAttributeArgs>()), Times.Once);
+    }
 
 
 }
