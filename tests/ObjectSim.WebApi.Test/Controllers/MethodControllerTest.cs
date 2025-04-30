@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using ObjectSim.BusinessLogic;
+using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.Controllers;
@@ -265,6 +267,88 @@ public class MethodControllerTest
         response.Should().NotBeNull();
         response!.Count.Should().Be(methods.Count);
         response.First().Name.Should().Be(_testMethod.Name);
+    }
+    #endregion
+
+    #region Add-Parameter-Test
+    [TestMethod]
+    public void AddParameter_WhenValid_ShouldAddToMethod()
+    {
+        var newParam = new Parameter
+        {
+            Name = "testParam1",
+            Type = Parameter.ParameterDataType.String
+        };
+
+        var methodRepoMock = new Mock<IRepository<Method>>();
+        methodRepoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+                      .Returns(_testMethod);
+
+        var service = new MethodService(methodRepoMock.Object);
+
+        var result = service.AddParameter(_testMethod.Id, newParam);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("testParam1");
+        _testMethod.Parameters.Should().ContainSingle(p => p.Name == "testParam1");
+        methodRepoMock.Verify(r => r.Update(_testMethod), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddParameter_WhenMethodNotFound_ShouldThrow()
+    {
+        var methodId = Guid.NewGuid();
+        var newParam = new Parameter
+        {
+            Name = "testParam",
+            Type = Parameter.ParameterDataType.Int
+        };
+
+        var methodRepoMock = new Mock<IRepository<Method>>();
+        methodRepoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+                      .Returns((Method?)null);
+
+        var service = new MethodService(methodRepoMock.Object);
+
+        Action act = () => service.AddParameter(methodId, newParam);
+
+        act.Should().Throw<Exception>().WithMessage("Method not found");
+    }
+
+    [TestMethod]
+    public void AddParameter_WhenDuplicateName_ShouldThrow()
+    {
+        var methodId = Guid.NewGuid();
+        var existingParam = new Parameter
+        {
+            Name = "testParam1",
+            Type = Parameter.ParameterDataType.Int
+        };
+
+        var method = new Method
+        {
+            Id = methodId,
+            Name = "MethodA",
+            Type = Method.MethodDataType.Int,
+            Accessibility = Method.MethodAccessibility.Public,
+            Parameters = new List<Parameter> { existingParam }
+        };
+
+        var newParam = new Parameter
+        {
+            Name = "testParam1",
+            Type = Parameter.ParameterDataType.Int
+        };
+
+        var methodRepoMock = new Mock<IRepository<Method>>();
+        methodRepoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+                      .Returns(method);
+
+        var service = new MethodService(methodRepoMock.Object);
+
+        Action act = () => service.AddParameter(methodId, newParam);
+
+        act.Should().Throw<Exception>().WithMessage("Parameter already exists in this method");
     }
     #endregion
 }
