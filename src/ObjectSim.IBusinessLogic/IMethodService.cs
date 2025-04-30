@@ -9,4 +9,5 @@ public interface IMethodService
     bool Delete(Guid id);
     Method GetById(Guid id);
     Method Update(Guid id, Method entity);
+    Parameter AddParameter(Guid methodId, Parameter parameter);
 }
