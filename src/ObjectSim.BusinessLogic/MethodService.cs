@@ -13,21 +13,23 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
             throw new ArgumentNullException(nameof(methodsArgs), "Method arguments cannot be null.");
         }
 
-        var classObj = classService.GetById(methodsArgs.ClassId);
-
         var method = new Method
         {
-            ClassId = methodsArgs.ClassId,
-            Class = classObj,
             Name = methodsArgs.Name,
+            ClassId = methodsArgs.ClassId,
+            Class = classService.GetById(methodsArgs.ClassId),
             Abstract = methodsArgs.IsAbstract ?? false,
             IsSealed = methodsArgs.IsSealed ?? false,
+            IsOverride = methodsArgs.IsOverride ?? false,
+            //Type = methodsArgs.Type, No se puede hacer aun.
             Parameters = methodsArgs.Parameters,
             LocalVariables = methodsArgs.LocalVariables,
             MethodsInvoke = methodsArgs.InvokeMethods
         };
 
         classService.AddMethod(methodsArgs.ClassId, method);
+
+        methodRepository.Add(method);
 
         return method;
     }
