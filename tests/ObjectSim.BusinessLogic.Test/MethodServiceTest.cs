@@ -260,7 +260,7 @@ public class MethodServiceTest
             Type = Parameter.ParameterDataType.String
         };
 
-        testMethod.Parameters = new List<Parameter> { existing };
+        testMethod.Parameters = [existing];
 
         var repoMock = new Mock<IRepository<Method>>();
         repoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
@@ -334,7 +334,7 @@ public class MethodServiceTest
             Type = LocalVariable.LocalVariableDataType.Bool
         };
 
-        testMethod.LocalVariables = new List<LocalVariable> { existing };
+        testMethod.LocalVariables = [existing];
 
         var methodRepoMock = new Mock<IRepository<Method>>();
         methodRepoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
