@@ -109,7 +109,7 @@ public class Method
                 throw new ArgumentNullException(nameof(value), "InvokeMethod cannot be null.");
             }
 
-            if (value.Any(method => method.Class != Class))
+            if (value.Any(method => method.Class != Class) || value.Any(method => method.Class != null && Class!.Methods!.Contains(method)))
             {
                 throw new ArgumentException("The invoked method must be reachable from the current method.");
             }
