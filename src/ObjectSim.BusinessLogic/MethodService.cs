@@ -13,6 +13,17 @@ public class MethodService(IRepository<Method> methodRepository) : IMethodServic
             throw new ArgumentNullException(nameof(methodsArgs), "Method arguments cannot be null.");
         }
 
+        var method = new Method
+        {
+            ClassId = methodsArgs.ClassId,
+            Name = methodsArgs.Name,
+            Abstract = methodsArgs.IsAbstract ?? false,
+            IsSealed = methodsArgs.IsSealed ?? false,
+            Parameters = methodsArgs.Parameters,
+            LocalVariables = methodsArgs.LocalVariables,
+            MethodsInvoke = methodsArgs.InvokeMethods
+        };
+
         return null!;
     }
 

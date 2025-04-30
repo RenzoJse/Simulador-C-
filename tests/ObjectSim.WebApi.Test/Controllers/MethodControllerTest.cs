@@ -246,7 +246,7 @@ public class MethodControllerTest
     }
     #endregion
 
-    #region GetAll-Methods-Test
+    #region GetAll-InvokeMethods-Test
     [TestMethod]
     public void GetAllMethods_ShouldReturnAllMethods()
     {

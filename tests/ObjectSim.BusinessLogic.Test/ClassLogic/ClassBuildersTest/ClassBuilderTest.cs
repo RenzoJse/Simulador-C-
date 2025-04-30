@@ -38,6 +38,7 @@ public class ClassBuilderTest
         false,
         false,
         false,
+        Guid.NewGuid(),
         [],
         [],
         []
@@ -212,6 +213,7 @@ public class ClassBuilderTest
             false,
             false,
             false,
+            Guid.NewGuid(),
             [],
             [],
             []
@@ -250,6 +252,7 @@ public class ClassBuilderTest
             false,
             false,
             false,
+            Guid.NewGuid(),
             [],
             [],
             []

@@ -21,6 +21,7 @@ public class MethodServiceTest
         false,
         false,
         false,
+        ClassId,
         [],
         [],
         []
@@ -34,7 +35,7 @@ public class MethodServiceTest
         _testMethod = new Method
         {
             Id = ClassId,
-            Name = "MetodoDePrueba",
+            Name = "TestMethod",
             Type = Method.MethodDataType.String,
             Abstract = false,
             IsSealed = false,
@@ -54,6 +55,16 @@ public class MethodServiceTest
     public void CreateMethod_WithNullArgs_ThrowsException()
     {
         _methodService!.CreateMethod(null!);
+    }
+
+    [TestMethod]
+    public void CreateMethod_WithEmptyArgs_ThrowsException()
+    {
+        var emptyArgs = new CreateMethodArgs("", "", "", null, null, null, Guid.Empty, [], [], []);
+
+        Action act = () => _methodService!.CreateMethod(emptyArgs);
+
+        act.Should().Throw<ArgumentException>();
     }
 
     [TestMethod]

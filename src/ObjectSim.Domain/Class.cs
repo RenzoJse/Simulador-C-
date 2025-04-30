@@ -114,7 +114,7 @@ public class Class
 
     #endregion
 
-    #region Methods
+    #region InvokeMethods
 
     private List<Method>? _methods;
 
@@ -128,7 +128,7 @@ public class Class
             {
                 if(value.Any(method => method.Abstract != true))
                 {
-                    throw new ArgumentException("Methods in an interface must be abstract");
+                    throw new ArgumentException("InvokeMethods in an interface must be abstract");
                 }
             }
 
