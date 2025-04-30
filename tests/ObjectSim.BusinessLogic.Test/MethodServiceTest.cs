@@ -51,7 +51,14 @@ public class MethodServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(Exception))]
-    public void CreateMethod_WhenMethodAlreadyExists_ShouldThrowException()
+    public void CreateMethod_WithNullArgs_ThrowsException()
+    {
+        _methodService!.CreateMethod(null!);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(Exception))]
+    public void CreateMethod_WhenMethodAlreadyExistsInClass_ShouldThrowException()
     {
         _methodRepositoryMock!
             .Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>()))
@@ -65,7 +72,7 @@ public class MethodServiceTest
     #region Success
 
     [TestMethod]
-    public void CreateMethod_WhenValid_ShouldReturnMethod()
+    public void CreateMethod_WhenValid_ReturnsNewMethod()
     {
         _methodRepositoryMock!.Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>())).Returns(false);
         _methodRepositoryMock.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
