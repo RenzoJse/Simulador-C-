@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.Controllers;
 using ObjectSim.WebApi.DTOs.In;
@@ -98,27 +99,28 @@ public class AttributeControllerTest
         {
             Id = Guid.NewGuid(),
             Name = "Color",
-
             Visibility = Domain.Attribute.AttributeVisibility.Public,
             DataType = ReferenceType.Create("string"),
             ClassId = modelIn.ClassId
         };
 
         _attributeServiceMock
-            .Setup(s => s.Create(It.IsAny<Domain.Attribute>()))
+            .Setup(s => s.CreateAttribute(It.IsAny<CreateAttributeArgs>()))
             .Returns(domainAttribute);
 
         var result = _attributeController.Create(modelIn);
 
         var created = result as CreatedAtActionResult;
         Assert.IsNotNull(created);
+
         var outModel = created.Value as AttributeDtoOut;
         Assert.IsNotNull(outModel);
         Assert.AreEqual("Color", outModel.Name);
         Assert.AreEqual("Public", outModel.Visibility);
         Assert.AreEqual("Reference", outModel.DataTypeKind);
         Assert.AreEqual("string", outModel.DataTypeName);
-        _attributeServiceMock.Verify(x => x.Create(It.IsAny<Domain.Attribute>()), Times.Once);
+
+        _attributeServiceMock.Verify(x => x.CreateAttribute(It.IsAny<CreateAttributeArgs>()), Times.Once);
     }
 
 }

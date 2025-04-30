@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ObjectSim.IBusinessLogic;
+using ObjectSim.WebApi.DTOs.In;
+using ObjectSim.WebApi.DTOs.Out;
 
 namespace ObjectSim.WebApi.Controllers;
 [ApiController]
@@ -8,6 +10,15 @@ public class AttributeController(IAttributeService attributeService) : Controlle
 {
     private readonly IAttributeService _attributeService = attributeService;
 
+    [HttpPost]
+    public IActionResult Create([FromBody] CreateAttributeDtoIn modelIn)
+    {
+        var attribute = _attributeService.CreateAttribute(modelIn.ToArgs());
+
+        var response = AttributeDtoOut.ToInfo(attribute);
+
+        return CreatedAtAction(nameof(Create), new { id = response.Id }, response);
+    }
     [HttpGet]
     public IActionResult GetAll()
     {
