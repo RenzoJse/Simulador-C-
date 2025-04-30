@@ -3,5 +3,4 @@
 public class CreateDataTypeArgs(
     string name)
 {
-    string Name { get; set; } = name;
 }

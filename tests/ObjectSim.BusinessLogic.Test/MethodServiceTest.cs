@@ -214,7 +214,7 @@ public class MethodServiceTest
             Abstract = false,
             IsOverride = false,
             IsSealed = false,
-            LocalVariables = new List<LocalVariable>()
+            LocalVariables = []
         };
 
         var newLocalVar = new LocalVariable
@@ -277,7 +277,7 @@ public class MethodServiceTest
             Name = "Method1",
             Type = Method.MethodDataType.String,
             Accessibility = Method.MethodAccessibility.Public,
-            LocalVariables = new List<LocalVariable> { existingLocalVar }
+            LocalVariables = [existingLocalVar]
         };
 
         var newLocalVar = new LocalVariable
