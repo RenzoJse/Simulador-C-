@@ -69,4 +69,18 @@ public class MethodController(IMethodService methodService) : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpPost("{methodId}/local-variables")]
+    public IActionResult AddLocalVariable(Guid methodId, LocalVariableDtoIn dto)
+    {
+        try
+        {
+            var localVar = methodService.AddLocalVariable(methodId, dto.ToEntity());
+            return Ok(localVar);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
