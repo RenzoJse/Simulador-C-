@@ -125,6 +125,22 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
         return method;
     }
 
+    public Parameter AddParameter(Guid methodId, Parameter parameter)
+    {
+        var method = methodRepository.Get(m => m.Id == methodId)
+            ?? throw new Exception("Method not found");
+
+        if(method.Parameters.Any(p => p.Name == parameter.Name))
+        {
+            throw new Exception("Parameter already exists in this method");
+        }
+
+        method.Parameters.Add(parameter);
+        methodRepository.Update(method);
+
+        return parameter;
+    }
+
     public LocalVariable AddLocalVariable(Guid methodId, LocalVariable localVariable)
     {
         var method = methodRepository.Get(m => m.Id == methodId)
