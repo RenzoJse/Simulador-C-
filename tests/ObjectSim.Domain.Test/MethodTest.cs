@@ -5,60 +5,61 @@ namespace ObjectSim.Domain.Test;
 [TestClass]
 public class MethodTest
 {
+    private Method? _testMethod;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        _testMethod = new Method();
+    }
+
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqual()
     {
-        var method = new Method();
-        method.Type = Method.MethodDataType.Decimal;
-        method.Type.Should().Be(Method.MethodDataType.Decimal);
+        _testMethod!.Type = Method.MethodDataType.Decimal;
+        _testMethod.Type.Should().Be(Method.MethodDataType.Decimal);
     }
 
     [TestMethod]
     public void Accessibility_Property_SetAndGet_ShouldBeEqual()
     {
-        var method = new Method();
-        method.Accessibility = Method.MethodAccessibility.ProtectedInternal;
-        method.Accessibility.Should().Be(Method.MethodAccessibility.ProtectedInternal);
+        _testMethod!.Accessibility = Method.MethodAccessibility.ProtectedInternal;
+        _testMethod.Accessibility.Should().Be(Method.MethodAccessibility.ProtectedInternal);
     }
 
     [TestMethod]
     public void MethodDataType_CreateMethod_ShouldSetCorrectly()
     {
-        var method = new Method();
-        method.Type = Method.MethodDataType.String;
-        Assert.AreEqual(Method.MethodDataType.String, method.Type);
+        _testMethod!.Type = Method.MethodDataType.String;
+        Assert.AreEqual(Method.MethodDataType.String, _testMethod.Type);
     }
 
     [TestMethod]
     public void MethodAccessibility_CreateMethod_ShouldSetCorrectly()
     {
-        var method = new Method();
-        method.Accessibility = Method.MethodAccessibility.Public;
-        Assert.AreEqual(Method.MethodAccessibility.Public, method.Accessibility);
+        _testMethod!.Accessibility = Method.MethodAccessibility.Public;
+        Assert.AreEqual(Method.MethodAccessibility.Public, _testMethod.Accessibility);
     }
 
     [TestMethod]
     public void Name_Property_SetAndGet_ShouldBeEqual()
     {
-        var method = new Method();
-        method.Name = "TestMethod";
-        method.Name.Should().Be("TestMethod");
+        _testMethod!.Name = "TestMethod";
+        _testMethod.Name.Should().Be("TestMethod");
     }
 
     [TestMethod]
     public void Id_Property_SetAndGet_ShouldBeEqual()
     {
         var id = Guid.NewGuid();
-        var method = new Method { Id = id };
-        method.Id.Should().Be(id);
+        _testMethod!.Id = id;
+        _testMethod.Id.Should().Be(id);
     }
 
     [TestMethod]
     public void Name_SetToEmpty_ShouldThrowArgumentException()
     {
-        var method = new Method();
-
-        Action act = () => method.Name = string.Empty;
+        Action act = () => _testMethod!.Name = string.Empty;
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or whitespace.");
@@ -303,6 +304,12 @@ public class MethodTest
     public void SetInvokeMethod_WhenMethodsInvokeAreNull_ThrowsNullException()
     {
         var method = new Method { MethodsInvoke = null! };
+    }
+
+    [TestMethod]
+    public void SetInvokeMethod_WhenOtherMethodIsNotInClass_ThrowsException()
+    {
+
     }
 
     #endregion
