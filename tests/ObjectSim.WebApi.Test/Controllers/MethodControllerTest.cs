@@ -1,8 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using ObjectSim.BusinessLogic;
-using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.Controllers;
@@ -293,9 +291,10 @@ public class MethodControllerTest
         ok.Should().NotBeNull();
         ok!.StatusCode.Should().Be(200);
 
-        var returned = ok.Value as Parameter;
+        var returned = ok.Value as ParameterOutModel;
         returned.Should().NotBeNull();
         returned!.Name.Should().Be("testParameter");
+        returned.Type.Should().Be("String");
     }
 
     [TestMethod]
