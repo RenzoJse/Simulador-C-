@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
+using ObjectSim.WebApi.DTOs.In;
+using ObjectSim.WebApi.DTOs.Out;
+using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.WebApi.Controllers;
 [ApiController]
@@ -8,10 +12,69 @@ public class AttributeController(IAttributeService attributeService) : Controlle
 {
     private readonly IAttributeService _attributeService = attributeService;
 
+    [HttpPost]
+    public IActionResult Create([FromBody] CreateAttributeDtoIn modelIn)
+    {
+        if(modelIn == null)
+        {
+            return BadRequest();
+        }
+        var attribute = _attributeService.CreateAttribute(modelIn.ToArgs());
+
+        var response = AttributeDtoOut.ToInfo(attribute);
+
+        return CreatedAtAction(nameof(Create), new { id = response.Id }, response);
+    }
     [HttpGet]
     public IActionResult GetAll()
     {
         var attributes = _attributeService.GetAll();
         return Ok(attributes);
+    }
+    [HttpPut("{id}")]
+    public IActionResult Update(Guid id, [FromBody] CreateAttributeDtoIn modelIn)
+    {
+        if(!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        if(id == Guid.Empty)
+        {
+            return BadRequest("Invalid ID.");
+        }
+        var attributeToUpdate = new Domain.Attribute
+        {
+            Id = id,
+            Name = modelIn.Name,
+            ClassId = modelIn.ClassId,
+            Visibility = Enum.Parse<Domain.Attribute.AttributeVisibility>(modelIn.Visibility),
+            DataType = modelIn.DataTypeKind == "Value"
+                ? ValueType.Create(modelIn.DataTypeName)
+                : ReferenceType.Create(modelIn.DataTypeName)
+        };
+
+        var updated = _attributeService.Update(id, attributeToUpdate);
+        var response = AttributeDtoOut.ToInfo(updated);
+        return Ok(response);
+    }
+    [HttpGet("{id}")]
+    public IActionResult GetById(Guid id)
+    {
+        if(id == Guid.Empty)
+        {
+            return BadRequest("Invalid ID.");
+        }
+
+        try
+        {
+            var attribute = _attributeService.GetById(id);
+            var response = AttributeDtoOut.ToInfo(attribute);
+            return Ok(response);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

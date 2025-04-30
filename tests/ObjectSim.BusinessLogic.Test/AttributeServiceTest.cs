@@ -17,7 +17,7 @@ public class AttributeServiceTest
     private AttributeService? _attributeService;
 
     private static readonly CreateDataTypeArgs TestArgsDataType = new(
-        "int");
+        "int", "reference");
 
     private readonly DataType? _testDataType = ValueType.Create("int");
 
@@ -96,7 +96,7 @@ public class AttributeServiceTest
     public void CreateAttribute_InvalidVisibility_ThrowsException()
     {
         var invalidArgs = new CreateAttributeArgs(
-            new CreateDataTypeArgs("int"),
+            new CreateDataTypeArgs("int", "value"),
             "invalid_visibility",
             Guid.NewGuid(),
             "TestAttribute"
