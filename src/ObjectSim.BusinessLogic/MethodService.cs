@@ -24,7 +24,7 @@ public class MethodService(IRepository<Method> methodRepository) : IMethodServic
             MethodsInvoke = methodsArgs.InvokeMethods
         };
 
-        return null!;
+        return method;
     }
 
     public bool Delete(Guid id)
