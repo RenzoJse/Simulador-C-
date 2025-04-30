@@ -68,14 +68,16 @@ public class MethodServiceTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void CreateMethod_WhenMethodAlreadyExistsInClass_ShouldThrowException()
     {
         _methodRepositoryMock!
             .Setup(repo => repo.Exists(It.IsAny<Expression<Func<Method, bool>>>()))
             .Returns(true);
 
-        _methodService!.CreateMethod(_testCreateMethodArgs);
+        Action act = () => _methodService!.CreateMethod(_testCreateMethodArgs);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Method already exists in class.");
     }
 
     #endregion
