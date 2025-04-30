@@ -8,12 +8,28 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
 {
     public Method CreateMethod(CreateMethodArgs methodsArgs)
     {
-        if(methodsArgs is null)
+        ValidateNullMethodArgs(methodsArgs);
+
+        var method = BuildMethod(methodsArgs);
+
+        classService.AddMethod(methodsArgs.ClassId, method);
+
+        methodRepository.Add(method);
+
+        return method;
+    }
+
+    private static void ValidateNullMethodArgs(CreateMethodArgs methodsArgs)
+    {
+        if (methodsArgs is null)
         {
             throw new ArgumentNullException(nameof(methodsArgs), "Method arguments cannot be null.");
         }
+    }
 
-        var method = new Method
+    private Method BuildMethod(CreateMethodArgs methodsArgs)
+    {
+        return new Method
         {
             Name = methodsArgs.Name,
             ClassId = methodsArgs.ClassId,
@@ -26,12 +42,6 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
             LocalVariables = methodsArgs.LocalVariables,
             MethodsInvoke = methodsArgs.InvokeMethods
         };
-
-        classService.AddMethod(methodsArgs.ClassId, method);
-
-        methodRepository.Add(method);
-
-        return method;
     }
 
     public bool Delete(Guid id)
