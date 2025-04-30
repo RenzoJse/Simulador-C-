@@ -296,5 +296,49 @@ public class MethodControllerTest
         returned.Should().NotBeNull();
         returned!.Name.Should().Be("localV1");
     }
+
+    [TestMethod]
+    public void AddLocalVariable_WhenMethodNotFound_ShouldReturnBadRequest()
+    {
+        var methodId = Guid.NewGuid();
+        var dto = new LocalVariableDtoIn
+        {
+            Name = "lvTest",
+            Type = "Int"
+        };
+
+        _methodServiceMock
+            .Setup(s => s.AddLocalVariable(methodId, It.IsAny<LocalVariable>()))
+            .Throws(new Exception("Method not found"));
+
+        var result = _methodController.AddLocalVariable(methodId, dto);
+
+        var badRequest = result as BadRequestObjectResult;
+        badRequest.Should().NotBeNull();
+        badRequest!.StatusCode.Should().Be(400);
+        badRequest.Value.Should().Be("Method not found");
+    }
+
+    [TestMethod]
+    public void AddLocalVariable_WhenNameAlreadyExists_ShouldReturnBadRequest()
+    {
+        var methodId = Guid.NewGuid();
+        var dto = new LocalVariableDtoIn
+        {
+            Name = "lvDto",
+            Type = "Int"
+        };
+
+        _methodServiceMock
+            .Setup(s => s.AddLocalVariable(methodId, It.IsAny<LocalVariable>()))
+            .Throws(new Exception("LocalVariable already exists in this method"));
+
+        var result = _methodController.AddLocalVariable(methodId, dto);
+
+        var badRequest = result as BadRequestObjectResult;
+        badRequest.Should().NotBeNull();
+        badRequest!.StatusCode.Should().Be(400);
+        badRequest.Value.Should().Be("LocalVariable already exists in this method");
+    }
     #endregion
 }
