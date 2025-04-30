@@ -8,7 +8,12 @@ public class MethodService(IRepository<Method> methodRepository) : IMethodServic
 {
     public Method CreateMethod(CreateMethodArgs methodsArgs)
     {
-        throw new NotImplementedException();
+        if(methodsArgs is null)
+        {
+            throw new ArgumentNullException(nameof(methodsArgs), "Method arguments cannot be null.");
+        }
+
+        return null!;
     }
 
     public bool Delete(Guid id)

@@ -50,7 +50,7 @@ public class MethodServiceTest
     #region Error
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
+    [ExpectedException(typeof(ArgumentNullException))]
     public void CreateMethod_WithNullArgs_ThrowsException()
     {
         _methodService!.CreateMethod(null!);
