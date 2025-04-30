@@ -9,7 +9,7 @@ public class CreateMethodArgs(
     Guid classId,
     List<LocalVariable> localVariables,
     List<Parameter> parameters,
-    List<Method> invokeMethods)
+    List<Guid> invokeMethods)
 {
     public string? Name { get; set; } = name;
 
@@ -21,5 +21,5 @@ public class CreateMethodArgs(
     public Guid ClassId { get; set; } = classId;
     public List<LocalVariable> LocalVariables { get; set; } = localVariables;
     public List<Parameter> Parameters { get; set; } = parameters;
-    public List<Method> InvokeMethods { get; set; } = invokeMethods;
+    public List<Guid> InvokeMethods { get; set; } = invokeMethods;
 }

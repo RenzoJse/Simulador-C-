@@ -29,7 +29,7 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
 
     private Method BuildMethod(CreateMethodArgs methodsArgs)
     {
-        return new Method
+        var method = new Method
         {
             Name = methodsArgs.Name,
             ClassId = methodsArgs.ClassId,
@@ -40,8 +40,25 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
             //Type = methodsArgs.Type, No se puede hacer aun.
             Parameters = methodsArgs.Parameters,
             LocalVariables = methodsArgs.LocalVariables,
-            MethodsInvoke = methodsArgs.InvokeMethods
+            //MethodsInvoke = invokeMethodList
         };
+
+        List<Method> invokeMethodList = [];
+
+        foreach (var methodId in methodsArgs.InvokeMethods)
+        {
+            var invokeMethod = methodRepository.Get(m => m.Id == methodId);
+            if (invokeMethod != null)
+            {
+                invokeMethodList.Add(method);
+            }
+            else
+            {
+                throw new Exception($"Method with ID {methodId} not found.");
+            }
+        }
+
+        return method;
     }
 
     public bool Delete(Guid id)

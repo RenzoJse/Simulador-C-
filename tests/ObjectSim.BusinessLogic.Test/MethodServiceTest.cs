@@ -93,6 +93,21 @@ public class MethodServiceTest
         act.Should().Throw<InvalidOperationException>();
     }
 
+    [TestMethod]
+    [ExpectedException(typeof(Exception))]
+    public void CreateMethod_WhenMethodInvokeMethodsDosentExists_ThrowsException()
+    {
+        _classServiceMock!.Setup(cs => cs.GetById(It.IsAny<Guid>()))
+            .Returns(new Class { Id = ClassId, Name = "TestClass" });
+
+        _methodRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns((Method)null!);
+
+        _testCreateMethodArgs.InvokeMethods = [Guid.NewGuid()];
+
+        _methodService!.CreateMethod(_testCreateMethodArgs);
+    }
+
     #endregion
 
     #region Success
