@@ -267,4 +267,34 @@ public class MethodControllerTest
         response.First().Name.Should().Be(_testMethod.Name);
     }
     #endregion
+
+    #region Add-LocalVariable-Test
+    [TestMethod]
+    public void AddLocalVariable_WhenValid_ShouldAddToMethod()
+    {
+        var methodId = Guid.NewGuid();
+
+        var dto = new LocalVariableDtoIn
+        {
+            Name = "localV1",
+            Type = "Int"
+        };
+
+        var localVarEntity = dto.ToEntity();
+
+        _methodServiceMock
+            .Setup(service => service.AddLocalVariable(methodId, It.IsAny<LocalVariable>()))
+            .Returns(localVarEntity);
+
+        var result = _methodController.AddLocalVariable(methodId, dto);
+
+        var okResult = result as OkObjectResult;
+        okResult.Should().NotBeNull();
+        okResult!.StatusCode.Should().Be(200);
+
+        var returned = okResult.Value as LocalVariable;
+        returned.Should().NotBeNull();
+        returned!.Name.Should().Be("localV1");
+    }
+    #endregion
 }
