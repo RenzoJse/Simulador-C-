@@ -58,4 +58,23 @@ public class AttributeController(IAttributeService attributeService) : Controlle
             var response = AttributeDtoOut.ToInfo(updated);
             return Ok(response);
     }
+    [HttpGet("{id}")]
+    public IActionResult GetById(Guid id)
+    {
+        if(id == Guid.Empty)
+        {
+            return BadRequest("Invalid ID.");
+        }
+
+        try
+        {
+            var attribute = _attributeService.GetById(id);
+            var response = AttributeDtoOut.ToInfo(attribute);
+            return Ok(response);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
