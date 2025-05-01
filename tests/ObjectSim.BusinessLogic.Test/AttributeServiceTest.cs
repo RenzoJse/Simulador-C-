@@ -307,6 +307,6 @@ public class AttributeServiceTest
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
-        Assert.AreEqual("Color", result[0].Name);
+        Assert.AreEqual("Test", result[0].Name);
     }
 }

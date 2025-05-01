@@ -109,4 +109,19 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
         attributeRepository.Update(existing);
         return existing;
     }
+    public List<Attribute> GetByClassId(Guid classId)
+    {
+        if(classId == Guid.Empty)
+        {
+            throw new ArgumentException("ClassId must be a valid non-empty GUID.");
+        }
+
+        var attributes = attributeRepository.GetAll(a => a.ClassId == classId);
+        if(!attributes.Any())
+        {
+            throw new KeyNotFoundException($"No attributes found for ClassId: {classId}");
+        }
+
+        return attributes.ToList();
+    }
 }
