@@ -7,7 +7,7 @@ public class ValueTypeTest
 {
     private string _validType = null!;
     private string _validName = null!;
-    private List<Method> _emptyMethods = null!;
+    private List<Guid> _emptyMethods = null!;
     private List<Method> _methods = null!;
 
     [TestInitialize]
@@ -61,7 +61,7 @@ public class ValueTypeTest
         action.Should().Throw<ArgumentNullException>()
             .WithMessage("Name cannot be null or empty. (Parameter 'name')");
     }
-    
+
     [TestMethod]
     public void CreateValueType_WhenNameIsTooLong_ShouldThrowArgumentException()
     {
@@ -75,12 +75,12 @@ public class ValueTypeTest
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be longer than 20 characters.");
     }
-    
+
     [TestMethod]
     public void CreateValueType_WhenNameHasSymbols_ShouldThrowArgumentException()
     {
         const string name = "Invalid@Name";
-        
+
         Action action = () =>
         {
             var valueType = new ValueType(name, _validType, _emptyMethods);
@@ -89,7 +89,7 @@ public class ValueTypeTest
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot contain special characters.");
     }
-    
+
     [TestMethod]
     public void CreateValueType_WhenNameHasNumbers_ShouldThrowArgumentException()
     {
@@ -103,7 +103,7 @@ public class ValueTypeTest
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot contain special characters.");
     }
-    
+
     [TestMethod]
     public void CreateValueType_WhenNameHasSpaces_ShouldThrowArgumentException()
     {
@@ -117,11 +117,11 @@ public class ValueTypeTest
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot contain special characters.");
     }
-    
+
     [TestMethod]
     public void CreateValueType_WhenMethodsAreNull_ShouldThrowArgumentNullException()
     {
-        List<Method> methods = null!;
+        List<Guid> methods = null!;
 
         Action action = () =>
         {
@@ -144,7 +144,7 @@ public class ValueTypeTest
         valueType.Should().NotBeNull();
         valueType.Type.Should().Be(_validType);
     }
-    
+
     [TestMethod]
     public void CreateValueType_WhenNameIsValid_ShouldReturnValueType()
     {
