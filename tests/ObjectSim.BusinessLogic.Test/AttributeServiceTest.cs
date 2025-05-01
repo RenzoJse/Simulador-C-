@@ -309,4 +309,10 @@ public class AttributeServiceTest
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual("Test", result[0].Name);
     }
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void GetByClassId_ShouldThrow_WhenClassIdIsEmpty()
+    {
+        _attributeService.GetByClassId(Guid.Empty);
+    }
 }
