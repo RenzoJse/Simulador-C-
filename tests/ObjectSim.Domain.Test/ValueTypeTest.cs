@@ -89,6 +89,20 @@ public class ValueTypeTest
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot contain special characters.");
     }
+    
+    [TestMethod]
+    public void CreateValueType_WhenNameHasNumbers_ShouldThrowArgumentException()
+    {
+        const string name = "Invalid123Name";
+
+        Action action = () =>
+        {
+            var valueType = new ValueType(name, _validType, _emptyMethods);
+        };
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot contain special characters.");
+    }
 
     #endregion
 
