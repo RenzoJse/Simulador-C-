@@ -130,6 +130,18 @@ public class ValueTypeTest
         valueType.Should().NotBeNull();
         valueType.Type.Should().Be(_validType);
     }
+    
+    [TestMethod]
+    public void CreateValueType_WhenNameIsValid_ShouldReturnValueType()
+    {
+        var valueType = new ValueType(_validName, _validType, _emptyMethods);
+
+        valueType.Should().NotBeNull();
+        valueType.Name.Should().Be(_validName);
+        valueType.Type.Should().Be(_validType);
+        valueType.Methods.Should().BeEmpty();
+        valueType.MethodIds.Should().BeEmpty();
+    }
 
     #endregion
 
