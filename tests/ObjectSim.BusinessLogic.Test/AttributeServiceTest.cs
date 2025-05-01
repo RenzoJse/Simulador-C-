@@ -297,4 +297,16 @@ public class AttributeServiceTest
 
         _attributeService!.Update(dummyAttribute.Id, dummyAttribute);
     }
+    [TestMethod]
+    public void GetByClassId_ShouldReturnAttributes()
+    {
+        _attributeRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Attribute, bool>>()))
+            .Returns([_testAttribute]);
+
+        var result = _attributeService.GetByClassId(_testAttribute.ClassId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("Color", result[0].Name);
+    }
 }
