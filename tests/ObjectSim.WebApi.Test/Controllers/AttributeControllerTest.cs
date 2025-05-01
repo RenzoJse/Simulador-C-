@@ -264,4 +264,32 @@ public class AttributeControllerTest
         Assert.AreEqual(400, badRequest.StatusCode);
         Assert.AreEqual("Unexpected error.", badRequest.Value);
     }
+    [TestMethod]
+    public void GetByClassId_ValidId_ShouldReturnAttributes()
+    {
+        var classId = Guid.NewGuid();
+        var attributes = new List<Domain.Attribute>
+        {
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Attr1",
+                Visibility = Domain.Attribute.AttributeVisibility.Public,
+                ClassId = classId,
+                DataType = Domain.ValueType.Create("int")
+            }
+        };
+
+        _attributeServiceMock.Setup(s => s.GetByClassId(classId)).Returns(attributes);
+
+        var result = _attributeController.GetByClassId(classId);
+
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        var dtoList = okResult.Value as List<AttributeDtoOut>;
+        Assert.IsNotNull(dtoList);
+        Assert.AreEqual(1, dtoList.Count);
+
+        _attributeServiceMock.Verify(s => s.GetByClassId(classId), Times.Once);
+    }
 }
