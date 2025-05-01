@@ -117,6 +117,7 @@ public class ValueTypeTest
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot contain special characters.");
     }
+    
 
     #endregion
 
