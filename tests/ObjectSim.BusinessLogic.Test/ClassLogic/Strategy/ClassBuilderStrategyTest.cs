@@ -21,7 +21,7 @@ public class ClassBuilderStrategyTest
         _attributeServiceMock = new Mock<IAttributeService>();
         _classServiceMock = new Mock<IClassService>();
 
-        _strategy = new ClassBuilderStrategy(_methodServiceMock.Object);
+        _strategy = new ClassBuilderStrategy(_methodServiceMock.Object, _attributeServiceMock!.Object);
     }
 
     #region WhichIsMyBuilder
@@ -61,7 +61,7 @@ public class ClassBuilderStrategyTest
     [TestMethod]
     public void CreateBuilder_ReturnsClassBuilderInstance()
     {
-        var builder = _strategy!.CreateBuilder(_classServiceMock!.Object, _attributeServiceMock!.Object);
+        var builder = _strategy!.CreateBuilder(_classServiceMock!.Object);
 
         Assert.IsNotNull(builder);
         Assert.IsInstanceOfType(builder, typeof(ClassBuilder));

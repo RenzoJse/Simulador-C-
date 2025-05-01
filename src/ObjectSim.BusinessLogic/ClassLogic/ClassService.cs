@@ -8,7 +8,7 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.ClassLogic;
 
-public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> classRepository, IAttributeService attributeService) : IClassService
+public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> classRepository) : IClassService
 {
     public Class CreateClass(CreateClassArgs args)
     {
@@ -36,7 +36,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
     {
         var strategy = strategies.FirstOrDefault(x => x.WhichIsMyBuilder(args));
 
-        return strategy!.CreateBuilder(this, attributeService);
+        return strategy!.CreateBuilder(this);
     }
 
     public Class GetById(Guid? classId)

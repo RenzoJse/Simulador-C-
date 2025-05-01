@@ -1,12 +1,12 @@
 ﻿using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
-using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
 
-public abstract class Builder(IClassService classService)
+public abstract class Builder(IClassService classService, IAttributeService attributeService)
 {
+    public IAttributeService AttributeService { get; } = attributeService;
     protected Class Result { get; } = new Class();
 
     public virtual void SetName(string name)
@@ -66,7 +66,7 @@ public abstract class Builder(IClassService classService)
         }
     }
 
-    public virtual void SetMethods(List<Method> methods)
+    public virtual void SetMethods(List<CreateMethodArgs> methods)
     {
         ArgumentNullException.ThrowIfNull(methods);
 

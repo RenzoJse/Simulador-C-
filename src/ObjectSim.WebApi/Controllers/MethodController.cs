@@ -12,7 +12,7 @@ public class MethodController(IMethodService methodService) : ControllerBase
     [HttpPost]
     public IActionResult CreateMethod(MethodDtoIn createMethodDtoIn)
     {
-        var methodInfo = methodService.Create(createMethodDtoIn.ToEntity());
+        var methodInfo = methodService.CreateMethod(createMethodDtoIn.ToArgs());
 
         var response = new MethodOutModel(methodInfo);
 
@@ -32,7 +32,7 @@ public class MethodController(IMethodService methodService) : ControllerBase
         return Ok($"Method with id {id} deleted successfully.");
     }
 
-    [HttpPut("{id}")]
+    /*[HttpPut("{id}")]
     public IActionResult UpdateMethod(Guid id, MethodDtoIn updateMethodDtoIn)
     {
         var updatedMethod = methodService.Update(id, updateMethodDtoIn.ToEntity());
@@ -44,7 +44,8 @@ public class MethodController(IMethodService methodService) : ControllerBase
 
         var response = new MethodOutModel(updatedMethod);
         return Ok(response);
-    }
+        return Ok();
+    }*/
 
     [HttpGet("{id}")]
     public IActionResult GetMethodById(Guid id)
@@ -68,5 +69,35 @@ public class MethodController(IMethodService methodService) : ControllerBase
         var response = methods.Select(m => new MethodOutModel(m)).ToList();
 
         return Ok(response);
+    }
+
+
+    [HttpPost("{methodId}/parameters")]
+    public IActionResult AddParameter(Guid methodId, ParameterDtoIn dto)
+    {
+        try
+        {
+            var parameter = methodService.AddParameter(methodId, dto.ToEntity());
+            var response = new ParameterOutModel(parameter);
+            return Ok(response);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost("{methodId}/local-variables")]
+    public IActionResult AddLocalVariable(Guid methodId, LocalVariableDtoIn dto)
+    {
+        try
+        {
+            var localVar = methodService.AddLocalVariable(methodId, dto.ToEntity());
+            return Ok(new LocalVariableOutModel(localVar));
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

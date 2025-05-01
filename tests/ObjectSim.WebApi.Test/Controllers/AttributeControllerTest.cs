@@ -1,8 +1,12 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.Controllers;
+using ObjectSim.WebApi.DTOs.In;
+using ObjectSim.WebApi.DTOs.Out;
 namespace ObjectSim.WebApi.Test.Controllers;
 [TestClass]
 public class AttributeControllerTest
@@ -70,16 +74,194 @@ public class AttributeControllerTest
     [TestMethod]
     public void GetAll_ShouldThrowException_WhenNoAttributesExist()
     {
-        // Arrange
         _attributeServiceMock
             .Setup(service => service.GetAll())
             .Throws(new Exception("No attributes found."));
 
-        // Act
         Action act = () => _attributeController.GetAll();
 
-        // Assert
         act.Should().Throw<Exception>()
            .WithMessage("No attributes found.");
+    }
+    [TestMethod]
+    public void Create_ValidModel_ShouldReturnCreatedResult()
+    {
+        var modelIn = new CreateAttributeDtoIn
+        {
+            Name = "Color",
+            Visibility = "Public",
+            DataTypeName = "string",
+            DataTypeKind = "Reference",
+            ClassId = Guid.NewGuid()
+        };
+
+        var domainAttribute = new Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Color",
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            DataType = ReferenceType.Create("string"),
+            ClassId = modelIn.ClassId
+        };
+
+        _attributeServiceMock
+            .Setup(s => s.CreateAttribute(It.IsAny<CreateAttributeArgs>()))
+            .Returns(domainAttribute);
+
+        var result = _attributeController.Create(modelIn);
+
+        var created = result as CreatedAtActionResult;
+        Assert.IsNotNull(created);
+
+        var outModel = created.Value as AttributeDtoOut;
+        Assert.IsNotNull(outModel);
+        Assert.AreEqual("Color", outModel.Name);
+        Assert.AreEqual("Public", outModel.Visibility);
+        Assert.AreEqual("Reference", outModel.DataTypeKind);
+        Assert.AreEqual("string", outModel.DataTypeName);
+
+        _attributeServiceMock.Verify(x => x.CreateAttribute(It.IsAny<CreateAttributeArgs>()), Times.Once);
+    }
+    [TestMethod]
+    public void Create_NullModel_ShouldReturnBadRequest()
+    {
+        var result = _attributeController.Create(null!);
+        var badRequest = result as BadRequestResult;
+        Assert.IsNotNull(badRequest);
+        Assert.AreEqual(400, badRequest.StatusCode);
+    }
+    [TestMethod]
+    public void Create_ShouldReturnCreatedAtAction_WithCorrectActionName()
+    {
+        var modelIn = new CreateAttributeDtoIn
+        {
+            Name = "TestAttr",
+            Visibility = "Public",
+            DataTypeName = "string",
+            DataTypeKind = "Reference",
+            ClassId = Guid.NewGuid()
+        };
+
+        var domainAttr = new Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttr",
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            DataType = ReferenceType.Create("string"),
+            ClassId = modelIn.ClassId
+        };
+
+        _attributeServiceMock
+            .Setup(s => s.CreateAttribute(It.IsAny<CreateAttributeArgs>()))
+            .Returns(domainAttr);
+
+        var result = _attributeController.Create(modelIn);
+
+        var created = result as CreatedAtActionResult;
+        Assert.IsNotNull(created);
+        Assert.AreEqual("Create", created.ActionName);
+        Assert.AreEqual(domainAttr.Id, ((AttributeDtoOut)created.Value!).Id);
+    }
+    [TestMethod]
+    public void Update_ValidModel_ShouldReturnUpdatedAttribute()
+    {
+        var id = Guid.NewGuid();
+        var modelIn = new CreateAttributeDtoIn
+        {
+            Name = "Size",
+            Visibility = "Public",
+            DataTypeName = "int",
+            DataTypeKind = "Value",
+            ClassId = Guid.NewGuid()
+        };
+
+        var updatedAttribute = new Domain.Attribute
+        {
+            Id = id,
+            Name = modelIn.Name,
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            ClassId = modelIn.ClassId,
+            DataType = Domain.ValueType.Create(modelIn.DataTypeName)
+        };
+
+        _attributeServiceMock
+            .Setup(s => s.Update(id, It.Is<Domain.Attribute>(a =>
+                a.Name == modelIn.Name &&
+                a.ClassId == modelIn.ClassId &&
+                a.Visibility == Domain.Attribute.AttributeVisibility.Public &&
+                a.DataType.Name == modelIn.DataTypeName)))
+            .Returns(updatedAttribute);
+
+        var result = _attributeController.Update(id, modelIn);
+
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        Assert.AreEqual(200, okResult.StatusCode);
+
+        var dtoOut = okResult.Value as AttributeDtoOut;
+        Assert.IsNotNull(dtoOut);
+        Assert.AreEqual("Size", dtoOut.Name);
+        Assert.AreEqual("Public", dtoOut.Visibility);
+        _attributeServiceMock.Verify(x => x.Update(id, It.IsAny<Domain.Attribute>()), Times.Once);
+    }
+    [TestMethod]
+    public void Update_InvalidModel_ShouldReturnBadRequest()
+    {
+        var id = Guid.NewGuid();
+        var modelIn = new CreateAttributeDtoIn
+        {
+            Name = "",
+            Visibility = "Public",
+            DataTypeName = "int",
+            DataTypeKind = "Value",
+            ClassId = Guid.NewGuid()
+        };
+
+        _attributeController.ModelState.AddModelError("Name", "Name is required.");
+
+        var result = _attributeController.Update(id, modelIn);
+
+        var badRequest = result as BadRequestObjectResult;
+        Assert.IsNotNull(badRequest);
+        Assert.AreEqual(400, badRequest.StatusCode);
+    }
+    [TestMethod]
+    public void GetById_ValidId_ShouldReturnAttribute()
+    {
+        var id = Guid.NewGuid();
+        var attribute = new Domain.Attribute
+        {
+            Id = id,
+            Name = "Test",
+            ClassId = Guid.NewGuid(),
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            DataType = ReferenceType.Create("string")
+        };
+
+        _attributeServiceMock
+            .Setup(s => s.GetById(id))
+            .Returns(attribute);
+
+        var result = _attributeController.GetById(id);
+
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        var dto = okResult.Value as AttributeDtoOut;
+        Assert.IsNotNull(dto);
+    }
+    [TestMethod]
+    public void GetById_ShouldReturnBadRequest_WhenServiceThrowsGeneralException()
+    {
+        var id = Guid.NewGuid();
+        _attributeServiceMock
+            .Setup(s => s.GetById(id))
+            .Throws(new Exception("Unexpected error."));
+
+        var result = _attributeController.GetById(id);
+
+        var badRequest = result as BadRequestObjectResult;
+        Assert.IsNotNull(badRequest);
+        Assert.AreEqual(400, badRequest.StatusCode);
+        Assert.AreEqual("Unexpected error.", badRequest.Value);
     }
 }

@@ -7,5 +7,5 @@ namespace ObjectSim.BusinessLogic.ClassLogic.Strategy;
 public interface IBuilderStrategy
 {
     bool WhichIsMyBuilder(CreateClassArgs args);
-    public Builder CreateBuilder(IClassService classService, IAttributeService attributeService);
+    public Builder CreateBuilder(IClassService classService);
 }
