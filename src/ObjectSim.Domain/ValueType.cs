@@ -21,6 +21,10 @@ public class ValueType : DataType
         {
             throw new ArgumentException("Name cannot be longer than 20 characters.");
         }
+        if (!name.All(char.IsLetter))
+        {
+            throw new ArgumentException("Name cannot contain special characters.");
+        }
         if (!BuiltinTypes.Contains(type))
         {
             throw new ArgumentException($"Invalid ValueType: {type}.");
