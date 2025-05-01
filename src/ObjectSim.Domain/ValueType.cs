@@ -2,6 +2,7 @@
 public class ValueType : DataType
 {
     public static readonly List<string> BuiltinTypes = ["int", "bool", "char", "decimal", "DateTime"];
+    private const int MaxNameLength = 20;
 
     public ValueType(string name, string type, List<Method> methods)
     {
@@ -15,6 +16,10 @@ public class ValueType : DataType
         if (string.IsNullOrEmpty(name))
         {
             throw new ArgumentNullException(nameof(name), "Name cannot be null or empty.");
+        }
+        if (name.Length > MaxNameLength)
+        {
+            throw new ArgumentException("Name cannot be longer than 20 characters.");
         }
         if (!BuiltinTypes.Contains(type))
         {
