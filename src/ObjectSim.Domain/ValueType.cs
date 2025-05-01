@@ -8,8 +8,13 @@ public class ValueType : DataType
         Name = name;
     }
 
-    public static ValueType Create(string name)
+    public static ValueType Create(string name, string type)
     {
+        if (!BuiltinTypes.Contains(type))
+        {
+            throw new ArgumentException($"Invalid ValueType: {type}.");
+        }
+
         return null!;
     }
 }

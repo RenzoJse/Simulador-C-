@@ -8,7 +8,7 @@ public class AttributeTest
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqual()
     {
-        var expectedType = ValueType.Create("int");
+        var expectedType = ValueType.Create("myVariable","int");
         var attribute = new Attribute { DataType = expectedType };
 
         attribute.DataType.Should().Be(expectedType);
@@ -34,7 +34,7 @@ public class AttributeTest
     [TestMethod]
     public void ValidateDataType_ShouldPass_WhenValidValueType()
     {
-        var valid = ValueType.Create("int");
+        var valid = ValueType.Create("myVariable","int");
 
         Attribute.ValidateDataType(valid);
     }
@@ -78,7 +78,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
-            DataType = ValueType.Create("int"),
+            DataType = ValueType.Create("myVariable","int"),
             ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -96,7 +96,7 @@ public class AttributeTest
             Name = "Age",
             ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
-            DataType = ValueType.Create("int")
+            DataType = ValueType.Create("myVariable","int")
         };
 
         Action action = attr.Validate;
@@ -153,7 +153,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Name",
             ClassId = Guid.NewGuid(),
-            DataType = ValueType.Create("int"),
+            DataType = ValueType.Create("myVariable","int"),
             Visibility = Attribute.AttributeVisibility.Private
         };
 
@@ -184,7 +184,7 @@ public class AttributeTest
         {
             Id = Guid.Empty,
             Name = "ValidAttribute",
-            DataType = ValueType.Create("int"),
+            DataType = ValueType.Create("myVariable", "int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -201,7 +201,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = null,
             ClassId = Guid.NewGuid(),
-            DataType = ValueType.Create("int"),
+            DataType = ValueType.Create("myVariable", "int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -252,7 +252,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "   ",
             ClassId = Guid.NewGuid(),
-            DataType = ValueType.Create("int"),
+            DataType = ValueType.Create("myVariable","int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -269,7 +269,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = new string('a', 101),
             ClassId = Guid.NewGuid(),
-            DataType = ValueType.Create("int"),
+            DataType = ValueType.Create("myVariable","int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -286,7 +286,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "aaa",
             ClassId = Guid.NewGuid(),
-            DataType = ValueType.Create("int"),
+            DataType = ValueType.Create("myVariable","int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -302,7 +302,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Test",
             ClassId = Guid.NewGuid(),
-            DataType = ValueType.Create("int"),
+            DataType = ValueType.Create("myVariable","int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -329,7 +329,7 @@ public class AttributeTest
     [TestMethod]
     public void AttributeValidator_WithInvalidDataType_ShouldThrowArgumentException()
     {
-        Action act = () => ValueType.Create("false");
+        Action act = () => ValueType.Create("myVariable","false");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("Invalid ValueType: false");
@@ -350,7 +350,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Test",
             ClassId = Guid.NewGuid(),
-            DataType = ValueType.Create("int"),
+            DataType = ValueType.Create("myVariable","int"),
             Visibility = (Attribute.AttributeVisibility)999
         };
 
@@ -367,7 +367,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Test",
             ClassId = Guid.NewGuid(),
-            DataType = ValueType.Create("int"),
+            DataType = ValueType.Create("myVariable","int"),
             Visibility = Attribute.AttributeVisibility.Internal
         };
 

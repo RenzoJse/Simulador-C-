@@ -2,6 +2,7 @@
 
 namespace ObjectSim.Domain.Test;
 
+[TestClass]
 public class ValueTypeTest
 {
     private string _validType = null!;
