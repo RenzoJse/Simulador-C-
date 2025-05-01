@@ -31,6 +31,7 @@ public class AttributeController(IAttributeService attributeService) : Controlle
         var attributes = _attributeService.GetAll();
         return Ok(attributes);
     }
+    /*
     [HttpPut("{id}")]
     public IActionResult Update(Guid id, [FromBody] CreateAttributeDtoIn modelIn)
     {
@@ -57,7 +58,8 @@ public class AttributeController(IAttributeService attributeService) : Controlle
         var updated = _attributeService.Update(id, attributeToUpdate);
         var response = AttributeDtoOut.ToInfo(updated);
         return Ok(response);
-    }
+    }*/
+
     [HttpGet("{id}")]
     public IActionResult GetById(Guid id)
     {
