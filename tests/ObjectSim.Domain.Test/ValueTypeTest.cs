@@ -61,6 +61,20 @@ public class ValueTypeTest
         action.Should().Throw<ArgumentNullException>()
             .WithMessage("Name cannot be null or empty. (Parameter 'name')");
     }
+    
+    [TestMethod]
+    public void CreateValueType_WhenNameIsTooLong_ShouldThrowArgumentException()
+    {
+        var name = new string('a', 21);
+
+        Action action = () =>
+        {
+            var valueType = new ValueType(name, _validType, _emptyMethods);
+        };
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be longer than 20 characters.");
+    }
 
     #endregion
 
