@@ -77,4 +77,24 @@ public class AttributeController(IAttributeService attributeService) : Controlle
             return BadRequest(ex.Message);
         }
     }
+    [HttpGet("by-class/{classId}")]
+    public IActionResult GetByClassId(Guid classId)
+    {
+        if(classId == Guid.Empty)
+        {
+            return BadRequest("Invalid ClassId.");
+        }
+
+        try
+        {
+            var attributes = _attributeService.GetByClassId(classId);
+            var response = attributes.Select(AttributeDtoOut.ToInfo).ToList();
+            return Ok(response);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
 }
