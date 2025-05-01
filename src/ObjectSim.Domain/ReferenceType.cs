@@ -32,8 +32,4 @@ public class ReferenceType : DataType
             throw new ArgumentNullException(nameof(methodIds), "Methods cannot be null.");
         }
     }
-    public static ReferenceType Create(string name)
-    {
-        return null!;
-    }
 }

@@ -68,9 +68,4 @@ public class ValueType : DataType
             throw new ArgumentException($"Invalid ValueType: {type}.");
         }
     }
-
-    public static ValueType Create(string name, string type)
-    {
-        return null!;
-    }
 }
