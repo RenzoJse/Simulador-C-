@@ -48,6 +48,20 @@ public class ValueTypeTest
             .WithMessage($"Invalid ValueType: {invalidType}.");
     }
 
+    [TestMethod]
+    public void CreateValueType_WhenNameIsNull_ShouldThrowArgumentException()
+    {
+        string name = null!;
+
+        Action action = () =>
+        {
+            var valueType = new ValueType(name, _validType, _emptyMethods);
+        };
+
+        action.Should().Throw<ArgumentNullException>()
+            .WithMessage("Name cannot be null or empty. (Parameter 'name')");
+    }
+
     #endregion
 
     #region Success
