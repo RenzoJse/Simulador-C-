@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using ObjectSim.BusinessLogic;
-using ObjectSim.BusinessLogic.ClassLogic;
-using ObjectSim.BusinessLogic.ClassLogic.Strategy;
+using ObjectSim.ClassLogic.Strategy;
 using ObjectSim.DataAccess;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.DataAccess.Repositories;

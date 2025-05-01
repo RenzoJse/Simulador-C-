@@ -1,8 +1,8 @@
 ﻿using Moq;
-using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+using ObjectSim.ClassLogic.ClassBuilders.Builders;
 using ObjectSim.IBusinessLogic;
 
-namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
+namespace ObjectSim.ClassLogic.Test.ClassBuildersTest;
 
 [TestClass]
 public class InterfaceBuilderTest

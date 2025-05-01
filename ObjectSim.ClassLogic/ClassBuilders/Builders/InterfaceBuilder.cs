@@ -1,8 +1,7 @@
-﻿using ObjectSim.Domain;
-using ObjectSim.Domain.Args;
+﻿using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
-namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+namespace ObjectSim.ClassLogic.ClassBuilders.Builders;
 
 public class InterfaceBuilder(IClassService classService, IAttributeService attributeService) : Builder(classService, attributeService)
 {
