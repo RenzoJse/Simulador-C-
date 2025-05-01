@@ -7,6 +7,7 @@ public class ValueType : DataType
     {
         ValidateValueType(name, type);
         Name = name;
+        Type = type;
     }
 
     private static void ValidateValueType(string name, string type)
