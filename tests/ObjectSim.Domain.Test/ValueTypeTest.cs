@@ -33,7 +33,6 @@ public class ValueTypeTest
     [TestMethod]
     public void CreateValueType_WhenTypeIsInvalid_ThrowsArgumentException()
     {
-
         const string invalidType = "invalidType";
 
         Action action = () =>

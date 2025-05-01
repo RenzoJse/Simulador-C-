@@ -5,16 +5,20 @@ public class ValueType : DataType
 
     public ValueType(string name, string type, List<Method> methods)
     {
+        ValidateValueType(name, type);
         Name = name;
     }
 
-    public static ValueType Create(string name, string type)
+    private static void ValidateValueType(string name, string type)
     {
         if (!BuiltinTypes.Contains(type))
         {
             throw new ArgumentException($"Invalid ValueType: {type}.");
         }
-
+    }
+    
+    public static ValueType Create(string name, string type)
+    {
         return null!;
     }
 }
