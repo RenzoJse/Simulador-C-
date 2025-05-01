@@ -30,6 +30,10 @@ public class ValueTypeTest
     {
     }
 
+    #region CreateValueType
+
+    #region Error
+
     [TestMethod]
     public void CreateValueType_WhenTypeIsInvalid_ThrowsArgumentException()
     {
@@ -43,4 +47,8 @@ public class ValueTypeTest
         action.Should().Throw<ArgumentException>()
             .WithMessage($"Invalid ValueType: {invalidType}.");
     }
+
+    #endregion
+
+    #endregion
 }
