@@ -315,4 +315,13 @@ public class AttributeServiceTest
     {
         _attributeService.GetByClassId(Guid.Empty);
     }
+    [TestMethod]
+    [ExpectedException(typeof(KeyNotFoundException))]
+    public void GetByClassId_ShouldThrow_WhenNoAttributesFound()
+    {
+        _attributeRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Attribute, bool>>()))
+            .Returns([]);
+
+        _attributeService.GetByClassId(_testAttribute.ClassId);
+    }
 }
