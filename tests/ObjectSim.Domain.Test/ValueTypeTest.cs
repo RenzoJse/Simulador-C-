@@ -50,5 +50,18 @@ public class ValueTypeTest
 
     #endregion
 
+    #region Success
+
+    [TestMethod]
+    public void CreateValueType_WhenTypeIsValid_ShouldReturnValueType()
+    {
+        var valueType = new ValueType(_validName, _validType, _emptyMethods);
+
+        valueType.Should().NotBeNull();
+        valueType.Type.Should().Be(_validType);
+    }
+
+    #endregion
+
     #endregion
 }
