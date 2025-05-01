@@ -6,7 +6,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
-namespace ObjectSim.BusinessLogic.ClassLogic;
+namespace ObjectSim.BusinessLogic;
 
 public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> classRepository) : IClassService
 {
