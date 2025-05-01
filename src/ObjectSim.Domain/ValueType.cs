@@ -12,6 +12,10 @@ public class ValueType : DataType
 
     private static void ValidateValueType(string name, string type)
     {
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new ArgumentNullException(nameof(name), "Name cannot be null or empty.");
+        }
         if (!BuiltinTypes.Contains(type))
         {
             throw new ArgumentException($"Invalid ValueType: {type}.");
