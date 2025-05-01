@@ -2,12 +2,38 @@
 public class ReferenceType : DataType
 {
     public static readonly List<string> BuiltinTypes = ["string", "object"];
-    private ReferenceType(string name)
+
+    private ReferenceType()
     {
-        Name = name;
+        Id = Guid.NewGuid();
+        Name = string.Empty;
+        Type = string.Empty;
+        MethodIds = [];
+    }
+
+    public ReferenceType(string? name, string type, List<Guid> methodsIds)
+    {
+        Validate(name, methodsIds);
+
+        Id = Guid.NewGuid();
+        Name = name ?? "";
+        Type = type;
+        MethodIds = methodsIds;
+    }
+
+    private static void Validate(string? name, List<Guid> methodIds)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Name cannot be null or empty.");
+        }
+        if (methodIds == null)
+        {
+            throw new ArgumentNullException(nameof(methodIds), "Methods cannot be null.");
+        }
     }
     public static ReferenceType Create(string name)
     {
-        return !BuiltinTypes.Contains(name) ? throw new ArgumentException($"Invalid ReferenceType: {name}") : new ReferenceType(name);
+        return null!;
     }
 }

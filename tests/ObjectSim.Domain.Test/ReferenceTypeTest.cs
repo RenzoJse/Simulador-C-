@@ -5,18 +5,19 @@ namespace ObjectSim.Domain.Test;
 [TestClass]
 public class ReferenceTypeTest
 {
+    private static readonly List<Guid> methodsIds = [];
 
     #region CreateReferenceType
 
     #region Error
 
     [TestMethod]
-    public void CreateReferenceType_WhenMethodsAreNull_ThrowsArgumentNullException()
+    public void CreateReferenceType_WhenMethodsIdsAreNull_ThrowsArgumentNullException()
     {
         const string name = "myString";
         const string type = "string";
 
-        Assert.ThrowsException<ArgumentNullException>(() => new ReferenceType(name, type));
+        Assert.ThrowsException<ArgumentNullException>(() => new ReferenceType(name, type, null!));
     }
 
     [TestMethod]
@@ -27,7 +28,7 @@ public class ReferenceTypeTest
 
         Action action = () =>
         {
-            var referenceType = new ReferenceType(invalidName, type);
+            var referenceType = new ReferenceType(invalidName, type, methodsIds);
         };
 
         action.Should().Throw<ArgumentException>()
@@ -44,7 +45,7 @@ public class ReferenceTypeTest
         const string name = "myString";
         const string type = "string";
 
-        var referenceType = new ReferenceType(name, type);
+        var referenceType = new ReferenceType(name, type, methodsIds);
 
         Assert.IsNotNull(referenceType);
         Assert.AreEqual(name, referenceType.Name);

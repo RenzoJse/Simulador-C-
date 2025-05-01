@@ -4,6 +4,14 @@ public class ValueType : DataType
     public static readonly List<string> BuiltinTypes = ["int", "bool", "char", "decimal", "DateTime"];
     private const int MaxNameLength = 20;
 
+    private ValueType()
+    {
+        Id = Guid.NewGuid();
+        Name = string.Empty;
+        Type = string.Empty;
+        MethodIds = [];
+    }
+
     public ValueType(string name, string type, List<Guid> methods)
     {
         ValidateValueType(name, type, methods);

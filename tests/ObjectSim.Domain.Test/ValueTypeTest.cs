@@ -176,6 +176,25 @@ public class ValueTypeTest
         valueType.Type.Should().Be(_validType);
     }
 
+
+    [TestMethod]
+    public void ValueType_DefaultConstructor_ShouldInitializeProperties()
+    {
+        var constructor = typeof(ValueType).GetConstructor(
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+            null,
+            Type.EmptyTypes,
+            null);
+
+        var valueType = (ValueType)constructor!.Invoke(null);
+
+        valueType.Id.Should().NotBeEmpty();
+        valueType.Name.Should().BeEmpty();
+        valueType.Type.Should().BeEmpty();
+        valueType.MethodIds.Should().NotBeNull();
+        valueType.MethodIds.Should().BeEmpty();
+    }
+
     #endregion
 
     #endregion
