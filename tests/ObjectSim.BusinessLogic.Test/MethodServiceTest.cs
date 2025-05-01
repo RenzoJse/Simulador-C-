@@ -427,16 +427,10 @@ public class MethodServiceTest
     [TestMethod]
     public void AddLocalVariable_WhenMethodNotFound_ShouldThrow()
     {
-        var localVariable = new LocalVariable
-        {
-            Name = "lvTest",
-            Type = LocalVariable.LocalVariableDataType.String
-        };
-
         _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns((Method?)null);
 
-        Action act = () => _methodService!.AddLocalVariable(_testMethod!.Id, localVariable);
+        Action act = () => _methodService!.AddLocalVariable(_testMethod!.Id, TestLocalVariable);
 
         act.Should().Throw<Exception>().WithMessage("Method not found");
 
