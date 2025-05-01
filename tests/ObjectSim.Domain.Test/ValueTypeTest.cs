@@ -153,8 +153,27 @@ public class ValueTypeTest
         valueType.Should().NotBeNull();
         valueType.Name.Should().Be(_validName);
         valueType.Type.Should().Be(_validType);
-        valueType.Methods.Should().BeEmpty();
         valueType.MethodIds.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void CreateValueTypes_WhenMethodsAreProvided_ShouldReturnValueTypeWithMethodsIds()
+    {
+        var methodIds = new List<Guid>
+        {
+            _methods[0].Id,
+            _methods[1].Id
+        };
+
+        var valueType = new ValueType(_validName, _validType, methodIds);
+
+        valueType.Should().NotBeNull();
+        valueType.MethodIds.Should().NotBeEmpty();
+        valueType.MethodIds.Should().NotBeEmpty();
+        valueType.MethodIds.Should().Contain(m => m == _methods[0].Id);
+        valueType.MethodIds.Should().Contain(m => m == _methods[1].Id);
+        valueType.Name.Should().Be(_validName);
+        valueType.Type.Should().Be(_validType);
     }
 
     #endregion
