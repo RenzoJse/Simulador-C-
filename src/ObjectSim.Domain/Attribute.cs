@@ -46,7 +46,7 @@ public class Attribute
         }
         if(Regex.IsMatch(name, @"^\d"))
         {
-            throw new ArgumentException("Name cannot be null or start with a num.");
+            throw new ArgumentException("Name cannot be null or start with a num.");
         }
 
     }

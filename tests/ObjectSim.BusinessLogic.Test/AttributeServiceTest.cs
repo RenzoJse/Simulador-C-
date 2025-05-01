@@ -19,7 +19,7 @@ public class AttributeServiceTest
     private static readonly CreateDataTypeArgs TestArgsDataType = new(
         "int");
 
-    private readonly DataType? _testDataType = ValueType.Create("int");
+    private readonly DataType? _testDataType = new ValueType("myVariable", "int", []);
 
     private static readonly Guid TestAttributeId = Guid.NewGuid();
 
@@ -34,7 +34,7 @@ public class AttributeServiceTest
     {
         Id = TestAttributeId,
         Name = "Test",
-        DataType = ValueType.Create("int"),
+        DataType = new ValueType("myVariable", "int", []),
         ClassId = Guid.NewGuid(),
         Visibility = Attribute.AttributeVisibility.Public
     };
@@ -133,7 +133,8 @@ public class AttributeServiceTest
         var result = _attributeService!.CreateAttribute(_testArgsAttribute);
         result.Should().NotBeNull();
         result.Should().BeOfType<Attribute>();
-        result.Should().BeEquivalentTo(_testAttribute);
+        result.Should().BeEquivalentTo(_testAttribute, options =>
+            options.Excluding(x => x.DataType.Id));
     }
 
     #endregion
@@ -150,7 +151,7 @@ public class AttributeServiceTest
             Id = Guid.NewGuid(),
             Name = "Name",
             ClassId = Guid.NewGuid(),
-            DataType = ValueType.Create("int"),
+            DataType = new ValueType("myVariable", "int", []),
             Visibility = Attribute.AttributeVisibility.Private
         },
             new()
@@ -158,7 +159,7 @@ public class AttributeServiceTest
             Id = Guid.NewGuid(),
             Name = "Name2",
             ClassId = Guid.NewGuid(),
-            DataType = ValueType.Create("int"),
+            DataType = new ValueType("myVariable", "int", []),
             Visibility = Attribute.AttributeVisibility.Private
             }
         };
@@ -292,7 +293,7 @@ public class AttributeServiceTest
             Name = "Attr",
             ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
-            DataType = ValueType.Create("int")
+            DataType = new ValueType("myVariable", "int", [])
         };
 
         _attributeService!.Update(dummyAttribute.Id, dummyAttribute);

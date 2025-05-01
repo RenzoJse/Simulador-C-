@@ -12,7 +12,9 @@ public class AttributeTest
         var attribute = new Attribute { DataType = expectedType };
 
         attribute.DataType.Should().Be(expectedType);
-        attribute.DataType.Name.Should().Be("int");
+        attribute.DataType.Name.Should().Be("myVariable");
+        attribute.DataType.Type.Should().Be("int");
+        attribute.DataType.MethodIds.Should().BeEmpty();
     }
 
     [TestMethod]
@@ -51,7 +53,9 @@ public class AttributeTest
         attribute.DataType.Should().NotBeNull();
         attribute.DataType.Should().Be(expectedType);
         attribute.DataType.Name.Should().NotBeNullOrEmpty();
-        attribute.DataType.Name.Should().Be("string");
+        attribute.DataType.Type.Should().Be("string");
+        attribute.DataType.MethodIds.Should().BeEmpty();
+        attribute.DataType.Name.Should().Be("myString");
     }
 
     [TestMethod]
