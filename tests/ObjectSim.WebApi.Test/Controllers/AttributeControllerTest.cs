@@ -292,4 +292,22 @@ public class AttributeControllerTest
 
         _attributeServiceMock.Verify(s => s.GetByClassId(classId), Times.Once);
     }
+    [TestMethod]
+    public void GetByClassId_InvalidId_ShouldReturnBadRequest()
+    {
+        // Arrange
+        var invalidId = Guid.Empty;
+
+        // Act
+        var result = _attributeController.GetByClassId(invalidId);
+
+        // Assert
+        var badRequest = result as BadRequestObjectResult;
+        Assert.IsNotNull(badRequest);
+        Assert.AreEqual(400, badRequest.StatusCode);
+        Assert.AreEqual("Invalid ClassId.", badRequest.Value);
+
+        _attributeServiceMock.Verify(s => s.GetByClassId(It.IsAny<Guid>()), Times.Never);
+    }
+
 }
