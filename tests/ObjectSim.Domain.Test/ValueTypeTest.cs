@@ -1,6 +1,46 @@
-﻿namespace ObjectSim.Domain.Test;
+﻿using FluentAssertions;
+
+namespace ObjectSim.Domain.Test;
 
 public class ValueTypeTest
 {
-    
+    private string _validType = null!;
+    private string _validName = null!;
+    private List<Method> _emptyMethods = null!;
+    private List<Method> _methods = null!;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        _validType = "int";
+        _validName = "ValidName";
+
+        _methods =
+        [
+            new Method(),
+            new Method()
+        ];
+
+        _emptyMethods = [];
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+    }
+
+    [TestMethod]
+    public void CreateValueType_WhenTypeIsInvalid_ThrowsArgumentException()
+    {
+
+        const string invalidType = "invalidType";
+
+        Action action = () =>
+        {
+            var valueType = new ValueType(_validName, invalidType, _emptyMethods);
+        };
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage($"Invalid ValueType: {invalidType}.");
+    }
 }
