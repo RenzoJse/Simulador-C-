@@ -18,11 +18,13 @@ public class MethodControllerTest
     private static readonly LocalVariable TestLocalVariable = new LocalVariable
     {
         Name = "TestLocalVariable",
+        Type = LocalVariable.LocalVariableDataType.String,
     };
 
     private static readonly Parameter TestParameter = new Parameter
     {
         Name = "TestParameter",
+        Type = Parameter.ParameterDataType.String,
     };
 
     private static readonly Method TestMethod = new Method
