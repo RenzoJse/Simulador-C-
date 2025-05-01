@@ -293,4 +293,16 @@ public class MethodTest
         method.Parameters.Should().NotBeNull();
         method.LocalVariables.Should().NotBeNull();
     }
+
+    [TestMethod]
+    public void Constructor_WhenClassIsSet_ShouldInitializeClass()
+    {
+        var method = new Method();
+        var classInstance = new Class();
+        method.Class = classInstance;
+        method.ClassId = classInstance.Id;
+
+        method.Class.Should().Be(classInstance);
+        method.ClassId.Should().Be(classInstance.Id);
+    }
 }
