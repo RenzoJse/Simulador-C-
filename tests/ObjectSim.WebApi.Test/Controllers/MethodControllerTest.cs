@@ -9,23 +9,16 @@ using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
 
 namespace ObjectSim.WebApi.Test.Controllers;
+
 [TestClass]
 public class MethodControllerTest
 {
     private Mock<IMethodService> _methodServiceMock = null!;
     private MethodController _methodController = null!;
 
-    private static readonly LocalVariable TestLocalVariable = new LocalVariable
-    {
-        Name = "TestLocalVariable",
-        Type = LocalVariable.LocalVariableDataType.String,
-    };
+    private static readonly DataType TestLocalVariable = new ReferenceType("TestLocalVariable", "string", []);
 
-    private static readonly Parameter TestParameter = new Parameter
-    {
-        Name = "TestParameter",
-        Type = Parameter.ParameterDataType.String,
-    };
+    private static readonly DataType TestParameter = new ReferenceType("TestParameter", "string", []);
 
     private static readonly Method TestMethod = new Method
     {
@@ -69,8 +62,8 @@ public class MethodControllerTest
         var result = _methodController.CreateMethod(new MethodDtoIn
         {
             Name = "TestClass",
-            Type = Method.MethodDataType.Char.ToString(),
-            Accessibility = Method.MethodAccessibility.Public.ToString(),
+            Type = nameof(Method.MethodDataType.Char),
+            Accessibility = nameof(Method.MethodAccessibility.Public),
             IsAbstract = false,
             IsOverride = false,
             IsSealed = false,
@@ -84,7 +77,7 @@ public class MethodControllerTest
         var statusCode = resultObject?.StatusCode;
         statusCode.Should().Be(200);
 
-        var answer = resultObject?.Value as MethodOutModel;
+        var answer = resultObject?.Value as MethodInformationDtoOut;
         answer.Should().NotBeNull();
         answer!.Name.Should().Be(_testMethod.Name);
         answer.IsAbstract.Should().Be(_testMethod.Abstract);
@@ -150,7 +143,7 @@ public class MethodControllerTest
         okResult.Should().NotBeNull();
         okResult!.StatusCode.Should().Be(200);
 
-        var response = okResult.Value as MethodOutModel;
+        var response = okResult.Value as MethodInformationDtoOut;
         response.Should().NotBeNull();
         response!.Name.Should().Be(expectedMethod.Name);
     }
@@ -188,159 +181,11 @@ public class MethodControllerTest
         okResult.Should().NotBeNull();
         okResult!.StatusCode.Should().Be(200);
 
-        var response = okResult.Value as List<MethodOutModel>;
+        var response = okResult.Value as List<MethodInformationDtoOut>;
         response.Should().NotBeNull();
         response!.Count.Should().Be(methods.Count);
         response.First().Name.Should().Be(_testMethod.Name);
     }
     #endregion
-
-    #region Add-LocalVariable-Test
-    [TestMethod]
-    public void AddLocalVariable_WhenValid_ShouldReturnOk()
-    {
-        var methodId = Guid.NewGuid();
-        var dto = new LocalVariableDtoIn
-        {
-            Name = "lvTest",
-            Type = "Int"
-        };
-
-        var localVarEntity = dto.ToEntity();
-
-        _methodServiceMock
-            .Setup(s => s.AddLocalVariable(methodId, It.IsAny<LocalVariable>()))
-            .Returns(localVarEntity);
-
-        var result = _methodController.AddLocalVariable(methodId, dto);
-
-        var okResult = result as OkObjectResult;
-        okResult.Should().NotBeNull();
-        okResult!.StatusCode.Should().Be(200);
-
-        var returned = okResult.Value as LocalVariableOutModel;
-        returned.Should().NotBeNull();
-        returned!.Name.Should().Be("lvTest");
-        returned.Type.Should().Be("Int");
-    }
-
-    [TestMethod]
-    public void AddLocalVariable_WhenMethodNotFound_ShouldReturnBadRequest()
-    {
-        var methodId = Guid.NewGuid();
-        var dto = new LocalVariableDtoIn
-        {
-            Name = "lvTest",
-            Type = "Bool"
-        };
-
-        _methodServiceMock
-            .Setup(s => s.AddLocalVariable(methodId, It.IsAny<LocalVariable>()))
-            .Throws(new Exception("Method not found"));
-
-        var result = _methodController.AddLocalVariable(methodId, dto);
-
-        var badRequest = result as BadRequestObjectResult;
-        badRequest.Should().NotBeNull();
-        badRequest!.StatusCode.Should().Be(400);
-        badRequest.Value.Should().Be("Method not found");
-    }
-
-    [TestMethod]
-    public void AddLocalVariable_WhenDuplicate_ShouldReturnBadRequest()
-    {
-        var methodId = Guid.NewGuid();
-        var dto = new LocalVariableDtoIn
-        {
-            Name = "lvTest",
-            Type = "Int"
-        };
-
-        _methodServiceMock
-            .Setup(s => s.AddLocalVariable(methodId, It.IsAny<LocalVariable>()))
-            .Throws(new Exception("LocalVariable already exists in this method"));
-
-        var result = _methodController.AddLocalVariable(methodId, dto);
-
-        var badRequest = result as BadRequestObjectResult;
-        badRequest.Should().NotBeNull();
-        badRequest!.StatusCode.Should().Be(400);
-        badRequest.Value.Should().Be("LocalVariable already exists in this method");
-    }
-    #endregion
-
-    #region Add-Parameter-Test
-    [TestMethod]
-    public void AddParameter_WhenValid_ShouldReturnOk()
-    {
-        var methodId = Guid.NewGuid();
-        var dto = new ParameterDtoIn
-        {
-            Name = "parameterTest",
-            Type = "String"
-        };
-
-        var paramEntity = dto.ToEntity();
-
-        _methodServiceMock
-            .Setup(s => s.AddParameter(methodId, It.IsAny<Parameter>()))
-            .Returns(paramEntity);
-
-        var result = _methodController.AddParameter(methodId, dto);
-
-        var ok = result as OkObjectResult;
-        ok.Should().NotBeNull();
-        ok!.StatusCode.Should().Be(200);
-
-        var returned = ok.Value as ParameterOutModel;
-        returned.Should().NotBeNull();
-        returned!.Name.Should().Be("parameterTest");
-        returned.Type.Should().Be("String");
-    }
-
-    [TestMethod]
-    public void AddParameter_WhenMethodNotFound_ShouldReturnBadRequest()
-    {
-        var methodId = Guid.NewGuid();
-        var dto = new ParameterDtoIn
-        {
-            Name = "parameterTest",
-            Type = "Int"
-        };
-
-        _methodServiceMock
-            .Setup(s => s.AddParameter(methodId, It.IsAny<Parameter>()))
-            .Throws(new Exception("Method not found"));
-
-        var result = _methodController.AddParameter(methodId, dto);
-
-        var badRequest = result as BadRequestObjectResult;
-        badRequest.Should().NotBeNull();
-        badRequest!.StatusCode.Should().Be(400);
-        badRequest.Value.Should().Be("Method not found");
-    }
-
-    [TestMethod]
-    public void AddParameter_WhenDuplicate_ShouldReturnBadRequest()
-    {
-        var methodId = Guid.NewGuid();
-        var dto = new ParameterDtoIn
-        {
-            Name = "parameterTest",
-            Type = "Bool"
-        };
-
-        _methodServiceMock
-            .Setup(s => s.AddParameter(methodId, It.IsAny<Parameter>()))
-            .Throws(new Exception("Parameter already exists in this method"));
-
-        var result = _methodController.AddParameter(methodId, dto);
-
-        var badRequest = result as BadRequestObjectResult;
-        badRequest.Should().NotBeNull();
-        badRequest!.StatusCode.Should().Be(400);
-        badRequest.Value.Should().Be("Parameter already exists in this method");
-    }
-
-    #endregion
+    
 }

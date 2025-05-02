@@ -1,6 +1,6 @@
 ﻿using ObjectSim.WebApi.DTOs.Out;
 
-namespace ObjectSim.WebApi.Test.Models;
+namespace ObjectSim.WebApi.Test.Models.Out;
 [TestClass]
 public class AttributeModelOutTest
 {
