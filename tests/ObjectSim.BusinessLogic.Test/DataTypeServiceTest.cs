@@ -30,5 +30,6 @@ public class DataTypeServiceTest
 
         Assert.IsInstanceOfType(result, typeof(ReferenceType));
         Assert.AreEqual("object", result.Name);
+        Assert.AreEqual("Reference", result.Type);
     }
 }
