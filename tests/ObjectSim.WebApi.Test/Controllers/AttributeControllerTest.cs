@@ -90,8 +90,8 @@ public class AttributeControllerTest
         {
             Name = "Color",
             Visibility = "Public",
-            DataTypeName = "string",
-            DataTypeKind = "Reference",
+            DataTypeName = "myString",
+            DataTypeKind = "string",
             ClassId = Guid.NewGuid()
         };
 
@@ -117,11 +117,12 @@ public class AttributeControllerTest
         Assert.IsNotNull(outModel);
         Assert.AreEqual("Color", outModel.Name);
         Assert.AreEqual("Public", outModel.Visibility);
-        Assert.AreEqual("Reference", outModel.DataTypeKind);
+        Assert.AreEqual("string", outModel.DataTypeKind);
         Assert.AreEqual("myString", outModel.DataTypeName);
 
         _attributeServiceMock.Verify(x => x.CreateAttribute(It.IsAny<CreateAttributeArgs>()), Times.Once);
     }
+
     [TestMethod]
     public void Create_NullModel_ShouldReturnBadRequest()
     {
@@ -267,4 +268,59 @@ public class AttributeControllerTest
         Assert.AreEqual(400, badRequest.StatusCode);
         Assert.AreEqual("Unexpected error.", badRequest.Value);
     }
+    [TestMethod]
+    public void GetByClassId_ValidId_ShouldReturnAttributes()
+    {
+        var classId = Guid.NewGuid();
+        var attribute = new Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "cantidad",
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            ClassId = classId,
+            DataType = new Domain.ValueType("cantidad", "int", [])
+        };
+
+        var attributes = new List<Domain.Attribute> { attribute };
+
+        _attributeServiceMock
+            .Setup(s => s.GetByClassId(classId))
+            .Returns(attributes);
+
+        var result = _attributeController.GetByClassId(classId);
+
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+
+        var dtoList = okResult.Value as List<AttributeDtoOut>;
+        Assert.IsNotNull(dtoList);
+        Assert.AreEqual(1, dtoList.Count);
+
+        var dto = dtoList[0];
+        Assert.AreEqual("cantidad", dto.Name);
+        Assert.AreEqual("Public", dto.Visibility);
+        Assert.AreEqual("int", dto.DataTypeKind);
+        Assert.AreEqual("cantidad", dto.DataTypeName);
+        Assert.AreEqual(classId, dto.ClassId);
+
+        _attributeServiceMock.Verify(s => s.GetByClassId(classId), Times.Once);
+    }
+
+
+    [TestMethod]
+    public void GetByClassId_InvalidId_ShouldReturnBadRequest()
+    {
+
+        var invalidId = Guid.Empty;
+
+        var result = _attributeController.GetByClassId(invalidId);
+
+        var badRequest = result as BadRequestObjectResult;
+        Assert.IsNotNull(badRequest);
+        Assert.AreEqual(400, badRequest.StatusCode);
+        Assert.AreEqual("Invalid ClassId.", badRequest.Value);
+
+        _attributeServiceMock.Verify(s => s.GetByClassId(It.IsAny<Guid>()), Times.Never);
+    }
+
 }

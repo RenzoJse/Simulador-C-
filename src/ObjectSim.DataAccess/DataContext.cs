@@ -118,5 +118,11 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         });
 
         base.OnModelCreating(modelBuilder);
+        ModelSeedData();
+    }
+    private void ModelSeedData()
+    {
+        //insertar en la bd todos los metodos predefinidos por .NET para cada tipo de dato.
+        //Tienen que tener guid fijo.
     }
 }

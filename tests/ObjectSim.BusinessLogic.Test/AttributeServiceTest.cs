@@ -298,4 +298,31 @@ public class AttributeServiceTest
 
         _attributeService!.Update(dummyAttribute.Id, dummyAttribute);
     }
+    [TestMethod]
+    public void GetByClassId_ShouldReturnAttributes()
+    {
+        _attributeRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Attribute, bool>>()))
+            .Returns([_testAttribute]);
+
+        var result = _attributeService.GetByClassId(_testAttribute.ClassId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("Test", result[0].Name);
+    }
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void GetByClassId_ShouldThrow_WhenClassIdIsEmpty()
+    {
+        _attributeService.GetByClassId(Guid.Empty);
+    }
+    [TestMethod]
+    [ExpectedException(typeof(KeyNotFoundException))]
+    public void GetByClassId_ShouldThrow_WhenNoAttributesFound()
+    {
+        _attributeRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Attribute, bool>>()))
+            .Returns([]);
+
+        _attributeService.GetByClassId(_testAttribute.ClassId);
+    }
 }
