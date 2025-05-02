@@ -88,11 +88,11 @@ public class Method
     #endregion
 
     #region Parameters
-    public List<Parameter> Parameters { get; set; } = [];
+    public List<DataType> Parameters { get; set; } = [];
     #endregion
 
     #region LocalVariable
-    public List<LocalVariable> LocalVariables { get; set; } = [];
+    public List<DataType> LocalVariables { get; set; } = [];
     #endregion
 
     #region MethodsInvoke

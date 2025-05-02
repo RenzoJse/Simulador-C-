@@ -4,7 +4,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodService(IRepository<Method> methodRepository, IClassService classService) : IMethodService
+public class MethodService(IRepository<Method> methodRepository, IClassService classService, IDataTypeService dataTypeService) : IMethodService
 {
     public Method CreateMethod(CreateMethodArgs methodsArgs)
     {
@@ -29,6 +29,11 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
 
     private Method BuildMethod(CreateMethodArgs methodsArgs)
     {
+        List<DataType> parameters = [];
+        parameters.AddRange(methodsArgs.Parameters.Select(dataTypeService.CreateDataType));
+        List<DataType> localVariables = [];
+        localVariables.AddRange(methodsArgs.LocalVariables.Select(dataTypeService.CreateDataType));
+
         var method = new Method
         {
             Name = methodsArgs.Name,
@@ -38,8 +43,8 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
             IsSealed = methodsArgs.IsSealed ?? false,
             IsOverride = methodsArgs.IsOverride ?? false,
             //Type = methodsArgs.Type, No se puede hacer aun.
-            Parameters = methodsArgs.Parameters,
-            LocalVariables = methodsArgs.LocalVariables,
+            Parameters = parameters,
+            LocalVariables = localVariables,
             MethodsInvoke = GetInvokeMethods(methodsArgs.InvokeMethods)
         };
 
@@ -125,7 +130,7 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
         return method;
     }
 
-    public Parameter AddParameter(Guid methodId, Parameter parameter)
+    public DataType AddParameter(Guid methodId, DataType parameter)
     {
         var method = methodRepository.Get(m => m.Id == methodId)
             ?? throw new Exception("Method not found");
@@ -141,7 +146,7 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
         return parameter;
     }
 
-    public LocalVariable AddLocalVariable(Guid methodId, LocalVariable localVariable)
+    public DataType AddLocalVariable(Guid methodId, DataType localVariable)
     {
         var method = methodRepository.Get(m => m.Id == methodId)
             ?? throw new Exception("Method not found");

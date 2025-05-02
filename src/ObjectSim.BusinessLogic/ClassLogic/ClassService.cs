@@ -99,7 +99,7 @@ public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> 
         }
     }
 
-    private static bool AreParametersEqual(List<Parameter> parameters1, List<Parameter> parameters2)
+    private static bool AreParametersEqual(List<DataType> parameters1, List<DataType> parameters2)
     {
         if(parameters1.Count != parameters2.Count)
         {
