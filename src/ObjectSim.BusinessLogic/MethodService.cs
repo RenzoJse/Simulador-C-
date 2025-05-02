@@ -42,7 +42,7 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
             Abstract = methodsArgs.IsAbstract ?? false,
             IsSealed = methodsArgs.IsSealed ?? false,
             IsOverride = methodsArgs.IsOverride ?? false,
-            //Type = methodsArgs.Type, No se puede hacer aun.
+            //Type = dataTypeService.GetId();
             Parameters = parameters,
             LocalVariables = localVariables,
             MethodsInvoke = GetInvokeMethods(methodsArgs.InvokeMethods)
