@@ -16,4 +16,9 @@ public class InterfaceBuilder(IClassService classService, IAttributeService attr
         base.SetMethods(methods);
         Result.Methods = [];
     }
+    
+    public override void SetName(string name)
+    {
+        Result.IsAbstract = true;
+    }
 }
