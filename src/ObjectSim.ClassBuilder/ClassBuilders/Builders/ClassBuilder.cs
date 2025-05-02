@@ -3,7 +3,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
-namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+namespace ObjectSim.ClassLogic.ClassBuilders.Builders;
 
 public class ClassBuilder(IMethodService methodService, IClassService classService, IAttributeService attributeService) : Builder(classService, attributeService)
 {

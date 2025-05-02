@@ -21,7 +21,7 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
 
     private static void ValidateNullMethodArgs(CreateMethodArgs methodsArgs)
     {
-        if (methodsArgs is null)
+        if(methodsArgs is null)
         {
             throw new ArgumentNullException(nameof(methodsArgs), "Method arguments cannot be null.");
         }
@@ -53,17 +53,17 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
 
     private List<Method> GetInvokeMethods(List<Guid> invokeMethodIds)
     {
-        if (invokeMethodIds.Count == 0)
+        if(invokeMethodIds.Count == 0)
         {
             return [];
         }
 
         var invokeMethods = new List<Method>();
 
-        foreach (var methodId in invokeMethodIds)
+        foreach(var methodId in invokeMethodIds)
         {
             var invokeMethod = methodRepository.Get(m => m.Id == methodId);
-            if (invokeMethod == null)
+            if(invokeMethod == null)
             {
                 throw new Exception($"Method with ID {methodId} not found.");
             }

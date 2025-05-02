@@ -1,49 +1,47 @@
 ﻿using Moq;
-using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
-using ObjectSim.BusinessLogic.ClassLogic.Strategy;
+using ObjectSim.ClassLogic.ClassBuilders.Builders;
+using ObjectSim.ClassLogic.Strategy;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
-namespace ObjectSim.BusinessLogic.Test.ClassLogic.Strategy;
+namespace ObjectSim.ClassLogic.Test.Strategy;
 
 [TestClass]
-public class ClassBuilderStrategyTest
+public class InterfaceBuilderStrategyTest
 {
-    private Mock<IMethodService>? _methodServiceMock;
     private Mock<IAttributeService>? _attributeServiceMock;
     private Mock<IClassService>? _classServiceMock;
-    private ClassBuilderStrategy? _strategy;
-
+    private InterfaceBuilderStrategy? _strategy;
+    
     [TestInitialize]
     public void Initialize()
     {
-        _methodServiceMock = new Mock<IMethodService>();
         _attributeServiceMock = new Mock<IAttributeService>();
         _classServiceMock = new Mock<IClassService>();
 
-        _strategy = new ClassBuilderStrategy(_methodServiceMock.Object, _attributeServiceMock!.Object);
+        _strategy = new InterfaceBuilderStrategy(_attributeServiceMock.Object);
     }
-
+    
     #region WhichIsMyBuilder
 
     [TestMethod]
-    public void WhichIsMyBuilder_WithNormalClass_ReturnsTrue()
+    public void WhichIsMyBuilder_WithNormalClass_ReturnsFalse()
     {
         var args = new CreateClassArgs("NormalClass", false, false, false, [], [], null);
 
         var result = _strategy!.WhichIsMyBuilder(args);
 
-        Assert.IsTrue(result);
+        Assert.IsFalse(result);
     }
 
     [TestMethod]
-    public void WhichIsMyBuilder_WithInterfaceClass_ReturnsFalse()
+    public void WhichIsMyBuilder_WithInterfaceClass_ReturnsTrue()
     {
         var args = new CreateClassArgs("InterfaceClass", false, false, true, [], [], null);
 
         var result = _strategy!.WhichIsMyBuilder(args);
 
-        Assert.IsFalse(result);
+        Assert.IsTrue(result);
     }
 
     [TestMethod]
@@ -58,12 +56,16 @@ public class ClassBuilderStrategyTest
 
     #endregion
 
+    #region CreateBuilder
+    
     [TestMethod]
-    public void CreateBuilder_ReturnsClassBuilderInstance()
+    public void CreateBuilder_WhenIsInterface_ReturnsInterfaceBuilder()
     {
         var builder = _strategy!.CreateBuilder(_classServiceMock!.Object);
 
         Assert.IsNotNull(builder);
-        Assert.IsInstanceOfType(builder, typeof(ClassBuilder));
+        Assert.IsInstanceOfType(builder, typeof(InterfaceBuilder));
     }
+
+    #endregion
 }

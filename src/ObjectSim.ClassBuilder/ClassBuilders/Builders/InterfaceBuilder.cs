@@ -1,18 +1,24 @@
-﻿using ObjectSim.Domain;
-using ObjectSim.Domain.Args;
+﻿using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
-namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+namespace ObjectSim.ClassLogic.ClassBuilders.Builders;
 
 public class InterfaceBuilder(IClassService classService, IAttributeService attributeService) : Builder(classService, attributeService)
 {
     public override void SetAttributes(List<CreateAttributeArgs> attributes)
     {
         base.SetAttributes(attributes);
+        Result.Attributes = [];
     }
 
     public override void SetMethods(List<CreateMethodArgs> methods)
     {
         base.SetMethods(methods);
+        Result.Methods = [];
+    }
+    
+    public override void SetAbstraction(bool? abstraction)
+    {
+        Result.IsAbstract = true;
     }
 }

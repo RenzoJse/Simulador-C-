@@ -16,7 +16,7 @@ public class AttributeDtoOut
             Name = attribute.Name!,
             Visibility = attribute.Visibility.ToString(),
             DataTypeName = attribute.DataType.Name,
-            DataTypeKind = attribute.DataType is ValueType ? "Value" : "Reference",
+            DataTypeKind = attribute.DataType.Type,
             ClassId = attribute.ClassId
         };
     }

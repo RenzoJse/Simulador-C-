@@ -1,13 +1,13 @@
 ﻿using FluentAssertions;
 using Moq;
-using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
+using ObjectSim.ClassLogic.ClassBuilders.Builders;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 using ValueType = ObjectSim.Domain.ValueType;
 
-namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
+namespace ObjectSim.ClassLogic.Test.ClassBuildersTest;
 
 [TestClass]
 public class ClassBuilderTest

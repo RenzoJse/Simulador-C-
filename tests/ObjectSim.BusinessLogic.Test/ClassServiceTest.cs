@@ -1,9 +1,8 @@
 using FluentAssertions;
 using Moq;
-using ObjectSim.BusinessLogic.ClassLogic;
-using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
-using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
-using ObjectSim.BusinessLogic.ClassLogic.Strategy;
+using ObjectSim.ClassLogic.ClassBuilders;
+using ObjectSim.ClassLogic.ClassBuilders.Builders;
+using ObjectSim.ClassLogic.Strategy;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
@@ -11,7 +10,7 @@ using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 using ValueType = ObjectSim.Domain.ValueType;
 
-namespace ObjectSim.BusinessLogic.Test.ClassLogic;
+namespace ObjectSim.BusinessLogic.Test;
 
 [TestClass]
 public class ClassServiceTest

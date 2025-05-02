@@ -1,5 +1,4 @@
-﻿using ObjectSim.Domain;
-using ObjectSim.Domain.Args;
+﻿using ObjectSim.Domain.Args;
 
 namespace ObjectSim.WebApi.DTOs.In;
 
