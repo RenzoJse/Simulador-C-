@@ -3,6 +3,6 @@
 public class CreateDataTypeArgs(
     string name, string kind)
 {
-    public string Name { get; set; } = name;
-    public string Kind { get; set; } = kind;
+    public string Name { get; } = name;
+    public string Kind { get; } = kind;
 }

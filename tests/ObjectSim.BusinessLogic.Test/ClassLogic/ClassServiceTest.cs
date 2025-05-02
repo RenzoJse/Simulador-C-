@@ -400,7 +400,7 @@ public class ClassServiceTest
             Name = "TestMethod",
             Parameters = [
                 new ValueType("variable", "int", []),
-                new ValueType("variable2", "bool", [])
+                new ValueType("variableTwo", "bool", [])
             ]
         };
 
@@ -408,7 +408,7 @@ public class ClassServiceTest
         {
             Name = "TestMethod",
             Parameters = [
-                new ValueType("variable2", "bool", []),
+                new ValueType("variableTwo", "bool", []),
                 new ValueType("variable", "int", [])
             ]
         };
@@ -472,7 +472,7 @@ public class ClassServiceTest
             Name = "TestMethod",
             Parameters = [
                 new ValueType("variable", "bool", []),
-                new ValueType("variable2", "int", [])
+                new ValueType("variableTwo", "int", [])
             ]
         };
 
