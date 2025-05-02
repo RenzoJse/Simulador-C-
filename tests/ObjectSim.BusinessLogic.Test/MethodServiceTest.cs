@@ -16,6 +16,20 @@ public class MethodServiceTest
     private Method? _testMethod;
 
     private static readonly Guid ClassId = Guid.NewGuid();
+    private static readonly Guid MethodId = Guid.NewGuid();
+
+
+    private static readonly LocalVariable TestLocalVariable = new LocalVariable
+    {
+        Name = "TestLocalVariable",
+        Type = LocalVariable.LocalVariableDataType.String,
+    };
+
+    private static readonly Parameter TestParameter = new Parameter
+    {
+        Name = "TestParameter",
+        Type = Parameter.ParameterDataType.String,
+    };
 
     private readonly CreateMethodArgs _testCreateMethodArgs = new CreateMethodArgs(
         "TestMethod",
@@ -38,7 +52,7 @@ public class MethodServiceTest
         _methodService = new MethodService(_methodRepositoryMock.Object, _classServiceMock.Object);
         _testMethod = new Method
         {
-            Id = ClassId,
+            Id = MethodId,
             Name = "TestMethod",
             Type = Method.MethodDataType.String,
             Abstract = false,
@@ -168,6 +182,8 @@ public class MethodServiceTest
 
     #endregion
 
+
+    #region GetAll-Methods-Test
     [TestMethod]
     public void GetAllMethods_ShouldReturnMethods()
     {
@@ -202,6 +218,9 @@ public class MethodServiceTest
         _methodService!.GetAll();
     }
 
+    #endregion
+
+    #region GetById-Method-Test
     [TestMethod]
     public void GetById_WhenValid_ShouldReturnMethod()
     {
@@ -236,7 +255,9 @@ public class MethodServiceTest
             .Returns((Method)null!);
         _methodService!.Delete(ClassId);
     }
+    #endregion
 
+    #region Delete-Method-Test
     [TestMethod]
     public void DeleteMethod_WhenExists_ShouldDeleteAndReturnTrue()
     {
@@ -252,6 +273,9 @@ public class MethodServiceTest
         result.Should().BeTrue();
         _methodRepositoryMock.Verify(x => x.Delete(It.Is<Method>(m => m.Id == _testMethod.Id)), Times.Once);
     }
+    #endregion
+
+    #region Update-Method-Test
 
     [TestMethod]
     public void UpdateMethod_WhenValid_ShouldReturnUpdatedMethod()
@@ -312,6 +336,7 @@ public class MethodServiceTest
 
         _methodService!.Update(_testMethod.Id, invalidUpdate);
     }
+    #endregion
 
     #region Add-Parameter-Test
 
@@ -328,29 +353,23 @@ public class MethodServiceTest
             .Returns(_testMethod);
 
         _methodRepositoryMock!.Setup(r => r.Update(It.IsAny<Method>()))
-            .Returns((Method m) => m); // Configuración para devolver el objeto actualizado
+            .Returns((Method m) => m);
 
-        var result = _methodService!.AddParameter(_testMethod!.Id, param);
+        var result = _methodService!.AddParameter(_testMethod!.Id, TestParameter);
 
         result.Should().NotBeNull();
-        result.Name.Should().Be("parameterTest");
-        _testMethod.Parameters.Should().ContainSingle(p => p.Name == "parameterTest");
+        result.Name.Should().Be(TestParameter.Name);
+        _testMethod.Parameters.Should().ContainSingle(p => p.Name == TestParameter.Name);
         _methodRepositoryMock.Verify(r => r.Update(_testMethod), Times.Once);
     }
 
     [TestMethod]
     public void AddParameter_WhenMethodNotFound_ShouldThrow()
     {
-        var param = new Parameter
-        {
-            Name = "parameterTest",
-            Type = Parameter.ParameterDataType.String
-        };
-
         _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns((Method?)null);
 
-        Action act = () => _methodService!.AddParameter(_testMethod!.Id, param);
+        Action act = () => _methodService!.AddParameter(_testMethod!.Id, TestParameter);
 
         act.Should().Throw<Exception>().WithMessage("Method not found");
 
@@ -391,39 +410,27 @@ public class MethodServiceTest
     [TestMethod]
     public void AddLocalVariable_WhenValid_ShouldAddToMethod()
     {
-        var localVariable = new LocalVariable
-        {
-            Name = "lvTest",
-            Type = LocalVariable.LocalVariableDataType.Int
-        };
-
         _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns(_testMethod);
 
         _methodRepositoryMock!.Setup(r => r.Update(It.IsAny<Method>()))
             .Returns((Method m) => m);
 
-        var result = _methodService!.AddLocalVariable(_testMethod!.Id, localVariable);
+        var result = _methodService!.AddLocalVariable(_testMethod!.Id, TestLocalVariable);
 
         result.Should().NotBeNull();
-        result.Name.Should().Be("lvTest");
-        _testMethod!.LocalVariables.Should().ContainSingle(v => v.Name == "lvTest");
+        result.Name.Should().Be(TestLocalVariable.Name);
+        _testMethod!.LocalVariables.Should().ContainSingle(v => v.Name == TestLocalVariable.Name);
         _methodRepositoryMock.Verify(r => r.Update(_testMethod), Times.Once);
     }
 
     [TestMethod]
     public void AddLocalVariable_WhenMethodNotFound_ShouldThrow()
     {
-        var localVariable = new LocalVariable
-        {
-            Name = "lvTest",
-            Type = LocalVariable.LocalVariableDataType.String
-        };
-
         _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns((Method?)null);
 
-        Action act = () => _methodService!.AddLocalVariable(_testMethod!.Id, localVariable);
+        Action act = () => _methodService!.AddLocalVariable(_testMethod!.Id, TestLocalVariable);
 
         act.Should().Throw<Exception>().WithMessage("Method not found");
 
