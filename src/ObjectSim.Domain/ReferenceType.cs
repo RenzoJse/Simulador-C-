@@ -1,8 +1,6 @@
 ﻿namespace ObjectSim.Domain;
 public class ReferenceType : DataType
 {
-    public static readonly List<string> BuiltinTypes = ["string", "object"];
-
     private ReferenceType()
     {
         Id = Guid.NewGuid();

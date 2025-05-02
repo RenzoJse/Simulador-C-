@@ -42,4 +42,30 @@ public class DataTypeServiceTest
 
         _service.CreateDataType(args);
     }
+    [TestMethod]
+    public void CreateDataType_ObjectReferenceTypeWithClass_ShouldSucceed()
+    {
+        var args = new CreateDataTypeArgs("object", "Reference");
+
+        _classRepoMock.Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
+                      .Returns([new Class { Name = "object" }]);
+
+        var result = _service.CreateDataType(args);
+
+        Assert.IsInstanceOfType(result, typeof(ReferenceType));
+        Assert.AreEqual("object", result.Name);
+    }
+    [TestMethod]
+    public void CreateDataType_WithValidIntType_ShouldCreateValueType()
+    {
+        var args = new CreateDataTypeArgs("MyInt", "int");
+
+        var result = _service.CreateDataType(args);
+
+        Assert.IsInstanceOfType(result, typeof(Domain.ValueType));
+        Assert.AreEqual("MyInt", result.Name);
+        Assert.AreEqual("int", result.Type);
+        Assert.AreEqual(0, result.MethodIds.Count);
+    }
+
 }
