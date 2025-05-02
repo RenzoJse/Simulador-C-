@@ -5,28 +5,28 @@ namespace ObjectSim.Domain.Test;
 [TestClass]
 public class MethodTest
 {
+    private readonly DataType _methodType = new ValueType("methodType", "int", []);
+    private readonly DataType _methodReferenceType = new ReferenceType("methodReferenceType", "object", []);
+    
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqual()
     {
-        var method = new Method();
-        method.Type = Method.MethodDataType.Decimal;
-        method.Type.Should().Be(Method.MethodDataType.Decimal);
+        var method = new Method { Type = _methodType };
+        method.Type.Should().Be(_methodType);
     }
 
     [TestMethod]
     public void Accessibility_Property_SetAndGet_ShouldBeEqual()
     {
-        var method = new Method();
-        method.Accessibility = Method.MethodAccessibility.ProtectedInternal;
+        var method = new Method { Accessibility = Method.MethodAccessibility.ProtectedInternal };
         method.Accessibility.Should().Be(Method.MethodAccessibility.ProtectedInternal);
     }
 
     [TestMethod]
     public void MethodDataType_CreateMethod_ShouldSetCorrectly()
     {
-        var method = new Method();
-        method.Type = Method.MethodDataType.String;
-        Assert.AreEqual(Method.MethodDataType.String, method.Type);
+        var method = new Method { Type = _methodReferenceType };
+        Assert.AreEqual(_methodReferenceType, method.Type);
     }
 
     [TestMethod]
@@ -104,7 +104,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
-            Type = Method.MethodDataType.String,
+            Type = _methodReferenceType,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -120,7 +120,7 @@ public class MethodTest
         {
             Id = Guid.Empty,
             Name = "Test",
-            Type = Method.MethodDataType.String,
+            Type = _methodReferenceType,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -131,24 +131,13 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void Setting_InvalidDataType_ShouldThrowArgumentException()
-    {
-        var method = new Method();
-
-        Action act = () => method.Type = (Method.MethodDataType)999;
-
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Invalid data type.");
-    }
-
-    [TestMethod]
     public void MethodValidator_WithValidDataType_ShouldNotThrow()
     {
         var method = new Method
         {
             Id = Guid.NewGuid(),
             Name = "mmmm",
-            Type = Method.MethodDataType.String,
+            Type = _methodReferenceType,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -164,7 +153,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "test",
-            Type = Method.MethodDataType.String
+            Type = _methodReferenceType
         };
 
         var accessibilityField = typeof(Method).GetField("_accessibility", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -183,7 +172,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "test",
-            Type = Method.MethodDataType.String,
+            Type = _methodReferenceType,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -236,7 +225,7 @@ public class MethodTest
         var method = new Method
         {
             Id = Guid.NewGuid(),
-            Type = Method.MethodDataType.String,
+            Type = _methodReferenceType,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -248,31 +237,12 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void MethodValidator_WithInvalidDataType_ShouldThrowArgumentException()
-    {
-        var method = new Method
-        {
-            Id = Guid.NewGuid(),
-            Name = "test",
-            Accessibility = Method.MethodAccessibility.Public
-        };
-
-        var typeField = typeof(Method).GetField("_type", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        typeField!.SetValue(method, (Method.MethodDataType)999);
-
-        Action act = method.ValidateFields;
-
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Invalid data type.");
-    }
-
-    [TestMethod]
     public void ValidateFields_WithNullName_ShouldThrow()
     {
         var method = new Method
         {
             Id = Guid.NewGuid(),
-            Type = Method.MethodDataType.String,
+            Type = _methodReferenceType,
             Accessibility = Method.MethodAccessibility.Public
         };
 

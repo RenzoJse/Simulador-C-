@@ -5,6 +5,7 @@ using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
+using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic.ClassBuildersTest;
 
@@ -33,7 +34,7 @@ public class ClassBuilderTest
 
     private static readonly CreateMethodArgs TestCreateMethodArgs = new(
         "TestMethod",
-        "int",
+        new CreateDataTypeArgs("TestParameter", "int"),
         "public",
         false,
         false,
@@ -208,7 +209,7 @@ public class ClassBuilderTest
     {
         var invalidMethodArgs = new CreateMethodArgs(
             "InvalidMethod",
-            "int",
+            new CreateDataTypeArgs("MethodType", "int"),
             "public",
             false,
             false,
@@ -247,7 +248,7 @@ public class ClassBuilderTest
 
         var methodCreateArgs2 = new CreateMethodArgs(
             "Method2",
-            "int",
+            new CreateDataTypeArgs("MethodType", "int"),
             "public",
             false,
             false,

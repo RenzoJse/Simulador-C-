@@ -28,7 +28,7 @@ public class MethodControllerTest
     private readonly Method _testMethod = new Method
     {
         Name = "TestMethod",
-        Type = Method.MethodDataType.String,
+        Type = new ReferenceType("TestParameter", "string", []),
         Accessibility = Method.MethodAccessibility.Public,
         Abstract = false,
         IsOverride = false,
@@ -62,7 +62,7 @@ public class MethodControllerTest
         var result = _methodController.CreateMethod(new MethodDtoIn
         {
             Name = "TestClass",
-            Type = nameof(Method.MethodDataType.Char),
+            Type = new CreateDataTypeDtoIn(),
             Accessibility = nameof(Method.MethodAccessibility.Public),
             IsAbstract = false,
             IsOverride = false,

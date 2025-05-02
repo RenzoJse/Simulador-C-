@@ -39,6 +39,8 @@ public class Method
 
     public DataType Type { get; set; } = null!;
 
+    public string GetTypeString() => Type?.Type ?? string.Empty;
+    
     #endregion
 
     #region Abstract

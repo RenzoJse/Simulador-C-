@@ -55,7 +55,7 @@ public class ClassRepositoryTest
                     Abstract = false,
                     IsOverride = false,
                     IsSealed = false,
-                    Type = 0
+                    Type = new ReferenceType("TestParameter", "string", [])
                 }
             ],
             Attributes =
