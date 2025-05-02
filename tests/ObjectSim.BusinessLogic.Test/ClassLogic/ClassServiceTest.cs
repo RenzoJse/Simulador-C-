@@ -9,6 +9,7 @@ using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
+using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.BusinessLogic.Test.ClassLogic;
 
@@ -334,7 +335,7 @@ public class ClassServiceTest
     [TestMethod]
     public void AddMethod_ClassIsInterfaceMethodThatHaveLocalVariables_ThrowsException()
     {
-        _testMethod.LocalVariables = [new LocalVariable()];
+        _testMethod.LocalVariables = [new ValueType("variable", "int", [])];
 
         _classRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
@@ -369,13 +370,13 @@ public class ClassServiceTest
         var existingMethod = new Method
         {
             Name = "TestMethod1",
-            Parameters = [new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int }]
+            Parameters = [new ValueType("variable", "int", [])]
         };
 
         var newMethod = new Method
         {
             Name = "TestMethod2",
-            Parameters = [new Parameter { Name = "otherParam", Type = Parameter.ParameterDataType.Bool }]
+            Parameters = [new ValueType("variable", "int", [])]
         };
 
         _testClass.Methods!.Add(existingMethod);
@@ -398,8 +399,8 @@ public class ClassServiceTest
         {
             Name = "TestMethod",
             Parameters = [
-                new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int },
-                new Parameter { Name = "param2", Type = Parameter.ParameterDataType.String }
+                new ValueType("variable", "int", []),
+                new ValueType("variable2", "bool", [])
             ]
         };
 
@@ -407,8 +408,8 @@ public class ClassServiceTest
         {
             Name = "TestMethod",
             Parameters = [
-                new Parameter { Name = "param2", Type = Parameter.ParameterDataType.String },
-                new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int }
+                new ValueType("variable2", "bool", []),
+                new ValueType("variable", "int", [])
             ]
         };
 
@@ -433,7 +434,7 @@ public class ClassServiceTest
             Name = "TestMethod",
             Abstract = false,
             IsSealed = false,
-            Parameters = [new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int }]
+            Parameters = [new ValueType("variable", "bool", [])]
         };
 
         var newMethod = new Method
@@ -441,7 +442,7 @@ public class ClassServiceTest
             Name = "TestMethod",
             Abstract = false,
             IsSealed = false,
-            Parameters = [new Parameter { Name = "param1", Type = Parameter.ParameterDataType.String }]
+            Parameters = [new ValueType("variable", "int", [])]
         };
 
         _testClass.Methods!.Add(existingMethod);
@@ -463,15 +464,15 @@ public class ClassServiceTest
         var existingMethod = new Method
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int }]
+            Parameters = [new ValueType("variable", "bool", [])]
         };
 
         var newMethod = new Method
         {
             Name = "TestMethod",
             Parameters = [
-                new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int },
-                new Parameter { Name = "param2", Type = Parameter.ParameterDataType.String }
+                new ValueType("variable", "bool", []),
+                new ValueType("variable2", "int", [])
             ]
         };
 
@@ -499,14 +500,14 @@ public class ClassServiceTest
         var existingMethod = new Method
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int }]
+            Parameters = [new ValueType("variable", "int", [])]
         };
 
         var newMethod = new Method
         {
             Name = "TestMethod",
             Parameters = [
-                new Parameter { Name = "param1", Type = Parameter.ParameterDataType.Int },
+                new ValueType("variable", "int", []),
             ],
             IsOverride = true
         };
