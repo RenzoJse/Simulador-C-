@@ -90,8 +90,8 @@ public class AttributeControllerTest
         {
             Name = "Color",
             Visibility = "Public",
-            DataTypeName = "string",
-            DataTypeKind = "Reference",
+            DataTypeName = "myString",
+            DataTypeKind = "string",
             ClassId = Guid.NewGuid()
         };
 
@@ -117,11 +117,12 @@ public class AttributeControllerTest
         Assert.IsNotNull(outModel);
         Assert.AreEqual("Color", outModel.Name);
         Assert.AreEqual("Public", outModel.Visibility);
-        Assert.AreEqual("Reference", outModel.DataTypeKind);
+        Assert.AreEqual("string", outModel.DataTypeKind);
         Assert.AreEqual("myString", outModel.DataTypeName);
 
         _attributeServiceMock.Verify(x => x.CreateAttribute(It.IsAny<CreateAttributeArgs>()), Times.Once);
     }
+
     [TestMethod]
     public void Create_NullModel_ShouldReturnBadRequest()
     {
