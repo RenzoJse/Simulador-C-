@@ -32,4 +32,14 @@ public class DataTypeServiceTest
         Assert.AreEqual("object", result.Name);
         Assert.AreEqual("Reference", result.Type);
     }
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void CreateDataType_ObjectReferenceTypeWithoutClass_ShouldThrow()
+    {
+        var args = new CreateDataTypeArgs("object", "Reference");
+        _classRepoMock.Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
+                      .Returns([]);
+
+        _service.CreateDataType(args);
+    }
 }
