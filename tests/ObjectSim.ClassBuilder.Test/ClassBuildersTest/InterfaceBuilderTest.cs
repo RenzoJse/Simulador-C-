@@ -16,22 +16,22 @@ public class InterfaceBuilderTest
     private Mock<IMethodService>? _methodServiceMock;
     private Mock<IClassService>? _classServiceMock;
     private Mock<IAttributeService>? _attributeServiceMock;
-    
+
     private static readonly CreateDataTypeArgs TestArgsDataType = new(
         "int", "reference");
 
     private static readonly Guid TestAttributeId = Guid.NewGuid();
-    
+
     private readonly CreateAttributeArgs _testArgsAttribute = new(
         TestArgsDataType,
         "public",
         TestAttributeId,
         "Test"
     );
-    
+
     private readonly CreateMethodArgs _testCreateMethodArgs = new CreateMethodArgs(
         "TestMethod",
-        "string",
+        new CreateDataTypeArgs("int", "reference"),
         "public",
         false,
         false,
@@ -76,20 +76,20 @@ public class InterfaceBuilderTest
     }
 
     #endregion
-    
+
     #endregion
-    
+
     #region SetMethods
-    
+
     #region Error
-    
+
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void SetMethods_NullMethodList_ThrowsException()
     {
         _interfaceBuilderTest!.SetMethods(null!);
     }
-    
+
     #endregion
 
     #region Success
@@ -104,7 +104,7 @@ public class InterfaceBuilderTest
     }
 
     #endregion
-    
+
     #endregion
 
     #region SetAbstraction
@@ -119,5 +119,5 @@ public class InterfaceBuilderTest
     }
 
     #endregion
-    
+
 }

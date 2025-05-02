@@ -10,11 +10,11 @@ public class CreateDataTypeDtoInTest
     public void CreateDataTypeDtoIn_WithArguments_ReturnsNewInstance()
     {
         var model = new CreateDataTypeDtoIn { Name = "TestName", Type = "int" };
-        
+
         model.Name.Should().Be("TestName");
         model.Type.Should().Be("int");
     }
-    
+
     [TestMethod]
     public void CreateDataTypeDtoInToArgs_WithArguments_DataTypeArgs()
     {
@@ -22,6 +22,6 @@ public class CreateDataTypeDtoInTest
         var args = model.ToArgs();
         args.Should().NotBeNull();
         args.Name.Should().Be("TestName");
-        args.Kind.Should().Be("int");
+        args.Type.Should().Be("int");
     }
 }
