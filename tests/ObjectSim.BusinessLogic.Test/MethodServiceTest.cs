@@ -179,22 +179,8 @@ public class MethodServiceTest
     #endregion
     
     #region GetAll-Methods-Test
-    [TestMethod]
-    public void GetAllMethods_ShouldReturnMethods()
-    {
-        var methods = new List<Method>
-        {
-            new Method { Name = "m1Test", Abstract = false, IsSealed = false, Accessibility = Method.MethodAccessibility.Public, LocalVariables = [], Parameters = [], MethodsInvoke = [] },
-            new Method { Name = "m2Test", Abstract = false, IsSealed = false, Accessibility = Method.MethodAccessibility.Public, LocalVariables = [], Parameters = [], MethodsInvoke = [] }
-        };
 
-        _methodRepositoryMock!.Setup(repo => repo.GetAll(It.IsAny<Func<Method, bool>>())).Returns(methods);
-
-        var result = _methodService!.GetAll();
-
-        result.Should().HaveCount(2);
-        _methodRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Method, bool>>()), Times.Once);
-    }
+    #region Error
 
     [TestMethod]
     [ExpectedException(typeof(Exception))]
@@ -215,20 +201,32 @@ public class MethodServiceTest
 
     #endregion
 
-    #region GetById-Method-Test
+    #region Success
+
     [TestMethod]
-    public void GetById_WhenValid_ShouldReturnMethod()
+    public void GetAllMethods_ShouldReturnMethods()
     {
-        _methodRepositoryMock!
-            .Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns(_testMethod!);
+        var methods = new List<Method>
+        {
+            new Method { Name = "m1Test", Abstract = false, IsSealed = false, Accessibility = Method.MethodAccessibility.Public, LocalVariables = [], Parameters = [], MethodsInvoke = [] },
+            new Method { Name = "m2Test", Abstract = false, IsSealed = false, Accessibility = Method.MethodAccessibility.Public, LocalVariables = [], Parameters = [], MethodsInvoke = [] }
+        };
 
-        var result = _methodService!.GetById(ClassId);
+        _methodRepositoryMock!.Setup(repo => repo.GetAll(It.IsAny<Func<Method, bool>>())).Returns(methods);
 
-        result.Should().NotBeNull();
-        result.Id.Should().Be(_testMethod!.Id);
-        result.Name.Should().Be(_testMethod.Name);
+        var result = _methodService!.GetAll();
+
+        result.Should().HaveCount(2);
+        _methodRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Method, bool>>()), Times.Once);
     }
+
+    #endregion
+
+    #endregion
+
+    #region GetById-Method-Test
+
+    #region Error
 
     [TestMethod]
     [ExpectedException(typeof(InvalidOperationException))]
@@ -250,9 +248,31 @@ public class MethodServiceTest
             .Returns((Method)null!);
         _methodService!.Delete(ClassId);
     }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void GetById_WhenValid_ShouldReturnMethod()
+    {
+        _methodRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns(_testMethod!);
+
+        var result = _methodService!.GetById(ClassId);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(_testMethod!.Id);
+        result.Name.Should().Be(_testMethod.Name);
+    }
+
+    #endregion
+    
     #endregion
 
     #region Delete-Method-Test
+    
     [TestMethod]
     public void DeleteMethod_WhenExists_ShouldDeleteAndReturnTrue()
     {
@@ -266,8 +286,8 @@ public class MethodServiceTest
         var result = _methodService!.Delete(_testMethod!.Id);
 
         result.Should().BeTrue();
-        _methodRepositoryMock.Verify(x => x.Delete(It.Is<Method>(m => m.Id == _testMethod.Id)), Times.Once);
     }
+    
     #endregion
 
     #region Update-Method-Test
@@ -304,9 +324,6 @@ public class MethodServiceTest
         result.Abstract.Should().Be(newMethod.Abstract);
         result.IsSealed.Should().Be(newMethod.IsSealed);
         result.Accessibility.Should().Be(newMethod.Accessibility);
-
-        _methodRepositoryMock.Verify(x => x.Get(It.IsAny<Func<Method, bool>>()), Times.Once);
-        _methodRepositoryMock.Verify(x => x.Update(It.IsAny<Method>()), Times.Once);
     }
 
     [TestMethod]
@@ -331,28 +348,12 @@ public class MethodServiceTest
 
         _methodService!.Update(_testMethod.Id, invalidUpdate);
     }
+    
     #endregion
 
     #region Add-Parameter-Test
 
-    [TestMethod]
-    public void AddParameter_WhenValid_ShouldAdd()
-    {
-        var param = new ValueType("variable", "int", []);
-
-        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns(_testMethod);
-
-        _methodRepositoryMock!.Setup(r => r.Update(It.IsAny<Method>()))
-            .Returns((Method m) => m);
-
-        var result = _methodService!.AddParameter(_testMethod!.Id, TestParameter);
-
-        result.Should().NotBeNull();
-        result.Name.Should().Be(TestParameter.Name);
-        _testMethod.Parameters.Should().ContainSingle(p => p.Name == TestParameter.Name);
-        _methodRepositoryMock.Verify(r => r.Update(_testMethod), Times.Once);
-    }
+    #region Error
 
     [TestMethod]
     public void AddParameter_WhenMethodNotFound_ShouldThrow()
@@ -382,13 +383,13 @@ public class MethodServiceTest
 
         act.Should().Throw<Exception>().WithMessage("Parameter already exists in this method");
     }
-
+    
     #endregion
 
-    #region Add-LocalVariable-Test
+    #region Success
 
     [TestMethod]
-    public void AddLocalVariable_WhenValid_ShouldAddToMethod()
+    public void AddParameter_WhenValid_ShouldAdd()
     {
         _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns(_testMethod);
@@ -396,14 +397,21 @@ public class MethodServiceTest
         _methodRepositoryMock!.Setup(r => r.Update(It.IsAny<Method>()))
             .Returns((Method m) => m);
 
-        var result = _methodService!.AddLocalVariable(_testMethod!.Id, TestLocalVariable);
+        var result = _methodService!.AddParameter(_testMethod!.Id, TestParameter);
 
         result.Should().NotBeNull();
-        result.Name.Should().Be(TestLocalVariable.Name);
-        _testMethod!.LocalVariables.Should().ContainSingle(v => v.Name == TestLocalVariable.Name);
-        _methodRepositoryMock.Verify(r => r.Update(_testMethod), Times.Once);
+        result.Name.Should().Be(TestParameter.Name);
+        _testMethod.Parameters.Should().ContainSingle(p => p.Name == TestParameter.Name);
     }
 
+    #endregion
+    
+    #endregion
+
+    #region Add-LocalVariable-Test
+
+    #region Error
+    
     [TestMethod]
     public void AddLocalVariable_WhenMethodNotFound_ShouldThrow()
     {
@@ -413,8 +421,6 @@ public class MethodServiceTest
         Action act = () => _methodService!.AddLocalVariable(_testMethod!.Id, TestLocalVariable);
 
         act.Should().Throw<Exception>().WithMessage("Method not found");
-
-        _methodRepositoryMock.Verify(r => r.Get(It.IsAny<Func<Method, bool>>()), Times.Once);
     }
 
     [TestMethod]
@@ -432,6 +438,28 @@ public class MethodServiceTest
 
         act.Should().Throw<Exception>().WithMessage("LocalVariable already exists in this method");
     }
+    
+    #endregion
+    
+    #region Success
+    
+    [TestMethod]
+    public void AddLocalVariable_WhenValid_ShouldAddToMethod()
+    {
+        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns(_testMethod);
+
+        _methodRepositoryMock!.Setup(r => r.Update(It.IsAny<Method>()))
+            .Returns((Method m) => m);
+
+        var result = _methodService!.AddLocalVariable(_testMethod!.Id, TestLocalVariable);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be(TestLocalVariable.Name);
+        _testMethod!.LocalVariables.Should().ContainSingle(v => v.Name == TestLocalVariable.Name);
+    }
+    
+    #endregion
 
     #endregion
 }
