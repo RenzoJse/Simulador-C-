@@ -14,5 +14,6 @@ public class InterfaceBuilder(IClassService classService, IAttributeService attr
     public override void SetMethods(List<CreateMethodArgs> methods)
     {
         base.SetMethods(methods);
+        Result.Methods = [];
     }
 }
