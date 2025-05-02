@@ -1,6 +1,11 @@
-﻿using Moq;
+﻿using FluentAssertions;
+using Moq;
 using ObjectSim.ClassLogic.ClassBuilders.Builders;
+using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
+using Attribute = ObjectSim.Domain.Attribute;
+using ValueType = System.ValueType;
 
 namespace ObjectSim.ClassLogic.Test.ClassBuildersTest;
 
@@ -11,6 +16,18 @@ public class InterfaceBuilderTest
     private Mock<IMethodService>? _methodServiceMock;
     private Mock<IClassService>? _classServiceMock;
     private Mock<IAttributeService>? _attributeServiceMock;
+    
+    private static readonly CreateDataTypeArgs TestArgsDataType = new(
+        "int", "reference");
+
+    private static readonly Guid TestAttributeId = Guid.NewGuid();
+    
+    private readonly CreateAttributeArgs _testArgsAttribute = new(
+        TestArgsDataType,
+        "public",
+        TestAttributeId,
+        "Test"
+    );
 
     [TestInitialize]
     public void Initialize()
@@ -21,20 +38,32 @@ public class InterfaceBuilderTest
         _interfaceBuilderTest = new InterfaceBuilder(_classServiceMock.Object, _attributeServiceMock!.Object);
     }
 
+    #region SetAttributes
+
     #region Error
 
     [TestMethod]
-    public void SetAttributes_SetsEmptyAttributes()
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void SetAttributes_NullAttributeList_ThrowsException()
     {
-        /*
-        List<Attribute> attributes = new List<Attribute>();
-
-        _interfaceBuilderTest!.SetAttributes(attributes);
-        var result = _interfaceBuilderTest.GetResult();
-
-        result.Attributes.Should().BeEmpty();
-        */
+        _interfaceBuilderTest!.SetAttributes(null!);
     }
 
     #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void SetAttributes_WithAttributeList_AddsEmptyAttributeList()
+    {
+        _interfaceBuilderTest!.SetAttributes([_testArgsAttribute]);
+        var result = _interfaceBuilderTest.GetResult();
+
+        result.Attributes.Should().BeEmpty();
+    }
+
+    #endregion
+    
+    #endregion
+    
 }
