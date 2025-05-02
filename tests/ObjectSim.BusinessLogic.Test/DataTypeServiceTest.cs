@@ -67,5 +67,30 @@ public class DataTypeServiceTest
         Assert.AreEqual("int", result.Type);
         Assert.AreEqual(0, result.MethodIds.Count);
     }
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void CreateDataType_ShouldThrow_WhenReferenceTypeNotFoundInClasses()
+    {
+        var args = new CreateDataTypeArgs("InvalidRef", "UnknownClass");
+
+        _classRepoMock.Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
+            .Returns([]);
+
+        _service.CreateDataType(args);
+    }
+    [TestMethod]
+    public void CreateDataType_ShouldReturnReferenceType_WhenTypeMatchesExistingClass()
+    {
+        var args = new CreateDataTypeArgs("MyClientRef", "Client");
+
+        _classRepoMock.Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
+            .Returns([new Class { Name = "Client" }]);
+
+        var result = _service.CreateDataType(args);
+
+        Assert.IsInstanceOfType(result, typeof(ReferenceType));
+        Assert.AreEqual("MyClientRef", result.Name);
+        Assert.AreEqual("Client", result.Type);
+    }
 
 }

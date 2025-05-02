@@ -271,40 +271,49 @@ public class AttributeControllerTest
     public void GetByClassId_ValidId_ShouldReturnAttributes()
     {
         var classId = Guid.NewGuid();
-        var attributes = new List<Domain.Attribute>
+        var attribute = new Domain.Attribute
         {
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Attr1",
-                Visibility = Domain.Attribute.AttributeVisibility.Public,
-                ClassId = classId,
-                DataType = Domain.ValueType.Create("int")
-            }
+            Id = Guid.NewGuid(),
+            Name = "cantidad",
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            ClassId = classId,
+            DataType = new Domain.ValueType("cantidad", "int", [])
         };
 
-        _attributeServiceMock.Setup(s => s.GetByClassId(classId)).Returns(attributes);
+        var attributes = new List<Domain.Attribute> { attribute };
+
+        _attributeServiceMock
+            .Setup(s => s.GetByClassId(classId))
+            .Returns(attributes);
 
         var result = _attributeController.GetByClassId(classId);
 
         var okResult = result as OkObjectResult;
         Assert.IsNotNull(okResult);
+
         var dtoList = okResult.Value as List<AttributeDtoOut>;
         Assert.IsNotNull(dtoList);
         Assert.AreEqual(1, dtoList.Count);
 
+        var dto = dtoList[0];
+        Assert.AreEqual("cantidad", dto.Name);
+        Assert.AreEqual("Public", dto.Visibility);
+        Assert.AreEqual("int", dto.DataTypeKind);
+        Assert.AreEqual("cantidad", dto.DataTypeName);
+        Assert.AreEqual(classId, dto.ClassId);
+
         _attributeServiceMock.Verify(s => s.GetByClassId(classId), Times.Once);
     }
+
+
     [TestMethod]
     public void GetByClassId_InvalidId_ShouldReturnBadRequest()
     {
-        // Arrange
+
         var invalidId = Guid.Empty;
 
-        // Act
         var result = _attributeController.GetByClassId(invalidId);
 
-        // Assert
         var badRequest = result as BadRequestObjectResult;
         Assert.IsNotNull(badRequest);
         Assert.AreEqual(400, badRequest.StatusCode);
