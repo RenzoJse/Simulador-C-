@@ -106,5 +106,18 @@ public class InterfaceBuilderTest
     #endregion
     
     #endregion
+
+    #region SetAbstraction
+
+    [TestMethod]
+    public void SetAbstraction_WithAbstractionValue_SetsAbstraction()
+    {
+        _interfaceBuilderTest!.SetAbstraction(false);
+        var result = _interfaceBuilderTest.GetResult();
+
+        result.IsAbstract.Should().BeTrue();
+    }
+
+    #endregion
     
 }
