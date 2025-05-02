@@ -21,11 +21,11 @@ public class ReferenceType : DataType
 
     private static void Validate(string? name, List<Guid> methodIds)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if(string.IsNullOrWhiteSpace(name))
         {
             throw new ArgumentException("Name cannot be null or empty.");
         }
-        if (methodIds == null)
+        if(methodIds == null)
         {
             throw new ArgumentNullException(nameof(methodIds), "Methods cannot be null.");
         }

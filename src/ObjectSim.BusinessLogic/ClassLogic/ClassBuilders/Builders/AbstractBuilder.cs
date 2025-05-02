@@ -1,5 +1,4 @@
-﻿using ObjectSim.Domain;
-using ObjectSim.Domain.Args;
+﻿using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders.Builders;
