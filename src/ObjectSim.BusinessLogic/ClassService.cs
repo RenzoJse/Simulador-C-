@@ -1,12 +1,12 @@
-﻿using ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
-using ObjectSim.BusinessLogic.ClassLogic.Strategy;
+﻿using ObjectSim.ClassLogic.ClassBuilders;
+using ObjectSim.ClassLogic.Strategy;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
-namespace ObjectSim.BusinessLogic.ClassLogic;
+namespace ObjectSim.BusinessLogic;
 
 public class ClassService(List<IBuilderStrategy> strategies, IRepository<Class> classRepository) : IClassService
 {

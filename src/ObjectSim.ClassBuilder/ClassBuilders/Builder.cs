@@ -2,7 +2,7 @@
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
-namespace ObjectSim.BusinessLogic.ClassLogic.ClassBuilders;
+namespace ObjectSim.ClassLogic.ClassBuilders;
 
 public abstract class Builder(IClassService classService, IAttributeService attributeService)
 {

@@ -7,26 +7,24 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <RootNamespace>ObjectSim.ClassLogic.Test</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="6.0.0" />
+        <PackageReference Include="coverlet.collector" Version="6.0.0"/>
         <PackageReference Include="FluentAssertions" Version="8.2.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
         <PackageReference Include="Moq" Version="4.20.72" />
-        <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
-        <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+        <PackageReference Include="MSTest.TestAdapter" Version="3.1.1"/>
+        <PackageReference Include="MSTest.TestFramework" Version="3.1.1"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+        <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\ObjectSim.BusinessLogic\ObjectSim.BusinessLogic.csproj" />
       <ProjectReference Include="..\..\src\ObjectSim.ClassBuilder\ObjectSim.ClassBuilder.csproj" />
-      <ProjectReference Include="..\..\src\ObjectSim.DataAccess\ObjectSim.DataAccess.csproj" />
-      <ProjectReference Include="..\..\src\ObjectSim.Domain\ObjectSim.Domain.csproj" />
       <ProjectReference Include="..\..\src\ObjectSim.IBusinessLogic\ObjectSim.IBusinessLogic.csproj" />
     </ItemGroup>
 
