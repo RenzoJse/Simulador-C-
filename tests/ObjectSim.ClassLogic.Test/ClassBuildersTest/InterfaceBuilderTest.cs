@@ -28,6 +28,19 @@ public class InterfaceBuilderTest
         TestAttributeId,
         "Test"
     );
+    
+    private readonly CreateMethodArgs _testCreateMethodArgs = new CreateMethodArgs(
+        "TestMethod",
+        "string",
+        "public",
+        false,
+        false,
+        false,
+        Guid.Empty,
+        [],
+        [],
+        []
+    );
 
     [TestInitialize]
     public void Initialize()
@@ -60,6 +73,34 @@ public class InterfaceBuilderTest
         var result = _interfaceBuilderTest.GetResult();
 
         result.Attributes.Should().BeEmpty();
+    }
+
+    #endregion
+    
+    #endregion
+    
+    #region SetMethods
+    
+    #region Error
+    
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void SetMethods_NullMethodList_ThrowsException()
+    {
+        _interfaceBuilderTest!.SetMethods(null!);
+    }
+    
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void SetMethods_WithMethodList_AddsEmptyMethodList()
+    {
+        _interfaceBuilderTest!.SetMethods([_testCreateMethodArgs]);
+        var result = _interfaceBuilderTest.GetResult();
+
+        result.Methods.Should().BeEmpty();
     }
 
     #endregion
