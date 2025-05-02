@@ -209,7 +209,7 @@ public class MethodTest
     public void Parameters_AddParameter_ShouldContainParameter()
     {
         var method = new Method();
-        var param = new Parameter();
+        var param = new ValueType("variable", "int", []);
         method.Parameters.Add(param);
         method.Parameters.Should().Contain(param);
     }
@@ -218,7 +218,7 @@ public class MethodTest
     public void LocalVariables_AddLocalVariable_ShouldContainLocalVariable()
     {
         var method = new Method();
-        var localVar = new LocalVariable();
+        var localVar = new ValueType("variable", "int", []);
         method.LocalVariables.Add(localVar);
         method.LocalVariables.Should().Contain(localVar);
     }

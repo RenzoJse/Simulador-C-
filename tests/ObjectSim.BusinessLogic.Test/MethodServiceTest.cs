@@ -4,6 +4,7 @@ using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
+using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.BusinessLogic.Test;
 
@@ -12,24 +13,15 @@ public class MethodServiceTest
 {
     private Mock<IRepository<Method>>? _methodRepositoryMock;
     private Mock<IClassService>? _classServiceMock;
+    private Mock<IDataTypeService>? _dataTypeServiceMock;
     private MethodService? _methodService;
-    private Method? _testMethod;
 
     private static readonly Guid ClassId = Guid.NewGuid();
     private static readonly Guid MethodId = Guid.NewGuid();
+    
+    private static readonly ReferenceType TestLocalVariable = new ReferenceType("TestLocalVariable", "string", []);
 
-
-    private static readonly LocalVariable TestLocalVariable = new LocalVariable
-    {
-        Name = "TestLocalVariable",
-        Type = LocalVariable.LocalVariableDataType.String,
-    };
-
-    private static readonly Parameter TestParameter = new Parameter
-    {
-        Name = "TestParameter",
-        Type = Parameter.ParameterDataType.String,
-    };
+    private static readonly ValueType TestParameter = new ValueType("TestParameter", "int", []);
 
     private readonly CreateMethodArgs _testCreateMethodArgs = new CreateMethodArgs(
         "TestMethod",
@@ -43,25 +35,27 @@ public class MethodServiceTest
         [],
         []
     );
+    
+    private readonly Method? _testMethod = new Method
+    {
+        Id = MethodId,
+        Name = "TestMethod",
+        Type = Method.MethodDataType.String,
+        Abstract = false,
+        IsSealed = false,
+        Accessibility = Method.MethodAccessibility.Public,
+        Parameters = [],
+        LocalVariables = [],
+        MethodsInvoke = []
+    };
 
     [TestInitialize]
     public void Initialize()
     {
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
         _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
-        _methodService = new MethodService(_methodRepositoryMock.Object, _classServiceMock.Object);
-        _testMethod = new Method
-        {
-            Id = MethodId,
-            Name = "TestMethod",
-            Type = Method.MethodDataType.String,
-            Abstract = false,
-            IsSealed = false,
-            Accessibility = Method.MethodAccessibility.Public,
-            Parameters = [],
-            LocalVariables = [],
-            MethodsInvoke = []
-        };
+        _dataTypeServiceMock = new Mock<IDataTypeService>(MockBehavior.Strict);
+        _methodService = new MethodService(_methodRepositoryMock.Object, _classServiceMock.Object, _dataTypeServiceMock.Object);
     }
 
     [TestCleanup]
@@ -69,6 +63,7 @@ public class MethodServiceTest
     {
         _methodRepositoryMock!.VerifyAll();
         _classServiceMock!.VerifyAll();
+        _dataTypeServiceMock!.VerifyAll();
     }
 
     #region CreateMethod
@@ -76,10 +71,11 @@ public class MethodServiceTest
     #region Error
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void CreateMethod_WithNullArgs_ThrowsException()
     {
-        _methodService!.CreateMethod(null!);
+        Action act = () => _methodService!.CreateMethod(null!);
+    
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [TestMethod]
@@ -181,8 +177,7 @@ public class MethodServiceTest
     #endregion
 
     #endregion
-
-
+    
     #region GetAll-Methods-Test
     [TestMethod]
     public void GetAllMethods_ShouldReturnMethods()
@@ -343,11 +338,7 @@ public class MethodServiceTest
     [TestMethod]
     public void AddParameter_WhenValid_ShouldAdd()
     {
-        var param = new Parameter
-        {
-            Name = "parameterTest",
-            Type = Parameter.ParameterDataType.String
-        };
+        var param = new ValueType("variable", "int", []);
 
         _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns(_testMethod);
@@ -379,17 +370,8 @@ public class MethodServiceTest
     [TestMethod]
     public void AddParameter_WhenDuplicate_ShouldThrow()
     {
-        var existing = new Parameter
-        {
-            Name = "parameterTest",
-            Type = Parameter.ParameterDataType.String
-        };
-
-        var param = new Parameter
-        {
-            Name = "parameterTest",
-            Type = Parameter.ParameterDataType.String
-        };
+        var existing = new ValueType("variable", "bool", []);
+        var param = new ValueType("variable", "bool", []);
 
         _testMethod!.Parameters = [existing];
 
@@ -399,8 +381,6 @@ public class MethodServiceTest
         Action act = () => _methodService!.AddParameter(_testMethod.Id, param);
 
         act.Should().Throw<Exception>().WithMessage("Parameter already exists in this method");
-
-        _methodRepositoryMock.Verify(r => r.Get(It.IsAny<Func<Method, bool>>()), Times.Once);
     }
 
     #endregion
@@ -440,31 +420,17 @@ public class MethodServiceTest
     [TestMethod]
     public void AddLocalVariable_WhenDuplicateName_ShouldThrow()
     {
-        var existing = new LocalVariable
-        {
-            Name = "lvTest1",
-            Type = LocalVariable.LocalVariableDataType.Bool
-        };
-
-        var newVar = new LocalVariable
-        {
-            Name = "lvTest1",
-            Type = LocalVariable.LocalVariableDataType.Bool
-        };
-
+        var existing = new ValueType("variable", "bool", []);
+        var newVar = new ValueType("variable", "bool", []);
+    
         _testMethod!.LocalVariables = [existing];
 
-        var methodRepoMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
-        methodRepoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns(_testMethod);
 
-        _methodService = new MethodService(methodRepoMock.Object, _classServiceMock!.Object);
-
-        Action act = () => _methodService.AddLocalVariable(_testMethod.Id, newVar);
+        Action act = () => _methodService!.AddLocalVariable(_testMethod.Id, newVar);
 
         act.Should().Throw<Exception>().WithMessage("LocalVariable already exists in this method");
-
-        methodRepoMock.Verify(r => r.Get(It.IsAny<Func<Method, bool>>()), Times.Once);
     }
 
     #endregion
