@@ -8,6 +8,7 @@ public class InterfaceBuilder(IClassService classService, IAttributeService attr
     public override void SetAttributes(List<CreateAttributeArgs> attributes)
     {
         base.SetAttributes(attributes);
+        Result.Attributes = [];
     }
 
     public override void SetMethods(List<CreateMethodArgs> methods)
