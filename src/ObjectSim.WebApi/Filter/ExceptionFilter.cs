@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ObjectSim.WebApi.Filter;
@@ -15,6 +16,23 @@ public sealed class ExceptionFilter : IExceptionFilter
 
     public void OnException(ExceptionContext context)
     {
+        var exception = context.Exception;
+        var exceptionType = exception.GetType();
 
+        var (statusCode, innerCode) = ExceptionMappings.TryGetValue(exceptionType, out var mapped)
+            ? mapped
+            : (HttpStatusCode.InternalServerError, "InternalError");
+
+        context.Result = new ObjectResult(new
+        {
+            InnerCode = innerCode,
+            Message = exception.Message
+        })
+        {
+            StatusCode = (int)statusCode
+        };
+
+        context.ExceptionHandled = true;
     }
+}
 }
