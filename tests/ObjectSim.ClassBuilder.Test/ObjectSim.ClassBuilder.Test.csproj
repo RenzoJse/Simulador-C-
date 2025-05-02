@@ -7,6 +7,7 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <RootNamespace>ObjectSim.ClassLogic.Test</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\ObjectSim.ClassLogic\ObjectSim.ClassLogic.csproj" />
+      <ProjectReference Include="..\..\src\ObjectSim.ClassBuilder\ObjectSim.ClassBuilder.csproj" />
       <ProjectReference Include="..\..\src\ObjectSim.IBusinessLogic\ObjectSim.IBusinessLogic.csproj" />
     </ItemGroup>
 

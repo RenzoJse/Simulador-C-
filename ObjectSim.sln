@@ -25,9 +25,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.WebApi", "src\Obj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.WebApi.Test", "tests\ObjectSim.WebApi.Test\ObjectSim.WebApi.Test.csproj", "{C8033819-5046-41F5-8A35-F63178800EB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.ClassLogic", "src\ObjectSim.ClassLogic\ObjectSim.ClassLogic.csproj", "{F53F5D23-7AF7-4100-A63B-C35D7DBDAC5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.ClassBuilder", "src\ObjectSim.ClassBuilder\ObjectSim.ClassBuilder.csproj", "{F53F5D23-7AF7-4100-A63B-C35D7DBDAC5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.ClassLogic.Test", "tests\ObjectSim.ClassLogic.Test\ObjectSim.ClassLogic.Test.csproj", "{11C8E47A-BA66-4558-8483-463BE410AAA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.ClassBuilder.Test", "tests\ObjectSim.ClassBuilder.Test\ObjectSim.ClassBuilder.Test.csproj", "{11C8E47A-BA66-4558-8483-463BE410AAA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
