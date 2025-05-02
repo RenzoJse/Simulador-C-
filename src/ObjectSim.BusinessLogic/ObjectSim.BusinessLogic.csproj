@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\ObjectSim.ClassLogic\ObjectSim.ClassLogic.csproj" />
+      <ProjectReference Include="..\ObjectSim.ClassLogic\ObjectSim.ClassLogic.csproj" />
       <ProjectReference Include="..\ObjectSim.DataAccess\ObjectSim.DataAccess.csproj" />
       <ProjectReference Include="..\ObjectSim.Domain\ObjectSim.Domain.csproj" />
       <ProjectReference Include="..\ObjectSim.IBusinessLogic\ObjectSim.IBusinessLogic.csproj" />
