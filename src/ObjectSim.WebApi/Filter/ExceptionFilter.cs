@@ -1,9 +1,10 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ObjectSim.WebApi.Filter;
-
+[ExcludeFromCodeCoverage]
 public sealed class ExceptionFilter : IExceptionFilter
 {
     private static readonly Dictionary<Type, (HttpStatusCode StatusCode, string InnerCode)> ExceptionMappings = new()
