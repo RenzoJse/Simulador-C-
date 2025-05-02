@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
-using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.WebApi.Controllers;
 [ApiController]

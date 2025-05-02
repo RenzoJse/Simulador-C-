@@ -35,4 +35,3 @@ public sealed class ExceptionFilter : IExceptionFilter
         context.ExceptionHandled = true;
     }
 }
-}
