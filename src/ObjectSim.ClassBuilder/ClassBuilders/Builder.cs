@@ -6,7 +6,7 @@ namespace ObjectSim.ClassLogic.ClassBuilders;
 
 public abstract class Builder()
 {
-    protected Class Result { get; } = new Class();
+    protected Class Result { get; } = new Class(){ Attributes = [], Methods = []};
 
     public virtual void SetName(string name)
     {

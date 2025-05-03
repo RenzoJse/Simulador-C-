@@ -14,10 +14,17 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
         List<Attribute> newAttributes = [];
         foreach(var attr in attributes)
         {
-            var newAttribute = attributeService.CreateAttribute(attr);
-            if(Result.CanAddAttribute(Result, newAttribute))
+            Attribute newAttribute;
+            try
             {
-                newAttributes.Add(newAttribute);
+                newAttribute = attributeService.CreateAttribute(attr);
+                if(Result.CanAddAttribute(Result, newAttribute))
+                {
+                    newAttributes.Add(newAttribute);
+                }
+            }
+            catch
+            {
             }
         }
 
@@ -31,10 +38,16 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
         List<Method> newMethods = [];
         foreach(var method in methods)
         {
-            var newMethod = methodService.CreateMethod(method);
-            if(Result.CanAddMethod(Result, newMethod))
+            try
             {
-                newMethods.Add(newMethod);
+                var newMethod = methodService.CreateMethod(method);
+                if(Result.CanAddMethod(Result, newMethod))
+                {
+                    newMethods.Add(newMethod);
+                }
+            }
+            catch
+            {
             }
         }
 
