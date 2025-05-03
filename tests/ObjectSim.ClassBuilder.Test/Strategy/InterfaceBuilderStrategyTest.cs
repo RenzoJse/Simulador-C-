@@ -12,7 +12,7 @@ public class InterfaceBuilderStrategyTest
     private Mock<IAttributeService>? _attributeServiceMock;
     private Mock<IClassService>? _classServiceMock;
     private InterfaceBuilderStrategy? _strategy;
-    
+
     [TestInitialize]
     public void Initialize()
     {
@@ -21,7 +21,7 @@ public class InterfaceBuilderStrategyTest
 
         _strategy = new InterfaceBuilderStrategy(_attributeServiceMock.Object);
     }
-    
+
     #region WhichIsMyBuilder
 
     [TestMethod]
@@ -57,11 +57,11 @@ public class InterfaceBuilderStrategyTest
     #endregion
 
     #region CreateBuilder
-    
+
     [TestMethod]
     public void CreateBuilder_WhenIsInterface_ReturnsInterfaceBuilder()
     {
-        var builder = _strategy!.CreateBuilder(_classServiceMock!.Object);
+        var builder = _strategy!.CreateBuilder();
 
         Assert.IsNotNull(builder);
         Assert.IsInstanceOfType(builder, typeof(InterfaceBuilder));

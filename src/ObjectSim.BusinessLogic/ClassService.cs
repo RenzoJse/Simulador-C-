@@ -36,7 +36,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
     {
         var strategy = strategies.FirstOrDefault(x => x.WhichIsMyBuilder(args));
 
-        return strategy!.CreateBuilder(this);
+        return strategy!.CreateBuilder();
     }
 
     public Class GetById(Guid? classId)
@@ -55,7 +55,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
 
         var classObj = GetById(classId);
 
-        Class.CanAddMethod(classObj, method); //Tengo que ver lo de si abstract haga la clase abstract
+        classObj.CanAddMethod(classObj, method); //Tengo que ver lo de si abstract haga la clase abstract
 
         classObj.Methods!.Add(method);
     }

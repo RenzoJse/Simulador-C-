@@ -51,7 +51,7 @@ public class ClassBuilderTest
         _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
         _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
         _attributeServiceMock = new Mock<IAttributeService>(MockBehavior.Strict);
-        _classBuilderTest = new ClassBuilder(_methodServiceMock.Object, _classServiceMock.Object, _attributeServiceMock.Object);
+        _classBuilderTest = new ClassBuilder(_methodServiceMock.Object, _attributeServiceMock.Object);
     }
 
     #region SetAttributes
@@ -97,12 +97,6 @@ public class ClassBuilderTest
         _attributeServiceMock!.Setup(m => m.CreateAttribute(validAttributeArgs))
             .Returns(validAttribute);
 
-        _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), invalidAttribute))
-            .Returns(false);
-
-        _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), validAttribute))
-            .Returns(true);
-
         _classBuilderTest!.SetAttributes([invalidAttributeArgs, validAttributeArgs]);
 
         _classBuilderTest.GetResult().Attributes.Should().HaveCount(1);
@@ -121,12 +115,6 @@ public class ClassBuilderTest
         _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
             .Returns(attribute2);
 
-        _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), attribute1))
-            .Returns(true);
-
-        _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), attribute2))
-            .Returns(true);
-
         var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataType, "public", Guid.NewGuid(), "Attribute1");
         var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataType, "public", Guid.NewGuid(), "Attribute2");
 
@@ -144,9 +132,6 @@ public class ClassBuilderTest
 
         _attributeServiceMock!.Setup(m => m.CreateAttribute(TestCreateAttributeArgs))
             .Returns(attribute1);
-
-        _classServiceMock!.Setup(m => m.CanAddAttribute(It.IsAny<Class>(), attribute1))
-            .Returns(false);
 
         _classBuilderTest!.SetAttributes([TestCreateAttributeArgs]);
 
@@ -196,8 +181,6 @@ public class ClassBuilderTest
 
         _methodServiceMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
 
-        _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), TestMethod)).Returns(true);
-
         Action action = () => _classBuilderTest!.SetMethods([TestCreateMethodArgs]);
 
         action.Should().Throw<ArgumentException>()
@@ -227,8 +210,6 @@ public class ClassBuilderTest
 
         _methodServiceMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
         _methodServiceMock!.Setup(m => m.CreateMethod(invalidMethodArgs)).Returns(inValidMethod);
-        _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), TestMethod)).Returns(true);
-        _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), inValidMethod)).Returns(false);
 
         _classBuilderTest!.SetMethods([TestCreateMethodArgs, invalidMethodArgs]);
 
@@ -263,8 +244,6 @@ public class ClassBuilderTest
 
         _methodServiceMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(method1);
         _methodServiceMock!.Setup(m => m.CreateMethod(methodCreateArgs2)).Returns(method2);
-        _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), method1)).Returns(true);
-        _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), method2)).Returns(true);
 
         _classBuilderTest!.SetMethods([TestCreateMethodArgs, methodCreateArgs2]);
 
@@ -301,7 +280,6 @@ public class ClassBuilderTest
         _classBuilderTest!.SetParent(parentClass.Id);
 
         _methodServiceMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(interfaceMethod);
-        _classServiceMock!.Setup(m => m.CanAddMethod(It.IsAny<Class>(), interfaceMethod)).Returns(true);
 
         _classBuilderTest!.SetMethods([TestCreateMethodArgs]);
 

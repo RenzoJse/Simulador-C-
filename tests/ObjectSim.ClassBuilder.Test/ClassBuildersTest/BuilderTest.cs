@@ -42,7 +42,7 @@ public class BuilderTest
         _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
         _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
         _attributeServiceMock = new Mock<IAttributeService>(MockBehavior.Strict);
-        _builder = new ClassBuilder(_methodServiceMock.Object, _classServiceMock.Object, _attributeServiceMock.Object);
+        _builder = new ClassBuilder(_methodServiceMock.Object, _attributeServiceMock.Object);
     }
 
     #region SetParent

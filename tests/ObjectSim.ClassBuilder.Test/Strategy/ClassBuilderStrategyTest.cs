@@ -59,15 +59,15 @@ public class ClassBuilderStrategyTest
     #endregion
 
     #region CreateBuilder
-    
+
     [TestMethod]
     public void CreateBuilder_WhenIsNormalClass_ReturnsClassBuilder()
     {
-        var builder = _strategy!.CreateBuilder(_classServiceMock!.Object);
+        var builder = _strategy!.CreateBuilder();
 
         Assert.IsNotNull(builder);
         Assert.IsInstanceOfType(builder, typeof(ClassBuilder));
     }
-    
+
     #endregion
 }
