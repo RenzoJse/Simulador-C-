@@ -55,7 +55,7 @@ public class ClassRepositoryTest
                     Abstract = false,
                     IsOverride = false,
                     IsSealed = false,
-                    Type = 0
+                    Type = new ReferenceType("TestParameter", "string", [])
                 }
             ],
             Attributes =
@@ -65,7 +65,7 @@ public class ClassRepositoryTest
                     Id = Guid.NewGuid(),
                     Name = "TestAttribute",
                     ClassId = classId,
-                    DataType = ValueType.Create("int"),
+                    DataType = new ValueType("myVariable","int", []),
                     Visibility = 0
                 }
             ]

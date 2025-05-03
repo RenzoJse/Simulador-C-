@@ -6,7 +6,7 @@ public class CreateClassArgs(
     bool? isSealed,
     bool? isInterface,
     List<CreateAttributeArgs> attributes,
-    List<Method> methods,
+    List<CreateMethodArgs> methods,
     Guid? parent)
 {
     public string? Name { get; set; } = name;
@@ -14,6 +14,6 @@ public class CreateClassArgs(
     public bool? IsSealed { get; set; } = isSealed;
     public bool? IsInterface { get; set; } = isInterface;
     public List<CreateAttributeArgs> Attributes { get; set; } = attributes;
-    public List<Method> Methods { get; set; } = methods;
+    public List<CreateMethodArgs> Methods { get; set; } = methods;
     public Guid? Parent { get; set; } = parent;
 }

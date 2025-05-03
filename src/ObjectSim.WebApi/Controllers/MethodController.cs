@@ -12,9 +12,9 @@ public class MethodController(IMethodService methodService) : ControllerBase
     [HttpPost]
     public IActionResult CreateMethod(MethodDtoIn createMethodDtoIn)
     {
-        var methodInfo = methodService.Create(createMethodDtoIn.ToEntity());
+        var methodInfo = methodService.CreateMethod(createMethodDtoIn.ToArgs());
 
-        var response = new MethodOutModel(methodInfo);
+        var response = new MethodInformationDtoOut(methodInfo);
 
         return Ok(response);
     }
@@ -32,20 +32,6 @@ public class MethodController(IMethodService methodService) : ControllerBase
         return Ok($"Method with id {id} deleted successfully.");
     }
 
-    [HttpPut("{id}")]
-    public IActionResult UpdateMethod(Guid id, MethodDtoIn updateMethodDtoIn)
-    {
-        var updatedMethod = methodService.Update(id, updateMethodDtoIn.ToEntity());
-
-        if(updatedMethod == null)
-        {
-            return NotFound($"Method with id {id} not found.");
-        }
-
-        var response = new MethodOutModel(updatedMethod);
-        return Ok(response);
-    }
-
     [HttpGet("{id}")]
     public IActionResult GetMethodById(Guid id)
     {
@@ -56,7 +42,7 @@ public class MethodController(IMethodService methodService) : ControllerBase
             return NotFound($"Method with id {id} not found.");
         }
 
-        var response = new MethodOutModel(methodInfo);
+        var response = new MethodInformationDtoOut(methodInfo);
         return Ok(response);
     }
 
@@ -65,8 +51,9 @@ public class MethodController(IMethodService methodService) : ControllerBase
     {
         var methods = methodService.GetAll();
 
-        var response = methods.Select(m => new MethodOutModel(m)).ToList();
+        var response = methods.Select(m => new MethodInformationDtoOut(m)).ToList();
 
         return Ok(response);
     }
+    
 }

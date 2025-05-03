@@ -4,7 +4,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 namespace ObjectSim.BusinessLogic;
-public class AttributeService(IRepository<Attribute> attributeRepository, IClassService classService, IDataTypeService dataTypeService) : IAttributeService
+public class AttributeService(IRepository<Attribute> attributeRepository, IClassServiceBuilder classService, IDataTypeService dataTypeService) : IAttributeService
 {
     public Attribute CreateAttribute(CreateAttributeArgs args)
     {
@@ -23,7 +23,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
 
     private static void ValidateNullArgs(CreateAttributeArgs args)
     {
-        if (args == null)
+        if(args == null)
         {
             throw new ArgumentNullException(nameof(args), "Attribute cannot be null.");
         }
@@ -31,7 +31,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
 
     private static Attribute.AttributeVisibility ParseVisibility(string visibilityValue)
     {
-        if (!Enum.TryParse(visibilityValue, true, out Attribute.AttributeVisibility visibility))
+        if(!Enum.TryParse(visibilityValue, true, out Attribute.AttributeVisibility visibility))
         {
             throw new ArgumentException($"Invalid visibility value: {visibilityValue}");
         }
@@ -108,5 +108,20 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
         existing.Visibility = entity.Visibility;
         attributeRepository.Update(existing);
         return existing;
+    }
+    public List<Attribute> GetByClassId(Guid classId)
+    {
+        if(classId == Guid.Empty)
+        {
+            throw new ArgumentException("ClassId must be a valid non-empty GUID.");
+        }
+
+        var attributes = attributeRepository.GetAll(a => a.ClassId == classId);
+        if(!attributes.Any())
+        {
+            throw new KeyNotFoundException($"No attributes found for ClassId: {classId}");
+        }
+
+        return attributes.ToList();
     }
 }

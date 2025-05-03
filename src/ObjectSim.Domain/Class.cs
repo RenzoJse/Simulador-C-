@@ -112,6 +112,21 @@ public class Class
         }
     }
 
+    public bool CanAddAttribute(Class classObj, Attribute attribute)
+    {
+        if(classObj.IsInterface == true)
+        {
+            throw new ArgumentException("Cannot add attribute to an interface.");
+        }
+
+        if(classObj.Attributes!.Any(classAttribute => classAttribute.Name == attribute.Name))
+        {
+            throw new ArgumentException("Attribute name already exists in class.");
+        }
+
+        return true;
+    }
+
     #endregion
 
     #region Methods
@@ -134,6 +149,78 @@ public class Class
 
             _methods = value.ToList();
         }
+    }
+
+    public bool CanAddMethod(Class classObj, Method method)
+    {
+        ValidateMethodUniqueness(classObj, method);
+
+        if(classObj.IsInterface == true)
+        {
+            ValidateInterfaceMethodConstraints(method);
+        }
+
+        return true;
+    }
+
+    public static void ValidateMethodUniqueness(Class classObj, Method method)
+    {
+        if(classObj.Methods!.Any(classMethod => classMethod.Name == method.Name &&
+                                                classMethod.Type == method.Type &&
+                                                method.IsOverride == false &&
+                                                AreParametersEqual(classMethod.Parameters, method.Parameters)))
+        {
+            throw new ArgumentException("Method already exists in class.");
+        }
+    }
+
+    private static void ValidateInterfaceMethodConstraints(Method method)
+    {
+        if(method.IsSealed)
+        {
+            throw new ArgumentException("Method cannot be sealed in an interface.");
+        }
+        if(method.IsOverride)
+        {
+            throw new ArgumentException("Method cannot be override in an interface.");
+        }
+        if(method.Accessibility == Method.MethodAccessibility.Private)
+        {
+            throw new ArgumentException("Method cannot be private in an interface.");
+        }
+        if(method.LocalVariables.Count > 0)
+        {
+            throw new ArgumentException("Method cannot have local variables in an interface.");
+        }
+        if(method.MethodsInvoke.Count > 0)
+        {
+            throw new ArgumentException("Method cannot invoke other methods in an interface.");
+        }
+        if(!method.Abstract)
+        {
+            method.Abstract = true;
+        }
+    }
+
+    private static bool AreParametersEqual(List<DataType> parameters1, List<DataType> parameters2)
+    {
+        if(parameters1.Count != parameters2.Count)
+        {
+            return false;
+        }
+
+        for(var i = 0; i < parameters1.Count; i++)
+        {
+            var p1 = parameters1[i];
+            var p2 = parameters2[i];
+
+            if(p1.Name != p2.Name || p1.Type != p2.Type)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     #endregion

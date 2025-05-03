@@ -4,16 +4,6 @@ namespace ObjectSim.Domain;
 
 public class Method
 {
-    public enum MethodDataType
-    {
-        String,
-        Char,
-        Int,
-        Decimal,
-        Bool,
-        DateTime
-    }
-
     public enum MethodAccessibility
     {
         Public,
@@ -23,7 +13,7 @@ public class Method
         ProtectedInternal,
         PrivateProtected
     }
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; init; } = Guid.NewGuid();
 
     public Guid? ClassId { get; set; }
 
@@ -47,17 +37,10 @@ public class Method
 
     #region Type
 
-    private MethodDataType _type;
+    public DataType Type { get; set; } = null!;
 
-    public MethodDataType Type
-    {
-        get => _type;
-        set
-        {
-            ValidateDataType(value!);
-            _type = value;
-        }
-    }
+    public string GetTypeString() => Type?.Type ?? string.Empty;
+    
     #endregion
 
     #region Abstract
@@ -88,11 +71,11 @@ public class Method
     #endregion
 
     #region Parameters
-    public List<Parameter> Parameters { get; set; } = [];
+    public List<DataType> Parameters { get; set; } = [];
     #endregion
 
     #region LocalVariable
-    public List<LocalVariable> LocalVariables { get; set; } = [];
+    public List<DataType> LocalVariables { get; set; } = [];
     #endregion
 
     #region MethodsInvoke
@@ -125,7 +108,6 @@ public class Method
     {
         ValidateId(Id);
         ValidateName(Name);
-        ValidateDataType(Type);
         ValidateAccesibility(Accessibility);
     }
     private static void ValidateId(Guid id)
@@ -152,13 +134,7 @@ public class Method
             throw new ArgumentException("Name cannot be null or start with a num.");
         }
     }
-    private static void ValidateDataType(MethodDataType type)
-    {
-        if(!Enum.IsDefined(typeof(MethodDataType), type))
-        {
-            throw new ArgumentException("Invalid data type.");
-        }
-    }
+
     private static void ValidateAccesibility(MethodAccessibility accessibility)
     {
         if(!Enum.IsDefined(typeof(MethodAccessibility), accessibility))

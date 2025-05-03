@@ -13,8 +13,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<Method> Methods { get; set; }
     public DbSet<Attribute> Attributes { get; set; }
     public DbSet<DataType> DataTypes { get; set; }
-    public DbSet<LocalVariable> LocalVariables { get; set; }
-    public DbSet<Parameter> Parameters { get; set; }
     public DbSet<ValueType> ValueTypes { get; set; }
     public DbSet<ReferenceType> ReferenceTypes { get; set; }
 
@@ -96,17 +94,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 .HasValue<ValueType>("ValueType")
                 .HasValue<ReferenceType>("ReferenceType");
         });
-
-        modelBuilder.Entity<Parameter>(p =>
-        {
-            p.HasKey(p => p.Id);
-        });
-
-        modelBuilder.Entity<LocalVariable>(lv =>
-        {
-            lv.HasKey(lv => lv.Id);
-        });
-
+        
         modelBuilder.Entity<ValueType>(vt =>
         {
             vt.Property(vt => vt.Name).IsRequired();
@@ -118,5 +106,11 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         });
 
         base.OnModelCreating(modelBuilder);
+        ModelSeedData();
+    }
+    private void ModelSeedData()
+    {
+        //insertar en la bd todos los metodos predefinidos por .NET para cada tipo de dato.
+        //Tienen que tener guid fijo.
     }
 }

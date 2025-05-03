@@ -8,4 +8,5 @@ public interface IAttributeService
     bool Delete(Guid id);
     Domain.Attribute GetById(Guid id);
     Domain.Attribute Update(Guid id, Domain.Attribute entity);
+    List<Domain.Attribute> GetByClassId(Guid classId);
 }

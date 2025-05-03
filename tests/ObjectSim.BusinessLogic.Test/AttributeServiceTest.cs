@@ -12,14 +12,14 @@ namespace ObjectSim.BusinessLogic.Test;
 public class AttributeServiceTest
 {
     private Mock<IRepository<Attribute>>? _attributeRepositoryMock;
-    private Mock<IClassService> _classServiceMock = null!;
+    private Mock<IClassServiceBuilder> _classServiceBuilderMock = null!;
     private Mock<IDataTypeService> _dataTypeServiceMock = null!;
     private AttributeService? _attributeService;
 
     private static readonly CreateDataTypeArgs TestArgsDataType = new(
-        "int");
+        "int", "reference");
 
-    private readonly DataType? _testDataType = ValueType.Create("int");
+    private readonly DataType? _testDataType = new ValueType("myVariable", "int", []);
 
     private static readonly Guid TestAttributeId = Guid.NewGuid();
 
@@ -34,7 +34,7 @@ public class AttributeServiceTest
     {
         Id = TestAttributeId,
         Name = "Test",
-        DataType = ValueType.Create("int"),
+        DataType = new ValueType("myVariable", "int", []),
         ClassId = Guid.NewGuid(),
         Visibility = Attribute.AttributeVisibility.Public
     };
@@ -42,17 +42,17 @@ public class AttributeServiceTest
     [TestInitialize]
     public void Setup()
     {
-        _classServiceMock = new Mock<IClassService>();
+        _classServiceBuilderMock = new Mock<IClassServiceBuilder>();
         _dataTypeServiceMock = new Mock<IDataTypeService>();
         _attributeRepositoryMock = new Mock<IRepository<Attribute>>(MockBehavior.Strict);
-        _attributeService = new AttributeService(_attributeRepositoryMock.Object, _classServiceMock.Object, _dataTypeServiceMock.Object);
+        _attributeService = new AttributeService(_attributeRepositoryMock.Object, _classServiceBuilderMock.Object, _dataTypeServiceMock.Object);
     }
 
     [TestCleanup]
     public void Cleanup()
     {
         _attributeRepositoryMock!.VerifyAll();
-        _classServiceMock.VerifyAll();
+        _classServiceBuilderMock.VerifyAll();
         _dataTypeServiceMock.VerifyAll();
     }
 
@@ -71,7 +71,7 @@ public class AttributeServiceTest
     public void CreateAttribute_AttributeWithSameNameAlreadyExistsInClass_ThrowsException()
     {
         _dataTypeServiceMock.Setup(x => x.CreateDataType(TestArgsDataType)).Returns(_testDataType!);
-        _classServiceMock
+        _classServiceBuilderMock
             .Setup(x => x.AddAttribute(It.IsAny<Guid>(), It.IsAny<Attribute>()))
             .Throws(new ArgumentException());
 
@@ -96,7 +96,7 @@ public class AttributeServiceTest
     public void CreateAttribute_InvalidVisibility_ThrowsException()
     {
         var invalidArgs = new CreateAttributeArgs(
-            new CreateDataTypeArgs("int"),
+            new CreateDataTypeArgs("int", "value"),
             "invalid_visibility",
             Guid.NewGuid(),
             "TestAttribute"
@@ -124,7 +124,7 @@ public class AttributeServiceTest
         _dataTypeServiceMock
             .Setup(x => x.CreateDataType(_testArgsAttribute.DataType)).Returns(_testDataType!);
 
-        _classServiceMock.Setup(x => x.AddAttribute(It.IsAny<Guid>(), It.IsAny<Attribute>()));
+        _classServiceBuilderMock.Setup(x => x.AddAttribute(It.IsAny<Guid>(), It.IsAny<Attribute>()));
 
         _attributeRepositoryMock!
             .Setup(repo => repo.Add(It.IsAny<Attribute>()))
@@ -133,7 +133,8 @@ public class AttributeServiceTest
         var result = _attributeService!.CreateAttribute(_testArgsAttribute);
         result.Should().NotBeNull();
         result.Should().BeOfType<Attribute>();
-        result.Should().BeEquivalentTo(_testAttribute);
+        result.Should().BeEquivalentTo(_testAttribute, options =>
+            options.Excluding(x => x.DataType.Id));
     }
 
     #endregion
@@ -150,7 +151,7 @@ public class AttributeServiceTest
             Id = Guid.NewGuid(),
             Name = "Name",
             ClassId = Guid.NewGuid(),
-            DataType = ValueType.Create("int"),
+            DataType = new ValueType("myVariable", "int", []),
             Visibility = Attribute.AttributeVisibility.Private
         },
             new()
@@ -158,7 +159,7 @@ public class AttributeServiceTest
             Id = Guid.NewGuid(),
             Name = "Name2",
             ClassId = Guid.NewGuid(),
-            DataType = ValueType.Create("int"),
+            DataType = new ValueType("myVariable", "int", []),
             Visibility = Attribute.AttributeVisibility.Private
             }
         };
@@ -292,9 +293,36 @@ public class AttributeServiceTest
             Name = "Attr",
             ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
-            DataType = ValueType.Create("int")
+            DataType = new ValueType("myVariable", "int", [])
         };
 
         _attributeService!.Update(dummyAttribute.Id, dummyAttribute);
+    }
+    [TestMethod]
+    public void GetByClassId_ShouldReturnAttributes()
+    {
+        _attributeRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Attribute, bool>>()))
+            .Returns([_testAttribute]);
+
+        var result = _attributeService.GetByClassId(_testAttribute.ClassId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("Test", result[0].Name);
+    }
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void GetByClassId_ShouldThrow_WhenClassIdIsEmpty()
+    {
+        _attributeService.GetByClassId(Guid.Empty);
+    }
+    [TestMethod]
+    [ExpectedException(typeof(KeyNotFoundException))]
+    public void GetByClassId_ShouldThrow_WhenNoAttributesFound()
+    {
+        _attributeRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Attribute, bool>>()))
+            .Returns([]);
+
+        _attributeService.GetByClassId(_testAttribute.ClassId);
     }
 }
