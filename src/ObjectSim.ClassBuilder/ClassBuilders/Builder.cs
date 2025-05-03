@@ -4,7 +4,7 @@ using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.ClassLogic.ClassBuilders;
 
-public abstract class Builder(IClassService classService, IAttributeService attributeService)
+public abstract class Builder(IAttributeService attributeService)
 {
     public IAttributeService AttributeService { get; } = attributeService;
     protected Class Result { get; } = new Class();
@@ -16,7 +16,7 @@ public abstract class Builder(IClassService classService, IAttributeService attr
 
     public virtual void SetParent(Guid? idParent)
     {
-        Class parent = null!;
+        /*Class parent = null!;
         try
         {
             parent = classService.GetById(idParent);
@@ -30,7 +30,7 @@ public abstract class Builder(IClassService classService, IAttributeService attr
         {
             IsParentSealed(parent);
             Result.Parent = parent;
-        }
+        }*/
     }
 
     private static void IsParentSealed(Class parent)

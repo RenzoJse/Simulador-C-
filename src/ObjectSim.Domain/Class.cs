@@ -151,7 +151,7 @@ public class Class
         }
     }
 
-    public static bool CanAddMethod(Class classObj, Method method)
+    public bool CanAddMethod(Class classObj, Method method)
     {
         ValidateMethodUniqueness(classObj, method);
 

@@ -12,8 +12,8 @@ public class InterfaceBuilderStrategy(IAttributeService attributeService) : IBui
         return args.IsInterface == true;
     }
 
-    public Builder CreateBuilder(IClassService classService)
+    public Builder CreateBuilder()
     {
-        return new InterfaceBuilder(classService, attributeService);
+        return new InterfaceBuilder(attributeService);
     }
 }

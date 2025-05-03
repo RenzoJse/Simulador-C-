@@ -3,7 +3,7 @@ using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.ClassLogic.ClassBuilders.Builders;
 
-public class InterfaceBuilder(IClassService classService, IAttributeService attributeService) : Builder(classService, attributeService)
+public class InterfaceBuilder(IAttributeService attributeService) : Builder(attributeService)
 {
     public override void SetAttributes(List<CreateAttributeArgs> attributes)
     {
@@ -16,7 +16,7 @@ public class InterfaceBuilder(IClassService classService, IAttributeService attr
         base.SetMethods(methods);
         Result.Methods = [];
     }
-    
+
     public override void SetAbstraction(bool? abstraction)
     {
         Result.IsAbstract = true;

@@ -15,8 +15,8 @@ public class ClassBuilderStrategy(
         return args is { IsInterface: false, IsAbstract: false };
     }
 
-    public Builder CreateBuilder(IClassService classService)
+    public Builder CreateBuilder()
     {
-        return new ClassBuilder(methodService, classService, attributeService);
+        return new ClassBuilder(methodService, attributeService);
     }
 }
