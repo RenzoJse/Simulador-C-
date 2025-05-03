@@ -13,23 +13,15 @@ public abstract class Builder()
         Result.Name = name;
     }
 
-    public virtual void SetParent(Guid? idParent)
+    public virtual void SetParent(Class? parent)
     {
-        /*Class parent = null!;
-        try
-        {
-            parent = classService.GetById(idParent);
-        }
-        catch(ArgumentException)
-        {
-            Result.Parent = null;
-        }
+        Result.Parent = null;
 
         if(parent != null)
         {
             IsParentSealed(parent);
             Result.Parent = parent;
-        }*/
+        }
     }
 
     private static void IsParentSealed(Class parent)

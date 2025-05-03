@@ -15,8 +15,8 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
         ArgumentNullException.ThrowIfNull(args);
 
         var builder = GetBuilder(args);
-        builder.SetParent(args.Parent);
         builder.SetName(args.Name!);
+        builder.SetParent(args.Parent == null ? null : GetById(args.Parent));
         builder.SetAbstraction(args.IsAbstract);
         builder.SetInterface(args.IsInterface);
         builder.SetSealed(args.IsSealed);

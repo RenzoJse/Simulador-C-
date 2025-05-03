@@ -132,6 +132,7 @@ public class ClassServiceTest
     [TestMethod]
     public void CreateClass_WithNullAttributesList_ThrowsArgumentException()
     {
+        var parentId = Guid.NewGuid();
         var argsWithNullAttributes = new CreateClassArgs(
             "TestClass",
             false,
@@ -139,7 +140,7 @@ public class ClassServiceTest
             false,
             null!,
             [],
-            Guid.NewGuid());
+            null);
 
         var classBuilder = GetMockedBuilder();
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
@@ -155,9 +156,44 @@ public class ClassServiceTest
     #region Success
 
     [TestMethod]
+    public void SetParent_InvalidParentID_AddsNullParent()
+    {
+        var invalidParentId = Guid.NewGuid();
+        var invalidParentClass = new Class()
+        {
+            Id = invalidParentId,
+            Name = "InvalidClass",
+            IsAbstract = false,
+            IsSealed = false,
+            IsInterface = false,
+            Methods = [],
+            Attributes = []
+        };
+
+        var classBuilder = GetMockedBuilder();
+        _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
+        _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
+
+        _classRepositoryMock!.Setup(repo => repo.Get(It.Is<Func<Class, bool>>(f =>
+                f.Invoke(invalidParentClass))))
+            .Returns(invalidParentClass);
+
+        _classRepositoryMock.Setup(repo => repo.Add(It.IsAny<Class>()))
+            .Returns((Class c) => { c.Parent = null; return c; });
+
+        _args.Parent = invalidParentClass.Id;
+
+        var result = _classServiceTest!.CreateClass(_args);
+
+        result.Parent.Should().BeNull();
+    }
+
+    [TestMethod]
     public void CreateClass_WithValidParameters_SetsStrategyBuilder()
     {
         var classBuilder = GetMockedBuilder();
+
+        _args.Parent = null;
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(_args)).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);

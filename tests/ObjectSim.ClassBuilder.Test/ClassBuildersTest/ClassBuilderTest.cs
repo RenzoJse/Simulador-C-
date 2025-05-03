@@ -176,7 +176,7 @@ public class ClassBuilderTest
         _classServiceMock!.Setup(m => m.GetById(parentClass.Id))
             .Returns(parentClass);
 
-        _classBuilderTest!.SetParent(parentClass.Id);
+        _classBuilderTest!.SetParent(parentClass);
 
         _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
 
@@ -276,7 +276,7 @@ public class ClassBuilderTest
         _classServiceMock!.Setup(m => m.GetById(parentClass.Id))
             .Returns(parentClass);
 
-        _classBuilderTest!.SetParent(parentClass.Id);
+        _classBuilderTest!.SetParent(parentClass);
 
         _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(interfaceMethod);
 
