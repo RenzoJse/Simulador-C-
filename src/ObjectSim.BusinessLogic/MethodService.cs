@@ -4,7 +4,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodService(IRepository<Method> methodRepository, IClassService classService, IDataTypeService dataTypeService) : IMethodService, IMethodServiceCreate
+public class MethodService(IRepository<Method> methodRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService) : IMethodService, IMethodServiceCreate
 {
     public Method CreateMethod(CreateMethodArgs methodsArgs)
     {
@@ -12,7 +12,7 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
 
         var method = BuildMethod(methodsArgs);
 
-        classService.AddMethod(methodsArgs.ClassId, method);
+        AddMethod(methodsArgs.ClassId, method);
 
         methodRepository.Add(method);
 
@@ -38,7 +38,7 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
         {
             Name = methodsArgs.Name,
             ClassId = methodsArgs.ClassId,
-            Class = classService.GetById(methodsArgs.ClassId),
+            Class = GetClassById(methodsArgs.ClassId),
             Abstract = methodsArgs.IsAbstract ?? false,
             IsSealed = methodsArgs.IsSealed ?? false,
             IsOverride = methodsArgs.IsOverride ?? false,
@@ -49,6 +49,23 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
         };
 
         return method;
+    }
+
+    private Class GetClassById(Guid classId)
+    {
+        return classRepository.Get(c => c.Id == classId) ?? throw new ArgumentException("Class not found.");
+    }
+
+    private void AddMethod(Guid classId, Method? method)
+    {
+        ArgumentNullException.ThrowIfNull(classId);
+        ArgumentNullException.ThrowIfNull(method);
+
+        var classObj = GetClassById(classId);
+
+        classObj.CanAddMethod(classObj, method); //Tengo que ver lo de si abstract haga la clase abstract
+
+        classObj.Methods!.Add(method);
     }
 
     private List<Method> GetInvokeMethods(List<Guid> invokeMethodIds)

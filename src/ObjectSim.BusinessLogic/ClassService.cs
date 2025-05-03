@@ -4,11 +4,10 @@ using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
-using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic;
 
-public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<Class> classRepository) : IClassService, IClassServiceBuilder
+public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<Class> classRepository) : IClassService
 {
     public Class CreateClass(CreateClassArgs args)
     {
@@ -46,31 +45,6 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
             throw new ArgumentNullException(nameof(classId));
         }
         return classRepository.Get(c => c.Id == classId) ?? throw new ArgumentException("Class not found.");
-    }
-
-    public void AddMethod(Guid? classId, Method? method)
-    {
-        ArgumentNullException.ThrowIfNull(classId);
-        ArgumentNullException.ThrowIfNull(method);
-
-        var classObj = GetById(classId);
-
-        classObj.CanAddMethod(classObj, method); //Tengo que ver lo de si abstract haga la clase abstract
-
-        classObj.Methods!.Add(method);
-    }
-
-    public void AddAttribute(Guid? classId, Attribute attribute)
-    {
-        ArgumentNullException.ThrowIfNull(classId);
-        ArgumentNullException.ThrowIfNull(attribute);
-
-        var classObj = GetById(classId);
-
-        if(classObj.CanAddAttribute(classObj, attribute))
-        {
-            classObj.Attributes!.Add(attribute);
-        }
     }
 
     public void DeleteClass(Guid? classId)

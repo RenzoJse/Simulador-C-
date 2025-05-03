@@ -4,7 +4,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 namespace ObjectSim.BusinessLogic;
-public class AttributeService(IRepository<Attribute> attributeRepository, IClassServiceBuilder classService, IDataTypeService dataTypeService) : IAttributeService
+public class AttributeService(IRepository<Attribute> attributeRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService) : IAttributeService
 {
     public Attribute CreateAttribute(CreateAttributeArgs args)
     {
@@ -15,10 +15,32 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
 
         var attribute = BuildAttribute(args, dataType, visibility);
 
-        classService.AddAttribute(args.ClassId, attribute);
+        AddAttribute(args.ClassId, attribute);
         AddAttributeToRepository(attribute);
 
         return attribute;
+    }
+
+    private void AddAttribute(Guid? classId, Attribute attribute)
+    {
+        ArgumentNullException.ThrowIfNull(classId);
+        ArgumentNullException.ThrowIfNull(attribute);
+
+        var classObj = GetById(classId);
+
+        if(classObj.CanAddAttribute(classObj, attribute))
+        {
+            classObj.Attributes!.Add(attribute);
+        }
+    }
+
+    private Class GetById(Guid? classId)
+    {
+        if(classId == null)
+        {
+            throw new ArgumentNullException(nameof(classId));
+        }
+        return classRepository.Get(c => c.Id == classId) ?? throw new ArgumentException("Class not found.");
     }
 
     private static void ValidateNullArgs(CreateAttributeArgs args)
