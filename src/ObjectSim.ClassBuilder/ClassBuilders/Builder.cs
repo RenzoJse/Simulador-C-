@@ -4,9 +4,8 @@ using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.ClassLogic.ClassBuilders;
 
-public abstract class Builder(IAttributeService attributeService)
+public abstract class Builder()
 {
-    public IAttributeService AttributeService { get; } = attributeService;
     protected Class Result { get; } = new Class();
 
     public virtual void SetName(string name)

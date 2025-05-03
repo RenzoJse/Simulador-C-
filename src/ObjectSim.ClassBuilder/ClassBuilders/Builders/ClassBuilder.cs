@@ -5,10 +5,8 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.ClassLogic.ClassBuilders.Builders;
 
-public class ClassBuilder(IMethodService methodService, IAttributeService attributeService) : Builder(attributeService)
+public class ClassBuilder(IMethodService methodService, IAttributeService attributeService) : Builder()
 {
-    private readonly IAttributeService _attributeService = attributeService;
-
     public override void SetAttributes(List<CreateAttributeArgs> attributes)
     {
         base.SetAttributes(attributes);
@@ -16,7 +14,7 @@ public class ClassBuilder(IMethodService methodService, IAttributeService attrib
         List<Attribute> newAttributes = [];
         foreach(var attr in attributes)
         {
-            var newAttribute = _attributeService.CreateAttribute(attr);
+            var newAttribute = attributeService.CreateAttribute(attr);
             if(Result.CanAddAttribute(Result, newAttribute))
             {
                 newAttributes.Add(newAttribute);

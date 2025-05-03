@@ -1,11 +1,10 @@
 ﻿using ObjectSim.ClassLogic.ClassBuilders;
 using ObjectSim.ClassLogic.ClassBuilders.Builders;
 using ObjectSim.Domain.Args;
-using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.ClassLogic.Strategy;
 
-public class InterfaceBuilderStrategy(IAttributeService attributeService) : IBuilderStrategy
+public class InterfaceBuilderStrategy() : IBuilderStrategy
 {
     public bool WhichIsMyBuilder(CreateClassArgs args)
     {
@@ -14,6 +13,6 @@ public class InterfaceBuilderStrategy(IAttributeService attributeService) : IBui
 
     public Builder CreateBuilder()
     {
-        return new InterfaceBuilder(attributeService);
+        return new InterfaceBuilder();
     }
 }

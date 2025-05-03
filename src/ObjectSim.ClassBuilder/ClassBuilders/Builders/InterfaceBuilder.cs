@@ -3,7 +3,7 @@ using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.ClassLogic.ClassBuilders.Builders;
 
-public class InterfaceBuilder(IAttributeService attributeService) : Builder(attributeService)
+public class InterfaceBuilder() : Builder()
 {
     public override void SetAttributes(List<CreateAttributeArgs> attributes)
     {
