@@ -48,7 +48,7 @@ public class InterfaceBuilderTest
         _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
         _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
         _attributeServiceMock = new Mock<IAttributeService>(MockBehavior.Strict);
-        _interfaceBuilderTest = new InterfaceBuilder(_attributeServiceMock!.Object);
+        _interfaceBuilderTest = new InterfaceBuilder();
     }
 
     #region SetAttributes
