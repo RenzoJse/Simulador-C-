@@ -33,8 +33,7 @@ public static class ServiceFactory
         services.AddScoped<IDataTypeService, DataTypeService>();
 
         services.AddScoped<IBuilderStrategy, ClassBuilderStrategy>();
-        services.AddScoped<List<IBuilderStrategy>>(provider =>
-            provider.GetServices<IBuilderStrategy>().ToList());
+        services.AddScoped<IBuilderStrategy, InterfaceBuilderStrategy>();
         services.AddScoped<IClassService, ClassService>();
     }
 
