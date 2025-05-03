@@ -4,7 +4,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodService(IRepository<Method> methodRepository, IClassService classService, IDataTypeService dataTypeService) : IMethodService
+public class MethodService(IRepository<Method> methodRepository, IClassService classService, IDataTypeService dataTypeService) : IMethodService, IMethodServiceCreate
 {
     public Method CreateMethod(CreateMethodArgs methodsArgs)
     {

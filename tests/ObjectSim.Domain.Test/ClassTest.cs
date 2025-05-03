@@ -117,7 +117,7 @@ public class ClassTest
         Action action = () => _testClass.Methods = methods;
 
         action.Should().Throw<ArgumentException>()
-            .WithMessage("InvokeMethods in an interface must be abstract");
+            .WithMessage("Methods in an interface must be abstract");
     }
 
     [TestMethod]

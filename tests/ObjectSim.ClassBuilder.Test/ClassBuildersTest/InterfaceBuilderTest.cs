@@ -1,11 +1,8 @@
 ﻿using FluentAssertions;
 using Moq;
 using ObjectSim.ClassLogic.ClassBuilders.Builders;
-using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
-using Attribute = ObjectSim.Domain.Attribute;
-using ValueType = System.ValueType;
 
 namespace ObjectSim.ClassLogic.Test.ClassBuildersTest;
 
@@ -13,9 +10,6 @@ namespace ObjectSim.ClassLogic.Test.ClassBuildersTest;
 public class InterfaceBuilderTest
 {
     private InterfaceBuilder? _interfaceBuilderTest;
-    private Mock<IMethodService>? _methodServiceMock;
-    private Mock<IClassService>? _classServiceMock;
-    private Mock<IAttributeService>? _attributeServiceMock;
 
     private static readonly CreateDataTypeArgs TestArgsDataType = new(
         "int", "reference");
@@ -45,10 +39,7 @@ public class InterfaceBuilderTest
     [TestInitialize]
     public void Initialize()
     {
-        _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
-        _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
-        _attributeServiceMock = new Mock<IAttributeService>(MockBehavior.Strict);
-        _interfaceBuilderTest = new InterfaceBuilder(_classServiceMock.Object, _attributeServiceMock!.Object);
+        _interfaceBuilderTest = new InterfaceBuilder();
     }
 
     #region SetAttributes

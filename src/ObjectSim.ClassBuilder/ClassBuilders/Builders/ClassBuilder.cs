@@ -5,11 +5,8 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.ClassLogic.ClassBuilders.Builders;
 
-public class ClassBuilder(IMethodService methodService, IClassService classService, IAttributeService attributeService) : Builder(classService, attributeService)
+public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService attributeService) : Builder()
 {
-    private readonly IClassService _classService = classService;
-    private readonly IAttributeService _attributeService = attributeService;
-
     public override void SetAttributes(List<CreateAttributeArgs> attributes)
     {
         base.SetAttributes(attributes);
@@ -17,10 +14,17 @@ public class ClassBuilder(IMethodService methodService, IClassService classServi
         List<Attribute> newAttributes = [];
         foreach(var attr in attributes)
         {
-            var newAttribute = _attributeService.CreateAttribute(attr);
-            if(_classService.CanAddAttribute(Result, newAttribute))
+            Attribute newAttribute;
+            try
             {
-                newAttributes.Add(newAttribute);
+                newAttribute = attributeService.CreateAttribute(attr);
+                if(Result.CanAddAttribute(Result, newAttribute))
+                {
+                    newAttributes.Add(newAttribute);
+                }
+            }
+            catch
+            {
             }
         }
 
@@ -34,10 +38,16 @@ public class ClassBuilder(IMethodService methodService, IClassService classServi
         List<Method> newMethods = [];
         foreach(var method in methods)
         {
-            var newMethod = methodService.CreateMethod(method);
-            if(_classService.CanAddMethod(Result, newMethod))
+            try
             {
-                newMethods.Add(newMethod);
+                var newMethod = methodService.CreateMethod(method);
+                if(Result.CanAddMethod(Result, newMethod))
+                {
+                    newMethods.Add(newMethod);
+                }
+            }
+            catch
+            {
             }
         }
 

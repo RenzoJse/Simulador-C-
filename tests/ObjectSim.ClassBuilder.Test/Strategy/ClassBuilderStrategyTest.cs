@@ -9,19 +9,17 @@ namespace ObjectSim.ClassLogic.Test.Strategy;
 [TestClass]
 public class ClassBuilderStrategyTest
 {
-    private Mock<IMethodService>? _methodServiceMock;
+    private Mock<IMethodServiceCreate>? _methodServiceCreateMock;
     private Mock<IAttributeService>? _attributeServiceMock;
-    private Mock<IClassService>? _classServiceMock;
     private ClassBuilderStrategy? _strategy;
 
     [TestInitialize]
     public void Initialize()
     {
-        _methodServiceMock = new Mock<IMethodService>();
+        _methodServiceCreateMock = new Mock<IMethodServiceCreate>();
         _attributeServiceMock = new Mock<IAttributeService>();
-        _classServiceMock = new Mock<IClassService>();
 
-        _strategy = new ClassBuilderStrategy(_methodServiceMock.Object, _attributeServiceMock!.Object);
+        _strategy = new ClassBuilderStrategy(_methodServiceCreateMock.Object, _attributeServiceMock!.Object);
     }
 
     #region WhichIsMyBuilder
@@ -59,15 +57,15 @@ public class ClassBuilderStrategyTest
     #endregion
 
     #region CreateBuilder
-    
+
     [TestMethod]
     public void CreateBuilder_WhenIsNormalClass_ReturnsClassBuilder()
     {
-        var builder = _strategy!.CreateBuilder(_classServiceMock!.Object);
+        var builder = _strategy!.CreateBuilder();
 
         Assert.IsNotNull(builder);
         Assert.IsInstanceOfType(builder, typeof(ClassBuilder));
     }
-    
+
     #endregion
 }

@@ -4,27 +4,18 @@ using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.ClassLogic.ClassBuilders;
 
-public abstract class Builder(IClassService classService, IAttributeService attributeService)
+public abstract class Builder()
 {
-    public IAttributeService AttributeService { get; } = attributeService;
-    protected Class Result { get; } = new Class();
+    protected Class Result { get; } = new Class(){ Attributes = [], Methods = []};
 
     public virtual void SetName(string name)
     {
         Result.Name = name;
     }
 
-    public virtual void SetParent(Guid? idParent)
+    public virtual void SetParent(Class? parent)
     {
-        Class parent = null!;
-        try
-        {
-            parent = classService.GetById(idParent);
-        }
-        catch(ArgumentException)
-        {
-            Result.Parent = null;
-        }
+        Result.Parent = null;
 
         if(parent != null)
         {

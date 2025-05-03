@@ -18,7 +18,7 @@ public class ClassServiceTest
     private ClassService? _classServiceTest;
     private Mock<IBuilderStrategy>? _builderStrategyMock;
     private Mock<IAttributeService>? _attributeServiceMock;
-    private Mock<IClassService>? _classServiceMock;
+    private Mock<IMethodServiceCreate>? _methodServiceCreateMock;
     private Mock<IMethodService>? _methodServiceMock;
     private Mock<IRepository<Class>>? _classRepositoryMock;
 
@@ -65,12 +65,11 @@ public class ClassServiceTest
     protected virtual Builder GetMockedBuilder()
     {
         _methodServiceMock = new Mock<IMethodService>();
-        _classServiceMock = new Mock<IClassService>();
+        _methodServiceCreateMock = new Mock<IMethodServiceCreate>();
         _attributeServiceMock = new Mock<IAttributeService>();
 
         return new ClassBuilder(
-            _methodServiceMock.Object,
-            _classServiceMock.Object,
+            _methodServiceCreateMock.Object,
             _attributeServiceMock.Object);
     }
 
@@ -114,7 +113,7 @@ public class ClassServiceTest
         var classBuilder = GetMockedBuilder();
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
-        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>())).Returns(classBuilder);
+        _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
 
         _args.Name = null;
         _classServiceTest!.CreateClass(_args);
@@ -133,6 +132,7 @@ public class ClassServiceTest
     [TestMethod]
     public void CreateClass_WithNullAttributesList_ThrowsArgumentException()
     {
+        var parentId = Guid.NewGuid();
         var argsWithNullAttributes = new CreateClassArgs(
             "TestClass",
             false,
@@ -140,11 +140,11 @@ public class ClassServiceTest
             false,
             null!,
             [],
-            Guid.NewGuid());
+            null);
 
         var classBuilder = GetMockedBuilder();
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
-        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>())).Returns(classBuilder);
+        _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
 
         Action action = () => _classServiceTest!.CreateClass(argsWithNullAttributes);
 
@@ -156,12 +156,47 @@ public class ClassServiceTest
     #region Success
 
     [TestMethod]
+    public void SetParent_InvalidParentID_AddsNullParent()
+    {
+        var invalidParentId = Guid.NewGuid();
+        var invalidParentClass = new Class()
+        {
+            Id = invalidParentId,
+            Name = "InvalidClass",
+            IsAbstract = false,
+            IsSealed = false,
+            IsInterface = false,
+            Methods = [],
+            Attributes = []
+        };
+
+        var classBuilder = GetMockedBuilder();
+        _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
+        _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
+
+        _classRepositoryMock!.Setup(repo => repo.Get(It.Is<Func<Class, bool>>(f =>
+                f.Invoke(invalidParentClass))))
+            .Returns(invalidParentClass);
+
+        _classRepositoryMock.Setup(repo => repo.Add(It.IsAny<Class>()))
+            .Returns((Class c) => { c.Parent = null; return c; });
+
+        _args.Parent = invalidParentClass.Id;
+
+        var result = _classServiceTest!.CreateClass(_args);
+
+        result.Parent.Should().BeNull();
+    }
+
+    [TestMethod]
     public void CreateClass_WithValidParameters_SetsStrategyBuilder()
     {
         var classBuilder = GetMockedBuilder();
 
+        _args.Parent = null;
+
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(_args)).Returns(true);
-        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>())).Returns(classBuilder);
+        _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
         _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c);
 
         Action action = () => _classServiceTest!.CreateClass(_args);
@@ -176,7 +211,7 @@ public class ClassServiceTest
         var classBuilder = GetMockedBuilder();
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
-        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>())).Returns(classBuilder);
+        _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
         _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c).Verifiable();
 
         Action action = () => _classServiceTest!.CreateClass(_args);
@@ -198,7 +233,7 @@ public class ClassServiceTest
         var classBuilder = GetMockedBuilder();
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
-        _builderStrategyMock.Setup(x => x.CreateBuilder(It.IsAny<IClassService>())).Returns(classBuilder);
+        _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
         _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c).Verifiable();
 
         var result = _classServiceTest!.CreateClass(_args);

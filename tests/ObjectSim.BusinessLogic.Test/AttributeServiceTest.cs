@@ -12,7 +12,7 @@ namespace ObjectSim.BusinessLogic.Test;
 public class AttributeServiceTest
 {
     private Mock<IRepository<Attribute>>? _attributeRepositoryMock;
-    private Mock<IClassService> _classServiceMock = null!;
+    private Mock<IClassServiceBuilder> _classServiceBuilderMock = null!;
     private Mock<IDataTypeService> _dataTypeServiceMock = null!;
     private AttributeService? _attributeService;
 
@@ -42,17 +42,17 @@ public class AttributeServiceTest
     [TestInitialize]
     public void Setup()
     {
-        _classServiceMock = new Mock<IClassService>();
+        _classServiceBuilderMock = new Mock<IClassServiceBuilder>();
         _dataTypeServiceMock = new Mock<IDataTypeService>();
         _attributeRepositoryMock = new Mock<IRepository<Attribute>>(MockBehavior.Strict);
-        _attributeService = new AttributeService(_attributeRepositoryMock.Object, _classServiceMock.Object, _dataTypeServiceMock.Object);
+        _attributeService = new AttributeService(_attributeRepositoryMock.Object, _classServiceBuilderMock.Object, _dataTypeServiceMock.Object);
     }
 
     [TestCleanup]
     public void Cleanup()
     {
         _attributeRepositoryMock!.VerifyAll();
-        _classServiceMock.VerifyAll();
+        _classServiceBuilderMock.VerifyAll();
         _dataTypeServiceMock.VerifyAll();
     }
 
@@ -71,7 +71,7 @@ public class AttributeServiceTest
     public void CreateAttribute_AttributeWithSameNameAlreadyExistsInClass_ThrowsException()
     {
         _dataTypeServiceMock.Setup(x => x.CreateDataType(TestArgsDataType)).Returns(_testDataType!);
-        _classServiceMock
+        _classServiceBuilderMock
             .Setup(x => x.AddAttribute(It.IsAny<Guid>(), It.IsAny<Attribute>()))
             .Throws(new ArgumentException());
 
@@ -124,7 +124,7 @@ public class AttributeServiceTest
         _dataTypeServiceMock
             .Setup(x => x.CreateDataType(_testArgsAttribute.DataType)).Returns(_testDataType!);
 
-        _classServiceMock.Setup(x => x.AddAttribute(It.IsAny<Guid>(), It.IsAny<Attribute>()));
+        _classServiceBuilderMock.Setup(x => x.AddAttribute(It.IsAny<Guid>(), It.IsAny<Attribute>()));
 
         _attributeRepositoryMock!
             .Setup(repo => repo.Add(It.IsAny<Attribute>()))

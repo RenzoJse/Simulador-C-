@@ -12,7 +12,7 @@ namespace ObjectSim.ClassLogic.Test.ClassBuildersTest;
 public class BuilderTest
 {
     private Builder? _builder;
-    private Mock<IMethodService>? _methodServiceMock;
+    private Mock<IMethodServiceCreate>? _methodServiceCreateMock;
     private Mock<IClassService>? _classServiceMock;
     private Mock<IAttributeService>? _attributeServiceMock;
 
@@ -39,10 +39,10 @@ public class BuilderTest
     [TestInitialize]
     public void Initialize()
     {
-        _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
+        _methodServiceCreateMock = new Mock<IMethodServiceCreate>(MockBehavior.Strict);
         _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
         _attributeServiceMock = new Mock<IAttributeService>(MockBehavior.Strict);
-        _builder = new ClassBuilder(_methodServiceMock.Object, _classServiceMock.Object, _attributeServiceMock.Object);
+        _builder = new ClassBuilder(_methodServiceCreateMock.Object, _attributeServiceMock.Object);
     }
 
     #region SetParent
@@ -53,21 +53,22 @@ public class BuilderTest
     public void SetParent_SealedParent_ThrowsException()
     {
         var parentId = Guid.NewGuid();
+        var sealedParent = new Class
+        {
+            Id = parentId,
+            Name = "ParentClass",
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false,
+            Methods = [],
+            Attributes = [],
+            Parent = null,
+        };
 
         _classServiceMock!.Setup(m => m.GetById(parentId))
-            .Returns(new Class
-            {
-                Id = parentId,
-                Name = "ParentClass",
-                IsAbstract = false,
-                IsSealed = true,
-                IsInterface = false,
-                Methods = [],
-                Attributes = [],
-                Parent = null,
-            });
+            .Returns(sealedParent);
 
-        Action action = () => _builder!.SetParent(parentId);
+        Action action = () => _builder!.SetParent(sealedParent);
 
         action.Should().Throw<ArgumentException>("Cant have a sealed class as parent");
     }
@@ -75,18 +76,6 @@ public class BuilderTest
     #endregion
 
     #region Success
-
-    [TestMethod]
-    public void SetParent_InvalidParentID_AddsNullParent()
-    {
-        var invalidParentId = Guid.NewGuid();
-
-        _classServiceMock!.Setup(m => m.GetById(invalidParentId))
-            .Throws(new ArgumentException("Class does not exist"));
-
-        _builder!.SetParent(invalidParentId);
-        _builder.GetResult().Parent.Should().BeNull();
-    }
 
     [TestMethod]
     public void SetParent_ValidParentID_AddsParent()
@@ -107,7 +96,7 @@ public class BuilderTest
         _classServiceMock!.Setup(m => m.GetById(parentId))
             .Returns(parentClass);
 
-        _builder!.SetParent(parentId);
+        _builder!.SetParent(parentClass);
 
         _builder.GetResult().Parent.Should().Be(parentClass);
     }
@@ -183,7 +172,7 @@ public class BuilderTest
         _classServiceMock!.Setup(m => m.GetById(parentId))
             .Returns(interfaceClass);
 
-        _builder!.SetParent(parentId);
+        _builder!.SetParent(interfaceClass);
         Action action = () => _builder.SetMethods([]);
 
         action.Should().Throw<ArgumentException>()
@@ -206,7 +195,7 @@ public class BuilderTest
         _classServiceMock!.Setup(m => m.GetById(_parentClass.Id))
             .Returns(_parentClass);
 
-        _builder!.SetParent(_parentClass.Id);
+        _builder!.SetParent(_parentClass);
 
         _builder!.SetMethods([]);
 

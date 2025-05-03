@@ -29,13 +29,14 @@ public static class ServiceFactory
     public static void AddServices(IServiceCollection services)
     {
         services.AddScoped<IMethodService, MethodService>();
+        services.AddScoped<IMethodServiceCreate>(sp => (IMethodServiceCreate)sp.GetRequiredService<IMethodService>());
         services.AddScoped<IAttributeService, AttributeService>();
         services.AddScoped<IDataTypeService, DataTypeService>();
 
         services.AddScoped<IBuilderStrategy, ClassBuilderStrategy>();
-        services.AddScoped<List<IBuilderStrategy>>(provider =>
-            provider.GetServices<IBuilderStrategy>().ToList());
+        services.AddScoped<IBuilderStrategy, InterfaceBuilderStrategy>();
         services.AddScoped<IClassService, ClassService>();
+        services.AddScoped<IClassServiceBuilder>(sp => (IClassServiceBuilder)sp.GetRequiredService<IClassService>());
     }
 
     public static void AddDataAccess(IServiceCollection services)
