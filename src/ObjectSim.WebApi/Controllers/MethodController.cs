@@ -2,6 +2,7 @@
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
+using ObjectSim.WebApi.Filter;
 
 namespace ObjectSim.WebApi.Controllers;
 
@@ -10,6 +11,7 @@ namespace ObjectSim.WebApi.Controllers;
 public class MethodController(IMethodService methodService) : ControllerBase
 {
     [HttpPost]
+    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult CreateMethod(MethodDtoIn createMethodDtoIn)
     {
         var methodInfo = methodService.CreateMethod(createMethodDtoIn.ToArgs());
@@ -20,33 +22,26 @@ public class MethodController(IMethodService methodService) : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult DeleteMethod(Guid id)
     {
-        var deleted = methodService.Delete(id);
-
-        if(!deleted)
-        {
-            return NotFound($"Method with id {id} not found.");
-        }
-
+        methodService.Delete(id);
         return Ok($"Method with id {id} deleted successfully.");
     }
 
     [HttpGet("{id}")]
+    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult GetMethodById(Guid id)
     {
         var methodInfo = methodService.GetById(id);
 
-        if(methodInfo == null)
-        {
-            return NotFound($"Method with id {id} not found.");
-        }
-
         var response = new MethodInformationDtoOut(methodInfo);
+
         return Ok(response);
     }
 
     [HttpGet]
+    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult GetAllMethods()
     {
         var methods = methodService.GetAll();

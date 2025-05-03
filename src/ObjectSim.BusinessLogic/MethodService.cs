@@ -79,7 +79,7 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
         var method = methodRepository.Get(method1 => id == method1.Id);
         if(method == null)
         {
-            throw new Exception("Method cannot be null.");
+            throw new KeyNotFoundException($"Method with id {id} not found.");
         }
 
         methodRepository.Delete(method);
@@ -105,7 +105,7 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
         }
         catch(Exception)
         {
-            throw new InvalidOperationException("Not found method.");
+            throw new KeyNotFoundException($"Method with ID {id} not found.");
         }
     }
 
