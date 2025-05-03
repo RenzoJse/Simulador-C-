@@ -9,17 +9,17 @@ namespace ObjectSim.ClassLogic.Test.Strategy;
 [TestClass]
 public class ClassBuilderStrategyTest
 {
-    private Mock<IMethodService>? _methodServiceMock;
+    private Mock<IMethodServiceCreate>? _methodServiceCreateMock;
     private Mock<IAttributeService>? _attributeServiceMock;
     private ClassBuilderStrategy? _strategy;
 
     [TestInitialize]
     public void Initialize()
     {
-        _methodServiceMock = new Mock<IMethodService>();
+        _methodServiceCreateMock = new Mock<IMethodServiceCreate>();
         _attributeServiceMock = new Mock<IAttributeService>();
 
-        _strategy = new ClassBuilderStrategy(_methodServiceMock.Object, _attributeServiceMock!.Object);
+        _strategy = new ClassBuilderStrategy(_methodServiceCreateMock.Object, _attributeServiceMock!.Object);
     }
 
     #region WhichIsMyBuilder

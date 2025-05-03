@@ -12,7 +12,7 @@ namespace ObjectSim.ClassLogic.Test.ClassBuildersTest;
 public class BuilderTest
 {
     private Builder? _builder;
-    private Mock<IMethodService>? _methodServiceMock;
+    private Mock<IMethodServiceCreate>? _methodServiceCreateMock;
     private Mock<IClassService>? _classServiceMock;
     private Mock<IAttributeService>? _attributeServiceMock;
 
@@ -39,10 +39,10 @@ public class BuilderTest
     [TestInitialize]
     public void Initialize()
     {
-        _methodServiceMock = new Mock<IMethodService>(MockBehavior.Strict);
+        _methodServiceCreateMock = new Mock<IMethodServiceCreate>(MockBehavior.Strict);
         _classServiceMock = new Mock<IClassService>(MockBehavior.Strict);
         _attributeServiceMock = new Mock<IAttributeService>(MockBehavior.Strict);
-        _builder = new ClassBuilder(_methodServiceMock.Object, _attributeServiceMock.Object);
+        _builder = new ClassBuilder(_methodServiceCreateMock.Object, _attributeServiceMock.Object);
     }
 
     #region SetParent

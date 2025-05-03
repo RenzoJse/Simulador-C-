@@ -18,7 +18,7 @@ public class ClassServiceTest
     private ClassService? _classServiceTest;
     private Mock<IBuilderStrategy>? _builderStrategyMock;
     private Mock<IAttributeService>? _attributeServiceMock;
-    private Mock<IClassService>? _classServiceMock;
+    private Mock<IMethodServiceCreate>? _methodServiceCreateMock;
     private Mock<IMethodService>? _methodServiceMock;
     private Mock<IRepository<Class>>? _classRepositoryMock;
 
@@ -65,11 +65,11 @@ public class ClassServiceTest
     protected virtual Builder GetMockedBuilder()
     {
         _methodServiceMock = new Mock<IMethodService>();
-        _classServiceMock = new Mock<IClassService>();
+        _methodServiceCreateMock = new Mock<IMethodServiceCreate>();
         _attributeServiceMock = new Mock<IAttributeService>();
 
         return new ClassBuilder(
-            _methodServiceMock.Object,
+            _methodServiceCreateMock.Object,
             _attributeServiceMock.Object);
     }
 
