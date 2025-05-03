@@ -18,7 +18,7 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
             try
             {
                 newAttribute = attributeService.CreateAttribute(attr);
-                if(Result.CanAddAttribute(Result, newAttribute))
+                if(Class.CanAddAttribute(Result, newAttribute))
                 {
                     newAttributes.Add(newAttribute);
                 }

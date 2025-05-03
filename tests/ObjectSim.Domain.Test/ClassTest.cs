@@ -468,4 +468,73 @@ public class ClassTest
     #endregion
 
     #endregion
+
+    #region CanAddAttribute
+
+    #region Error
+
+    [TestMethod]
+    public void CanAddAttribute_ClassIsInterface_ThrowsException()
+    {
+        var classObj = new Class
+        {
+            IsInterface = true,
+            Attributes = []
+        };
+
+        var attribute = new Attribute
+        {
+            Name = "TestAttribute"
+        };
+
+        Action action = () => classObj.CanAddAttribute(classObj, attribute);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Cannot add attribute to an interface.");
+    }
+
+    [TestMethod]
+    public void CanAddAttribute_AttributeRepeatedName_ThrowsException()
+    {
+        var classObj = new Class
+        {
+            Attributes = [new Attribute { Name = "TestAttribute" }]
+        };
+
+        var attribute = new Attribute
+        {
+            Name = "TestAttribute"
+        };
+
+        Action action = () => classObj.CanAddAttribute(classObj, attribute);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Attribute name already exists in class.");
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void CanAddAttribute_ValidAttribute_AddsAttribute()
+    {
+        var classObj = new Class
+        {
+            Attributes = []
+        };
+
+        var attribute = new Attribute
+        {
+            Name = "TestAttribute"
+        };
+
+        Action action = () => classObj.CanAddAttribute(classObj, attribute);
+
+        action.Should().NotThrow();
+    }
+
+    #endregion
+
+    #endregion
 }

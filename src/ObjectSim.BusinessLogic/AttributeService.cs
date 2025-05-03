@@ -28,7 +28,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
 
         var classObj = GetById(classId);
 
-        if(classObj.CanAddAttribute(classObj, attribute))
+        if(Class.CanAddAttribute(classObj, attribute))
         {
             classObj.Attributes!.Add(attribute);
         }
