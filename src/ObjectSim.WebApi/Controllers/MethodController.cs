@@ -2,6 +2,7 @@
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
+using ObjectSim.WebApi.Filter;
 
 namespace ObjectSim.WebApi.Controllers;
 
@@ -33,16 +34,13 @@ public class MethodController(IMethodService methodService) : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult GetMethodById(Guid id)
     {
         var methodInfo = methodService.GetById(id);
 
-        if(methodInfo == null)
-        {
-            return NotFound($"Method with id {id} not found.");
-        }
-
         var response = new MethodInformationDtoOut(methodInfo);
+
         return Ok(response);
     }
 
