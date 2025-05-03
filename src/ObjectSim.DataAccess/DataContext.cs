@@ -63,17 +63,49 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             m.HasKey(m => m.Id);
 
+            m.HasOne(m => m.Type)
+                .WithMany()
+                .HasForeignKey("TypeId");
+
             m.HasMany(m => m.Parameters)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany()
+                .UsingEntity<DataTypeMethodParameters>(
+                    j => j
+                        .HasOne<DataType>()
+                        .WithMany()
+                        .HasForeignKey("IdDataType")
+                        .OnDelete(DeleteBehavior.Restrict),
+                    j => j
+                        .HasOne<Method>()
+                        .WithMany()
+                        .HasForeignKey("IdMethod")
+                        .OnDelete(DeleteBehavior.Restrict),
+                    j =>
+                    {
+                        j.HasKey("IdDataType", "IdMethod");
+                    });
 
             m.HasMany(m => m.LocalVariables)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany()
+                .UsingEntity<DataTypeMethodLocalVariables>(
+                    j => j
+                        .HasOne<DataType>()
+                        .WithMany()
+                        .HasForeignKey("IdDataType")
+                        .OnDelete(DeleteBehavior.Restrict),
+                    j => j
+                        .HasOne<Method>()
+                        .WithMany()
+                        .HasForeignKey("IdMethod")
+                        .OnDelete(DeleteBehavior.Restrict),
+                    j =>
+                    {
+                        j.HasKey("IdDataType", "IdMethod");
+                    });
 
             m.HasMany(m => m.MethodsInvoke)
                 .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Attribute>(a =>
@@ -94,7 +126,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 .HasValue<ValueType>("ValueType")
                 .HasValue<ReferenceType>("ReferenceType");
         });
-        
+
         modelBuilder.Entity<ValueType>(vt =>
         {
             vt.Property(vt => vt.Name).IsRequired();
@@ -113,4 +145,19 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         //insertar en la bd todos los metodos predefinidos por .NET para cada tipo de dato.
         //Tienen que tener guid fijo.
     }
+
+    [ExcludeFromCodeCoverage]
+    public sealed record DataTypeMethodParameters
+    {
+        public Guid IdDataType { get; set; }
+        public Guid IdMethod { get; set; }
+    }
+
+    [ExcludeFromCodeCoverage]
+    public sealed record DataTypeMethodLocalVariables
+    {
+        public Guid IdDataType { get; set; }
+        public Guid IdMethod { get; set; }
+    }
+
 }
