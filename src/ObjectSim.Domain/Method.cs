@@ -92,12 +92,8 @@ public class Method
                 throw new ArgumentNullException(nameof(value), "InvokeMethod cannot be null.");
             }
 
-            if (MethodIsNotInClass(value))
+            if (MethodIsNotInClass(value) && MethodIsNotFromParent(value))
             {
-                if(MethodClassHasParent())
-                {
-                    MethodIsNotFromParent(value);
-                }
                 throw new ArgumentException("The invoked method must be reachable from the current method.");
             }
 
@@ -117,15 +113,19 @@ public class Method
 
     private bool MethodIsNotFromParent(List<Method> methods)
     {
-        var parentClass = Class!.Parent;
-        foreach(var method in parentClass!.Methods!)
+        if (MethodClassHasParent())
         {
-            if(methods.Contains(method))
+            var parentClass = Class!.Parent;
+            foreach(var method in parentClass!.Methods!)
             {
-                return true;
+                if(methods.Contains(method))
+                {
+                    return false;
+                }
             }
         }
-        return false;
+
+        return true;
     }
 
     #endregion
