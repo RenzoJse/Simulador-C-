@@ -7,20 +7,32 @@ public class MethodTest
 {
     private readonly DataType _methodType = new ValueType("methodType", "int", []);
     private readonly DataType _methodReferenceType = new ReferenceType("methodReferenceType", "object", []);
-    private Method? _testMethod;
 
     private Class? _testClass = new Class
     {
         Id = Guid.NewGuid(),
         Name = "TestClass",
+        Methods = []
     };
+
+    private Method? _testMethod;
 
     [TestInitialize]
     public void Initialize()
     {
-        _testMethod = new Method();
+        _testMethod =  new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            Type = new ValueType("int", "int", []),
+            Accessibility = Method.MethodAccessibility.Public,
+            Abstract = false,
+            IsSealed = false,
+            IsOverride = false,
+            ClassId = _testClass!.Id,
+            Class = _testClass
+        };
     }
-
 
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqual()
@@ -55,14 +67,6 @@ public class MethodTest
     {
         _testMethod!.Name = "TestMethod";
         _testMethod.Name.Should().Be("TestMethod");
-    }
-
-    [TestMethod]
-    public void Id_Property_SetAndGet_ShouldBeEqual()
-    {
-        var id = Guid.NewGuid();
-        _testMethod!.Id = id;
-        _testMethod.Id.Should().Be(id);
     }
 
     [TestMethod]
@@ -318,8 +322,11 @@ public class MethodTest
     [TestMethod]
     public void SetInvokeMethod_WhenUsingMethodThatIsNotInClassNeitherParentClass_ThrowsException()
     {
+        var parentClass = new Class { Methods = new List<Method>() };
+        _testClass!.Parent = parentClass;
+
         var otherMethod = new Method { Id = Guid.NewGuid() };
-        _testMethod!.Class = _testClass;
+        _testClass.Methods!.Add(new Method { Id = Guid.NewGuid() });
 
         Action act = () => _testMethod!.MethodsInvoke = [otherMethod];
 

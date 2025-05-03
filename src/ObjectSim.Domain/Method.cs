@@ -40,7 +40,7 @@ public class Method
     public DataType Type { get; set; } = null!;
 
     public string GetTypeString() => Type?.Type ?? string.Empty;
-    
+
     #endregion
 
     #region Abstract
@@ -92,13 +92,40 @@ public class Method
                 throw new ArgumentNullException(nameof(value), "InvokeMethod cannot be null.");
             }
 
-            if (value.Any(method => method.Class != Class) || value.Any(method => method.Class != null && Class!.Methods!.Contains(method)))
+            if (MethodIsNotInClass(value))
             {
+                if(MethodClassHasParent())
+                {
+                    MethodIsNotFromParent(value);
+                }
                 throw new ArgumentException("The invoked method must be reachable from the current method.");
             }
 
             _methodsInvoke = value;
         }
+    }
+
+    private bool MethodIsNotInClass(List<Method> methods)
+    {
+        return methods.Any(method => method.Class != Class);
+    }
+
+    private bool MethodClassHasParent()
+    {
+        return Class?.Parent != null;
+    }
+
+    private bool MethodIsNotFromParent(List<Method> methods)
+    {
+        var parentClass = Class!.Parent;
+        foreach(var method in parentClass!.Methods!)
+        {
+            if(methods.Contains(method))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     #endregion
