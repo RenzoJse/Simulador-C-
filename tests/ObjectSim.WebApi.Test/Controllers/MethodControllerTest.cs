@@ -110,22 +110,21 @@ public class MethodControllerTest
     }
 
     [TestMethod]
-    public void DeleteMethod_WhenMethodDoesNotExist_ShouldReturnNotFound()
+    public void DeleteMethod_WhenMethodDoesNotExist_ShouldThrowKeyNotFoundException()
     {
         var methodId = Guid.NewGuid();
+
         _methodServiceMock
             .Setup(service => service.Delete(methodId))
-            .Returns(false);
+            .Throws(new KeyNotFoundException($"Method with id {methodId} not found."));
 
-        var result = _methodController.DeleteMethod(methodId);
+        Action act = () => _methodController.DeleteMethod(methodId);
 
-        var notFoundResult = result as NotFoundObjectResult;
-        notFoundResult.Should().NotBeNull();
-        notFoundResult!.StatusCode.Should().Be(404);
-        notFoundResult.Value.Should().Be($"Method with id {methodId} not found.");
+        act.Should().Throw<KeyNotFoundException>()
+           .WithMessage($"Method with id {methodId} not found.");
     }
     #endregion
-    
+
     #region GetById-Method-Test
     [TestMethod]
     public void GetMethodById_WhenMethodExists_ShouldReturnOk()
