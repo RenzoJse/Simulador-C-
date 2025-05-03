@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using ObjectSim.BusinessLogic;
-using ObjectSim.ClassLogic.Strategy;
+using ObjectSim.ClassConstructor.Strategy;
 using ObjectSim.DataAccess;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.DataAccess.Repositories;
@@ -36,7 +36,6 @@ public static class ServiceFactory
         services.AddScoped<IBuilderStrategy, ClassBuilderStrategy>();
         services.AddScoped<IBuilderStrategy, InterfaceBuilderStrategy>();
         services.AddScoped<IClassService, ClassService>();
-        services.AddScoped<IClassServiceBuilder>(sp => (IClassServiceBuilder)sp.GetRequiredService<IClassService>());
     }
 
     public static void AddDataAccess(IServiceCollection services)

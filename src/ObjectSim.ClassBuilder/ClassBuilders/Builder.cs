@@ -1,8 +1,7 @@
 ﻿using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
-using ObjectSim.IBusinessLogic;
 
-namespace ObjectSim.ClassLogic.ClassBuilders;
+namespace ObjectSim.ClassConstructor.ClassBuilders;
 
 public abstract class Builder()
 {

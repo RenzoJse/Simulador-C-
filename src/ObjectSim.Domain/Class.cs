@@ -112,7 +112,7 @@ public class Class
         }
     }
 
-    public bool CanAddAttribute(Class classObj, Attribute attribute)
+    public static bool CanAddAttribute(Class classObj, Attribute attribute)
     {
         if(classObj.IsInterface == true)
         {
@@ -151,7 +151,7 @@ public class Class
         }
     }
 
-    public bool CanAddMethod(Class classObj, Method method)
+    public static bool CanAddMethod(Class classObj, Method method)
     {
         ValidateMethodUniqueness(classObj, method);
 

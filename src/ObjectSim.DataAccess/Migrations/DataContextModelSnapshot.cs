@@ -22,6 +22,36 @@ namespace ObjectSim.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ObjectSim.DataAccess.DataContext+DataTypeMethodLocalVariables", b =>
+                {
+                    b.Property<Guid>("IdDataType")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("IdMethod")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("IdDataType", "IdMethod");
+
+                    b.HasIndex("IdMethod");
+
+                    b.ToTable("DataTypeMethodLocalVariables");
+                });
+
+            modelBuilder.Entity("ObjectSim.DataAccess.DataContext+DataTypeMethodParameters", b =>
+                {
+                    b.Property<Guid>("IdDataType")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("IdMethod")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("IdDataType", "IdMethod");
+
+                    b.HasIndex("IdMethod");
+
+                    b.ToTable("DataTypeMethodParameters");
+                });
+
             modelBuilder.Entity("ObjectSim.Domain.Attribute", b =>
                 {
                     b.Property<Guid>("Id")
@@ -88,6 +118,10 @@ namespace ObjectSim.DataAccess.Migrations
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
+                    b.Property<string>("MethodIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -99,28 +133,6 @@ namespace ObjectSim.DataAccess.Migrations
                     b.HasDiscriminator().HasValue("DataType");
 
                     b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("ObjectSim.Domain.LocalVariable", b =>
-                {
-                    b.Property<Guid?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("MethodId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MethodId");
-
-                    b.ToTable("LocalVariables");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Method", b =>
@@ -150,8 +162,8 @@ namespace ObjectSim.DataAccess.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -159,29 +171,9 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.HasIndex("MethodId");
 
+                    b.HasIndex("TypeId");
+
                     b.ToTable("Methods");
-                });
-
-            modelBuilder.Entity("ObjectSim.Domain.Parameter", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("MethodId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MethodId");
-
-                    b.ToTable("Parameters");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.ReferenceType", b =>
@@ -196,6 +188,36 @@ namespace ObjectSim.DataAccess.Migrations
                     b.HasBaseType("ObjectSim.Domain.DataType");
 
                     b.HasDiscriminator().HasValue("ValueType");
+                });
+
+            modelBuilder.Entity("ObjectSim.DataAccess.DataContext+DataTypeMethodLocalVariables", b =>
+                {
+                    b.HasOne("ObjectSim.Domain.DataType", null)
+                        .WithMany()
+                        .HasForeignKey("IdDataType")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ObjectSim.Domain.Method", null)
+                        .WithMany()
+                        .HasForeignKey("IdMethod")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ObjectSim.DataAccess.DataContext+DataTypeMethodParameters", b =>
+                {
+                    b.HasOne("ObjectSim.Domain.DataType", null)
+                        .WithMany()
+                        .HasForeignKey("IdDataType")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ObjectSim.Domain.Method", null)
+                        .WithMany()
+                        .HasForeignKey("IdMethod")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Attribute", b =>
@@ -225,17 +247,9 @@ namespace ObjectSim.DataAccess.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("ObjectSim.Domain.LocalVariable", b =>
-                {
-                    b.HasOne("ObjectSim.Domain.Method", null)
-                        .WithMany("LocalVariables")
-                        .HasForeignKey("MethodId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("ObjectSim.Domain.Method", b =>
                 {
-                    b.HasOne("ObjectSim.Domain.Class", "Class")
+                    b.HasOne("ObjectSim.Domain.Class", null)
                         .WithMany("Methods")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -243,17 +257,15 @@ namespace ObjectSim.DataAccess.Migrations
                     b.HasOne("ObjectSim.Domain.Method", null)
                         .WithMany("MethodsInvoke")
                         .HasForeignKey("MethodId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Class");
-                });
+                    b.HasOne("ObjectSim.Domain.DataType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("ObjectSim.Domain.Parameter", b =>
-                {
-                    b.HasOne("ObjectSim.Domain.Method", null)
-                        .WithMany("Parameters")
-                        .HasForeignKey("MethodId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Class", b =>
@@ -265,11 +277,7 @@ namespace ObjectSim.DataAccess.Migrations
 
             modelBuilder.Entity("ObjectSim.Domain.Method", b =>
                 {
-                    b.Navigation("LocalVariables");
-
                     b.Navigation("MethodsInvoke");
-
-                    b.Navigation("Parameters");
                 });
 #pragma warning restore 612, 618
         }

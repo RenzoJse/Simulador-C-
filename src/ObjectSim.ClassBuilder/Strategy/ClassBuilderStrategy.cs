@@ -1,9 +1,9 @@
-﻿using ObjectSim.ClassLogic.ClassBuilders;
-using ObjectSim.ClassLogic.ClassBuilders.Builders;
+﻿using ObjectSim.ClassConstructor.ClassBuilders;
+using ObjectSim.ClassConstructor.ClassBuilders.Builders;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
-namespace ObjectSim.ClassLogic.Strategy;
+namespace ObjectSim.ClassConstructor.Strategy;
 
 public class ClassBuilderStrategy(
     IMethodServiceCreate methodService,
