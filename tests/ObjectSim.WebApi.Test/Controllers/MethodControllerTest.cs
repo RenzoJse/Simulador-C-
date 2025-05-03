@@ -226,13 +226,14 @@ public class MethodControllerTest
     }
 
     [TestMethod]
+    [ExpectedException(typeof(KeyNotFoundException))]
     public void GetMethodById_WhenMethodDoesNotExist_ShouldReturnNotFound()
     {
         var methodId = Guid.NewGuid();
 
         _methodServiceMock
             .Setup(service => service.GetById(methodId))
-            .Returns((Method?)null);
+            .Throws(new KeyNotFoundException("Method with ID not found"));
 
         var result = _methodController.GetMethodById(methodId);
 
