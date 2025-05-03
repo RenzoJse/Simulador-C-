@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
-using ObjectSim.ClassLogic.ClassBuilders;
-using ObjectSim.ClassLogic.ClassBuilders.Builders;
+using ObjectSim.ClassConstructor.ClassBuilders;
+using ObjectSim.ClassConstructor.ClassBuilders.Builders;
 using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;

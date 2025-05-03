@@ -1,7 +1,6 @@
 ﻿using ObjectSim.Domain.Args;
-using ObjectSim.IBusinessLogic;
 
-namespace ObjectSim.ClassLogic.ClassBuilders.Builders;
+namespace ObjectSim.ClassConstructor.ClassBuilders.Builders;
 
 public class InterfaceBuilder() : Builder()
 {

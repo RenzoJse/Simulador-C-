@@ -1,5 +1,5 @@
-﻿using ObjectSim.ClassLogic.ClassBuilders.Builders;
-using ObjectSim.ClassLogic.Strategy;
+﻿using ObjectSim.ClassConstructor.ClassBuilders.Builders;
+using ObjectSim.ClassConstructor.Strategy;
 using ObjectSim.Domain.Args;
 
 namespace ObjectSim.ClassLogic.Test.Strategy;

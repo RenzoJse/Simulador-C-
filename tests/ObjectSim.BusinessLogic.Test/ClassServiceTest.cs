@@ -1,8 +1,8 @@
 using FluentAssertions;
 using Moq;
-using ObjectSim.ClassLogic.ClassBuilders;
-using ObjectSim.ClassLogic.ClassBuilders.Builders;
-using ObjectSim.ClassLogic.Strategy;
+using ObjectSim.ClassConstructor.ClassBuilders;
+using ObjectSim.ClassConstructor.ClassBuilders.Builders;
+using ObjectSim.ClassConstructor.Strategy;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;

@@ -1,8 +1,8 @@
-﻿using ObjectSim.ClassLogic.ClassBuilders;
-using ObjectSim.ClassLogic.ClassBuilders.Builders;
+﻿using ObjectSim.ClassConstructor.ClassBuilders;
+using ObjectSim.ClassConstructor.ClassBuilders.Builders;
 using ObjectSim.Domain.Args;
 
-namespace ObjectSim.ClassLogic.Strategy;
+namespace ObjectSim.ClassConstructor.Strategy;
 
 public class InterfaceBuilderStrategy() : IBuilderStrategy
 {

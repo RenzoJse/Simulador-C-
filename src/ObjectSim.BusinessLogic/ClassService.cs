@@ -1,5 +1,5 @@
-﻿using ObjectSim.ClassLogic.ClassBuilders;
-using ObjectSim.ClassLogic.Strategy;
+﻿using ObjectSim.ClassConstructor.ClassBuilders;
+using ObjectSim.ClassConstructor.Strategy;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
