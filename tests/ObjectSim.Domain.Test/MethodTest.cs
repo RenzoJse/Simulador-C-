@@ -322,7 +322,7 @@ public class MethodTest
     [TestMethod]
     public void SetInvokeMethod_WhenUsingMethodThatIsNotInClassNeitherParentClass_ThrowsException()
     {
-        var parentClass = new Class { Methods = new List<Method>() };
+        var parentClass = new Class { Methods = [] };
         _testClass!.Parent = parentClass;
 
         var otherMethod = new Method { Id = Guid.NewGuid() };
@@ -332,6 +332,33 @@ public class MethodTest
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void SetInvokeMethod_WhenUsingMethodThatIsNotInClassButInParentClass_AddsMethod()
+    {
+        var parentClass = new Class
+        {
+            Id = Guid.NewGuid(),
+            Name = "ParentClass",
+            Methods = []
+        };
+        _testClass!.Parent = parentClass;
+
+        var otherMethod = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "OtherMethod",
+            Class = parentClass
+        };
+        parentClass.Methods!.Add(otherMethod);
+
+        _testMethod!.MethodsInvoke = [otherMethod];
+        _testMethod.MethodsInvoke.Should().Contain(otherMethod);
     }
 
     #endregion
