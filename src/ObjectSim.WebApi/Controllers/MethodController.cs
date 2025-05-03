@@ -45,6 +45,7 @@ public class MethodController(IMethodService methodService) : ControllerBase
     }
 
     [HttpGet]
+    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult GetAllMethods()
     {
         var methods = methodService.GetAll();
