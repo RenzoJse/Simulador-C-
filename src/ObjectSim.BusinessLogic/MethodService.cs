@@ -2,6 +2,7 @@
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
+using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.BusinessLogic;
 public class MethodService(IRepository<Method> methodRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService) : IMethodService, IMethodServiceCreate
@@ -38,11 +39,11 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         {
             Name = methodsArgs.Name,
             ClassId = methodsArgs.ClassId,
-            Class = GetClassById(methodsArgs.ClassId),
             Abstract = methodsArgs.IsAbstract ?? false,
             IsSealed = methodsArgs.IsSealed ?? false,
             IsOverride = methodsArgs.IsOverride ?? false,
-            //Type = dataTypeService.GetId();
+            Type = dataTypeService.CreateDataType(methodsArgs.Type),
+            TypeId = dataTypeService.CreateDataType(methodsArgs.Type).Id,
             Parameters = parameters,
             LocalVariables = localVariables,
             MethodsInvoke = GetInvokeMethods(methodsArgs.InvokeMethods)

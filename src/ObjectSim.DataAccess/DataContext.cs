@@ -34,7 +34,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             c.HasKey(c => c.Id);
 
             c.HasMany(c => c.Methods)
-                .WithOne(m => m.Class)
+                .WithOne()
                 .HasForeignKey(m => m.ClassId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -65,7 +65,8 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
             m.HasOne(m => m.Type)
                 .WithMany()
-                .HasForeignKey("TypeId");
+                .HasForeignKey(m => m.TypeId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             m.HasMany(m => m.Parameters)
                 .WithMany()

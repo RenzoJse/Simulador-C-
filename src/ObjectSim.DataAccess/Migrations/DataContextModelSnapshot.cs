@@ -249,7 +249,7 @@ namespace ObjectSim.DataAccess.Migrations
 
             modelBuilder.Entity("ObjectSim.Domain.Method", b =>
                 {
-                    b.HasOne("ObjectSim.Domain.Class", "Class")
+                    b.HasOne("ObjectSim.Domain.Class", null)
                         .WithMany("Methods")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -264,8 +264,6 @@ namespace ObjectSim.DataAccess.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Class");
 
                     b.Navigation("Type");
                 });
