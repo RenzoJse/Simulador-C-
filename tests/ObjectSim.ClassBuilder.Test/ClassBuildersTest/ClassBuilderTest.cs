@@ -5,7 +5,6 @@ using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
-using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.ClassLogic.Test.ClassBuildersTest;
 

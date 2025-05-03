@@ -11,7 +11,6 @@ public class ClassBuilderStrategyTest
 {
     private Mock<IMethodService>? _methodServiceMock;
     private Mock<IAttributeService>? _attributeServiceMock;
-    private Mock<IClassService>? _classServiceMock;
     private ClassBuilderStrategy? _strategy;
 
     [TestInitialize]
@@ -19,7 +18,6 @@ public class ClassBuilderStrategyTest
     {
         _methodServiceMock = new Mock<IMethodService>();
         _attributeServiceMock = new Mock<IAttributeService>();
-        _classServiceMock = new Mock<IClassService>();
 
         _strategy = new ClassBuilderStrategy(_methodServiceMock.Object, _attributeServiceMock!.Object);
     }
