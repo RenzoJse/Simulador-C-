@@ -230,7 +230,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => classObj.CanAddMethod(classObj, newMethod);
+        Action action = () => Class.CanAddMethod(classObj, newMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method already exists in class.");
@@ -261,7 +261,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => classObj.CanAddMethod(classObj, newMethod);
+        Action action = () => Class.CanAddMethod(classObj, newMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method already exists in class.");
@@ -281,7 +281,7 @@ public class ClassTest
             IsSealed = true
         };
 
-        Action action = () => classObj.CanAddMethod(classObj, method);
+        Action action = () => Class.CanAddMethod(classObj, method);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot be sealed in an interface.");
@@ -301,14 +301,14 @@ public class ClassTest
             IsOverride = true
         };
 
-        Action action = () => classObj.CanAddMethod(classObj, method);
+        Action action = () => Class.CanAddMethod(classObj, method);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot be override in an interface.");
     }
 
     [TestMethod]
-    public void CanAddMethod_ClassIsInterfaceMethodAccesibilityIsPrivate_ThrowsException()
+    public void CanAddMethod_ClassIsInterfaceMethodAccessibilityIsPrivate_ThrowsException()
     {
         var classObj = new Class
         {
@@ -321,7 +321,7 @@ public class ClassTest
             Accessibility = Method.MethodAccessibility.Private
         };
 
-        Action action = () => classObj.CanAddMethod(classObj, method);
+        Action action = () => Class.CanAddMethod(classObj, method);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot be private in an interface.");
@@ -341,7 +341,7 @@ public class ClassTest
             LocalVariables = [new ValueType("int", "int", [])]
         };
 
-        Action action = () => classObj.CanAddMethod(classObj, method);
+        Action action = () => Class.CanAddMethod(classObj, method);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot have local variables in an interface.");
@@ -361,7 +361,7 @@ public class ClassTest
             MethodsInvoke = [new Method()]
         };
 
-        Action action = () => classObj.CanAddMethod(classObj, method);
+        Action action = () => Class.CanAddMethod(classObj, method);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot invoke other methods in an interface.");
@@ -403,7 +403,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => classObj.CanAddMethod(classObj, newMethod);
+        Action action = () => Class.CanAddMethod(classObj, newMethod);
 
         action.Should().NotThrow();
     }
@@ -424,7 +424,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => classObj.CanAddMethod(classObj, method);
+        Action action = () => Class.CanAddMethod(classObj, method);
 
         action.Should().NotThrow();
     }
@@ -445,7 +445,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => classObj.CanAddMethod(classObj, method);
+        Action action = () => Class.CanAddMethod(classObj, method);
 
         action.Should().NotThrow();
     }
@@ -487,7 +487,7 @@ public class ClassTest
             Name = "TestAttribute"
         };
 
-        Action action = () => classObj.CanAddAttribute(classObj, attribute);
+        Action action = () => Class.CanAddAttribute(classObj, attribute);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Cannot add attribute to an interface.");
@@ -506,7 +506,7 @@ public class ClassTest
             Name = "TestAttribute"
         };
 
-        Action action = () => classObj.CanAddAttribute(classObj, attribute);
+        Action action = () => Class.CanAddAttribute(classObj, attribute);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Attribute name already exists in class.");
@@ -529,7 +529,7 @@ public class ClassTest
             Name = "TestAttribute"
         };
 
-        Action action = () => classObj.CanAddAttribute(classObj, attribute);
+        Action action = () => Class.CanAddAttribute(classObj, attribute);
 
         action.Should().NotThrow();
     }
