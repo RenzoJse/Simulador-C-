@@ -11,6 +11,7 @@ namespace ObjectSim.WebApi.Controllers;
 public class MethodController(IMethodService methodService) : ControllerBase
 {
     [HttpPost]
+    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult CreateMethod(MethodDtoIn createMethodDtoIn)
     {
         var methodInfo = methodService.CreateMethod(createMethodDtoIn.ToArgs());
@@ -21,6 +22,7 @@ public class MethodController(IMethodService methodService) : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult DeleteMethod(Guid id)
     {
         methodService.Delete(id);
