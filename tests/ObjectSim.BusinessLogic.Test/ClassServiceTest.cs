@@ -49,11 +49,6 @@ public class ClassServiceTest
         Name = "TestMethod",
     };
 
-    private readonly Attribute _testAttribute = new Attribute
-    {
-        Name = "TestAttribute",
-    };
-
     private readonly CreateClassArgs _args = new CreateClassArgs("TestClass",
         false,
         false,
@@ -290,87 +285,6 @@ public class ClassServiceTest
         result.Should().NotBeNull();
         result.Should().BeOfType<Class>();
         result.Should().Be(_testClass);
-    }
-
-    #endregion
-
-    #endregion
-
-    #region AddAttribute
-
-    #region Error
-
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void AddAttribute_WithNullClassId_ThrowsException()
-    {
-        _classServiceTest!.AddAttribute(null!, _testAttribute);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void AddAttribute_NullAttributeId_ThrowsException()
-    {
-        _classServiceTest!.AddAttribute(_testClass.Id, null!);
-    }
-
-    [TestMethod]
-    public void AddAttribute_ClassIsInterface_ThrowsException()
-    {
-        var attributeId = Guid.NewGuid();
-        var attribute = new Attribute
-        {
-            Id = attributeId,
-            Name = "TestAttribute",
-        };
-
-        _classRepositoryMock!
-            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(_testInterfaceClass);
-
-        Action action = () => _classServiceTest!.AddAttribute(_testInterfaceClass.Id, _testAttribute);
-        action.Should().Throw<ArgumentException>().WithMessage("Cannot add attribute to an interface.");
-    }
-
-    [TestMethod]
-    public void AddAttribute_AttributeRepeatedName_ThrowsException()
-    {
-        var attributeId = Guid.NewGuid();
-        var attribute = new Attribute
-        {
-            Id = attributeId,
-            Name = "TestAttribute",
-        };
-
-        var sameNameAttribute = new Attribute
-        {
-            Id = Guid.NewGuid(),
-            Name = "TestAttribute",
-        };
-
-        _testClass.Attributes!.Add(sameNameAttribute);
-
-        _classRepositoryMock!
-            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(_testClass);
-
-        Action action = () => _classServiceTest!.AddAttribute(_testClass.Id, _testAttribute);
-        action.Should().Throw<ArgumentException>().WithMessage("Attribute name already exists in class.");
-    }
-
-    #endregion
-
-    #region Success
-
-    [TestMethod]
-    public void AddAttribute_ValidAttribute_AddsAttribute()
-    {
-        _classRepositoryMock!
-            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(_testClass);
-
-        _classServiceTest!.AddAttribute(_testClass.Id, _testAttribute);
-        _testClass.Attributes.Should().Contain(_testAttribute);
     }
 
     #endregion

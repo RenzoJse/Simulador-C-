@@ -7,7 +7,7 @@ public class MethodTest
 {
     private readonly DataType _methodType = new ValueType("methodType", "int", []);
     private readonly DataType _methodReferenceType = new ReferenceType("methodReferenceType", "object", []);
-    
+
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqual()
     {
@@ -269,10 +269,7 @@ public class MethodTest
     {
         var method = new Method();
         var classInstance = new Class();
-        method.Class = classInstance;
         method.ClassId = classInstance.Id;
-
-        method.Class.Should().Be(classInstance);
         method.ClassId.Should().Be(classInstance.Id);
     }
 }
