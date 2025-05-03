@@ -229,7 +229,7 @@ public class MethodServiceTest
     #region Error
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(KeyNotFoundException))]
     public void GetById_WhenMethodNotFound_ShouldThrowInvalidOperationException()
     {
         _methodRepositoryMock!

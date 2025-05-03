@@ -105,7 +105,7 @@ public class MethodService(IRepository<Method> methodRepository, IClassService c
         }
         catch(Exception)
         {
-            throw new InvalidOperationException("Not found method.");
+            throw new KeyNotFoundException($"Method with ID {id} not found.");
         }
     }
 
