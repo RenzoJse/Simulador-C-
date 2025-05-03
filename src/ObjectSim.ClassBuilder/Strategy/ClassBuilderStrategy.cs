@@ -6,7 +6,7 @@ using ObjectSim.IBusinessLogic;
 namespace ObjectSim.ClassLogic.Strategy;
 
 public class ClassBuilderStrategy(
-    IMethodService methodService,
+    IMethodServiceCreate methodService,
     IAttributeService attributeService)
     : IBuilderStrategy
 {

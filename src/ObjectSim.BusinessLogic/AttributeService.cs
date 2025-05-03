@@ -4,7 +4,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 namespace ObjectSim.BusinessLogic;
-public class AttributeService(IRepository<Attribute> attributeRepository, IClassService classService, IDataTypeService dataTypeService) : IAttributeService
+public class AttributeService(IRepository<Attribute> attributeRepository, IClassServiceBuilder classService, IDataTypeService dataTypeService) : IAttributeService
 {
     public Attribute CreateAttribute(CreateAttributeArgs args)
     {

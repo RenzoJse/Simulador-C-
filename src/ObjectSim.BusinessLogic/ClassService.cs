@@ -8,7 +8,7 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic;
 
-public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<Class> classRepository) : IClassService
+public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<Class> classRepository) : IClassService, IClassServiceBuilder
 {
     public Class CreateClass(CreateClassArgs args)
     {

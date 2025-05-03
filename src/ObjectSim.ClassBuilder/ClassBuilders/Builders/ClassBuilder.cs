@@ -5,7 +5,7 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.ClassLogic.ClassBuilders.Builders;
 
-public class ClassBuilder(IMethodService methodService, IAttributeService attributeService) : Builder()
+public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService attributeService) : Builder()
 {
     public override void SetAttributes(List<CreateAttributeArgs> attributes)
     {
