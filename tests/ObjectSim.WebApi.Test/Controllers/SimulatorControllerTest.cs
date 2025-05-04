@@ -27,10 +27,10 @@ public  class SimulatorControllerTest
         {
             ReferenceType = "ReferenceClass",
             InstanceType = "Instance",
-            MethodName = "MainStep"
+            MethodName = "Method1"
         };
 
-        var expected = new List<string> { "MyType.this.Step1()", "MyType.this.Step2()" };
+        var expected = new List<string> { "MyType.this.Method1()", "MyType.this.Method2()" };
 
         _simulatorServiceMock
             .Setup(s => s.Simulate(args))
@@ -53,7 +53,7 @@ public  class SimulatorControllerTest
         {
             ReferenceType = "ReferenceClass",
             InstanceType = "InstanceClass",
-            MethodName = "MainStep"
+            MethodName = "Method1"
         };
 
         _simulatorServiceMock
