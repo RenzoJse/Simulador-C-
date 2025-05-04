@@ -180,14 +180,7 @@ public class ValueTypeTest
     [TestMethod]
     public void ValueType_DefaultConstructor_ShouldInitializeProperties()
     {
-        var constructor = typeof(ValueType).GetConstructor(
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
-            null,
-            Type.EmptyTypes,
-            null);
-
-        var valueType = (ValueType)constructor!.Invoke(null);
-
+        var valueType = new ValueType();
         valueType.Id.Should().NotBeEmpty();
         valueType.Name.Should().BeEmpty();
         valueType.Type.Should().BeEmpty();

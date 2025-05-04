@@ -376,7 +376,7 @@ public class ClassTest
     {
     }
 
-     [TestMethod]
+    [TestMethod]
     public void CanAddMethod_WithSameParamsInDifferentOrder_AddsMethod()
     {
         var parameterOne = new ValueType("int", "int", []);
