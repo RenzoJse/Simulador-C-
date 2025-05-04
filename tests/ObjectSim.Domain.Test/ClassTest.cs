@@ -376,7 +376,7 @@ public class ClassTest
         action.Should().NotThrow();
     }
 
-     [TestMethod]
+    [TestMethod]
     public void CanAddMethod_WithSameParamsInDifferentOrder_AddsMethod()
     {
         var parameterOne = new ValueType("int", "int", []);

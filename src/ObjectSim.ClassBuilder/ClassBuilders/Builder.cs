@@ -5,7 +5,7 @@ namespace ObjectSim.ClassConstructor.ClassBuilders;
 
 public abstract class Builder()
 {
-    protected Class Result { get; } = new Class(){ Attributes = [], Methods = []};
+    protected Class Result { get; } = new Class() { Attributes = [], Methods = [] };
 
     public virtual void SetName(string name)
     {

@@ -50,5 +50,5 @@ public class MethodController(IMethodService methodService) : ControllerBase
 
         return Ok(response);
     }
-    
+
 }
