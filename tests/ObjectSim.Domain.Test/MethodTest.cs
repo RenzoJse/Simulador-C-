@@ -272,4 +272,13 @@ public class MethodTest
         method.ClassId = classInstance.Id;
         method.ClassId.Should().Be(classInstance.Id);
     }
+
+    [TestMethod]
+    public void TypeId_SetAndGet_ShouldBeEqual()
+    {
+        var expectedTypeId = Guid.NewGuid();
+        var method = new Method { TypeId = expectedTypeId };
+
+        method.TypeId.Should().Be(expectedTypeId);
+    }
 }
