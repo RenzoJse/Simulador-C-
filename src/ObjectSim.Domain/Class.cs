@@ -112,6 +112,14 @@ public class Class
         }
     }
 
+    public void AddAttribute(Attribute attribute)
+    {
+        if(CanAddAttribute(this, attribute))
+        {
+            Attributes!.Add(attribute);
+        }
+    }
+
     public static bool CanAddAttribute(Class classObj, Attribute attribute)
     {
         if(classObj.IsInterface == true)

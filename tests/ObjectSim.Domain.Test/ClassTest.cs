@@ -14,7 +14,7 @@ public class ClassTest
         Parameters = [],
         IsOverride = false
     };
-    private readonly Attribute _attribute = new()
+    private readonly Attribute _testAttribute = new()
     {
         Name = "TestAttribute"
     };
@@ -530,7 +530,7 @@ public class ClassTest
     {
         _testClass!.IsInterface = true;
 
-        Action action = () => Class.CanAddAttribute(_testClass, _attribute);
+        Action action = () => Class.CanAddAttribute(_testClass, _testAttribute);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Cannot add attribute to an interface.");
@@ -541,10 +541,32 @@ public class ClassTest
     {
         _testClass!.Attributes = [new Attribute { Name = "TestAttribute" }];
 
-        Action action = () => Class.CanAddAttribute(_testClass, _attribute);
+        Action action = () => Class.CanAddAttribute(_testClass, _testAttribute);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Attribute name already exists in class.");
+    }
+
+    [TestMethod]
+    public void AddAttribute_ShouldThrow_WhenDuplicateName()
+    {
+        var attribute2 = new Attribute { Name = _testAttribute.Name };
+        _testClass!.AddAttribute(_testAttribute);
+
+        var act = () => _testClass.AddAttribute(attribute2);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Attribute name already exists in class.");;
+    }
+
+    [TestMethod]
+    public void AddAttribute_ShouldThrow_WhenClassIsInterface()
+    {
+        _testClass!.IsInterface = true;
+
+        var act = () => _testClass.AddAttribute(_testAttribute);
+
+        act.Should().Throw<ArgumentException>().WithMessage("Cannot add attribute to an interface.");
     }
 
     #endregion
@@ -554,10 +576,17 @@ public class ClassTest
     [TestMethod]
     public void CanAddAttribute_ValidAttribute_AddsAttribute()
     {
-
-        Action action = () => Class.CanAddAttribute(_testClass!, _attribute);
+        Action action = () => Class.CanAddAttribute(_testClass!, _testAttribute);
 
         action.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void AddAttribute_ShouldAddAttribute_WhenValid()
+    {
+        _testClass!.AddAttribute(_testAttribute);
+
+        _testClass.Attributes.Should().ContainSingle(a => a.Name == _testAttribute.Name);
     }
 
     #endregion

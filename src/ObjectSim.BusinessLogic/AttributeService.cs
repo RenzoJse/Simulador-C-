@@ -14,27 +14,15 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         var dataType = dataTypeService.CreateDataType(args.DataType);
 
         var attribute = BuildAttribute(args, dataType, visibility);
+        var classObj = GetClassById(args.ClassId);
 
-        AddAttribute(args.ClassId, attribute);
+        classObj.AddAttribute(attribute);
         AddAttributeToRepository(attribute);
 
         return attribute;
     }
 
-    private void AddAttribute(Guid? classId, Attribute attribute)
-    {
-        ArgumentNullException.ThrowIfNull(classId);
-        ArgumentNullException.ThrowIfNull(attribute);
-
-        var classObj = GetById(classId);
-
-        if(Class.CanAddAttribute(classObj, attribute))
-        {
-            classObj.Attributes!.Add(attribute);
-        }
-    }
-
-    private Class GetById(Guid? classId)
+    private Class GetClassById(Guid? classId)
     {
         if(classId == null)
         {
