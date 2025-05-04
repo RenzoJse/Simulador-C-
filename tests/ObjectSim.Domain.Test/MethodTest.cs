@@ -29,8 +29,7 @@ public class MethodTest
             Abstract = false,
             IsSealed = false,
             IsOverride = false,
-            ClassId = _testClass!.Id,
-            Class = _testClass
+            ClassId = _testClass!.Id
         };
     }
 
@@ -44,8 +43,8 @@ public class MethodTest
     [TestMethod]
     public void Accessibility_Property_SetAndGet_ShouldBeEqual()
     {
-        var method = new Method { Accessibility = Method.MethodAccessibility.ProtectedInternal };
-        method.Accessibility.Should().Be(Method.MethodAccessibility.ProtectedInternal);
+        var method = new Method { Accessibility = Method.MethodAccessibility.Public };
+        method.Accessibility.Should().Be(Method.MethodAccessibility.Public);
     }
 
     [TestMethod]
@@ -302,39 +301,38 @@ public class MethodTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void SetInvokeMethod_WhenMethodsInvokeAreNull_ThrowsNullException()
+    public void AddInvokeMethod_WhenMethodsInvokeAreNull_ThrowsNullException()
     {
-        var method = new Method { MethodsInvoke = null! };
+        _testMethod!.AddInvokeMethod(null!, _testClass!);
     }
 
     [TestMethod]
-    public void SetInvokeMethod_WhenOtherMethodIsNotInClass_ThrowsException()
+    public void AddInvokeMethod_WhenOtherMethodIsNotInClass_ThrowsException()
     {
         var otherMethod = new Method { Id = Guid.NewGuid() };
-        _testMethod!.Class = _testClass;
 
-        Action act = () => _testMethod!.MethodsInvoke = [otherMethod];
+        Action act = () => _testMethod!.AddInvokeMethod(otherMethod, _testClass!);
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
     }
 
     [TestMethod]
-    public void SetInvokeMethod_WhenIsTryingToUseWrongAttributeMethod_ThrowsException()
+    public void AddInvokeMethod_WhenIsTryingToUseWrongAttributeMethod_ThrowsException()
     {
         // nose puede hacer aun
     }
 
     [TestMethod]
-    public void SetInvokeMethod_WhenUsingMethodThatIsNotInClassNeitherParentClass_ThrowsException()
+    public void AddInvokeMethod_WhenUsingMethodThatIsNotInClassNeitherParentClass_ThrowsException()
     {
         var parentClass = new Class { Methods = [] };
         _testClass!.Parent = parentClass;
 
         var otherMethod = new Method { Id = Guid.NewGuid() };
-        _testClass.Methods!.Add(new Method { Id = Guid.NewGuid() });
+        _testClass.Methods!.Add(new Method { Name = "OtherMethod" });
 
-        Action act = () => _testMethod!.MethodsInvoke = [otherMethod];
+        Action act = () => _testMethod!.AddInvokeMethod(otherMethod, _testClass!);
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
@@ -345,7 +343,7 @@ public class MethodTest
     #region Success
 
     [TestMethod]
-    public void SetInvokeMethod_WhenUsingMethodThatIsNotInClassButInParentClass_AddsMethod()
+    public void AddInvokeMethod_WhenUsingMethodThatIsNotInClassButInParentClass_AddsMethod()
     {
         var parentClass = new Class
         {
@@ -358,12 +356,11 @@ public class MethodTest
         var otherMethod = new Method
         {
             Id = Guid.NewGuid(),
-            Name = "OtherMethod",
-            Class = parentClass
+            Name = "OtherMethod"
         };
         parentClass.Methods!.Add(otherMethod);
 
-        _testMethod!.MethodsInvoke = [otherMethod];
+        _testMethod!.AddInvokeMethod(otherMethod, _testClass!);
         _testMethod.MethodsInvoke.Should().Contain(otherMethod);
     }
 

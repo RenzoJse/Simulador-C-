@@ -239,7 +239,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(_testClass, newMethod);
+        Action action = () => _testClass.CanAddMethod(_testClass, newMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method already exists in class.");
@@ -258,7 +258,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(_testClass, newMethod);
+        Action action = () => _testClass.CanAddMethod(_testClass, newMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method already exists in class.");
@@ -271,7 +271,7 @@ public class ClassTest
 
         _existingMethod.IsSealed = true;
 
-        Action action = () => Class.CanAddMethod(_testClass, _existingMethod);
+        Action action = () => _testClass.CanAddMethod(_testClass, _existingMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot be sealed in an interface.");
@@ -284,7 +284,7 @@ public class ClassTest
 
         _existingMethod.IsOverride = true;
 
-        Action action = () => Class.CanAddMethod(_testClass, _existingMethod);
+        Action action = () => _testClass.CanAddMethod(_testClass, _existingMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot be override in an interface.");
@@ -297,7 +297,7 @@ public class ClassTest
 
        _existingMethod.Accessibility = Method.MethodAccessibility.Private;
 
-        Action action = () => Class.CanAddMethod(_testClass, _existingMethod);
+        Action action = () => _testClass.CanAddMethod(_testClass, _existingMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot be private in an interface.");
@@ -310,7 +310,7 @@ public class ClassTest
 
         _existingMethod.LocalVariables = [ValueType];
 
-        Action action = () => Class.CanAddMethod(_testClass, _existingMethod);
+        Action action = () => _testClass.CanAddMethod(_testClass, _existingMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot have local variables in an interface.");
@@ -321,9 +321,20 @@ public class ClassTest
     {
         _testClass!.IsInterface = true;
 
-        _existingMethod.MethodsInvoke = [new Method()];
+        var methodToInvoke = new Method
+        {
+            Name = "MethodToInvoke",
+            Type = ValueType,
+            Abstract = true,
+        };
 
-        Action action = () => Class.CanAddMethod(_testClass, _existingMethod);
+        _testClass.Methods = [methodToInvoke];
+
+        _existingMethod.Abstract = true;
+
+        _existingMethod.AddInvokeMethod(methodToInvoke, _testClass);
+
+        Action action = () => _testClass.CanAddMethod(_testClass, _existingMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot invoke other methods in an interface.");
@@ -350,7 +361,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(_testClass, newMethod);
+        Action action = () => _testClass.CanAddMethod(_testClass, newMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method already exists in class.");
@@ -371,7 +382,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(_testClass!, method);
+        Action action = () => _testClass.CanAddMethod(_testClass!, method);
 
         action.Should().NotThrow();
     }
@@ -400,7 +411,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(_testClass, newMethod);
+        Action action = () => _testClass.CanAddMethod(_testClass, newMethod);
 
         action.Should().NotThrow();
     }
@@ -416,7 +427,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(_testClass!, method);
+        Action action = () => _testClass.CanAddMethod(_testClass!, method);
 
         action.Should().NotThrow();
     }
@@ -442,7 +453,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(_testClass, newMethod);
+        Action action = () => _testClass.CanAddMethod(_testClass, newMethod);
 
         action.Should().NotThrow();
     }
@@ -470,7 +481,7 @@ public class ClassTest
             IsOverride = true
         };
 
-        Action action = () => Class.CanAddMethod(_testClass, method);
+        Action action = () => _testClass.CanAddMethod(_testClass, method);
 
         action.Should().NotThrow();
     }
@@ -488,7 +499,7 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(_testClass, method);
+        Action action = () => _testClass.CanAddMethod(_testClass, method);
 
         action.Should().NotThrow();
         method.Abstract.Should().BeTrue();
@@ -512,7 +523,7 @@ public class ClassTest
             MethodsInvoke = []
         };
 
-        Action action = () => Class.CanAddMethod(_testClass, method);
+        Action action = () => _testClass.CanAddMethod(_testClass, method);
 
         action.Should().NotThrow();
     }

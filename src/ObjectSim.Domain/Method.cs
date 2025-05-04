@@ -9,9 +9,6 @@ public class Method
         Public,
         Private,
         Protected,
-        Internal,
-        ProtectedInternal,
-        PrivateProtected
     }
     public Guid Id { get; init; } = Guid.NewGuid();
 
@@ -84,47 +81,55 @@ public class Method
     public List<Method> MethodsInvoke
     {
         get => _methodsInvoke;
-        set
+        init => _methodsInvoke = value ?? [];
+    }
+
+    public void AddInvokeMethod(Method method, Class classObj)
+    {
+        if (method == null)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value), "InvokeMethod cannot be null.");
-            }
-
-            if (MethodIsNotInClass(value) && MethodIsNotFromParent(value))
-            {
-                throw new ArgumentException("The invoked method must be reachable from the current method.");
-            }
-
-            _methodsInvoke = value;
+            throw new ArgumentNullException(nameof(method), "Method cannot be null.");
         }
-    }
 
-    private bool MethodIsNotInClass(List<Method> methods)
-    {
-        return methods.Any(method => method.Class != Class);
-    }
-
-    private bool MethodClassHasParent()
-    {
-        return Class?.Parent != null;
-    }
-
-    private bool MethodIsNotFromParent(List<Method> methods)
-    {
-        if (MethodClassHasParent())
+        if (MethodIsNotInClass(method, classObj) && MethodIsNotFromParent(method, classObj))
         {
-            var parentClass = Class!.Parent;
-            foreach(var method in parentClass!.Methods!)
+            throw new ArgumentException("The invoked method must be reachable from the current method.");
+        }
+
+        _methodsInvoke.Add(method);
+    }
+
+    private static bool MethodIsNotInClass(Method methods, Class classObj)
+    {
+        try
+        {
+            classObj.ValidateMethodUniqueness(classObj, methods);
+        }
+        catch(Exception)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool MethodIsNotFromParent(Method methods, Class classObj)
+    {
+        if (MethodClassHasParent(classObj))
+        {
+            var parentClass = classObj.Parent;
+            if(parentClass!.Methods!.Contains(methods))
             {
-                if(methods.Contains(method))
-                {
-                    return false;
-                }
+                return false;
             }
         }
 
         return true;
+    }
+
+    private bool MethodClassHasParent(Class classObj)
+    {
+        return classObj.Parent != null;
     }
 
     #endregion
