@@ -75,6 +75,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
 
         return attributes;
     }
+
     public bool Delete(Guid id)
     {
         var attribute = attributeRepository.Get(att1 => id == att1.Id);
@@ -85,6 +86,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         attributeRepository.Delete(attribute);
         return true;
     }
+
     public Attribute GetById(Guid id)
     {
         if(id == Guid.Empty)
