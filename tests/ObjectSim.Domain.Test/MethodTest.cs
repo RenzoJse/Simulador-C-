@@ -364,6 +364,20 @@ public class MethodTest
             .WithMessage("The invoked method must be reachable from the current method.");
     }
 
+    [TestMethod]
+    public void AddInvokeMethod_WhenIsTryingToUseMethodNotInParameters_ThrowsException()
+    {
+        var otherMethod = new Method { Id = Guid.NewGuid() };
+        var parameter = new ValueType("int", "int", []);
+
+        otherMethod.Parameters = [parameter];
+
+        Action act = () => _testMethod!.AddInvokeMethod(otherMethod, _testClass!);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("The invoked method must be reachable from the current method.");
+    }
+
     #endregion
 
     #region Success
