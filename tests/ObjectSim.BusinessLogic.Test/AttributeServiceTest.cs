@@ -19,7 +19,7 @@ public class AttributeServiceTest
     private static readonly CreateDataTypeArgs TestArgsDataType = new(
         "int", "reference");
 
-    //private readonly DataType? _testDataType = new ValueType("myVariable", "int", []);
+    private readonly DataType? _testDataType = new ValueType("myVariable", "int", []);
 
     private static readonly Guid TestAttributeId = Guid.NewGuid();
 
@@ -68,16 +68,6 @@ public class AttributeServiceTest
     }
 
     [TestMethod]
-    public void CreateAttribute_AttributeWithSameNameAlreadyExistsInClass_ThrowsException()
-    {/*
-        _dataTypeServiceMock.Setup(x => x.CreateDataType(TestArgsDataType)).Returns(_testDataType!);
-
-        Action act = () => _attributeServiceTest!.CreateAttribute(_testArgsAttribute);
-
-        act.Should().Throw<ArgumentException>();*/
-    }
-
-    [TestMethod]
     public void CreateAttribute_NotValidDataType_ThrowsException()
     {
         _dataTypeServiceMock
@@ -111,12 +101,16 @@ public class AttributeServiceTest
 
     [TestMethod]
     public void CreateAttribute_WithValidParameters_ReturnsNewAttribute()
-    {/*
+    {
         _testArgsAttribute.ClassId = _testAttribute!.ClassId;
         _testArgsAttribute.Id = _testAttribute.Id;
         _testArgsAttribute.Name = _testAttribute.Name!;
         _testArgsAttribute.Visibility = _testAttribute.Visibility.ToString();
         _testArgsAttribute.DataType = TestArgsDataType;
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(new Class { Id = _testAttribute.ClassId, Attributes = [] });
 
         _dataTypeServiceMock
             .Setup(x => x.CreateDataType(_testArgsAttribute.DataType)).Returns(_testDataType!);
@@ -129,7 +123,7 @@ public class AttributeServiceTest
         result.Should().NotBeNull();
         result.Should().BeOfType<Attribute>();
         result.Should().BeEquivalentTo(_testAttribute, options =>
-            options.Excluding(x => x.DataType.Id));*/
+            options.Excluding(x => x.DataType.Id));
     }
 
     #endregion
@@ -143,19 +137,19 @@ public class AttributeServiceTest
         {
             new()
             {
-            Id = Guid.NewGuid(),
-            Name = "Name",
-            ClassId = Guid.NewGuid(),
-            DataType = new ValueType("myVariable", "int", []),
-            Visibility = Attribute.AttributeVisibility.Private
-        },
+                Id = Guid.NewGuid(),
+                Name = "Name",
+                ClassId = Guid.NewGuid(),
+                DataType = new ValueType("myVariable", "int", []),
+                Visibility = Attribute.AttributeVisibility.Private
+            },
             new()
             {
-            Id = Guid.NewGuid(),
-            Name = "Name2",
-            ClassId = Guid.NewGuid(),
-            DataType = new ValueType("myVariable", "int", []),
-            Visibility = Attribute.AttributeVisibility.Private
+                Id = Guid.NewGuid(),
+                Name = "Name2",
+                ClassId = Guid.NewGuid(),
+                DataType = new ValueType("myVariable", "int", []),
+                Visibility = Attribute.AttributeVisibility.Private
             }
         };
 
@@ -163,10 +157,11 @@ public class AttributeServiceTest
         Assert.IsNotNull(_attributeServiceTest);
         _attributeRepositoryMock.Setup(repo => repo.GetAll(It.IsAny<Func<Attribute, bool>>()))
             .Returns(attributes);
-        var result = _attributeServiceTest.GetAll();
+        List<Attribute> result = _attributeServiceTest.GetAll();
         result.Should().HaveCount(2);
         _attributeRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Attribute, bool>>()), Times.Once);
     }
+
     [TestMethod]
     public void GetAll_ShouldThrowException_WhenRepositoryReturnsEmptyList()
     {
@@ -179,6 +174,7 @@ public class AttributeServiceTest
         act.Should().Throw<Exception>().WithMessage("No attributes found.");
         _attributeRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Attribute, bool>>()), Times.Once);
     }
+
     [TestMethod]
     public void GetAll_ShouldThrowException_WhenRepositoryReturnsNull()
     {
@@ -189,10 +185,11 @@ public class AttributeServiceTest
         Action act = () => _attributeServiceTest!.GetAll();
 
         act.Should().Throw<Exception>()
-           .WithMessage("No attributes found.");
+            .WithMessage("No attributes found.");
 
         _attributeRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Attribute, bool>>()), Times.Once);
     }
+
     [TestMethod]
     public void DeleteAttribute_ValidId_ShouldCallDelete()
     {
@@ -208,6 +205,7 @@ public class AttributeServiceTest
         _attributeRepositoryMock.Verify(repo => repo.Get(It.IsAny<Func<Attribute, bool>>()), Times.Once);
         _attributeRepositoryMock.Verify(repo => repo.Delete(It.IsAny<Attribute>()), Times.Once);
     }
+
     [TestMethod]
     [ExpectedException(typeof(Exception))]
     public void DeleteAttribute_InvalidId_ShouldThrowException()
@@ -218,6 +216,7 @@ public class AttributeServiceTest
 
         _attributeServiceTest!.Delete(Guid.Empty);
     }
+
     [TestMethod]
     public void GetById_ValidId_ShouldReturnAttribute()
     {
@@ -225,19 +224,21 @@ public class AttributeServiceTest
             .Setup(repo => repo.Get(It.IsAny<Func<Attribute, bool>>()))
             .Returns(_testAttribute);
 
-        var result = _attributeServiceTest!.GetById(_testAttribute!.Id);
+        Attribute result = _attributeServiceTest!.GetById(_testAttribute!.Id);
 
         result.Should().NotBeNull();
         result.Should().Be(_testAttribute);
 
         _attributeRepositoryMock.Verify(repo => repo.Get(It.IsAny<Func<Attribute, bool>>()), Times.Once);
     }
+
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void GetById_InvalidId_ShouldThrowArgumentException()
     {
         _attributeServiceTest!.GetById(Guid.Empty);
     }
+
     [TestMethod]
     [ExpectedException(typeof(KeyNotFoundException))]
     public void GetById_NonExistentId_ShouldThrowKeyNotFoundException()
@@ -248,6 +249,7 @@ public class AttributeServiceTest
 
         _attributeServiceTest!.GetById(Guid.NewGuid());
     }
+
     [TestMethod]
     public void UpdateAttribute_ValidAttribute_ShouldUpdateAndReturnAttribute()
     {
@@ -260,7 +262,7 @@ public class AttributeServiceTest
             .Setup(repo => repo.Update(It.IsAny<Attribute>()))
             .Returns((Attribute attr) => attr);
 
-        var result = _attributeServiceTest!.Update(_testAttribute.Id, _testAttribute);
+        Attribute result = _attributeServiceTest!.Update(_testAttribute.Id, _testAttribute);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("UpdatedName");
@@ -268,12 +270,14 @@ public class AttributeServiceTest
         _attributeRepositoryMock.Verify(repo => repo.Get(It.IsAny<Func<Attribute, bool>>()), Times.Once);
         _attributeRepositoryMock.Verify(repo => repo.Update(It.IsAny<Attribute>()), Times.Once);
     }
+
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void UpdateAttribute_NullAttribute_ShouldThrowArgumentNullException()
     {
         _attributeServiceTest!.Update(Guid.NewGuid(), null!);
     }
+
     [TestMethod]
     [ExpectedException(typeof(KeyNotFoundException))]
     public void UpdateAttribute_NonExistentAttribute_ShouldThrowKeyNotFoundException()
@@ -293,31 +297,34 @@ public class AttributeServiceTest
 
         _attributeServiceTest!.Update(dummyAttribute.Id, dummyAttribute);
     }
+
     [TestMethod]
     public void GetByClassId_ShouldReturnAttributes()
     {
-        _attributeRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Attribute, bool>>()))
-            .Returns([_testAttribute]);
+        _attributeRepositoryMock!.Setup(r => r.GetAll(It.IsAny<Func<Attribute, bool>>()))
+            .Returns([_testAttribute!]);
 
-        var result = _attributeServiceTest.GetByClassId(_testAttribute.ClassId);
+        List<Attribute> result = _attributeServiceTest!.GetByClassId(_testAttribute!.ClassId);
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual("Test", result[0].Name);
     }
+
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void GetByClassId_ShouldThrow_WhenClassIdIsEmpty()
     {
-        _attributeServiceTest.GetByClassId(Guid.Empty);
+        _attributeServiceTest!.GetByClassId(Guid.Empty);
     }
+
     [TestMethod]
     [ExpectedException(typeof(KeyNotFoundException))]
     public void GetByClassId_ShouldThrow_WhenNoAttributesFound()
     {
-        _attributeRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Attribute, bool>>()))
+        _attributeRepositoryMock!.Setup(r => r.GetAll(It.IsAny<Func<Attribute, bool>>()))
             .Returns([]);
 
-        _attributeServiceTest.GetByClassId(_testAttribute.ClassId);
+        _attributeServiceTest!.GetByClassId(_testAttribute!.ClassId);
     }
 }
