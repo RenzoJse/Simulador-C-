@@ -6,7 +6,6 @@ public class ValueType : DataType
 
     public ValueType()
     {
-        Id = Guid.NewGuid();
         Name = string.Empty;
         Type = string.Empty;
         MethodIds = [];
