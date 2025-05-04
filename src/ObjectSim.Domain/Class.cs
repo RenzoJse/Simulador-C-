@@ -159,7 +159,7 @@ public class Class
         }
     }
 
-    public static bool CanAddMethod(Class classObj, Method method)
+    public bool CanAddMethod(Class classObj, Method method)
     {
         ValidateMethodUniqueness(classObj, method);
 
@@ -171,7 +171,7 @@ public class Class
         return true;
     }
 
-    public static void ValidateMethodUniqueness(Class classObj, Method method)
+    public void ValidateMethodUniqueness(Class classObj, Method method)
     {
         if(classObj.Methods!.Any(classMethod =>
                classMethod.Name == method.Name &&

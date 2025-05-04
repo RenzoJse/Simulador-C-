@@ -40,7 +40,7 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
             try
             {
                 var newMethod = methodService.CreateMethod(method);
-                if(Class.CanAddMethod(Result, newMethod))
+                if(Result.CanAddMethod(Result, newMethod))
                 {
                     newMethods.Add(newMethod);
                 }

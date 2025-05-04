@@ -119,7 +119,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
     {
         try
         {
-            Class.ValidateMethodUniqueness(parentClass, method);
+            parentClass.ValidateMethodUniqueness(parentClass, method);
         }
         catch(Exception)
         {
