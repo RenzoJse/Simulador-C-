@@ -4,53 +4,51 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodSimulatorService(IRepository<Class> classRepository, IRepository<Method> methodRepository) : IMethodSimulatorService
+public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IRepository<Method> methodRepository) : IMethodSimulatorService
 {
     public List<string> Simulate(SimulateExecutionArgs args)
     {
-        if(args is null)
-        {
-            throw new ArgumentNullException(nameof(args), "Arguments cannot be null");
-        }
+        ArgumentNullException.ThrowIfNull(args);
 
-        var referenceClass = classRepository.Get(c => c.Id == args.ReferenceClassId)
-        ?? throw new ArgumentException("Reference class not found.");
+        var referenceType = GetReferenceType(args.ReferenceType);
+        var instanceType = GetReferenceType(args.InstanceType);
 
-        var instanceClass = classRepository.Get(c => c.Id == args.InstanceClassId)
-            ?? throw new ArgumentException("Instance class not found.");
+        ValidateHierarchy(referenceType, instanceType);
 
-        var method = methodRepository.Get(m => m.Id == args.MethodToExecuteId)
-            ?? throw new ArgumentException("Method to execute not found.");
+        var methodId = referenceType.MethodIds
+            .Select(id => methodRepository.Get(m => m.Id == id))
+            .FirstOrDefault(m => m?.Name == args.MethodName)?.Id
+            ?? throw new Exception("Method not found in reference type");
 
-        var trace = new List<string>();
+        var method = methodRepository.Get(m => m.Id == methodId)
+            ?? throw new Exception("Method entity not found");
 
-        if(referenceClass?.Name == null)
-        {
-            throw new InvalidOperationException("Reference class must have a valid name.");
-        }
+        var result = new List<string>();
+        SimulateInternal(instanceType.Name, method, result);
 
-        if(instanceClass?.Name == null)
-        {
-            throw new InvalidOperationException("Instance class must have a valid name.");
-        }
-
-        var className = referenceClass.Name;
-
-        SimulateMethod(referenceClass.Name, method, trace, "this.");
-
-        return trace;
+        return result;
     }
 
-    private void SimulateMethod(string className, Method method, List<string> trace, string prefix)
+    private DataType GetReferenceType(string typeName)
     {
-        var call = $"{className}.{prefix}{method.Name}()";
-        trace.Add(call);
+        var dataType = dataTypeRepository.Get(dt => dt.Type == typeName);
+        return dataType ?? throw new Exception($"Type '{typeName}' not found");
+    }
 
-        foreach(var subMethod in method.MethodsInvoke)
+    private void ValidateHierarchy(DataType reference, DataType instance)
+    {
+        if(reference.Type != instance.Type && reference.Name != instance.Name)
         {
-            var subClassName = classRepository.Get(c => c.Id == subMethod.ClassId)?.Name ?? "UnknownClass";
-            SimulateMethod(subClassName, subMethod, trace, prefix);
+            throw new Exception($"'{instance.Type}' is not a valid subtype of '{reference.Type}'");
         }
     }
 
+    private void SimulateInternal(string className, Method method, List<string> result)
+    {
+        result.Add($"{className}.this.{method.Name}()");
+        foreach(var invoked in method.MethodsInvoke)
+        {
+            SimulateInternal(className, invoked, result);
+        }
+    }
 }
