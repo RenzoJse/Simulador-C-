@@ -11,7 +11,7 @@ public class MethodInformationDtoOutTest
     public void MethodInformationDtoOut_ShouldCreateInstance()
     {
         var type = new ValueType("TestName", "int", []);
-        
+
         var method = new Method()
         {
             Name = "TestMethod",
@@ -24,9 +24,9 @@ public class MethodInformationDtoOutTest
             Parameters = [],
             MethodsInvoke = []
         };
-            
+
         var methodInfo = new MethodInformationDtoOut(method);
-        
+
         Assert.IsNotNull(methodInfo);
         Assert.AreEqual("TestMethod", methodInfo.Name);
         Assert.AreEqual("int", methodInfo.Type);

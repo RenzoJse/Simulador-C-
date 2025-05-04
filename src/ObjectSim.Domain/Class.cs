@@ -112,7 +112,15 @@ public class Class
         }
     }
 
-    public bool CanAddAttribute(Class classObj, Attribute attribute)
+    public void AddAttribute(Attribute attribute)
+    {
+        if(CanAddAttribute(this, attribute))
+        {
+            Attributes!.Add(attribute);
+        }
+    }
+
+    public static bool CanAddAttribute(Class classObj, Attribute attribute)
     {
         if(classObj.IsInterface == true)
         {
@@ -151,7 +159,7 @@ public class Class
         }
     }
 
-    public bool CanAddMethod(Class classObj, Method method)
+    public static bool CanAddMethod(Class classObj, Method method)
     {
         ValidateMethodUniqueness(classObj, method);
 
@@ -165,10 +173,11 @@ public class Class
 
     public static void ValidateMethodUniqueness(Class classObj, Method method)
     {
-        if(classObj.Methods!.Any(classMethod => classMethod.Name == method.Name &&
-                                                classMethod.Type == method.Type &&
-                                                method.IsOverride == false &&
-                                                AreParametersEqual(classMethod.Parameters, method.Parameters)))
+        if(classObj.Methods!.Any(classMethod =>
+               classMethod.Name == method.Name &&
+               classMethod.Type.IsSameType(method.Type) &&
+               method.IsOverride == false &&
+               AreParametersEqual(classMethod.Parameters, method.Parameters)))
         {
             throw new ArgumentException("Method already exists in class.");
         }

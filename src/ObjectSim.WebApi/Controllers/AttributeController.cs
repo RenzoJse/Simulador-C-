@@ -2,6 +2,7 @@
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
+using ObjectSim.WebApi.Filter;
 
 namespace ObjectSim.WebApi.Controllers;
 [ApiController]
@@ -59,24 +60,14 @@ public class AttributeController(IAttributeService attributeService) : Controlle
     }*/
 
     [HttpGet("{id}")]
+    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult GetById(Guid id)
     {
-        if(id == Guid.Empty)
-        {
-            return BadRequest("Invalid ID.");
-        }
-
-        try
-        {
-            var attribute = _attributeService.GetById(id);
-            var response = AttributeDtoOut.ToInfo(attribute);
-            return Ok(response);
-        }
-        catch(Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var attribute = _attributeService.GetById(id);
+        var response = AttributeDtoOut.ToInfo(attribute);
+        return Ok(response);
     }
+
     [HttpGet("by-class/{classId}")]
     public IActionResult GetByClassId(Guid classId)
     {

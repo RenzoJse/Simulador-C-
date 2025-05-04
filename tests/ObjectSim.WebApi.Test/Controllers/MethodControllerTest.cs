@@ -110,99 +110,21 @@ public class MethodControllerTest
     }
 
     [TestMethod]
-    public void DeleteMethod_WhenMethodDoesNotExist_ShouldReturnNotFound()
+    public void DeleteMethod_WhenMethodDoesNotExist_ShouldThrowKeyNotFoundException()
     {
         var methodId = Guid.NewGuid();
+
         _methodServiceMock
             .Setup(service => service.Delete(methodId))
-            .Returns(false);
+            .Throws(new KeyNotFoundException($"Method with id {methodId} not found."));
 
-        var result = _methodController.DeleteMethod(methodId);
+        Action act = () => _methodController.DeleteMethod(methodId);
 
-        var notFoundResult = result as NotFoundObjectResult;
-        notFoundResult.Should().NotBeNull();
-        notFoundResult!.StatusCode.Should().Be(404);
-        notFoundResult.Value.Should().Be($"Method with id {methodId} not found.");
+        act.Should().Throw<KeyNotFoundException>()
+           .WithMessage($"Method with id {methodId} not found.");
     }
     #endregion
-    /*
-        #region Update-Method-Test
-        [TestMethod]
-        public void UpdateMethod_WhenMethodExists_ShouldReturnOk()
-        {
-            var methodId = Guid.NewGuid();
-            var updatedMethod = new Method
-            {
-                Name = "UpdatedMethod",
-                Type = Method.MethodDataType.Char,
-                Accessibility = Method.MethodAccessibility.Internal,
-                Abstract = false,
-                IsSealed = false,
-                IsOverride = false,
-                LocalVariables = [],
-                Parameters = [],
-                MethodsInvoke = []
-            };
 
-            _methodServiceMock
-                .Setup(service => service.Update(methodId, It.IsAny<Method>()))
-                .Returns(updatedMethod);
-
-            var updateDto = new MethodDtoIn
-            {
-                Name = "UpdatedMethod",
-                Type = Method.MethodDataType.Char.ToString(),
-                Accessibility = Method.MethodAccessibility.Internal.ToString(),
-                IsAbstract = false,
-                IsOverride = false,
-                IsSealed = false,
-                LocalVariables = [],
-                Parameters = [],
-                InvokeMethodsId = []
-            };
-
-            var result = _methodController.UpdateMethod(methodId, updateDto);
-
-            var okResult = result as OkObjectResult;
-            okResult.Should().NotBeNull();
-            okResult!.StatusCode.Should().Be(200);
-
-            var response = okResult.Value as MethodOutModel;
-            response.Should().NotBeNull();
-            response!.Name.Should().Be(updatedMethod.Name);
-        }
-
-        [TestMethod]
-        public void UpdateMethod_WhenMethodDoesNotExist_ShouldReturnNotFound()
-        {
-            var methodId = Guid.NewGuid();
-
-            _methodServiceMock
-                .Setup(service => service.Update(methodId, It.IsAny<Method>()))
-                .Returns((Method?)null);
-
-            var updateDto = new MethodDtoIn
-            {
-                Name = "UpdatedMethod",
-                Type = Method.MethodDataType.Char.ToString(),
-                Accessibility = Method.MethodAccessibility.Internal.ToString(),
-                IsAbstract = false,
-                IsOverride = false,
-                IsSealed = false,
-                LocalVariables = [],
-                Parameters = [],
-                InvokeMethodsId = []
-            };
-
-            var result = _methodController.UpdateMethod(methodId, updateDto);
-
-            var notFoundResult = result as NotFoundObjectResult;
-            notFoundResult.Should().NotBeNull();
-            notFoundResult!.StatusCode.Should().Be(404);
-            notFoundResult.Value.Should().Be($"Method with id {methodId} not found.");
-        }
-        #endregion
-    */
     #region GetById-Method-Test
     [TestMethod]
     public void GetMethodById_WhenMethodExists_ShouldReturnOk()
@@ -226,13 +148,14 @@ public class MethodControllerTest
     }
 
     [TestMethod]
+    [ExpectedException(typeof(KeyNotFoundException))]
     public void GetMethodById_WhenMethodDoesNotExist_ShouldReturnNotFound()
     {
         var methodId = Guid.NewGuid();
 
         _methodServiceMock
             .Setup(service => service.GetById(methodId))
-            .Returns((Method?)null);
+            .Throws(new KeyNotFoundException("Method with ID not found"));
 
         var result = _methodController.GetMethodById(methodId);
 
@@ -264,5 +187,5 @@ public class MethodControllerTest
         response.First().Name.Should().Be(_testMethod.Name);
     }
     #endregion
-    
+
 }

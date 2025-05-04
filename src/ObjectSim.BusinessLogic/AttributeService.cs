@@ -4,7 +4,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 namespace ObjectSim.BusinessLogic;
-public class AttributeService(IRepository<Attribute> attributeRepository, IClassServiceBuilder classService, IDataTypeService dataTypeService) : IAttributeService
+public class AttributeService(IRepository<Attribute> attributeRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService) : IAttributeService
 {
     public Attribute CreateAttribute(CreateAttributeArgs args)
     {
@@ -14,11 +14,21 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
         var dataType = dataTypeService.CreateDataType(args.DataType);
 
         var attribute = BuildAttribute(args, dataType, visibility);
+        var classObj = GetClassById(args.ClassId);
 
-        classService.AddAttribute(args.ClassId, attribute);
+        classObj.AddAttribute(attribute);
         AddAttributeToRepository(attribute);
 
         return attribute;
+    }
+
+    private Class GetClassById(Guid? classId)
+    {
+        if(classId == null)
+        {
+            throw new ArgumentNullException(nameof(classId));
+        }
+        return classRepository.Get(c => c.Id == classId) ?? throw new ArgumentException("Class not found.");
     }
 
     private static void ValidateNullArgs(CreateAttributeArgs args)
@@ -65,6 +75,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
 
         return attributes;
     }
+
     public bool Delete(Guid id)
     {
         var attribute = attributeRepository.Get(att1 => id == att1.Id);
@@ -75,6 +86,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IClass
         attributeRepository.Delete(attribute);
         return true;
     }
+
     public Attribute GetById(Guid id)
     {
         if(id == Guid.Empty)

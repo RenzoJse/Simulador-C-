@@ -4,7 +4,8 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>ObjectSim.ClassLogic</RootNamespace>
+        <RootNamespace>ObjectSim.ClassConstructor</RootNamespace>
+        <AssemblyName>ObjectSim.ClassConstructor</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

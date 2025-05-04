@@ -3,7 +3,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
-namespace ObjectSim.ClassLogic.ClassBuilders.Builders;
+namespace ObjectSim.ClassConstructor.ClassBuilders.Builders;
 
 public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService attributeService) : Builder()
 {
@@ -14,11 +14,10 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
         List<Attribute> newAttributes = [];
         foreach(var attr in attributes)
         {
-            Attribute newAttribute;
             try
             {
-                newAttribute = attributeService.CreateAttribute(attr);
-                if(Result.CanAddAttribute(Result, newAttribute))
+                Attribute newAttribute = attributeService.CreateAttribute(attr);
+                if(Class.CanAddAttribute(Result, newAttribute))
                 {
                     newAttributes.Add(newAttribute);
                 }
@@ -41,7 +40,7 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
             try
             {
                 var newMethod = methodService.CreateMethod(method);
-                if(Result.CanAddMethod(Result, newMethod))
+                if(Class.CanAddMethod(Result, newMethod))
                 {
                     newMethods.Add(newMethod);
                 }

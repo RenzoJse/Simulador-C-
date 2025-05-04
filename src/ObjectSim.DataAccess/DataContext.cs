@@ -34,7 +34,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             c.HasKey(c => c.Id);
 
             c.HasMany(c => c.Methods)
-                .WithOne(m => m.Class)
+                .WithOne()
                 .HasForeignKey(m => m.ClassId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -63,17 +63,50 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             m.HasKey(m => m.Id);
 
-            m.HasMany(m => m.Parameters)
-                .WithOne()
+            m.HasOne(m => m.Type)
+                .WithMany()
+                .HasForeignKey(m => m.TypeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            m.HasMany(m => m.Parameters)
+                .WithMany()
+                .UsingEntity<DataTypeMethodParameters>(
+                    j => j
+                        .HasOne<DataType>()
+                        .WithMany()
+                        .HasForeignKey("IdDataType")
+                        .OnDelete(DeleteBehavior.Restrict),
+                    j => j
+                        .HasOne<Method>()
+                        .WithMany()
+                        .HasForeignKey("IdMethod")
+                        .OnDelete(DeleteBehavior.Restrict),
+                    j =>
+                    {
+                        j.HasKey("IdDataType", "IdMethod");
+                    });
+
             m.HasMany(m => m.LocalVariables)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany()
+                .UsingEntity<DataTypeMethodLocalVariables>(
+                    j => j
+                        .HasOne<DataType>()
+                        .WithMany()
+                        .HasForeignKey("IdDataType")
+                        .OnDelete(DeleteBehavior.Restrict),
+                    j => j
+                        .HasOne<Method>()
+                        .WithMany()
+                        .HasForeignKey("IdMethod")
+                        .OnDelete(DeleteBehavior.Restrict),
+                    j =>
+                    {
+                        j.HasKey("IdDataType", "IdMethod");
+                    });
 
             m.HasMany(m => m.MethodsInvoke)
                 .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Attribute>(a =>
@@ -94,7 +127,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 .HasValue<ValueType>("ValueType")
                 .HasValue<ReferenceType>("ReferenceType");
         });
-        
+
         modelBuilder.Entity<ValueType>(vt =>
         {
             vt.Property(vt => vt.Name).IsRequired();
@@ -106,11 +139,135 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         });
 
         base.OnModelCreating(modelBuilder);
-        ModelSeedData();
+        ModelSeedData(modelBuilder);
     }
-    private void ModelSeedData()
+    private void ModelSeedData(ModelBuilder modelBuilder)
     {
-        //insertar en la bd todos los metodos predefinidos por .NET para cada tipo de dato.
-        //Tienen que tener guid fijo.
+        var voidTypeId = Guid.Parse("00000000-0000-0000-0000-000000000005");
+
+        modelBuilder.Entity<ValueType>().HasData(new ValueType
+        {
+            Id = voidTypeId,
+            Name = "void",
+            Type = "bool",
+            MethodIds = []
+        });
+        var objectClassId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+
+        modelBuilder.Entity<Class>().HasData(new Class
+        {
+            Id = objectClassId,
+            Name = "Object",
+            IsAbstract = false,
+            IsSealed = false,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Method>().HasData(
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000101"),
+                Name = "Equals",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Public,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000102"),
+                Name = "Equals (Object, Object)",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Public,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000103"),
+                Name = "Finalize",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Protected,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000104"),
+                Name = "GetHashCode",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Public,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000105"),
+                Name = "GetType",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Public,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000106"),
+                Name = "MemberwiseClone",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Protected,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000107"),
+                Name = "ReferenceEquals",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Public,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000108"),
+                Name = "ToString",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Public,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+
+            }
+        );
     }
+
+    [ExcludeFromCodeCoverage]
+    public sealed record DataTypeMethodParameters
+    {
+        public Guid IdDataType { get; set; }
+        public Guid IdMethod { get; set; }
+    }
+
+    [ExcludeFromCodeCoverage]
+    public sealed record DataTypeMethodLocalVariables
+    {
+        public Guid IdDataType { get; set; }
+        public Guid IdMethod { get; set; }
+    }
+
 }
