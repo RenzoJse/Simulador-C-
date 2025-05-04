@@ -21,20 +21,16 @@ public  class SimulatorControllerTest
     }
 
     [TestMethod]
-    public void SimulateExecution_WhenValidArgs_ShouldReturnOkWithResult()
+    public void SimulateExecution_ShouldReturnOkResult_WithTrace()
     {
         var args = new SimulateExecutionArgs
         {
-            ReferenceClassId = Guid.NewGuid(),
-            InstanceClassId = Guid.NewGuid(),
-            MethodToExecuteId = Guid.NewGuid()
+            ReferenceType = "ReferenceClass",
+            InstanceType = "Instance",
+            MethodName = "MainStep"
         };
 
-        var expected = new List<string>
-            {
-                "Class1.this.Method1()",
-                "Class2.this.Method2()"
-            };
+        var expected = new List<string> { "MyType.this.Step1()", "MyType.this.Step2()" };
 
         _simulatorServiceMock
             .Setup(s => s.Simulate(args))
@@ -42,23 +38,29 @@ public  class SimulatorControllerTest
 
         var result = _simulatorController.SimulateExecution(args);
 
-        var ok = result as OkObjectResult;
-        ok.Should().NotBeNull();
-        ok!.StatusCode.Should().Be(200);
-        ok.Value.Should().BeEquivalentTo(expected);
+        var okResult = result as OkObjectResult;
+        okResult.Should().NotBeNull();
+        okResult!.StatusCode.Should().Be(200);
+
+        var trace = okResult.Value as List<string>;
+        trace.Should().BeEquivalentTo(expected);
     }
 
     [TestMethod]
-    public void SimulateExecution_WhenExceptionThrown_ShouldThrow()
+    public void SimulateExecution_WhenExceptionThrown_ShouldThrowException()
     {
-        var args = new SimulateExecutionArgs();
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceType = "ReferenceClass",
+            InstanceType = "InstanceClass",
+            MethodName = "MainStep"
+        };
 
         _simulatorServiceMock
             .Setup(s => s.Simulate(It.IsAny<SimulateExecutionArgs>()))
             .Throws(new Exception("Unexpected error"));
 
         Action act = () => _simulatorController.SimulateExecution(args);
-
         act.Should().Throw<Exception>().WithMessage("Unexpected error");
     }
 }
