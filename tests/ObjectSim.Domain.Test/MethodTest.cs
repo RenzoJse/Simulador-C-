@@ -427,6 +427,20 @@ public class MethodTest
         _testMethod.MethodsInvoke.Should().Contain(otherMethod);
     }
 
+    [TestMethod]
+    public void AddInvokeMethod_WhenMethodIsInLocalVariable_AddsMethod()
+    {
+        var otherMethod = new Method { Id = Guid.NewGuid() };
+
+        var localVariable = new ValueType("int", "int", [otherMethod.Id]);
+
+        otherMethod.LocalVariables = [localVariable];
+
+        _testMethod!.AddInvokeMethod(otherMethod, _testClass!);
+
+        _testMethod.MethodsInvoke.Should().Contain(otherMethod);
+    }
+
     #endregion
 
     #endregion
