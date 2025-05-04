@@ -367,6 +367,36 @@ public class ClassTest
             .WithMessage("Method cannot invoke other methods in an interface.");
     }
 
+    [TestMethod]
+    public void CanAddMethod_WithSameParameterCountAndAreSameParameters_ThrowsException()
+    {
+        var method = new Method
+        {
+            Name = "NewMethod",
+            Type = new ValueType("int", "int", []),
+            Parameters = [new ValueType("int", "int", [])],
+            IsOverride = false
+        };
+
+        var classObj = new Class
+        {
+            Methods = [method]
+        };
+
+        var newMethod = new Method
+        {
+            Name = "NewMethod",
+            Type = new ValueType("int", "int", []),
+            Parameters = [new ValueType("int", "int", [])],
+            IsOverride = false
+        };
+
+        Action action = () => Class.CanAddMethod(classObj, newMethod);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Method already exists in class.");
+    }
+
     #endregion
 
     #region Success
@@ -374,6 +404,22 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_WithCompletelyDifferentMethod_AddsMethods()
     {
+        var classObj = new Class
+        {
+            Methods = []
+        };
+
+        var method = new Method
+        {
+            Name = "NewMethod",
+            Type = new ValueType("int", "int", []),
+            Parameters = [],
+            IsOverride = false
+        };
+
+        Action action = () => Class.CanAddMethod(classObj, method);
+
+        action.Should().NotThrow();
     }
 
      [TestMethod]
@@ -432,11 +478,6 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_WithDifferentParameterCount_AddsMethod()
     {
-        var classObj = new Class
-        {
-            Methods = []
-        };
-
         var method = new Method
         {
             Name = "NewMethod",
@@ -445,7 +486,20 @@ public class ClassTest
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(classObj, method);
+        var classObj = new Class
+        {
+            Methods = [method]
+        };
+
+        var newMethod = new Method
+        {
+            Name = "NewMethod",
+            Type = new ValueType("int", "int", []),
+            Parameters = [new ValueType("int", "int", [])],
+            IsOverride = false
+        };
+
+        Action action = () => Class.CanAddMethod(classObj, newMethod);
 
         action.Should().NotThrow();
     }
@@ -453,16 +507,84 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_TryingToAddOverridingParentMethod_AddsMethod()
     {
+        var parentMethod = new Method
+        {
+            Name = "ParentMethod",
+            Type = new ValueType("int", "int", []),
+            Parameters = [],
+            IsOverride = false
+        };
+
+        var classObj = new Class
+        {
+            Parent = new Class
+            {
+                Methods = [parentMethod]
+            },
+            Methods = []
+        };
+
+        var method = new Method
+        {
+            Name = "ParentMethod",
+            Type = new ValueType("int", "int", []),
+            Parameters = [],
+            IsOverride = true
+        };
+
+        Action action = () => Class.CanAddMethod(classObj, method);
+
+        action.Should().NotThrow();
     }
 
     [TestMethod]
     public void CanAddMethod_ClassIsInterfaceMethodIsNotAbstract_MakeMethodAbstractAndAddsMethod()
     {
+        var classObj = new Class
+        {
+            IsInterface = true,
+            Methods = []
+        };
+
+        var method = new Method
+        {
+            Name = "NewMethod",
+            Type = new ValueType("int", "int", []),
+            Parameters = [],
+            IsOverride = false
+        };
+
+        Action action = () => Class.CanAddMethod(classObj, method);
+
+        action.Should().NotThrow();
+        method.Abstract.Should().BeTrue();
     }
 
     [TestMethod]
     public void CanAddMethod_ClassIsInterfaceValidMethod_AddsMethod()
     {
+        var classObj = new Class
+        {
+            IsInterface = true,
+            Methods = []
+        };
+
+        var method = new Method
+        {
+            Name = "NewMethod",
+            Type = new ValueType("int", "int", []),
+            Parameters = [],
+            IsOverride = false,
+            Abstract = true,
+            IsSealed = false,
+            Accessibility = Method.MethodAccessibility.Public,
+            LocalVariables = [],
+            MethodsInvoke = []
+        };
+
+        Action action = () => Class.CanAddMethod(classObj, method);
+
+        action.Should().NotThrow();
     }
 
     #endregion

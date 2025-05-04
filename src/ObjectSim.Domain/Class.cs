@@ -165,10 +165,11 @@ public class Class
 
     public static void ValidateMethodUniqueness(Class classObj, Method method)
     {
-        if(classObj.Methods!.Any(classMethod => classMethod.Name == method.Name &&
-                                                classMethod.Type == method.Type &&
-                                                method.IsOverride == false &&
-                                                AreParametersEqual(classMethod.Parameters, method.Parameters)))
+        if(classObj.Methods!.Any(classMethod =>
+               classMethod.Name == method.Name &&
+               classMethod.Type.IsSameType(method.Type) &&
+               method.IsOverride == false &&
+               AreParametersEqual(classMethod.Parameters, method.Parameters)))
         {
             throw new ArgumentException("Method already exists in class.");
         }
