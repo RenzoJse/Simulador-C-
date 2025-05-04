@@ -51,7 +51,7 @@ public class MethodControllerTest
         _methodServiceMock.VerifyAll();
     }
 
-    #region CreateAttribute-Method-Test
+    #region Create-Method-Test
     [TestMethod]
     public void CreateMethod_WhenIsValid_MakesValidPost()
     {

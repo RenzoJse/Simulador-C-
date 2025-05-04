@@ -102,9 +102,9 @@ public class Method
             throw new ArgumentException("Name cannot be null or whitespace.");
         }
 
-        if(name.Length > 100)
+        if(name.Length > 50)
         {
-            throw new ArgumentException("Name cannot exceed 100 characters.");
+            throw new ArgumentException("Name cannot exceed 50 characters.");
         }
 
         if(Regex.IsMatch(name, @"^\d"))

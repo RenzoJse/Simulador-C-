@@ -80,10 +80,10 @@ public class MethodTest
     {
         var method = new Method();
 
-        Action act = () => method.Name = new string('t', 105);
+        Action act = () => method.Name = new string('t', 52);
 
         act.Should().Throw<ArgumentException>()
-            .WithMessage("Name cannot exceed 100 characters.");
+            .WithMessage("Name cannot exceed 50 characters.");
     }
 
     [TestMethod]
