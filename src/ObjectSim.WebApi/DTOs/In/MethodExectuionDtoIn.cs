@@ -1,6 +1,6 @@
 ﻿namespace ObjectSim.WebApi.DTOs.In;
 
-public class SimulateMethodExecutionDtoIn
+public class MethodExecutionDtoIn
 {
     public Guid ReferenceClassId { get; init; }
     public Guid InstanceClassId { get; init; }
