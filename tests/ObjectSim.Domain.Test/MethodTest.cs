@@ -320,7 +320,18 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenIsTryingToUseWrongAttributeMethod_ThrowsException()
     {
-        // nose puede hacer aun
+        var otherMethod = new Method { Id = Guid.NewGuid() };
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            DataType = new ValueType("int", "int", []),
+        };
+        _testClass!.Attributes = [attribute];
+
+        Action act = () => _testMethod!.AddInvokeMethod(otherMethod, _testClass!);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("The invoked method must be reachable from the current method.");
     }
 
     [TestMethod]
