@@ -404,6 +404,29 @@ public class MethodTest
         _testMethod.MethodsInvoke.Should().Contain(otherMethod);
     }
 
+    [TestMethod]
+    public void AddInvokeMethod_WhenMethodIsInAttributeDataType_AddsMethod()
+    {
+        var otherMethod = new Method { Id = Guid.NewGuid() };
+
+        var dataType = new ValueType("int", "int", [])
+        {
+            MethodIds = [otherMethod.Id]
+        };
+
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            DataType = dataType
+        };
+
+        _testClass!.Attributes = [attribute];
+
+        _testMethod!.AddInvokeMethod(otherMethod, _testClass);
+
+        _testMethod.MethodsInvoke.Should().Contain(otherMethod);
+    }
+
     #endregion
 
     #endregion
