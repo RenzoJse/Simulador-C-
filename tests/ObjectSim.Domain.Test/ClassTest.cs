@@ -6,6 +6,7 @@ namespace ObjectSim.Domain.Test;
 public class ClassTest
 {
     private Class? _testClass;
+    private readonly DataType _valueType = new ValueType("int", "int", []);
 
     [TestInitialize]
     public void Initialize()
@@ -208,11 +209,10 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_WhenMethodAlreadyExistsInClass_ThrowsException()
     {
-        var valueType = new ValueType("int", "int", []);
         var existingMethod = new Method
         {
             Name = "ExistingMethod",
-            Type = valueType,
+            Type = _valueType,
             Parameters = [],
             IsOverride = false
         };
@@ -225,7 +225,7 @@ public class ClassTest
         var newMethod = new Method
         {
             Name = "ExistingMethod",
-            Type = valueType,
+            Type = _valueType,
             Parameters = [],
             IsOverride = false
         };
@@ -239,11 +239,10 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_TryingToAddRepeatedMethodNotOverriding_ThrowsException()
     {
-        var valueType = new ValueType("int", "int", []);
         var existingMethod = new Method
         {
             Name = "ExistingMethod",
-            Type = valueType,
+            Type = _valueType,
             Parameters = [],
             IsOverride = false
         };
@@ -256,7 +255,7 @@ public class ClassTest
         var newMethod = new Method
         {
             Name = "ExistingMethod",
-            Type = valueType,
+            Type = _valueType,
             Parameters = [],
             IsOverride = false
         };
@@ -373,8 +372,8 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
-            Parameters = [new ValueType("int", "int", [])],
+            Type = _valueType,
+            Parameters = [_valueType],
             IsOverride = false
         };
 
@@ -386,8 +385,8 @@ public class ClassTest
         var newMethod = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
-            Parameters = [new ValueType("int", "int", [])],
+            Type = _valueType,
+            Parameters = [_valueType],
             IsOverride = false
         };
 
@@ -412,7 +411,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
+            Type = _valueType,
             Parameters = [],
             IsOverride = false
         };
@@ -431,7 +430,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
+            Type = _valueType,
             Parameters = [parameterOne, parameterTwo],
             IsOverride = false
         };
@@ -444,7 +443,7 @@ public class ClassTest
         var newMethod = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
+            Type = _valueType,
             Parameters = [parameterTwo, parameterOne],
             IsOverride = false
         };
@@ -465,7 +464,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
+            Type = _valueType,
             Parameters = [new ValueType("int", "int", [])],
             IsOverride = false
         };
@@ -481,7 +480,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
+            Type = _valueType,
             Parameters = [new ValueType("int", "int", []), new ReferenceType("string", "string", [])],
             IsOverride = false
         };
@@ -494,7 +493,7 @@ public class ClassTest
         var newMethod = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
+            Type = _valueType,
             Parameters = [new ValueType("int", "int", [])],
             IsOverride = false
         };
@@ -510,7 +509,7 @@ public class ClassTest
         var parentMethod = new Method
         {
             Name = "ParentMethod",
-            Type = new ValueType("int", "int", []),
+            Type = _valueType,
             Parameters = [],
             IsOverride = false
         };
@@ -527,7 +526,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "ParentMethod",
-            Type = new ValueType("int", "int", []),
+            Type = _valueType,
             Parameters = [],
             IsOverride = true
         };
@@ -549,7 +548,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
+            Type = _valueType,
             Parameters = [],
             IsOverride = false
         };
@@ -572,7 +571,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
+            Type = _valueType,
             Parameters = [],
             IsOverride = false,
             Abstract = true,
