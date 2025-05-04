@@ -91,12 +91,19 @@ public class Method
             throw new ArgumentNullException(nameof(method), "Method cannot be null.");
         }
 
-        if (MethodIsNotInClass(method, classObj) && MethodIsNotFromParent(method, classObj))
+        if (MethodIsNotInClass(method, classObj)
+            && MethodIsNotFromParent(method, classObj)
+            && MethodIsNotInAttributes(method, classObj))
         {
             throw new ArgumentException("The invoked method must be reachable from the current method.");
         }
 
         _methodsInvoke.Add(method);
+    }
+
+    private static bool MethodIsNotInAttributes(Method methods, Class classObj)
+    {
+        return classObj.Attributes!.Select(attribute => attribute.DataType).All(attributeDataType => !attributeDataType.MethodIds.Contains(methods.Id));
     }
 
     private static bool MethodIsNotInClass(Method methods, Class classObj)
