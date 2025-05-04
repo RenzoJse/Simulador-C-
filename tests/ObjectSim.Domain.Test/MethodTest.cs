@@ -12,7 +12,8 @@ public class MethodTest
     {
         Id = Guid.NewGuid(),
         Name = "TestClass",
-        Methods = []
+        Methods = [],
+        Attributes = [],
     };
 
     private Method? _testMethod;
@@ -342,6 +343,20 @@ public class MethodTest
 
         var otherMethod = new Method { Id = Guid.NewGuid() };
         _testClass.Methods!.Add(new Method { Name = "OtherMethod" });
+
+        Action act = () => _testMethod!.AddInvokeMethod(otherMethod, _testClass!);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("The invoked method must be reachable from the current method.");
+    }
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenIsTryingToUseMethodNotInLocalVariables_ThrowsException()
+    {
+        var otherMethod = new Method { Id = Guid.NewGuid() };
+        var localVariable = new ValueType("int", "int", []);
+
+        otherMethod.LocalVariables = [localVariable];
 
         Action act = () => _testMethod!.AddInvokeMethod(otherMethod, _testClass!);
 
