@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using ObjectSim.Domain;
 using ObjectSim.WebApi.DTOs.Out;
 using ValueType = ObjectSim.Domain.ValueType;
 
@@ -12,14 +11,14 @@ public class DataTypeInformationDtoOutTest
     public void DataTypeToInfo_WithArguments_MapsPropertiesCorrectly()
     {
         var domainDataType = new ValueType("TestName", "int", []);
-        
+
         var result = DataTypeInformationDtoOut.ToInfo(domainDataType);
-        
+
         result.Should().NotBeNull();
         result.Name.Should().Be("TestName");
         result.Type.Should().Be("int");
     }
-    
+
     [TestMethod]
     public void DataTypeToInfo_Properties_AreInitializedCorrectly()
     {

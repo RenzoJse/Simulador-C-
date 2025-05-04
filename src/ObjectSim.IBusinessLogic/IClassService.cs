@@ -1,6 +1,5 @@
 ﻿using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
-using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.IBusinessLogic;
 

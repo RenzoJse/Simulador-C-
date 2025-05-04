@@ -1,5 +1,4 @@
-﻿using ObjectSim.Domain;
-using ObjectSim.Domain.Args;
+﻿using ObjectSim.Domain.Args;
 
 namespace ObjectSim.WebApi.DTOs.In;
 
@@ -24,6 +23,6 @@ public class MethodDtoIn
         parameters.AddRange(Parameters.Select(parameter => new CreateDataTypeArgs(parameter.Name, parameter.Type)));
         var type = new CreateDataTypeArgs(Type.Name, Type.Type);
         return new CreateMethodArgs(Name, type, Accessibility,
-            IsAbstract, IsSealed, IsOverride, Guid.Parse(ClassId!), localVariables , parameters, InvokeMethodsId);
+            IsAbstract, IsSealed, IsOverride, Guid.Parse(ClassId!), localVariables, parameters, InvokeMethodsId);
     }
 }

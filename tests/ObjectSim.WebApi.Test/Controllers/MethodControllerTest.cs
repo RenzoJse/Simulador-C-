@@ -187,5 +187,5 @@ public class MethodControllerTest
         response.First().Name.Should().Be(_testMethod.Name);
     }
     #endregion
-    
+
 }

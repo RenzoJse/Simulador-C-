@@ -4,7 +4,7 @@ public class ValueType : DataType
     public static readonly List<string> BuiltinTypes = ["int", "bool", "char", "decimal", "DateTime"];
     private const int MaxNameLength = 20;
 
-    private ValueType()
+    public ValueType()
     {
         Id = Guid.NewGuid();
         Name = string.Empty;
