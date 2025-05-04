@@ -10,52 +10,60 @@ namespace ObjectSim.BusinessLogic.Test;
 public class MethodSimulatorServiceTest
 {
     [TestMethod]
-    public void Simulate_ShouldReturnMethodCallChain()
+    public void Simulate_ShouldReturnCorrectTrace()
     {
-        var reference = new Class { Id = Guid.NewGuid(), Name = "Class1" };
-        var instance = new Class { Id = Guid.NewGuid(), Name = "Class2" };
+        var method2 = new Method { Id = Guid.NewGuid(), Name = "SubStep" };
+        var method1 = new Method { Id = Guid.NewGuid(), Name = "MainStep", MethodsInvoke = [method2] };
 
-        var method2 = new Method
-        {
-            Id = Guid.NewGuid(),
-            Name = "Method2",
-            ClassId = instance.Id
-        };
+        var referenceType = new ReferenceType("Reference", "ReferenceClass", [method1.Id]);
+        var instanceType = new ReferenceType("Instance", "ReferenceClass", [method2.Id]);
 
-        var method1 = new Method
-        {
-            Id = Guid.NewGuid(),
-            Name = "Method1",
-            ClassId = reference.Id,
-            MethodsInvoke = new List<Method> { method2 }
-        };
-
-        var classRepoMock = new Mock<IRepository<Class>>();
-        classRepoMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns((Func<Class, bool> predicate) =>
-            {
-                var allClasses = new List<Class> { reference, instance };
-                return allClasses.FirstOrDefault(predicate);
-            });
+        var refRepoMock = new Mock<IRepository<DataType>>();
+        refRepoMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
+            .Returns(referenceType)
+            .Returns(instanceType);
 
         var methodRepoMock = new Mock<IRepository<Method>>();
         methodRepoMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns(method1);
-
-        var service = new MethodSimulatorService(classRepoMock.Object, methodRepoMock.Object);
+            .Returns<Func<Method, bool>>(pred => pred(method1) ? method1 : method2);
 
         var args = new SimulateExecutionArgs
         {
-            ReferenceClassId = reference.Id,
-            InstanceClassId = instance.Id,
-            MethodToExecuteId = method1.Id
+            ReferenceType = "ReferenceClass",
+            InstanceType = "ReferenceClass",
+            MethodName = "MainStep"
         };
+
+        var service = new MethodSimulatorService(refRepoMock.Object, methodRepoMock.Object);
 
         var result = service.Simulate(args);
 
         result.Should().ContainInOrder(
-            "Class1.this.Method1()",
-            "Class2.this.Method2()"
+            "Instance.this.MainStep()",
+            "Instance.this.SubStep()"
         );
+    }
+
+    [TestMethod]
+    public void Simulate_ShouldThrowIfTypeNotFound()
+    {
+        var refRepoMock = new Mock<IRepository<DataType>>();
+        refRepoMock.Setup(r => r.Get(It.IsAny<Func<DataType, bool>>()))
+                   .Returns((DataType)null!);
+
+        var methodRepoMock = new Mock<IRepository<Method>>();
+
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceType = "UnknownType",
+            InstanceType = "DoesNotMatter",
+            MethodName = "AnyMethod"
+        };
+
+        var service = new MethodSimulatorService(refRepoMock.Object, methodRepoMock.Object);
+
+        Action act = () => service.Simulate(args);
+
+        act.Should().Throw<Exception>().WithMessage("Type 'UnknownType' not found");
     }
 }
