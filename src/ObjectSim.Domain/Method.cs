@@ -93,12 +93,19 @@ public class Method
 
         if (MethodIsNotInClass(method, classObj)
             && MethodIsNotFromParent(method, classObj)
-            && MethodIsNotInAttributes(method, classObj))
+            && MethodIsNotInAttributes(method, classObj)
+            && MethodIsNotInLocalVariable(method, classObj))
         {
             throw new ArgumentException("The invoked method must be reachable from the current method.");
         }
 
         _methodsInvoke.Add(method);
+    }
+
+    private static bool MethodIsNotInLocalVariable(Method method, Class classObj)
+    {
+        var localVariables = method.LocalVariables;
+        return localVariables.All(localVariable => !localVariable.MethodIds.Contains(method.Id));
     }
 
     private static bool MethodIsNotInAttributes(Method methods, Class classObj)
