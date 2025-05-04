@@ -122,11 +122,7 @@ public class Method
 
     private static bool MethodIsNotInClass(Method methods, Class classObj)
     {
-        try
-        {
-            classObj.ValidateMethodUniqueness(classObj, methods);
-        }
-        catch(Exception)
+        if(classObj.Methods!.Contains(methods))
         {
             return false;
         }
