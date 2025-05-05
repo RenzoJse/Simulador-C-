@@ -12,6 +12,7 @@ public class ClassRepository(DbContext context) : Repository<Class>(context)
         return _classes
             .Include(c => c.Attributes)
             .Include(c => c.Methods)
+            .Include(c => c.Parent)
             .AsEnumerable()
             .FirstOrDefault(filter);
     }
