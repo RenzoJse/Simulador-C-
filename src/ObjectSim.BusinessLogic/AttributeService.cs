@@ -70,7 +70,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         var attributes = attributeRepository.GetAll(att1 => att1.Id != Guid.Empty);
         if(attributes == null || !attributes.Any())
         {
-            throw new Exception("No attributes found.");
+            throw new KeyNotFoundException("No attributes found.");
         }
 
         return attributes;

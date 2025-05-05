@@ -1,7 +1,7 @@
 ﻿namespace ObjectSim.Domain;
 public class ValueType : DataType
 {
-    public static readonly List<string> BuiltinTypes = ["int", "bool", "char", "decimal", "DateTime", "byte","float","double"];
+    public static readonly List<string> BuiltinTypes = ["int", "bool", "char", "decimal", "byte","float","double"];
     private const int MaxNameLength = 20;
 
     public ValueType()

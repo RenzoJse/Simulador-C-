@@ -20,6 +20,7 @@ public class AttributeController(IAttributeService attributeService) : Controlle
         return CreatedAtAction(nameof(Create), new { id = response.Id }, response);
     }
     [HttpGet]
+    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult GetAll()
     {
         var attributes = _attributeService.GetAll();
