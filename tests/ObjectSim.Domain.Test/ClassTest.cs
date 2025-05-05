@@ -321,9 +321,19 @@ public class ClassTest
     {
         _testClass!.IsInterface = true;
 
-        _existingMethod.MethodsInvoke = [new Method()];
+        var methodToInvoke = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "MethodToInvoke",
+            Type = ValueType,
+            Abstract = true
+        };
 
-        Action action = () => _testClass!.CanAddMethod(_existingMethod);
+        _testClass.Methods = [methodToInvoke];
+
+        _existingMethod.AddInvokeMethod(methodToInvoke, _testClass);
+
+        Action action = () => _testClass.CanAddMethod(_existingMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot invoke other methods in an interface.");
