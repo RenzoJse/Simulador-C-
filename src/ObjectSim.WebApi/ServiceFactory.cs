@@ -37,6 +37,7 @@ public static class ServiceFactory
         services.AddScoped<IBuilderStrategy, InterfaceBuilderStrategy>();
         services.AddScoped<IBuilderStrategy, AbstractBuilderStrategy>();
         services.AddScoped<IClassService, ClassService>();
+        services.AddScoped<IMethodSimulatorService, MethodSimulatorService>();
     }
 
     public static void AddDataAccess(IServiceCollection services)
