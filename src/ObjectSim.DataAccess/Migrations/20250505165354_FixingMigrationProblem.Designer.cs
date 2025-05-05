@@ -12,8 +12,8 @@ using ObjectSim.DataAccess;
 namespace ObjectSim.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250504012351_AddVoidTypeAndFixMethodSeed")]
-    partial class AddVoidTypeAndFixMethodSeed
+    [Migration("20250505165354_FixingMigrationProblem")]
+    partial class FixingMigrationProblem
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
