@@ -249,20 +249,34 @@ public class AttributeServiceTest
 
         _attributeServiceTest!.GetById(Guid.NewGuid());
     }
-    /*
     [TestMethod]
     public void UpdateAttribute_ValidAttribute_ShouldUpdateAndReturnAttribute()
     {
-        _testAttribute!.Name = "UpdatedName";
+        var args = new CreateAttributeArgs(
+            new CreateDataTypeArgs("stringName", "Reference"),
+            "Public",
+            Guid.NewGuid(),
+            "UpdatedName"
+        );
+
+        var updatedAttribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "UpdatedName",
+            ClassId = args.ClassId,
+            Visibility = Attribute.AttributeVisibility.Public,
+            DataType = new ReferenceType("stringName", "Reference", [])
+        };
+
         _attributeRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Attribute, bool>>()))
-            .Returns(_testAttribute);
+            .Returns(updatedAttribute);
 
         _attributeRepositoryMock!
             .Setup(repo => repo.Update(It.IsAny<Attribute>()))
             .Returns((Attribute attr) => attr);
 
-        Attribute result = _attributeServiceTest!.Update(_testAttribute.Id, _testAttribute);
+        var result = _attributeServiceTest!.Update(updatedAttribute.Id, args);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("UpdatedName");
@@ -270,14 +284,13 @@ public class AttributeServiceTest
         _attributeRepositoryMock.Verify(repo => repo.Get(It.IsAny<Func<Attribute, bool>>()), Times.Once);
         _attributeRepositoryMock.Verify(repo => repo.Update(It.IsAny<Attribute>()), Times.Once);
     }
-    */
+
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void UpdateAttribute_NullAttribute_ShouldThrowArgumentNullException()
     {
         _attributeServiceTest!.Update(Guid.NewGuid(), null!);
     }
-    /*
     [TestMethod]
     [ExpectedException(typeof(KeyNotFoundException))]
     public void UpdateAttribute_NonExistentAttribute_ShouldThrowKeyNotFoundException()
@@ -286,18 +299,16 @@ public class AttributeServiceTest
             .Setup(repo => repo.Get(It.IsAny<Func<Attribute, bool>>()))
             .Returns((Attribute)null!);
 
-        var dummyAttribute = new Attribute
-        {
-            Id = Guid.NewGuid(),
-            Name = "Attr",
-            ClassId = Guid.NewGuid(),
-            Visibility = Attribute.AttributeVisibility.Public,
-            DataType = new ValueType("myVariable", "int", [])
-        };
+        var id = Guid.NewGuid();
+        var createArgs = new CreateAttributeArgs(
+            new CreateDataTypeArgs("myVariable", "Value"),
+            "Public",
+            Guid.NewGuid(),
+            "Attr"
+        );
 
-        _attributeServiceTest!.Update(dummyAttribute.Id, dummyAttribute);
+        _attributeServiceTest!.Update(id, createArgs);
     }
-    */
     [TestMethod]
     public void GetByClassId_ShouldReturnAttributes()
     {
