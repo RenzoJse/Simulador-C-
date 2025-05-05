@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ObjectSim.DataAccess;
 
@@ -11,9 +12,11 @@ using ObjectSim.DataAccess;
 namespace ObjectSim.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250503211034_FixingIdProblem")]
+    partial class FixingIdProblem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,16 +108,6 @@ namespace ObjectSim.DataAccess.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Classes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            IsAbstract = false,
-                            IsInterface = false,
-                            IsSealed = false,
-                            Name = "Object"
-                        });
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.DataType", b =>
@@ -133,10 +126,6 @@ namespace ObjectSim.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -188,96 +177,6 @@ namespace ObjectSim.DataAccess.Migrations
                     b.HasIndex("TypeId");
 
                     b.ToTable("Methods");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000101"),
-                            Abstract = false,
-                            Accessibility = 0,
-                            ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            IsOverride = false,
-                            IsSealed = false,
-                            Name = "Equals",
-                            TypeId = new Guid("00000000-0000-0000-0000-000000000005")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000102"),
-                            Abstract = false,
-                            Accessibility = 0,
-                            ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            IsOverride = false,
-                            IsSealed = false,
-                            Name = "Equals (Object, Object)",
-                            TypeId = new Guid("00000000-0000-0000-0000-000000000005")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000103"),
-                            Abstract = false,
-                            Accessibility = 2,
-                            ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            IsOverride = false,
-                            IsSealed = false,
-                            Name = "Finalize",
-                            TypeId = new Guid("00000000-0000-0000-0000-000000000005")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000104"),
-                            Abstract = false,
-                            Accessibility = 0,
-                            ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            IsOverride = false,
-                            IsSealed = false,
-                            Name = "GetHashCode",
-                            TypeId = new Guid("00000000-0000-0000-0000-000000000005")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000105"),
-                            Abstract = false,
-                            Accessibility = 0,
-                            ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            IsOverride = false,
-                            IsSealed = false,
-                            Name = "GetType",
-                            TypeId = new Guid("00000000-0000-0000-0000-000000000005")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000106"),
-                            Abstract = false,
-                            Accessibility = 2,
-                            ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            IsOverride = false,
-                            IsSealed = false,
-                            Name = "MemberwiseClone",
-                            TypeId = new Guid("00000000-0000-0000-0000-000000000005")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000107"),
-                            Abstract = false,
-                            Accessibility = 0,
-                            ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            IsOverride = false,
-                            IsSealed = false,
-                            Name = "ReferenceEquals",
-                            TypeId = new Guid("00000000-0000-0000-0000-000000000005")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000108"),
-                            Abstract = false,
-                            Accessibility = 0,
-                            ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            IsOverride = false,
-                            IsSealed = false,
-                            Name = "ToString",
-                            TypeId = new Guid("00000000-0000-0000-0000-000000000005")
-                        });
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.ReferenceType", b =>
@@ -292,15 +191,6 @@ namespace ObjectSim.DataAccess.Migrations
                     b.HasBaseType("ObjectSim.Domain.DataType");
 
                     b.HasDiscriminator().HasValue("ValueType");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000005"),
-                            MethodIds = "[]",
-                            Name = "void",
-                            Type = "bool"
-                        });
                 });
 
             modelBuilder.Entity("ObjectSim.DataAccess.DataContext+DataTypeMethodLocalVariables", b =>

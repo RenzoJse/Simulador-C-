@@ -6,11 +6,32 @@ namespace ObjectSim.Domain.Test;
 public class ClassTest
 {
     private Class? _testClass;
+    private static readonly DataType ValueType = new ValueType("int", "int", []);
+    private readonly Method _existingMethod = new()
+    {
+        Name = "ExistingMethod",
+        Type = ValueType,
+        Parameters = [],
+        IsOverride = false
+    };
+    private readonly Attribute _testAttribute = new()
+    {
+        Name = "TestAttribute"
+    };
 
     [TestInitialize]
     public void Initialize()
     {
-        _testClass = new Class();
+        _testClass = new Class()
+        {
+            Name = "TestClass",
+            IsAbstract = false,
+            IsSealed = false,
+            IsInterface = false,
+            Attributes = [],
+            Methods = [],
+            Parent = null
+        };
     }
 
     #region CreateClass
@@ -208,29 +229,17 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_WhenMethodAlreadyExistsInClass_ThrowsException()
     {
-        var valueType = new ValueType("int", "int", []);
-        var existingMethod = new Method
-        {
-            Name = "ExistingMethod",
-            Type = valueType,
-            Parameters = [],
-            IsOverride = false
-        };
-
-        var classObj = new Class
-        {
-            Methods = [existingMethod]
-        };
+        _testClass!.Methods = [_existingMethod];
 
         var newMethod = new Method
         {
             Name = "ExistingMethod",
-            Type = valueType,
+            Type = ValueType,
             Parameters = [],
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(classObj, newMethod);
+        Action action = () => _testClass!.CanAddMethod(newMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method already exists in class.");
@@ -239,29 +248,17 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_TryingToAddRepeatedMethodNotOverriding_ThrowsException()
     {
-        var valueType = new ValueType("int", "int", []);
-        var existingMethod = new Method
-        {
-            Name = "ExistingMethod",
-            Type = valueType,
-            Parameters = [],
-            IsOverride = false
-        };
-
-        var classObj = new Class
-        {
-            Methods = [existingMethod]
-        };
+        _testClass!.Methods!.Add(_existingMethod);
 
         var newMethod = new Method
         {
             Name = "ExistingMethod",
-            Type = valueType,
+            Type = ValueType,
             Parameters = [],
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(classObj, newMethod);
+        Action action = () => _testClass!.CanAddMethod(newMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method already exists in class.");
@@ -270,18 +267,11 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_ClassIsInterfaceMethodIsSealed_ThrowsException()
     {
-        var classObj = new Class
-        {
-            IsInterface = true,
-            Methods = []
-        };
+        _testClass!.IsInterface = true;
 
-        var method = new Method
-        {
-            IsSealed = true
-        };
+        _existingMethod.IsSealed = true;
 
-        Action action = () => Class.CanAddMethod(classObj, method);
+        Action action = () => _testClass!.CanAddMethod(_existingMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot be sealed in an interface.");
@@ -290,18 +280,11 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_ClassIsInterfaceMethodIsOverriding_ThrowsException()
     {
-        var classObj = new Class
-        {
-            IsInterface = true,
-            Methods = []
-        };
+        _testClass!.IsInterface = true;
 
-        var method = new Method
-        {
-            IsOverride = true
-        };
+        _existingMethod.IsOverride = true;
 
-        Action action = () => Class.CanAddMethod(classObj, method);
+        Action action = () => _testClass!.CanAddMethod(_existingMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot be override in an interface.");
@@ -310,18 +293,11 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_ClassIsInterfaceMethodAccessibilityIsPrivate_ThrowsException()
     {
-        var classObj = new Class
-        {
-            IsInterface = true,
-            Methods = []
-        };
+        _testClass!.IsInterface = true;
 
-        var method = new Method
-        {
-            Accessibility = Method.MethodAccessibility.Private
-        };
+       _existingMethod.Accessibility = Method.MethodAccessibility.Private;
 
-        Action action = () => Class.CanAddMethod(classObj, method);
+        Action action = () => _testClass!.CanAddMethod(_existingMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot be private in an interface.");
@@ -330,18 +306,11 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_ClassIsInterfaceMethodThatHaveLocalVariables_ThrowsException()
     {
-        var classObj = new Class
-        {
-            IsInterface = true,
-            Methods = []
-        };
+        _testClass!.IsInterface = true;
 
-        var method = new Method
-        {
-            LocalVariables = [new ValueType("int", "int", [])]
-        };
+        _existingMethod.LocalVariables = [ValueType];
 
-        Action action = () => Class.CanAddMethod(classObj, method);
+        Action action = () => _testClass!.CanAddMethod(_existingMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot have local variables in an interface.");
@@ -350,21 +319,51 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_ClassIsInterfaceMethodThatHaveMethodInvoke_ThrowsException()
     {
-        var classObj = new Class
+        _testClass!.IsInterface = true;
+
+        var methodToInvoke = new Method
         {
-            IsInterface = true,
-            Methods = []
+            Id = Guid.NewGuid(),
+            Name = "MethodToInvoke",
+            Type = ValueType,
+            Abstract = true
         };
 
-        var method = new Method
-        {
-            MethodsInvoke = [new Method()]
-        };
+        _testClass.Methods = [methodToInvoke];
 
-        Action action = () => Class.CanAddMethod(classObj, method);
+        _existingMethod.AddInvokeMethod(methodToInvoke, _testClass);
+
+        Action action = () => _testClass.CanAddMethod(_existingMethod);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Method cannot invoke other methods in an interface.");
+    }
+
+    [TestMethod]
+    public void CanAddMethod_WithSameParameterCountAndAreSameParameters_ThrowsException()
+    {
+        var method = new Method
+        {
+            Name = "NewMethod",
+            Type = ValueType,
+            Parameters = [ValueType],
+            IsOverride = false
+        };
+
+        _testClass!.Methods = [method];
+
+        var newMethod = new Method
+        {
+            Name = "NewMethod",
+            Type = ValueType,
+            Parameters = [ValueType],
+            IsOverride = false
+        };
+
+        Action action = () => _testClass!.CanAddMethod(newMethod);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Method already exists in class.");
     }
 
     #endregion
@@ -374,9 +373,20 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_WithCompletelyDifferentMethod_AddsMethods()
     {
+        var method = new Method
+        {
+            Name = "NewMethod",
+            Type = ValueType,
+            Parameters = [],
+            IsOverride = false
+        };
+
+        Action action = () => _testClass!.CanAddMethod(method);
+
+        action.Should().NotThrow();
     }
 
-     [TestMethod]
+    [TestMethod]
     public void CanAddMethod_WithSameParamsInDifferentOrder_AddsMethod()
     {
         var parameterOne = new ValueType("int", "int", []);
@@ -385,25 +395,22 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
+            Type = ValueType,
             Parameters = [parameterOne, parameterTwo],
             IsOverride = false
         };
 
-        var classObj = new Class
-        {
-            Methods = [method]
-        };
+        _testClass!.Methods = [method];
 
         var newMethod = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
+            Type = ValueType,
             Parameters = [parameterTwo, parameterOne],
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(classObj, newMethod);
+        Action action = () => _testClass!.CanAddMethod(newMethod);
 
         action.Should().NotThrow();
     }
@@ -411,20 +418,15 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_WithSameNameAndTypeButDifferentParameters_AddsMethod()
     {
-        var classObj = new Class
-        {
-            Methods = []
-        };
-
         var method = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
+            Type = ValueType,
             Parameters = [new ValueType("int", "int", [])],
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(classObj, method);
+        Action action = () => _testClass!.CanAddMethod(method);
 
         action.Should().NotThrow();
     }
@@ -432,20 +434,25 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_WithDifferentParameterCount_AddsMethod()
     {
-        var classObj = new Class
-        {
-            Methods = []
-        };
-
         var method = new Method
         {
             Name = "NewMethod",
-            Type = new ValueType("int", "int", []),
+            Type = ValueType,
             Parameters = [new ValueType("int", "int", []), new ReferenceType("string", "string", [])],
             IsOverride = false
         };
 
-        Action action = () => Class.CanAddMethod(classObj, method);
+        _testClass!.Methods = [method];
+
+        var newMethod = new Method
+        {
+            Name = "NewMethod",
+            Type = ValueType,
+            Parameters = [new ValueType("int", "int", [])],
+            IsOverride = false
+        };
+
+        Action action = () => _testClass!.CanAddMethod(newMethod);
 
         action.Should().NotThrow();
     }
@@ -453,16 +460,71 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_TryingToAddOverridingParentMethod_AddsMethod()
     {
+        var parentMethod = new Method
+        {
+            Name = "ParentMethod",
+            Type = ValueType,
+            Parameters = [],
+            IsOverride = false
+        };
+
+        var parent = new Class { Methods = [parentMethod] };
+
+        _testClass!.Parent = parent;
+
+        var method = new Method
+        {
+            Name = "ParentMethod",
+            Type = ValueType,
+            Parameters = [],
+            IsOverride = true
+        };
+
+        Action action = () => _testClass!.CanAddMethod(method);
+
+        action.Should().NotThrow();
     }
 
     [TestMethod]
     public void CanAddMethod_ClassIsInterfaceMethodIsNotAbstract_MakeMethodAbstractAndAddsMethod()
     {
+        _testClass!.IsInterface = true;
+
+        var method = new Method
+        {
+            Name = "NewMethod",
+            Type = ValueType,
+            Parameters = [],
+            IsOverride = false
+        };
+
+        Action action = () => _testClass!.CanAddMethod(method);
+
+        action.Should().NotThrow();
+        method.Abstract.Should().BeTrue();
     }
 
     [TestMethod]
     public void CanAddMethod_ClassIsInterfaceValidMethod_AddsMethod()
     {
+        _testClass!.IsInterface = true;
+
+        var method = new Method
+        {
+            Name = "NewMethod",
+            Type = ValueType,
+            Parameters = [],
+            IsOverride = false,
+            Abstract = true,
+            IsSealed = false,
+            Accessibility = Method.MethodAccessibility.Public,
+            LocalVariables = [],
+            MethodsInvoke = []
+        };
+
+        Action action = () => _testClass!.CanAddMethod(method);
+
+        action.Should().NotThrow();
     }
 
     #endregion
@@ -476,18 +538,9 @@ public class ClassTest
     [TestMethod]
     public void CanAddAttribute_ClassIsInterface_ThrowsException()
     {
-        var classObj = new Class
-        {
-            IsInterface = true,
-            Attributes = []
-        };
+        _testClass!.IsInterface = true;
 
-        var attribute = new Attribute
-        {
-            Name = "TestAttribute"
-        };
-
-        Action action = () => Class.CanAddAttribute(classObj, attribute);
+        Action action = () => _testClass.CanAddAttribute(_testAttribute);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Cannot add attribute to an interface.");
@@ -496,20 +549,34 @@ public class ClassTest
     [TestMethod]
     public void CanAddAttribute_AttributeRepeatedName_ThrowsException()
     {
-        var classObj = new Class
-        {
-            Attributes = [new Attribute { Name = "TestAttribute" }]
-        };
+        _testClass!.Attributes = [new Attribute { Name = "TestAttribute" }];
 
-        var attribute = new Attribute
-        {
-            Name = "TestAttribute"
-        };
-
-        Action action = () => Class.CanAddAttribute(classObj, attribute);
+        Action action = () => _testClass.CanAddAttribute(_testAttribute);
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Attribute name already exists in class.");
+    }
+
+    [TestMethod]
+    public void AddAttribute_ShouldThrow_WhenDuplicateName()
+    {
+        var attribute2 = new Attribute { Name = _testAttribute.Name };
+        _testClass!.AddAttribute(_testAttribute);
+
+        var act = () => _testClass.AddAttribute(attribute2);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Attribute name already exists in class.");
+    }
+
+    [TestMethod]
+    public void AddAttribute_ShouldThrow_WhenClassIsInterface()
+    {
+        _testClass!.IsInterface = true;
+
+        var act = () => _testClass.AddAttribute(_testAttribute);
+
+        act.Should().Throw<ArgumentException>().WithMessage("Cannot add attribute to an interface.");
     }
 
     #endregion
@@ -519,19 +586,17 @@ public class ClassTest
     [TestMethod]
     public void CanAddAttribute_ValidAttribute_AddsAttribute()
     {
-        var classObj = new Class
-        {
-            Attributes = []
-        };
-
-        var attribute = new Attribute
-        {
-            Name = "TestAttribute"
-        };
-
-        Action action = () => Class.CanAddAttribute(classObj, attribute);
+        Action action = () => _testClass!.CanAddAttribute(_testAttribute);
 
         action.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void AddAttribute_ShouldAddAttribute_WhenValid()
+    {
+        _testClass!.AddAttribute(_testAttribute);
+
+        _testClass.Attributes.Should().ContainSingle(a => a.Name == _testAttribute.Name);
     }
 
     #endregion

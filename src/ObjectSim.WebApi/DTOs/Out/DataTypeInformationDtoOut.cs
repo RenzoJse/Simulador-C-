@@ -4,8 +4,8 @@ namespace ObjectSim.WebApi.DTOs.Out;
 
 public record DataTypeInformationDtoOut
 {
-    public string? Name { get; init;} = String.Empty;
-    public string? Type { get; init;} = String.Empty;
+    public string? Name { get; init; } = String.Empty;
+    public string? Type { get; init; } = String.Empty;
 
     public static DataTypeInformationDtoOut ToInfo(DataType dataType)
     {

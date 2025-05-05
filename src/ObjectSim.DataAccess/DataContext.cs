@@ -139,12 +139,121 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         });
 
         base.OnModelCreating(modelBuilder);
-        ModelSeedData();
+        ModelSeedData(modelBuilder);
     }
-    private void ModelSeedData()
+    private void ModelSeedData(ModelBuilder modelBuilder)
     {
-        //insertar en la bd todos los metodos predefinidos por .NET para cada tipo de dato.
-        //Tienen que tener guid fijo.
+        var voidTypeId = Guid.Parse("00000000-0000-0000-0000-000000000005");
+
+        modelBuilder.Entity<ValueType>().HasData(new ValueType
+        {
+            Id = voidTypeId,
+            Name = "void",
+            Type = "bool",
+            MethodIds = []
+        });
+        var objectClassId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+
+        modelBuilder.Entity<Class>().HasData(new Class
+        {
+            Id = objectClassId,
+            Name = "Object",
+            IsAbstract = false,
+            IsSealed = false,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Method>().HasData(
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000101"),
+                Name = "Equals",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Public,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000102"),
+                Name = "Equals (Object, Object)",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Public,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000103"),
+                Name = "Finalize",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Protected,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000104"),
+                Name = "GetHashCode",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Public,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000105"),
+                Name = "GetType",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Public,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000106"),
+                Name = "MemberwiseClone",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Protected,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000107"),
+                Name = "ReferenceEquals",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Public,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+            },
+            new Method
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000108"),
+                Name = "ToString",
+                ClassId = objectClassId,
+                Accessibility = Method.MethodAccessibility.Public,
+                Abstract = false,
+                IsSealed = false,
+                TypeId = voidTypeId,
+                IsOverride = false
+
+            }
+        );
     }
 
     [ExcludeFromCodeCoverage]

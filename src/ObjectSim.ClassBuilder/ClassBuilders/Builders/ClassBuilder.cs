@@ -17,7 +17,7 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
             try
             {
                 Attribute newAttribute = attributeService.CreateAttribute(attr);
-                if(Class.CanAddAttribute(Result, newAttribute))
+                if(Result.CanAddAttribute(newAttribute))
                 {
                     newAttributes.Add(newAttribute);
                 }
@@ -40,7 +40,7 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
             try
             {
                 var newMethod = methodService.CreateMethod(method);
-                if(Class.CanAddMethod(Result, newMethod))
+                if(Result.CanAddMethod(newMethod))
                 {
                     newMethods.Add(newMethod);
                 }

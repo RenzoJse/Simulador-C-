@@ -35,6 +35,7 @@ public static class ServiceFactory
 
         services.AddScoped<IBuilderStrategy, ClassBuilderStrategy>();
         services.AddScoped<IBuilderStrategy, InterfaceBuilderStrategy>();
+        services.AddScoped<IBuilderStrategy, AbstractBuilderStrategy>();
         services.AddScoped<IClassService, ClassService>();
     }
 

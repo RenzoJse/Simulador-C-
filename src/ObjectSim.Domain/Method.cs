@@ -9,9 +9,6 @@ public class Method
         Public,
         Private,
         Protected,
-        Internal,
-        ProtectedInternal,
-        PrivateProtected
     }
     public Guid Id { get; init; } = Guid.NewGuid();
 
@@ -78,7 +75,80 @@ public class Method
     #endregion
 
     #region MethodsInvoke
-    public List<Method> MethodsInvoke { get; set; } = [];
+
+    private List<Method> _methodsInvoke = [];
+
+    public List<Method> MethodsInvoke
+    {
+        get => _methodsInvoke;
+        init => _methodsInvoke = value ?? [];
+    }
+
+    public void AddInvokeMethod(Method method, Class classObj)
+    {
+        if (method == null)
+        {
+            throw new ArgumentNullException(nameof(method), "Method cannot be null.");
+        }
+
+        if (MethodIsNotInClass(method, classObj)
+            && MethodIsNotFromParent(method, classObj)
+            && MethodIsNotInAttributes(method, classObj)
+            && MethodIsNotInLocalVariable(method)
+            && MethodIsNotInParameters(method))
+        {
+            throw new ArgumentException("The invoked method must be reachable from the current method.");
+        }
+
+        _methodsInvoke.Add(method);
+    }
+
+    private static bool MethodIsNotInParameters(Method method)
+    {
+        var parameters = method.Parameters;
+        return parameters.All(parameter => !parameter.MethodIds.Contains(method.Id));
+    }
+
+    private static bool MethodIsNotInLocalVariable(Method method)
+    {
+        var localVariables = method.LocalVariables;
+        return localVariables.All(localVariable => !localVariable.MethodIds.Contains(method.Id));
+    }
+
+    private static bool MethodIsNotInAttributes(Method methods, Class classObj)
+    {
+        return classObj.Attributes!.Select(attribute => attribute.DataType).All(attributeDataType => !attributeDataType.MethodIds.Contains(methods.Id));
+    }
+
+    private static bool MethodIsNotInClass(Method methods, Class classObj)
+    {
+        if(classObj.Methods!.Contains(methods))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool MethodIsNotFromParent(Method methods, Class classObj)
+    {
+        if (MethodClassHasParent(classObj))
+        {
+            var parentClass = classObj.Parent;
+            if(parentClass!.Methods!.Contains(methods))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private bool MethodClassHasParent(Class classObj)
+    {
+        return classObj.Parent != null;
+    }
+
     #endregion
 
     #region Validations
@@ -102,9 +172,9 @@ public class Method
             throw new ArgumentException("Name cannot be null or whitespace.");
         }
 
-        if(name.Length > 100)
+        if(name.Length > 50)
         {
-            throw new ArgumentException("Name cannot exceed 100 characters.");
+            throw new ArgumentException("Name cannot exceed 50 characters.");
         }
 
         if(Regex.IsMatch(name, @"^\d"))

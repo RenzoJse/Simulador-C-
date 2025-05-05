@@ -2,7 +2,6 @@
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
-using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.BusinessLogic;
 public class MethodService(IRepository<Method> methodRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService) : IMethodService, IMethodServiceCreate
@@ -64,7 +63,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
         var classObj = GetClassById(classId);
 
-        Class.CanAddMethod(classObj, method); //Tengo que ver lo de si abstract haga la clase abstract
+        classObj.CanAddMethod(method); //Tengo que ver lo de si abstract haga la clase abstract
 
         classObj.Methods!.Add(method);
     }
