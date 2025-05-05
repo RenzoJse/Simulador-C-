@@ -7,6 +7,8 @@ using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
+using Attribute = ObjectSim.Domain.Attribute;
+using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.BusinessLogic.Test;
 
@@ -522,6 +524,168 @@ public class ClassServiceTest
         _classServiceTest!.RemoveMethod(_testClass.Id, _testMethod.Id);
 
         _testClass.Methods.Should().NotContain(_testMethod);
+    }
+
+    #endregion
+
+    #endregion
+
+    #region RemoveAttribute
+
+    #region Error
+
+    [TestMethod]
+    public void RemoveAttribute_WhenClassHasNoAttributes_ThrowsException()
+    {
+        var classWithoutAttributes = new Class
+        {
+            Name = "ClassNoAttributes",
+            Attributes = []
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(classWithoutAttributes);
+
+        Action action = () => _classServiceTest!.RemoveAttribute(classWithoutAttributes.Id, Guid.NewGuid());
+        action.Should().Throw<ArgumentException>().WithMessage("The class have no attributes.");
+    }
+
+    [TestMethod]
+    public void RemoveAttribute_WhenAttributeNotInClass_ThrowsException()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "ExistingAttribute"
+        };
+
+        var classWithAttributes = new Class
+        {
+            Name = "ClassWithAttributes",
+            Attributes = [attribute]
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(classWithAttributes);
+
+        Action action = () => _classServiceTest!.RemoveAttribute(classWithAttributes.Id, Guid.NewGuid());
+        action.Should().Throw<ArgumentException>().WithMessage("That attribute does not exist in the class.");
+    }
+
+    [TestMethod]
+    public void RemoveAttribute_WhenAttributeIsUsedInMethod_ThrowsException()
+    {
+        var attributeId = Guid.NewGuid();
+        var attribute = new Attribute
+        {
+            Id = attributeId,
+            Name = "UsedAttribute"
+        };
+
+        var localVariable = new ValueType()
+        {
+            Name = "UsedAttribute"
+        };
+
+        var method = new Method
+        {
+            Name = "Method",
+            LocalVariables = [localVariable]
+        };
+
+        var classWithAttributeInUse = new Class
+        {
+            Name = "Class",
+            Attributes = [attribute],
+            Methods = [method]
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(classWithAttributeInUse);
+
+        Action action = () => _classServiceTest!.RemoveAttribute(classWithAttributeInUse.Id, attributeId);
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Attribute is being used in method.");
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void RemoveAttribute_WhenCriteriaIsValid_DeletesAttribute()
+    {
+        var attributeId = Guid.NewGuid();
+        var attribute = new Attribute
+        {
+            Id = attributeId,
+            Name = "AttributeToRemove"
+        };
+
+        var classWithAttribute = new Class
+        {
+            Name = "ClassWithAttribute",
+            Attributes = [attribute],
+            Methods = []
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(classWithAttribute);
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Update(It.IsAny<Class>()))
+            .Callback<Class>(c => {
+                c.Attributes!.Should().NotContain(attribute);
+            })
+            .Returns((Class c) => c);
+
+        _classServiceTest!.RemoveAttribute(classWithAttribute.Id, attributeId);
+
+        _classRepositoryMock.Verify(repo => repo.Update(It.IsAny<Class>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void RemoveAttribute_WhenClassHasMethodsButAttributeNotUsed_DeletesAttribute()
+    {
+        var attributeId = Guid.NewGuid();
+        var attribute = new Attribute
+        {
+            Id = attributeId,
+            Name = "AttributeToRemove"
+        };
+
+        var method = new Method
+        {
+            Name = "TestMethod",
+            LocalVariables = [new ValueType { Name = "DifferentName" }],
+            Parameters = [new ValueType() { Name = "DifferentParam" }]
+        };
+
+        var classWithMethodsAndAttribute = new Class
+        {
+            Name = "Class",
+            Attributes = [attribute],
+            Methods = [method]
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(classWithMethodsAndAttribute);
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Update(It.IsAny<Class>()))
+            .Callback<Class>(c => {
+                c.Attributes!.Should().NotContain(attribute);
+            })
+            .Returns((Class c) => c);
+
+        _classServiceTest!.RemoveAttribute(classWithMethodsAndAttribute.Id, attributeId);
+
+        _classRepositoryMock.Verify(repo => repo.Update(It.IsAny<Class>()), Times.Once);
     }
 
     #endregion

@@ -159,6 +159,8 @@ public class Class
         }
     }
 
+    //TODO PREGUNTAR SI TIENE PADRE ENTONCES, PREGUNTAR SI HAY UN METODO IGUAL EN EL PADRE. Y SI LO HAY PUBLICO ASEGURAR QUE ESTE TENGA OVERRIDE, SI NO, NO SE PUEDE AGREGAR.
+
     public bool CanAddMethod(Method method)
     {
         ValidateMethodUniqueness(method);
