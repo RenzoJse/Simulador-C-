@@ -114,20 +114,20 @@ public class Class
 
     public void AddAttribute(Attribute attribute)
     {
-        if(CanAddAttribute(this, attribute))
+        if(CanAddAttribute(attribute))
         {
             Attributes!.Add(attribute);
         }
     }
 
-    public static bool CanAddAttribute(Class classObj, Attribute attribute)
+    public bool CanAddAttribute(Attribute attribute)
     {
-        if(classObj.IsInterface == true)
+        if(IsInterface == true)
         {
             throw new ArgumentException("Cannot add attribute to an interface.");
         }
 
-        if(classObj.Attributes!.Any(classAttribute => classAttribute.Name == attribute.Name))
+        if(Attributes!.Any(classAttribute => classAttribute.Name == attribute.Name))
         {
             throw new ArgumentException("Attribute name already exists in class.");
         }
@@ -159,11 +159,11 @@ public class Class
         }
     }
 
-    public bool CanAddMethod(Class classObj, Method method)
+    public bool CanAddMethod(Method method)
     {
-        ValidateMethodUniqueness(classObj, method);
+        ValidateMethodUniqueness(method);
 
-        if(classObj.IsInterface == true)
+        if(IsInterface == true)
         {
             ValidateInterfaceMethodConstraints(method);
         }
@@ -171,9 +171,9 @@ public class Class
         return true;
     }
 
-    public void ValidateMethodUniqueness(Class classObj, Method method)
+    public void ValidateMethodUniqueness(Method method)
     {
-        if(classObj.Methods!.Any(classMethod =>
+        if(Methods!.Any(classMethod =>
                classMethod.Name == method.Name &&
                classMethod.Type.IsSameType(method.Type) &&
                method.IsOverride == false &&
