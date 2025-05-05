@@ -10,6 +10,9 @@ namespace ObjectSim.BusinessLogic;
 
 public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<Class> classRepository) : IClassService
 {
+
+    #region CreateClass
+
     public Class CreateClass(CreateClassArgs args)
     {
         ArgumentNullException.ThrowIfNull(args);
@@ -39,6 +42,10 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
         return strategy!.CreateBuilder();
     }
 
+    #endregion
+
+    #region GetById
+
     public Class GetById(Guid? classId)
     {
         if(classId == null)
@@ -47,6 +54,10 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
         }
         return classRepository.Get(c => c.Id == classId) ?? throw new ArgumentException("Class not found.");
     }
+
+    #endregion
+
+    #region DeleteClass
 
     public void DeleteClass(Guid? classId)
     {
@@ -63,7 +74,11 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
         classRepository.Delete(classObj);
     }
 
-    public void RemoveMethod(Guid? classId, Guid? methodId)
+    #endregion
+
+    #region RemoveMethod
+
+     public void RemoveMethod(Guid? classId, Guid? methodId)
     {
         ArgumentNullException.ThrowIfNull(classId);
         ArgumentNullException.ThrowIfNull(methodId);
@@ -139,6 +154,10 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
         }
     }
 
+    #endregion
+
+    #region RemoveAttribute
+
     public void RemoveAttribute(Guid classId, Guid attributeId)
     {
         var classObj = GetById(classId);
@@ -184,5 +203,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
             }
         }
     }
+
+    #endregion
 
 }
