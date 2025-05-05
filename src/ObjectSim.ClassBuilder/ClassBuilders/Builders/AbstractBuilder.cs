@@ -17,7 +17,7 @@ public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeServi
             try
             {
                 Attribute newAttribute = attributeService.CreateAttribute(attr);
-                if(Class.CanAddAttribute(Result, newAttribute))
+                if(Result.CanAddAttribute(newAttribute))
                 {
                     newAttributes.Add(newAttribute);
                 }
@@ -42,7 +42,7 @@ public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeServi
             {
                 method.IsAbstract = true;
                 var newMethod = methodService.CreateMethod(method);
-                if(Class.CanAddMethod(Result, newMethod))
+                if(Result.CanAddMethod(newMethod))
                 {
                     newMethods.Add(newMethod);
                 }
