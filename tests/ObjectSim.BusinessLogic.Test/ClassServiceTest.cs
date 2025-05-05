@@ -354,6 +354,44 @@ public class ClassServiceTest
             .Verify(repo => repo.Delete(It.IsAny<Class>()), Times.Once);
     }
 
+    [TestMethod]
+    public void DeleteClass_WhenOtherClassesHaveParentsButNotThisOne_DeletesClass()
+    {
+        var classToDelete = new Class
+        {
+            Id = Guid.NewGuid(),
+            Name = "ClassToDelete"
+        };
+
+        var otherParent = new Class
+        {
+            Id = Guid.NewGuid(),
+            Name = "OtherParent"
+        };
+
+        var otherClassWithParent = new Class
+        {
+            Id = Guid.NewGuid(),
+            Name = "OtherClassWithParent",
+            Parent = otherParent
+        };
+
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(classToDelete);
+
+        _classRepositoryMock
+            .Setup(repo => repo.GetAll(It.Is<Func<Class, bool>>(f => f.Invoke(otherClassWithParent))))
+            .Returns([otherClassWithParent]);
+
+        _classRepositoryMock
+            .Setup(repo => repo.Delete(It.IsAny<Class>()));
+
+        _classServiceTest!.DeleteClass(classToDelete.Id);
+
+        _classRepositoryMock.Verify(repo => repo.Delete(It.Is<Class>(c => c.Id == classToDelete.Id)), Times.Once);
+    }
+
     #endregion
 
     #endregion
