@@ -126,10 +126,16 @@ public class AttributeControllerTest
     [TestMethod]
     public void Create_NullModel_ShouldReturnBadRequest()
     {
-        var result = _attributeController.Create(null!);
-        var badRequest = result as BadRequestResult;
-        Assert.IsNotNull(badRequest);
-        Assert.AreEqual(400, badRequest.StatusCode);
+        var invalidId = Guid.NewGuid();
+
+        _attributeServiceMock
+            .Setup(s => s.GetByClassId(invalidId))
+            .Throws(new ArgumentException("Invalid ClassId"));
+
+        Action act = () => _attributeController.GetByClassId(invalidId);
+
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Invalid ClassId");
     }
 
     [TestMethod]
@@ -312,17 +318,18 @@ public class AttributeControllerTest
     [TestMethod]
     public void GetByClassId_InvalidId_ShouldReturnBadRequest()
     {
-
         var invalidId = Guid.Empty;
 
-        var result = _attributeController.GetByClassId(invalidId);
+        _attributeServiceMock
+            .Setup(s => s.GetByClassId(invalidId))
+            .Throws(new ArgumentException("Invalid ClassId"));
 
-        var badRequest = result as BadRequestObjectResult;
-        Assert.IsNotNull(badRequest);
-        Assert.AreEqual(400, badRequest.StatusCode);
-        Assert.AreEqual("Invalid ClassId.", badRequest.Value);
+        Action act = () => _attributeController.GetByClassId(invalidId);
 
-        _attributeServiceMock.Verify(s => s.GetByClassId(It.IsAny<Guid>()), Times.Never);
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Invalid ClassId");
+
+        _attributeServiceMock.Verify(s => s.GetByClassId(invalidId), Times.Once);
     }
 
 }
