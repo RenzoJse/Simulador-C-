@@ -5,7 +5,7 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.ClassConstructor.ClassBuilders.Builders;
 
-public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeService attributeService) : Builder()
+public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeService attributeService) : Builder
 {
     public override void SetAttributes(List<CreateAttributeArgs> attributes)
     {
@@ -24,6 +24,7 @@ public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeServi
             }
             catch
             {
+                // ignored
             }
         }
 
@@ -48,6 +49,7 @@ public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeServi
             }
             catch
             {
+                // ignored
             }
         }
 

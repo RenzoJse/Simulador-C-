@@ -31,7 +31,7 @@ public class ClassTest
             Attributes = [],
             Methods = [],
             Parent = null
-        };;
+        };
     }
 
     #region CreateClass
@@ -556,7 +556,7 @@ public class ClassTest
         var act = () => _testClass.AddAttribute(attribute2);
 
         act.Should().Throw<ArgumentException>()
-            .WithMessage("Attribute name already exists in class.");;
+            .WithMessage("Attribute name already exists in class.");
     }
 
     [TestMethod]
