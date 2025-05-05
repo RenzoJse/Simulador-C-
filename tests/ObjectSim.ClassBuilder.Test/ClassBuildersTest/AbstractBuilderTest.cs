@@ -4,6 +4,8 @@ using ObjectSim.ClassConstructor.ClassBuilders.Builders;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
+using Attribute = ObjectSim.Domain.Attribute;
+using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.ClassLogic.Test.ClassBuildersTest;
 
@@ -17,6 +19,29 @@ public class AbstractBuilderTest
     private static readonly Method TestMethod = new()
     {
         Name = "TestMethod",
+    };
+
+    private static readonly CreateDataTypeArgs TestArgsDataType = new(
+        "int", "value");
+
+    private static readonly DataType TestDataType = new ValueType("test", "int", []);
+
+    private static readonly CreateAttributeArgs TestCreateAttributeArgs = new(
+        TestArgsDataType,
+        "public",
+        Guid.NewGuid(),
+        "Test"
+    );
+
+    private static readonly Class ParentClass = new Class
+    {
+        Id = Guid.NewGuid(),
+        Name = "ParentClass",
+        IsAbstract = false,
+        IsSealed = false,
+        IsInterface = false,
+        Methods = [],
+        Attributes = []
     };
 
     private static readonly CreateMethodArgs TestCreateMethodArgs = new(
@@ -42,13 +67,89 @@ public class AbstractBuilderTest
 
     #region SetAttributes
 
-    #region MyRegion
+    #region Error
 
     [TestMethod]
-    public void SetAttributes_ShouldNotThrow_WhenCalledWithEmptyList()
+    public void SetAttributes_Null_ThrowsException()
     {
-        var attributes = new List<CreateAttributeArgs>();
-        _abstractBuilder!.SetAttributes(attributes);
+        Action action = () => _abstractBuilder!.SetAttributes(null!);
+
+        action.Should().Throw<ArgumentNullException>();
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void SetAttribute_WithSameAndDifferentAttributeNameAsParent_SetsOnlyDifferentNameAttribute()
+    {
+        ParentClass.Attributes = [];
+
+        var validAttributeId = Guid.NewGuid();
+
+        var validAttribute = new Attribute
+        {
+            Id = validAttributeId,
+            Name = "NewAttribute"
+        };
+
+        var parentAttribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttribute"
+        };
+
+        ParentClass.Attributes.Add(parentAttribute);
+
+        _abstractBuilder!.SetParent(ParentClass);
+
+        var invalidAttributeArgs = new CreateAttributeArgs(TestArgsDataType, "public", Guid.NewGuid(), "TestAttribute");
+        var validAttributeArgs = new CreateAttributeArgs(TestArgsDataType, "public", Guid.NewGuid(), "NewAttribute");
+
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(invalidAttributeArgs))
+            .Throws(new ArgumentException());
+
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(validAttributeArgs))
+            .Returns(validAttribute);
+
+        _abstractBuilder!.SetAttributes([invalidAttributeArgs, validAttributeArgs]);
+
+        _abstractBuilder.GetResult().Attributes.Should().HaveCount(1);
+        _abstractBuilder.GetResult().Attributes.Should().Contain(validAttribute);
+    }
+
+    [TestMethod]
+    public void CreateClass_WithMultipleValidAttributes_AddsAllAttributes()
+    {
+        var attribute1 = new Attribute { Name = "Attribute1", DataType = TestDataType };
+        var attribute2 = new Attribute { Name = "Attribute2", DataType = TestDataType };
+
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute1")))
+            .Returns(attribute1);
+
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
+            .Returns(attribute2);
+
+        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataType, "public", Guid.NewGuid(), "Attribute1");
+        var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataType, "public", Guid.NewGuid(), "Attribute2");
+
+        _abstractBuilder!.SetAttributes([attributeArgs1, attributeArgs2]);
+
+        _abstractBuilder.GetResult().Attributes.Should().HaveCount(2);
+        _abstractBuilder.GetResult().Attributes.Should().Contain(attribute1);
+        _abstractBuilder.GetResult().Attributes.Should().Contain(attribute2);
+    }
+
+    [TestMethod]
+    public void CreateClass_WithInValidAttributes_SetsEmptyAttributes()
+    {
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(TestCreateAttributeArgs))
+            .Throws(new ArgumentException());
+
+        _abstractBuilder!.SetAttributes([TestCreateAttributeArgs]);
+
+        _abstractBuilder.GetResult().Attributes.Should().BeEmpty();
     }
 
     #endregion
