@@ -103,21 +103,27 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         return attribute;
     }
 
-    public Attribute Update(Guid id, Attribute entity)
+    public Attribute Update(Guid id, CreateAttributeArgs entity)
     {
         if(entity == null)
         {
-            throw new ArgumentNullException(nameof(entity), "Attribute cannot be null.");
+            throw new ArgumentNullException(nameof(entity), "Attribute arguments cannot be null.");
         }
-        var existing = attributeRepository.Get(att => att.Id == entity.Id);
+
+        var existing = attributeRepository.Get(att => att.Id == id);
         if(existing == null)
         {
-            throw new KeyNotFoundException($"Attribute with ID {entity.Id} not found.");
+            throw new KeyNotFoundException($"Attribute with ID {id} not found.");
         }
+
+        var visibility = ParseVisibility(entity.Visibility);
+        var dataType = dataTypeService.CreateDataType(entity.DataType);
+
         existing.Name = entity.Name;
-        existing.DataType = entity.DataType;
         existing.ClassId = entity.ClassId;
-        existing.Visibility = entity.Visibility;
+        existing.Visibility = visibility;
+        existing.DataType = dataType;
+
         attributeRepository.Update(existing);
         return existing;
     }

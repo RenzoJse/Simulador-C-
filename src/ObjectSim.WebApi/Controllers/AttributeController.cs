@@ -26,34 +26,15 @@ public class AttributeController(IAttributeService attributeService) : Controlle
         var attributes = _attributeService.GetAll();
         return Ok(attributes);
     }
-    /*
+    
     [HttpPut("{id}")]
     public IActionResult Update(Guid id, [FromBody] CreateAttributeDtoIn modelIn)
     {
-        if(!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        if(id == Guid.Empty)
-        {
-            return BadRequest("Invalid ID.");
-        }
-        var attributeToUpdate = new Domain.Attribute
-        {
-            Id = id,
-            Name = modelIn.Name,
-            ClassId = modelIn.ClassId,
-            Visibility = Enum.Parse<Domain.Attribute.AttributeVisibility>(modelIn.Visibility),
-            DataType = modelIn.DataTypeKind == "Value"
-                ? ValueType.Create(modelIn.DataTypeName)
-                : ReferenceType.Create(modelIn.DataTypeName)
-        };
-
-        var updated = _attributeService.Update(id, attributeToUpdate);
+        var updated = _attributeService.Update(id, modelIn.ToArgs());
         var response = AttributeDtoOut.ToInfo(updated);
+
         return Ok(response);
-    }*/
+    }
 
     [HttpGet("{id}")]
     [TypeFilter(typeof(ExceptionFilter))]
