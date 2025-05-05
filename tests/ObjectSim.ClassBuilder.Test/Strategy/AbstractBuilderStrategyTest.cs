@@ -1,6 +1,8 @@
-﻿using ObjectSim.ClassConstructor.ClassBuilders.Builders;
+﻿using Moq;
+using ObjectSim.ClassConstructor.ClassBuilders.Builders;
 using ObjectSim.ClassConstructor.Strategy;
 using ObjectSim.Domain.Args;
+using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.ClassLogic.Test.Strategy;
 
@@ -8,11 +10,15 @@ namespace ObjectSim.ClassLogic.Test.Strategy;
 public class AbstractBuilderStrategyTest
 {
     private AbstractBuilderStrategy? _strategy;
+    private Mock<IMethodServiceCreate>? _methodServiceCreateMock;
+    private Mock<IAttributeService>? _attributeServiceMock;
 
     [TestInitialize]
     public void Initialize()
     {
-        _strategy = new AbstractBuilderStrategy();
+        _methodServiceCreateMock = new Mock<IMethodServiceCreate>(MockBehavior.Strict);
+        _attributeServiceMock = new Mock<IAttributeService>(MockBehavior.Strict);
+        _strategy = new AbstractBuilderStrategy(_methodServiceCreateMock.Object, _attributeServiceMock.Object);
     }
 
     #region WhichIsMyBuilder

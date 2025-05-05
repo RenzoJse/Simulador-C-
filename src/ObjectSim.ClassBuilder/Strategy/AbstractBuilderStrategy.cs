@@ -1,10 +1,11 @@
 ﻿using ObjectSim.ClassConstructor.ClassBuilders;
 using ObjectSim.ClassConstructor.ClassBuilders.Builders;
 using ObjectSim.Domain.Args;
+using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.ClassConstructor.Strategy;
 
-public class AbstractBuilderStrategy : IBuilderStrategy
+public class AbstractBuilderStrategy(IMethodServiceCreate methodService, IAttributeService attributeService) : IBuilderStrategy
 {
     public bool WhichIsMyBuilder(CreateClassArgs args)
     {
@@ -13,6 +14,6 @@ public class AbstractBuilderStrategy : IBuilderStrategy
 
     public Builder CreateBuilder()
     {
-        return new AbstractBuilder();
+        return new AbstractBuilder(methodService, attributeService);
     }
 }
