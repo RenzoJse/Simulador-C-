@@ -12,4 +12,6 @@ public interface IMethodService
     Method Update(Guid id, Method entity);
     DataType AddParameter(Guid methodId, DataType parameter);
     DataType AddLocalVariable(Guid methodId, DataType localVariable);
+    Method AddInvokeMethod(Guid methodId, List<CreateInvokeMethodArgs> invokeMethodArgs);
+
 }

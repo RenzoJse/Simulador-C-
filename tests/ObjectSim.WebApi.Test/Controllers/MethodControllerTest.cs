@@ -21,7 +21,7 @@ public class MethodControllerTest
     private static readonly DataType TestParameter = new ReferenceType("TestParameter", "string", []);
 
     private static readonly InvokeMethod TestInvokeMethod = new InvokeMethod(Guid.NewGuid(), Guid.NewGuid(), "this");
-        
+
     private readonly Method _testMethod = new Method
     {
         Name = "TestMethod",
@@ -49,7 +49,7 @@ public class MethodControllerTest
     }
 
     #region Create-Method-Test
-    
+
     [TestMethod]
     public void CreateMethod_WhenIsValid_MakesValidPost()
     {
@@ -88,10 +88,11 @@ public class MethodControllerTest
         answer.InvokeMethodsIds.Should()
             .BeEquivalentTo(_testMethod.MethodsInvoke!.Select(m => m.InvokeMethodId.ToString()));
     }
-    
+
     #endregion
 
     #region Delete-Method-Test
+
     [TestMethod]
     public void DeleteMethod_WhenMethodExists_ShouldReturnOk()
     {
@@ -185,6 +186,43 @@ public class MethodControllerTest
         response!.Count.Should().Be(methods.Count);
         response.First().Name.Should().Be(_testMethod.Name);
     }
+    #endregion
+
+    #region AddInvokeMethod-Test
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenEverythingIsValid_ShouldReturnOk()
+    {
+        var methodId = Guid.NewGuid();
+        var invokeMethodId = Guid.NewGuid();
+        var reference = "init";
+        var invokeMethodDto = new CreateInvokeMethodDtoIn()
+        {
+            MethodId = methodId,
+            InvokeMethodId = invokeMethodId,
+            Reference = reference
+        };
+
+        _methodServiceMock
+            .Setup(service => service.AddInvokeMethod(methodId, [invokeMethodDto]))
+            .Returns(_testMethod);
+
+        var result = _methodController.AddInvokeMethod(methodId, new CreateInvokeMethodDtoIn
+        {
+            MethodId = methodId,
+            InvokeMethodId = invokeMethodId,
+            Reference = reference
+        });
+
+        var okResult = result as OkObjectResult;
+        okResult.Should().NotBeNull();
+        okResult!.StatusCode.Should().Be(200);
+
+        var response = okResult.Value as MethodInformationDtoOut;
+        response.Should().NotBeNull();
+        response!.Name.Should().Be(_testMethod.Name);
+    }
+
     #endregion
 
 }
