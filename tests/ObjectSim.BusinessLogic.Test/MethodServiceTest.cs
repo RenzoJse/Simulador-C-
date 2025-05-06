@@ -82,7 +82,7 @@ public class MethodServiceTest
     [TestMethod]
     public void CreateMethod_WithEmptyArgs_ThrowsException()
     {
-        var emptyArgs = new CreateMethodArgs("", null, "", null, null, null, Guid.Empty, [], [], []);
+        var emptyArgs = new CreateMethodArgs("", null!, "", null, null, null, Guid.Empty, [], [], []);
 
         Action act = () => _methodServiceTest!.CreateMethod(emptyArgs);
 
@@ -438,7 +438,7 @@ public class MethodServiceTest
         Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
 
         act.Should().Throw<Exception>()
-            .WithMessage($"Method with ID {_testMethod.Id} not found.");;
+            .WithMessage($"Method with ID {_testMethod!.Id} not found.");
     }
 
     [TestMethod]
@@ -463,7 +463,7 @@ public class MethodServiceTest
     public void AddInvokeMethod_WhenInvokeMethodCannotBeAdded_ThrowsException()
     {
         var invokeMethod = new Method { Id = Guid.NewGuid(), Name = "test", Parameters = [] };
-        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(invokeMethod.Id, _testMethod.Id, "init") };
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(invokeMethod.Id, _testMethod!.Id, "init") };
         
         ISetupSequentialResult<Method?> setupSequence =
             _methodRepositoryMock!.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()));

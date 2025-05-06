@@ -186,7 +186,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             {
                 throw new Exception($"Method to invoke with id {invokeMethod.MethodId} not found");
             }
-            method.CanAddInvokeMethod(methodToInvoke, GetClassById(method.Id), "this");
+            method.CanAddInvokeMethod(methodToInvoke, GetClassById(method.Id), invokeMethod.Reference);
             var newInvokeMethod = new InvokeMethod(invokeMethod.methodId, invokeMethod.InvokeMethodId, invokeMethod.Reference);
             invokeMethods.Add(newInvokeMethod);
         }
