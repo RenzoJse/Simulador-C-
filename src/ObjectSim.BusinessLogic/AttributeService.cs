@@ -70,7 +70,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         var attributes = attributeRepository.GetAll(att1 => att1.Id != Guid.Empty);
         if(attributes == null || !attributes.Any())
         {
-            throw new Exception("No attributes found.");
+            throw new KeyNotFoundException("No attributes found.");
         }
 
         return attributes;
@@ -78,11 +78,12 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
 
     public bool Delete(Guid id)
     {
-        var attribute = attributeRepository.Get(att1 => id == att1.Id);
+        var attribute = attributeRepository.Get(att1 => att1.Id == id);
         if(attribute == null)
         {
-            throw new Exception("Attribute cannot be null.");
+            throw new KeyNotFoundException($"Attribute with ID {id} not found.");
         }
+
         attributeRepository.Delete(attribute);
         return true;
     }
@@ -103,21 +104,32 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         return attribute;
     }
 
-    public Attribute Update(Guid id, Attribute entity)
+    public Attribute Update(Guid id, CreateAttributeArgs entity)
     {
         if(entity == null)
         {
-            throw new ArgumentNullException(nameof(entity), "Attribute cannot be null.");
+            throw new ArgumentNullException(nameof(entity), "Attribute arguments cannot be null.");
         }
-        var existing = attributeRepository.Get(att => att.Id == entity.Id);
+
+        var existing = attributeRepository.Get(att => att.Id == id);
         if(existing == null)
         {
-            throw new KeyNotFoundException($"Attribute with ID {entity.Id} not found.");
+            throw new KeyNotFoundException($"Attribute with ID {id} not found.");
         }
+        var classExists = classRepository.Get(c => c.Id == entity.ClassId);
+        if(classExists == null)
+        {
+            throw new KeyNotFoundException($"Class with ID {entity.ClassId} not found.");
+        }
+
+        var visibility = ParseVisibility(entity.Visibility);
+        var dataType = dataTypeService.CreateDataType(entity.DataType);
+
         existing.Name = entity.Name;
-        existing.DataType = entity.DataType;
         existing.ClassId = entity.ClassId;
-        existing.Visibility = entity.Visibility;
+        existing.Visibility = visibility;
+        existing.DataType = dataType;
+
         attributeRepository.Update(existing);
         return existing;
     }

@@ -56,7 +56,7 @@ public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeServi
         var parent = Result.Parent;
         if(parent is not null && (bool)parent.IsInterface!)
         {
-            if (parent.Methods!.Select(parentMethod => newMethods.Any(m => m.Name == parentMethod.Name)).Any(isImplemented => !isImplemented))
+            if(parent.Methods!.Select(parentMethod => newMethods.Any(m => m.Name == parentMethod.Name)).Any(isImplemented => !isImplemented))
             {
                 throw new ArgumentException("Parent class is an interface. Should implement all his methods");
             }

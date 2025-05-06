@@ -12,7 +12,7 @@ public class Method
     }
     public Guid Id { get; init; } = Guid.NewGuid();
 
-    public Guid? ClassId { get; set; }
+    public Guid ClassId { get; set; }
 
     #region Name
 
@@ -76,22 +76,22 @@ public class Method
 
     #region MethodsInvoke
 
-    private List<Method> _methodsInvoke = [];
+    private List<InvokeMethod> _methodsInvoke = [];
 
-    public List<Method> MethodsInvoke
+    public List<InvokeMethod> MethodsInvoke
     {
         get => _methodsInvoke;
         init => _methodsInvoke = value ?? [];
     }
 
-    public void AddInvokeMethod(Method method, Class classObj)
+    public void CanAddInvokeMethod(Method method, Class classObj, string reference)
     {
-        if (method == null)
+        if(method == null)
         {
             throw new ArgumentNullException(nameof(method), "Method cannot be null.");
         }
 
-        if (MethodIsNotInClass(method, classObj)
+        if(MethodIsNotInClass(method, classObj)
             && MethodIsNotFromParent(method, classObj)
             && MethodIsNotInAttributes(method, classObj)
             && MethodIsNotInLocalVariable(method)
@@ -100,7 +100,6 @@ public class Method
             throw new ArgumentException("The invoked method must be reachable from the current method.");
         }
 
-        _methodsInvoke.Add(method);
     }
 
     private static bool MethodIsNotInParameters(Method method)
@@ -132,7 +131,7 @@ public class Method
 
     private bool MethodIsNotFromParent(Method methods, Class classObj)
     {
-        if (MethodClassHasParent(classObj))
+        if(MethodClassHasParent(classObj))
         {
             var parentClass = classObj.Parent;
             if(parentClass!.Methods!.Contains(methods))
