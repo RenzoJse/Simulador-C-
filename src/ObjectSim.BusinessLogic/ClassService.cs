@@ -78,7 +78,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
 
     #region RemoveMethod
 
-     public void RemoveMethod(Guid? classId, Guid? methodId)
+    public void RemoveMethod(Guid? classId, Guid? methodId)
     {
         ArgumentNullException.ThrowIfNull(classId);
         ArgumentNullException.ThrowIfNull(methodId);
