@@ -26,7 +26,7 @@ public class AttributeController(IAttributeService attributeService) : Controlle
         var attributes = _attributeService.GetAll();
         return Ok(attributes);
     }
-    
+
     [HttpPut("{id}")]
     public IActionResult Update(Guid id, [FromBody] CreateAttributeDtoIn modelIn)
     {
@@ -48,9 +48,9 @@ public class AttributeController(IAttributeService attributeService) : Controlle
     [HttpGet("by-class/{classId}")]
     public IActionResult GetByClassId(Guid classId)
     {
-            var attributes = _attributeService.GetByClassId(classId);
-            var response = attributes.Select(AttributeDtoOut.ToInfo).ToList();
-            return Ok(response);
+        var attributes = _attributeService.GetByClassId(classId);
+        var response = attributes.Select(AttributeDtoOut.ToInfo).ToList();
+        return Ok(response);
     }
     [HttpDelete("{id}")]
     public IActionResult Delete(Guid id)

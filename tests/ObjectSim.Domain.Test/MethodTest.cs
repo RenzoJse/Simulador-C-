@@ -8,7 +8,7 @@ public class MethodTest
     private readonly DataType _methodType = new ValueType("methodType", "int", []);
     private readonly DataType _methodReferenceType = new ReferenceType("methodReferenceType", "object", []);
 
-    private Class? _testClass = new Class
+    private readonly Class? _testClass = new Class
     {
         Id = Guid.NewGuid(),
         Name = "TestClass",
@@ -18,7 +18,7 @@ public class MethodTest
 
     private Method? _testMethod;
 
-    private Method? _otherMethod = new Method
+    private readonly Method? _otherMethod = new Method
     {
         Id = Guid.NewGuid(),
         Name = "OtherMethod",
@@ -29,7 +29,7 @@ public class MethodTest
     [TestInitialize]
     public void Initialize()
     {
-        _testMethod =  new Method
+        _testMethod = new Method
         {
             Id = Guid.NewGuid(),
             Name = "TestMethod",

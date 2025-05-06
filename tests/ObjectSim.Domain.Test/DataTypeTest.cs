@@ -27,8 +27,8 @@ public class DataTypeTest
     [TestMethod]
     public void IsSameType_TypesAreDifferent_ReturnsFalse()
     {
-        var type1 =  new ValueType("variable", "int", []);
-        var type2 =  new ValueType("variable", "bool", []);
+        var type1 = new ValueType("variable", "int", []);
+        var type2 = new ValueType("variable", "bool", []);
 
         var result = type1.IsSameType(type2);
 
