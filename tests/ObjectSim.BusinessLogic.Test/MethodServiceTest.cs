@@ -442,4 +442,23 @@ public class MethodServiceTest
     #endregion
 
     #endregion
+
+    #region AddInvokeMethod
+
+    #region Error
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenMethodNotFound_ThrowsException()
+    {
+        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns((Method?)null);
+
+        Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, Guid.NewGuid());
+
+        act.Should().Throw<Exception>().WithMessage("Method not found");
+    }
+
+    #endregion
+
+    #endregion
 }
