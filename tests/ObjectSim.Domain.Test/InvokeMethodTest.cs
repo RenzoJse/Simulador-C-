@@ -37,4 +37,18 @@ public class InvokeMethodTest
         
         invokeMethod.Reference.Should().Be(newReference);
     }
+    
+    [TestMethod]
+    public void Constructor_InitializesProperties_WithCorrectValues()
+    {
+        var methodId = Guid.NewGuid();
+        var invokeMethodId = Guid.NewGuid();
+        const string reference = "TestReference";
+        
+        var invokeMethod = new InvokeMethod(methodId, invokeMethodId, reference);
+        
+        invokeMethod.MethodId.Should().Be(methodId);
+        invokeMethod.InvokeMethodId.Should().Be(invokeMethodId);
+        invokeMethod.Reference.Should().Be(reference);
+    }
 }
