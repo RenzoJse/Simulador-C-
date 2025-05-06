@@ -76,15 +76,20 @@ public class Method
 
     #region MethodsInvoke
 
-    private List<Method> _methodsInvoke = [];
+    private List<InvokeMethod> _methodsInvoke = [];
 
-    public List<Method> MethodsInvoke
+    public List<InvokeMethod> MethodsInvoke
     {
         get => _methodsInvoke;
         init => _methodsInvoke = value ?? [];
     }
+    
+    public void AddInvokeMethod(InvokeMethod invokeMethod)
+    {
+        MethodsInvoke.Add(invokeMethod);
+    }
 
-    public void AddInvokeMethod(Method method, Class classObj)
+    public void CanAddInvokeMethod(Method method, Class classObj)
     {
         if (method == null)
         {
@@ -99,8 +104,6 @@ public class Method
         {
             throw new ArgumentException("The invoked method must be reachable from the current method.");
         }
-
-        _methodsInvoke.Add(method);
     }
 
     private static bool MethodIsNotInParameters(Method method)

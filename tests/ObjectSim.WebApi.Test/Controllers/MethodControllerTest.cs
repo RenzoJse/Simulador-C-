@@ -20,11 +20,8 @@ public class MethodControllerTest
 
     private static readonly DataType TestParameter = new ReferenceType("TestParameter", "string", []);
 
-    private static readonly Method TestMethod = new Method
-    {
-        Name = "TestMethod",
-    };
-
+    private static readonly InvokeMethod TestInvokeMethod = new InvokeMethod(Guid.NewGuid(), Guid.NewGuid(), "this");
+        
     private readonly Method _testMethod = new Method
     {
         Name = "TestMethod",
@@ -35,7 +32,7 @@ public class MethodControllerTest
         IsSealed = false,
         Parameters = [TestParameter],
         LocalVariables = [TestLocalVariable],
-        MethodsInvoke = [TestMethod]
+        MethodsInvoke = [TestInvokeMethod]
     };
 
     [TestInitialize]
@@ -52,6 +49,7 @@ public class MethodControllerTest
     }
 
     #region Create-Method-Test
+    
     [TestMethod]
     public void CreateMethod_WhenIsValid_MakesValidPost()
     {
@@ -87,9 +85,10 @@ public class MethodControllerTest
             .Should().BeEquivalentTo(_testMethod.LocalVariables!.Select(lv => lv.Name));
         answer.Parameters.Select(p => p.Name)
             .Should().BeEquivalentTo(_testMethod.Parameters!.Select(p => p.Name));
-        answer.Methods.Select(m => m.Name)
-            .Should().BeEquivalentTo(_testMethod.MethodsInvoke!.Select(m => m.Name));
+        answer.InvokeMethodsIds.Should()
+            .BeEquivalentTo(_testMethod.MethodsInvoke!.Select(m => m.InvokeMethodId.ToString()));
     }
+    
     #endregion
 
     #region Delete-Method-Test

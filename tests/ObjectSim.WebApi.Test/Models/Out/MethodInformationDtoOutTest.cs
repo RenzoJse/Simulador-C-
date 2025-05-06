@@ -36,6 +36,6 @@ public class MethodInformationDtoOutTest
         Assert.IsFalse(methodInfo.IsOverride);
         Assert.IsNotNull(methodInfo.LocalVariables);
         Assert.IsNotNull(methodInfo.Parameters);
-        Assert.IsNotNull(methodInfo.Methods);
+        Assert.IsNotNull(methodInfo.InvokeMethodsIds);
     }
 }

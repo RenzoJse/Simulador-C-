@@ -16,7 +16,7 @@ public record MethodInformationDtoOut(Method methodInfo)
     public List<DataTypeInformationDtoOut> Parameters { get; } = methodInfo.Parameters != null
             ? methodInfo.Parameters.Select(DataTypeInformationDtoOut.ToInfo).ToList()
             : [];
-    public List<MethodInformationDtoOut> Methods { get; } = methodInfo.MethodsInvoke != null
-            ? methodInfo.MethodsInvoke.Select(m => new MethodInformationDtoOut(m)).ToList()
-            : [];
+    public List<string> InvokeMethodsIds { get; } = methodInfo.MethodsInvoke != null
+        ? methodInfo.MethodsInvoke.Select(m => m.InvokeMethodId.ToString()).ToList()
+        : [];
 }

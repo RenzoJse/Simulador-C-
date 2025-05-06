@@ -331,7 +331,7 @@ public class ClassTest
 
         _testClass.Methods = [methodToInvoke];
 
-        _existingMethod.AddInvokeMethod(methodToInvoke, _testClass);
+        _existingMethod.CanAddInvokeMethod(methodToInvoke, _testClass);
 
         Action action = () => _testClass.CanAddMethod(_existingMethod);
 

@@ -45,7 +45,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             TypeId = dataTypeService.CreateDataType(methodsArgs.Type).Id,
             Parameters = parameters,
             LocalVariables = localVariables,
-            MethodsInvoke = GetInvokeMethods(methodsArgs.InvokeMethods)
+            MethodsInvoke = []
         };
 
         return method;
@@ -178,4 +178,13 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
         return localVariable;
     }
+
+    #region AddInvokeMethod
+
+    public Method AddInvokeMethod(Guid methodId, Guid invokeMethodId)
+    {
+        throw new NotImplementedException("AddInvokeMethod not implemented.");
+    }
+
+    #endregion
 }
