@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
+using Moq.Language;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
@@ -457,26 +458,26 @@ public class MethodServiceTest
         
         Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
 
-        act.Should().Throw<Exception>().WithMessage("Method where you want to add the invoke method not found");
+        act.Should().Throw<Exception>()
+            .WithMessage($"Method with ID {_testMethod.Id} not found.");;
     }
 
     [TestMethod]
     public void AddInvokeMethod_WhenInvokeMethodDoNotExist_ThrowsException()
     {
-        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns(_testMethod);
+        ISetupSequentialResult<Method?> setupSequence =
+            _methodRepositoryMock!.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()));
         
-        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns((Method?)null);
+        setupSequence.Returns(_testMethod);
+        
+        setupSequence.Returns((Method?)null);
 
-        var invokeMethodArgs = new List<CreateInvokeMethodArgs>
-        {
-            new CreateInvokeMethodArgs(Guid.NewGuid(), Guid.NewGuid(), "init")
-        };
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(Guid.NewGuid(), Guid.NewGuid(), "init") };
 
         Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
 
-        act.Should().Throw<Exception>();
+        act.Should().Throw<Exception>()
+            .WithMessage($"Method to invoke with id {invokeMethodArgs[0].MethodId} not found");
     }
     
     #endregion

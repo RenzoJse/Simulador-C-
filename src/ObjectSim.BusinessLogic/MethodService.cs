@@ -98,14 +98,13 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     public Method GetById(Guid id)
     {
-        try
-        {
-            return methodRepository.Get(method1 => id == method1.Id)!;
-        }
-        catch(Exception)
+        var method = methodRepository.Get(method1 => id == method1.Id);
+        if (method == null)
         {
             throw new KeyNotFoundException($"Method with ID {id} not found.");
         }
+    
+        return method;
     }
 
     public Method Update(Guid id, Method entity)
@@ -165,13 +164,16 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     public Method AddInvokeMethod(Guid methodId, List<CreateInvokeMethodArgs> invokeMethodArgs)
     {
-        var method = methodRepository.Get(m => m.Id == methodId);
-        if (method == null)
-        {
-            throw new Exception("Method where you want to add the invoke method not found");
-        }
+        var method = GetById(methodId);
+        
+        ValidateInvokedMethods(invokeMethodArgs);
 
-        foreach(var invokeMethod in invokeMethodArgs)
+        return null!;
+    }
+    
+    private void ValidateInvokedMethods(List<CreateInvokeMethodArgs> invokeMethodArgs)
+    {
+        foreach (var invokeMethod in invokeMethodArgs)
         {
             var methodToInvoke = methodRepository.Get(m => m.Id == invokeMethod.MethodId);
             if (methodToInvoke == null)
@@ -179,9 +181,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
                 throw new Exception($"Method to invoke with id {invokeMethod.MethodId} not found");
             }
         }
-
-        return null!;
     }
-
+    
     #endregion
 }
