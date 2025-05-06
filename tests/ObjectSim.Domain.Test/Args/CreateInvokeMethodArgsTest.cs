@@ -10,7 +10,7 @@ public class CreateInvokeMethodArgsTest
     [TestMethod]
     public void InvokeMethodId_SetAndGet_ShouldReturnSameValue()
     {
-        var invokeMethodArgs = new CreateInvokeMethodArgs(_randomId, _randomId) { InvokeMethodId = _randomId };
+        var invokeMethodArgs = new CreateInvokeMethodArgs(_randomId, _randomId, "test") { InvokeMethodId = _randomId };
 
         Assert.AreEqual(_randomId, invokeMethodArgs.InvokeMethodId);
     }
@@ -19,7 +19,7 @@ public class CreateInvokeMethodArgsTest
     public void MethodId_SetAndGet_ShouldReturnSameValue()
     {
         var methodId = Guid.NewGuid();
-        var invokeMethodArgs = new CreateInvokeMethodArgs(_randomId, methodId) { MethodId = methodId };
+        var invokeMethodArgs = new CreateInvokeMethodArgs(_randomId, methodId, "test") { MethodId = methodId };
         
         Assert.AreEqual(methodId, invokeMethodArgs.MethodId);
     }
