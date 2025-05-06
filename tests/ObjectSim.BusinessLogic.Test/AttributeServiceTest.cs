@@ -276,6 +276,14 @@ public class AttributeServiceTest
             .Setup(repo => repo.Update(It.IsAny<Attribute>()))
             .Returns((Attribute attr) => attr);
 
+        _classRepositoryMock!
+            .Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(new Class { Id = args.ClassId });
+
+        _dataTypeServiceMock!
+            .Setup(service => service.CreateDataType(args.DataType))
+            .Returns(updatedAttribute.DataType);
+
         var result = _attributeServiceTest!.Update(updatedAttribute.Id, args);
 
         result.Should().NotBeNull();
@@ -283,7 +291,9 @@ public class AttributeServiceTest
 
         _attributeRepositoryMock.Verify(repo => repo.Get(It.IsAny<Func<Attribute, bool>>()), Times.Once);
         _attributeRepositoryMock.Verify(repo => repo.Update(It.IsAny<Attribute>()), Times.Once);
+        _classRepositoryMock.Verify(repo => repo.Get(It.IsAny<Func<Class, bool>>()), Times.Once);
     }
+
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
