@@ -1,6 +1,6 @@
 ﻿namespace ObjectSim.Domain.Args;
 
-public class CreateInvokeMethodArgs
+public class CreateInvokeMethodArgs(Guid invokeMethodId)
 {
-    
+    public Guid InvokeMethodId { get; set; } =  invokeMethodId; 
 }
