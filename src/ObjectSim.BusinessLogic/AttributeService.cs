@@ -116,6 +116,11 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         {
             throw new KeyNotFoundException($"Attribute with ID {id} not found.");
         }
+        var classExists = classRepository.Get(c => c.Id == entity.ClassId);
+        if(classExists == null)
+        {
+            throw new KeyNotFoundException($"Class with ID {entity.ClassId} not found.");
+        }
 
         var visibility = ParseVisibility(entity.Visibility);
         var dataType = dataTypeService.CreateDataType(entity.DataType);
