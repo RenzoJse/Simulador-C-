@@ -52,5 +52,12 @@ public class AttributeController(IAttributeService attributeService) : Controlle
             var response = attributes.Select(AttributeDtoOut.ToInfo).ToList();
             return Ok(response);
     }
+    [HttpDelete("{id}")]
+    public IActionResult Delete(Guid id)
+    {
+        var result = _attributeService.Delete(id);
+        return Ok(result);
+    }
+
 
 }
