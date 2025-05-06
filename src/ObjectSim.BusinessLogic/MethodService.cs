@@ -166,18 +166,17 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     {
         if(invokeMethodArgs == null || invokeMethodArgs.Count == 0)
         {
-            throw new ArgumentNullException("Invoke method arguments cannot be null or empty.");
+            throw new ArgumentException("Invoke method arguments cannot be null or empty.");
         }
         
         var method = GetById(methodId);
-        
-        var result = ValidateInvokedMethods(invokeMethodArgs, method);
+        var result = CreateInvokeMethods(invokeMethodArgs, method);
         method.MethodsInvoke.AddRange(result);
         methodRepository.Update(method);
         return method;
     }
     
-    private List<InvokeMethod> ValidateInvokedMethods(List<CreateInvokeMethodArgs> invokeMethodArgs, Method method)
+    private List<InvokeMethod> CreateInvokeMethods(List<CreateInvokeMethodArgs> invokeMethodArgs, Method method)
     {
         List<InvokeMethod> invokeMethods = [];
         foreach (var invokeMethod in invokeMethodArgs)

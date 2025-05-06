@@ -107,52 +107,29 @@ public class MethodServiceTest
 
     [TestMethod]
     public void CreateMethod_WhenValid_ReturnsNewMethodAndAddItToDataBase()
-    {/*
-        _testCreateMethodArgs.Name = "TestMethod";
-        //_testCreateMethodArgs.Type = "int";
-        _testCreateMethodArgs.ClassId = ClassId;
-        _testCreateMethodArgs.Accessibility = _testCreateMethodArgs.Accessibility;
-        _testCreateMethodArgs.IsAbstract = false;
-        _testCreateMethodArgs.IsSealed = false;
-        _testCreateMethodArgs.IsOverride = false;
-        _testCreateMethodArgs.LocalVariables = [];
-        _testCreateMethodArgs.Parameters = [];
-        _testCreateMethodArgs.InvokeMethods = _testCreateMethodArgs.InvokeMethods;
-
-        _methodRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
-
-        var result = _methodServiceTest!.CreateMethod(_testCreateMethodArgs);
-
-        result.Should().NotBeNull();
-        result.Id.Should().NotBe(Guid.Empty);
-        result.Name.Should().Be(_testCreateMethodArgs.Name);
-        //result.Type.Should().Be("int");
-        result.Accessibility.Should().Be(Method.MethodAccessibility.Public);
-        result.ClassId.Should().Be(ClassId);
-        result.IsOverride.Should().BeFalse();*/
-    }
-
-    [TestMethod]
-    public void CreateMethod_WhenIsValidHasListInvokeMethods_ReturnsNewMethodAndAddItToDataBase()
     {
-        _testCreateMethodArgs.InvokeMethods = [Guid.NewGuid()];
-
-        _methodRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns(new Method());
-
-        _methodRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Method>()))
-            .Returns((Method act) => act);
-
-        _dataTypeServiceMock!.Setup(service => service.CreateDataType(It.IsAny<CreateDataTypeArgs>()))
-            .Returns(new ValueType("TestType", "int", []));
+        var classObj = new Class
+        {
+            Id = ClassId,
+            Name = "TestClass",
+            Methods = [],
+            Attributes = []
+        };
 
         _classRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(new Class { Methods = [] });
+            .Returns(classObj);
+
+        _dataTypeServiceMock!.Setup(service => service.CreateDataType(It.IsAny<CreateDataTypeArgs>()))
+            .Returns(new ValueType("MethodType", "int", []));
+        
+        _methodRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Method>()))
+            .Returns((Method m) => m);
 
         var result = _methodServiceTest!.CreateMethod(_testCreateMethodArgs);
 
         result.Should().NotBeNull();
-        result.MethodsInvoke.Count.Should().Be(1);
+        result.Name.Should().Be(_testCreateMethodArgs.Name);
+        result.Type.Should().NotBeNull();
     }
 
     #endregion
@@ -210,14 +187,16 @@ public class MethodServiceTest
     #region Error
 
     [TestMethod]
-    [ExpectedException(typeof(KeyNotFoundException))]
     public void GetById_WhenMethodNotFound_ShouldThrowInvalidOperationException()
     {
         _methodRepositoryMock!
-            .Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
-            .Throws(new Exception());
+            .Setup(x => x.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns((Method)null!);
 
-        _methodServiceTest!.GetById(Guid.NewGuid());
+        Action act = () => _methodServiceTest!.GetById(ClassId);
+
+        act.Should().Throw<KeyNotFoundException>()
+            .WithMessage($"Method with ID {ClassId} not found.");
     }
 
     [TestMethod]
@@ -451,7 +430,7 @@ public class MethodServiceTest
     [TestMethod]
     public void AddInvokeMethod_WhenMethodNotFound_ThrowsException()
     {
-        var invokeMethodArgs = new List<CreateInvokeMethodArgs>();
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs>([new CreateInvokeMethodArgs(Guid.NewGuid(), Guid.NewGuid(), "init")]);
         
         _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns((Method?)null);
@@ -504,13 +483,12 @@ public class MethodServiceTest
     [TestMethod]
     public void AddInvokeMethod_WhenInvokeMethodListEmpty_ThrowsException()
     {
-        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns(_testMethod);
-
         var invokeMethodArgs = new List<CreateInvokeMethodArgs>();
+        
+        Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
 
-        _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
-        _testMethod!.MethodsInvoke.Should().BeEmpty();
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Invoke method arguments cannot be null or empty.");
     }
     
     #endregion
