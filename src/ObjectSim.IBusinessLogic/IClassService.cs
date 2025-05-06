@@ -9,5 +9,5 @@ public interface IClassService
     public Class GetById(Guid? classId);
     public void DeleteClass(Guid? classId);
     public void RemoveMethod(Guid? classId, Guid? methodId);
-    public void RemoveAttribute(Guid? classId, Guid? attributeId);
+    public void RemoveAttribute(Guid classId, Guid attributeId);
 }
