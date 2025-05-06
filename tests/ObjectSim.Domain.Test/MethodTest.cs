@@ -30,7 +30,7 @@ public class MethodTest
     [TestInitialize]
     public void Initialize()
     {
-        _testMethod =  new Method
+        _testMethod = new Method
         {
             Id = Guid.NewGuid(),
             Name = "TestMethod",

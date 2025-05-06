@@ -295,7 +295,7 @@ public class ClassTest
     {
         _testClass!.IsInterface = true;
 
-       _existingMethod.Accessibility = Method.MethodAccessibility.Private;
+        _existingMethod.Accessibility = Method.MethodAccessibility.Private;
 
         Action action = () => _testClass!.CanAddMethod(_existingMethod);
 
