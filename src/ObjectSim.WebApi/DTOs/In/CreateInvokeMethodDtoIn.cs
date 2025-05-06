@@ -4,15 +4,13 @@ namespace ObjectSim.WebApi.DTOs.In;
 
 public record CreateInvokeMethodDtoIn
 {
-    public required Guid MethodId {get; init; }
     public required Guid InvokeMethodId {get; init; }
     public required string Reference {get; init; }
 
     public CreateInvokeMethodArgs ToArgs()
     {
-        ArgumentNullException.ThrowIfNull(MethodId, nameof(MethodId));
         ArgumentNullException.ThrowIfNull(InvokeMethodId, nameof(InvokeMethodId));
         ArgumentNullException.ThrowIfNull(Reference, nameof(Reference));
-        return new CreateInvokeMethodArgs(MethodId, InvokeMethodId, Reference);
+        return new CreateInvokeMethodArgs(InvokeMethodId, Reference);
     }
 }

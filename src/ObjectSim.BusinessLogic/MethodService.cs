@@ -6,9 +6,9 @@ using ObjectSim.IBusinessLogic;
 namespace ObjectSim.BusinessLogic;
 public class MethodService(IRepository<Method> methodRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService) : IMethodService, IMethodServiceCreate
 {
-    
+
     #region CreateMethod
-    
+
     public Method CreateMethod(CreateMethodArgs methodsArgs)
     {
         ValidateNullMethodArgs(methodsArgs);
@@ -72,7 +72,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     }
 
     #endregion
-    
+
     public bool Delete(Guid id)
     {
         var method = methodRepository.Get(method1 => id == method1.Id);
@@ -103,7 +103,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         {
             throw new KeyNotFoundException($"Method with ID {id} not found.");
         }
-    
+
         return method;
     }
 
@@ -168,31 +168,31 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         {
             throw new ArgumentException("Invoke method arguments cannot be null or empty.");
         }
-        
+
         var method = GetById(methodId);
         var result = CreateInvokeMethods(invokeMethodArgs, method);
         method.MethodsInvoke.AddRange(result);
         methodRepository.Update(method);
         return method;
     }
-    
+
     private List<InvokeMethod> CreateInvokeMethods(List<CreateInvokeMethodArgs> invokeMethodArgs, Method method)
     {
         List<InvokeMethod> invokeMethods = [];
         foreach (var invokeMethod in invokeMethodArgs)
         {
-            var methodToInvoke = methodRepository.Get(m => m.Id == invokeMethod.MethodId);
+            var methodToInvoke = methodRepository.Get(m => m.Id == invokeMethod.InvokeMethodId);
             if (methodToInvoke == null)
             {
-                throw new Exception($"Method to invoke with id {invokeMethod.MethodId} not found");
+                throw new Exception($"Method to invoke with id {invokeMethod.InvokeMethodId} not found");
             }
             method.CanAddInvokeMethod(methodToInvoke, GetClassById(method.Id), invokeMethod.Reference);
-            var newInvokeMethod = new InvokeMethod(invokeMethod.methodId, invokeMethod.InvokeMethodId, invokeMethod.Reference);
+            var newInvokeMethod = new InvokeMethod(method.Id, invokeMethod.InvokeMethodId, invokeMethod.Reference);
             invokeMethods.Add(newInvokeMethod);
         }
 
         return invokeMethods;
     }
-    
+
     #endregion
 }

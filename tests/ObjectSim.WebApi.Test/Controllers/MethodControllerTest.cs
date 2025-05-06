@@ -199,12 +199,11 @@ public class MethodControllerTest
         const string reference = "init";
         var invokeMethodDto = new CreateInvokeMethodDtoIn()
         {
-            MethodId = methodId,
             InvokeMethodId = invokeMethodId,
             Reference = reference
         };
 
-        var invokeMethodArgs = new CreateInvokeMethodArgs(methodId, invokeMethodId, reference);
+        var invokeMethodArgs = new CreateInvokeMethodArgs(invokeMethodId, reference);
 
         _methodServiceMock
             .Setup(service => service.AddInvokeMethod(methodId, It.IsAny<List<CreateInvokeMethodArgs>>()))
@@ -212,7 +211,6 @@ public class MethodControllerTest
 
         var result = _methodController.AddInvokeMethods(methodId, [new CreateInvokeMethodDtoIn
         {
-            MethodId = methodId,
             InvokeMethodId = invokeMethodId,
             Reference = reference
         }]);
