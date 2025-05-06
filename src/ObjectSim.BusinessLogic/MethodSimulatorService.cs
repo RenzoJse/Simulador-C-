@@ -11,14 +11,11 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
         ArgumentNullException.ThrowIfNull(args);
 
         var referenceType = GetReferenceType(args.ReferenceType);
-        var instanceType = GetReferenceType(args.InstanceType);
+        var instanceType = GetReferenceType(args.InstanceType); // hasta aca es Auto, Auto
 
         ValidateHierarchy(referenceType, instanceType);
 
-        var methodId = referenceType.MethodIds
-            .Select(id => methodRepository.Get(m => m.Id == id))
-            .FirstOrDefault(m => m?.Name == args.MethodName)?.Id
-            ?? throw new Exception("Method not found in reference type");
+        var methodId = FindMethodIdByName(referenceType, args.MethodName); //aca consigo el metodo IniciarViaje
 
         var method = methodRepository.Get(m => m.Id == methodId)
             ?? throw new Exception("Method entity not found");
@@ -27,6 +24,15 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
         SimulateInternal(instanceType.Name, method, result);
 
         return result;
+    }
+
+    private Guid FindMethodIdByName(DataType referenceType, string methodName)
+    {
+        return referenceType.MethodIds
+                   .Select(id => methodRepository.Get(m => m.Id == id))
+                   .FirstOrDefault(m => m?.Name != null &&
+                                        string.Equals(m.Name, methodName, StringComparison.OrdinalIgnoreCase))?.Id
+               ?? throw new Exception("Method not found in reference type");
     }
 
     private DataType GetReferenceType(string typeName)

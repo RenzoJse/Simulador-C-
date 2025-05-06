@@ -10,8 +10,8 @@ namespace ObjectSim.WebApi.Controllers;
 [TypeFilter(typeof(ExceptionFilter))]
 public class SimulatorController(IMethodSimulatorService simulatorService) : ControllerBase
 {
-    [HttpPost]
 
+    [HttpPost]
     public IActionResult SimulateExecution([FromBody] SimulateExecutionArgs args)
     {
         var result = simulatorService.Simulate(args);
