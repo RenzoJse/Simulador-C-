@@ -147,7 +147,12 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
     {
         foreach(var methodInClass in methodList)
         {
-            if(methodInClass.MethodsInvoke != null && methodInClass.MethodsInvoke.Contains(method))
+            var methodInvoke = methodInClass.MethodsInvoke;
+            if(methodInvoke == null || methodInvoke.Count == 0)
+            {
+                continue;
+            }
+            if(methodInvoke.Any(invoke => invoke.InvokeMethodId == method.Id))
             {
                 throw new ArgumentException("Cannot remove method that is invoked by another method.");
             }

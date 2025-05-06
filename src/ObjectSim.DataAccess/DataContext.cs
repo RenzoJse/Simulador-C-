@@ -15,6 +15,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<DataType> DataTypes { get; set; }
     public DbSet<ValueType> ValueTypes { get; set; }
     public DbSet<ReferenceType> ReferenceTypes { get; set; }
+    public DbSet<InvokeMethod> InvokeMethod { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -136,6 +137,21 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<ReferenceType>(rt =>
         {
             rt.Property(rt => rt.Name).IsRequired();
+        });
+
+        modelBuilder.Entity<InvokeMethod>(im =>
+        {
+            im.HasKey(im => new { im.MethodId, im.InvokeMethodId });
+
+            im.HasOne<Method>()
+                .WithMany()
+                .HasForeignKey(im => im.MethodId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            im.HasOne<Method>()
+                .WithMany(m => m.MethodsInvoke)
+                .HasForeignKey(im => im.InvokeMethodId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         base.OnModelCreating(modelBuilder);

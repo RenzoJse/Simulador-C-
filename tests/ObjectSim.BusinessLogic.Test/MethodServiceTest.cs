@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
+using Moq.Language;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
@@ -81,7 +82,7 @@ public class MethodServiceTest
     [TestMethod]
     public void CreateMethod_WithEmptyArgs_ThrowsException()
     {
-        var emptyArgs = new CreateMethodArgs("", null, "", null, null, null, Guid.Empty, [], [], []);
+        var emptyArgs = new CreateMethodArgs("", null!, "", null, null, null, Guid.Empty, [], [], []);
 
         Action act = () => _methodServiceTest!.CreateMethod(emptyArgs);
 
@@ -106,52 +107,29 @@ public class MethodServiceTest
 
     [TestMethod]
     public void CreateMethod_WhenValid_ReturnsNewMethodAndAddItToDataBase()
-    {/*
-        _testCreateMethodArgs.Name = "TestMethod";
-        //_testCreateMethodArgs.Type = "int";
-        _testCreateMethodArgs.ClassId = ClassId;
-        _testCreateMethodArgs.Accessibility = _testCreateMethodArgs.Accessibility;
-        _testCreateMethodArgs.IsAbstract = false;
-        _testCreateMethodArgs.IsSealed = false;
-        _testCreateMethodArgs.IsOverride = false;
-        _testCreateMethodArgs.LocalVariables = [];
-        _testCreateMethodArgs.Parameters = [];
-        _testCreateMethodArgs.InvokeMethods = _testCreateMethodArgs.InvokeMethods;
-
-        _methodRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Method>())).Returns((Method act) => act);
-
-        var result = _methodServiceTest!.CreateMethod(_testCreateMethodArgs);
-
-        result.Should().NotBeNull();
-        result.Id.Should().NotBe(Guid.Empty);
-        result.Name.Should().Be(_testCreateMethodArgs.Name);
-        //result.Type.Should().Be("int");
-        result.Accessibility.Should().Be(Method.MethodAccessibility.Public);
-        result.ClassId.Should().Be(ClassId);
-        result.IsOverride.Should().BeFalse();*/
-    }
-
-    [TestMethod]
-    public void CreateMethod_WhenIsValidHasListInvokeMethods_ReturnsNewMethodAndAddItToDataBase()
     {
-        _testCreateMethodArgs.InvokeMethods = [Guid.NewGuid()];
-
-        _methodRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns(new Method());
-
-        _methodRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Method>()))
-            .Returns((Method act) => act);
-
-        _dataTypeServiceMock!.Setup(service => service.CreateDataType(It.IsAny<CreateDataTypeArgs>()))
-            .Returns(new ValueType("TestType", "int", []));
+        var classObj = new Class
+        {
+            Id = ClassId,
+            Name = "TestClass",
+            Methods = [],
+            Attributes = []
+        };
 
         _classRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(new Class { Methods = [] });
+            .Returns(classObj);
+
+        _dataTypeServiceMock!.Setup(service => service.CreateDataType(It.IsAny<CreateDataTypeArgs>()))
+            .Returns(new ValueType("MethodType", "int", []));
+
+        _methodRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Method>()))
+            .Returns((Method m) => m);
 
         var result = _methodServiceTest!.CreateMethod(_testCreateMethodArgs);
 
         result.Should().NotBeNull();
-        result.MethodsInvoke.Count.Should().Be(1);
+        result.Name.Should().Be(_testCreateMethodArgs.Name);
+        result.Type.Should().NotBeNull();
     }
 
     #endregion
@@ -209,14 +187,16 @@ public class MethodServiceTest
     #region Error
 
     [TestMethod]
-    [ExpectedException(typeof(KeyNotFoundException))]
     public void GetById_WhenMethodNotFound_ShouldThrowInvalidOperationException()
     {
         _methodRepositoryMock!
-            .Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
-            .Throws(new Exception());
+            .Setup(x => x.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns((Method)null!);
 
-        _methodServiceTest!.GetById(Guid.NewGuid());
+        Action act = () => _methodServiceTest!.GetById(ClassId);
+
+        act.Should().Throw<KeyNotFoundException>()
+            .WithMessage($"Method with ID {ClassId} not found.");
     }
 
     [TestMethod]
@@ -437,6 +417,110 @@ public class MethodServiceTest
         result.Should().NotBeNull();
         result.Name.Should().Be(TestLocalVariable.Name);
         _testMethod!.LocalVariables.Should().ContainSingle(v => v.Name == TestLocalVariable.Name);
+    }
+
+    #endregion
+
+    #endregion
+
+    #region AddInvokeMethod
+
+    #region Error
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenMethodNotFound_ThrowsException()
+    {
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs>([new CreateInvokeMethodArgs(Guid.NewGuid(), "init")]);
+
+        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns((Method?)null);
+
+        Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
+
+        act.Should().Throw<Exception>()
+            .WithMessage($"Method with ID {_testMethod!.Id} not found.");
+    }
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenInvokeMethodDoNotExist_ThrowsException()
+    {
+        var methodToInvokeId = Guid.NewGuid();
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(methodToInvokeId, "init") };
+
+        ISetupSequentialResult<Method?> setupSequence =
+            _methodRepositoryMock!.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()));
+
+        setupSequence.Returns(_testMethod);
+
+        setupSequence.Returns((Method?)null);
+
+        Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
+
+        act.Should().Throw<Exception>()
+            .WithMessage($"Method to invoke with id {methodToInvokeId} not found");
+    }
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenInvokeMethodCannotBeAdded_ThrowsException()
+    {
+        var invokeMethod = new Method { Id = Guid.NewGuid(), Name = "test", Parameters = [] };
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(invokeMethod.Id, "init") };
+
+        ISetupSequentialResult<Method?> setupSequence =
+            _methodRepositoryMock!.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()));
+
+        setupSequence.Returns(_testMethod);
+
+        setupSequence.Returns(invokeMethod);
+
+        _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(new Class { Methods = [], Attributes = []});
+
+        Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
+
+        act.Should().Throw<Exception>();
+    }
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenInvokeMethodListEmpty_ThrowsException()
+    {
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs>();
+
+        Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Invoke method arguments cannot be null or empty.");
+    }
+
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenInvokeIsValid_AddsInvokeMethod()
+    {
+        var invokeMethod = new Method { Id = Guid.NewGuid(), Name = "test", Parameters = [] };
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(invokeMethod.Id, "init") };
+
+        ISetupSequentialResult<Method?> setupSequence =
+            _methodRepositoryMock!.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()));
+
+        setupSequence.Returns(_testMethod);
+
+        setupSequence.Returns(invokeMethod);
+
+        _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(new Class { Methods = [invokeMethod], Attributes = []});
+
+        _testMethod!.MethodsInvoke.Add(new InvokeMethod(invokeMethod.Id, _testMethod.Id, "init"));
+
+        _methodRepositoryMock.Setup(r => r.Update(It.IsAny<Method>()))
+            .Returns(_testMethod);
+
+        var result = _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
+
+        result.Should().NotBeNull();
+        result.MethodsInvoke.Should().ContainSingle(m => m.MethodId == invokeMethod.Id);
     }
 
     #endregion

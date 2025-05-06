@@ -6,6 +6,9 @@ using ObjectSim.IBusinessLogic;
 namespace ObjectSim.BusinessLogic;
 public class MethodService(IRepository<Method> methodRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService) : IMethodService, IMethodServiceCreate
 {
+
+    #region CreateMethod
+
     public Method CreateMethod(CreateMethodArgs methodsArgs)
     {
         ValidateNullMethodArgs(methodsArgs);
@@ -45,7 +48,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             TypeId = dataTypeService.CreateDataType(methodsArgs.Type).Id,
             Parameters = parameters,
             LocalVariables = localVariables,
-            MethodsInvoke = GetInvokeMethods(methodsArgs.InvokeMethods)
+            MethodsInvoke = []
         };
 
         return method;
@@ -63,33 +66,12 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
         var classObj = GetClassById(classId);
 
-        classObj.CanAddMethod(method); //Tengo que ver lo de si abstract haga la clase abstract
+        classObj.CanAddMethod(method); //TODO Tengo que ver lo de si abstract haga la clase abstract
 
         classObj.Methods!.Add(method);
     }
 
-    private List<Method> GetInvokeMethods(List<Guid> invokeMethodIds)
-    {
-        if(invokeMethodIds.Count == 0)
-        {
-            return [];
-        }
-
-        var invokeMethods = new List<Method>();
-
-        foreach(var methodId in invokeMethodIds)
-        {
-            var invokeMethod = methodRepository.Get(m => m.Id == methodId);
-            if(invokeMethod == null)
-            {
-                throw new Exception($"Method with ID {methodId} not found.");
-            }
-
-            invokeMethods.Add(invokeMethod);
-        }
-
-        return invokeMethods;
-    }
+    #endregion
 
     public bool Delete(Guid id)
     {
@@ -116,14 +98,13 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     public Method GetById(Guid id)
     {
-        try
-        {
-            return methodRepository.Get(method1 => id == method1.Id)!;
-        }
-        catch(Exception)
+        var method = methodRepository.Get(method1 => id == method1.Id);
+        if (method == null)
         {
             throw new KeyNotFoundException($"Method with ID {id} not found.");
         }
+
+        return method;
     }
 
     public Method Update(Guid id, Method entity)
@@ -178,4 +159,40 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
         return localVariable;
     }
+
+    #region AddInvokeMethod
+
+    public Method AddInvokeMethod(Guid methodId, List<CreateInvokeMethodArgs> invokeMethodArgs)
+    {
+        if(invokeMethodArgs == null || invokeMethodArgs.Count == 0)
+        {
+            throw new ArgumentException("Invoke method arguments cannot be null or empty.");
+        }
+
+        var method = GetById(methodId);
+        var result = CreateInvokeMethods(invokeMethodArgs, method);
+        method.MethodsInvoke.AddRange(result);
+        methodRepository.Update(method);
+        return method;
+    }
+
+    private List<InvokeMethod> CreateInvokeMethods(List<CreateInvokeMethodArgs> invokeMethodArgs, Method method)
+    {
+        List<InvokeMethod> invokeMethods = [];
+        foreach (var invokeMethod in invokeMethodArgs)
+        {
+            var methodToInvoke = methodRepository.Get(m => m.Id == invokeMethod.InvokeMethodId);
+            if (methodToInvoke == null)
+            {
+                throw new Exception($"Method to invoke with id {invokeMethod.InvokeMethodId} not found");
+            }
+            method.CanAddInvokeMethod(methodToInvoke, GetClassById(method.ClassId), invokeMethod.Reference);
+            var newInvokeMethod = new InvokeMethod(method.Id, invokeMethod.InvokeMethodId, invokeMethod.Reference);
+            invokeMethods.Add(newInvokeMethod);
+        }
+
+        return invokeMethods;
+    }
+
+    #endregion
 }

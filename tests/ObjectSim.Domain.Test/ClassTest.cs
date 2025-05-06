@@ -330,9 +330,11 @@ public class ClassTest
         };
 
         _testClass.Methods = [methodToInvoke];
+        
+        var invokeMethod = new InvokeMethod(_existingMethod.Id, methodToInvoke.Id, "this");
 
-        _existingMethod.AddInvokeMethod(methodToInvoke, _testClass);
-
+        _existingMethod.CanAddInvokeMethod(methodToInvoke, _testClass, "this");
+        _existingMethod.MethodsInvoke.Add(invokeMethod);
         Action action = () => _testClass.CanAddMethod(_existingMethod);
 
         action.Should().Throw<ArgumentException>()

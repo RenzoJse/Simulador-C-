@@ -446,10 +446,14 @@ public class ClassServiceTest
     [TestMethod]
     public void RemoveMethod_WhenOtherMethodIsUsingIt_ThrowsException()
     {
+        var methodId = Guid.NewGuid();
+        var invokedMethod = new InvokeMethod(methodId, _testMethod.Id, "this");
+        
         var method = new Method
         {
             Name = "TestMethod",
-            MethodsInvoke = [_testMethod]
+            MethodsInvoke = [invokedMethod],
+            Id = methodId
         };
 
         _testClass.Methods!.Add(method);
