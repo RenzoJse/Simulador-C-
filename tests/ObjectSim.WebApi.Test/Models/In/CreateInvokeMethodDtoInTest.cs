@@ -1,4 +1,7 @@
-﻿namespace ObjectSim.WebApi.Test.Models.In;
+﻿using FluentAssertions;
+using ObjectSim.WebApi.DTOs.In;
+
+namespace ObjectSim.WebApi.Test.Models.In;
 
 [TestClass]
 public class CreateInvokeMethodDtoInTest
