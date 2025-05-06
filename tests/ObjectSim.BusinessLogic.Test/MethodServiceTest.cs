@@ -501,12 +501,8 @@ public class MethodServiceTest
         act.Should().Throw<Exception>();
     }
     
-    #endregion
-
-    #region Success
-
     [TestMethod]
-    public void AddInvokeMethod_WhenInvokeMethodListEmpty_SetsEmptyList()
+    public void AddInvokeMethod_WhenInvokeMethodListEmpty_ThrowsException()
     {
         _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns(_testMethod);
@@ -516,6 +512,10 @@ public class MethodServiceTest
         _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
         _testMethod!.MethodsInvoke.Should().BeEmpty();
     }
+    
+    #endregion
+
+    #region Success
     
     [TestMethod]
     public void AddInvokeMethod_WhenInvokeIsValid_AddsInvokeMethod()
@@ -532,6 +532,11 @@ public class MethodServiceTest
         
         _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(new Class { Methods = [invokeMethod], Attributes = []});
+        
+        _testMethod.MethodsInvoke.Add(new InvokeMethod(invokeMethod.Id, _testMethod.Id, "init"));
+        
+        _methodRepositoryMock.Setup(r => r.Update(It.IsAny<Method>()))
+            .Returns(_testMethod);
 
         var result = _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
 

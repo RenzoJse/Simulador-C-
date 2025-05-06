@@ -164,15 +164,22 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     public Method AddInvokeMethod(Guid methodId, List<CreateInvokeMethodArgs> invokeMethodArgs)
     {
+        if(invokeMethodArgs == null || invokeMethodArgs.Count == 0)
+        {
+            throw new ArgumentNullException("Invoke method arguments cannot be null or empty.");
+        }
+        
         var method = GetById(methodId);
         
-        ValidateInvokedMethods(invokeMethodArgs, method);
-
-        return null!;
+        var result = ValidateInvokedMethods(invokeMethodArgs, method);
+        method.MethodsInvoke.AddRange(result);
+        methodRepository.Update(method);
+        return method;
     }
     
-    private void ValidateInvokedMethods(List<CreateInvokeMethodArgs> invokeMethodArgs, Method method)
+    private List<InvokeMethod> ValidateInvokedMethods(List<CreateInvokeMethodArgs> invokeMethodArgs, Method method)
     {
+        List<InvokeMethod> invokeMethods = [];
         foreach (var invokeMethod in invokeMethodArgs)
         {
             var methodToInvoke = methodRepository.Get(m => m.Id == invokeMethod.MethodId);
@@ -181,7 +188,11 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
                 throw new Exception($"Method to invoke with id {invokeMethod.MethodId} not found");
             }
             method.CanAddInvokeMethod(methodToInvoke, GetClassById(method.Id), "this");
+            var newInvokeMethod = new InvokeMethod(invokeMethod.methodId, invokeMethod.InvokeMethodId, invokeMethod.Reference);
+            invokeMethods.Add(newInvokeMethod);
         }
+
+        return invokeMethods;
     }
     
     #endregion
