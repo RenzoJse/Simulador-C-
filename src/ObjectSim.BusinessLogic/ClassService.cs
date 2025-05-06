@@ -4,11 +4,15 @@ using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
+using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic;
 
 public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<Class> classRepository) : IClassService
 {
+
+    #region CreateClass
+
     public Class CreateClass(CreateClassArgs args)
     {
         ArgumentNullException.ThrowIfNull(args);
@@ -38,6 +42,10 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
         return strategy!.CreateBuilder();
     }
 
+    #endregion
+
+    #region GetById
+
     public Class GetById(Guid? classId)
     {
         if(classId == null)
@@ -46,6 +54,10 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
         }
         return classRepository.Get(c => c.Id == classId) ?? throw new ArgumentException("Class not found.");
     }
+
+    #endregion
+
+    #region DeleteClass
 
     public void DeleteClass(Guid? classId)
     {
@@ -62,7 +74,11 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
         classRepository.Delete(classObj);
     }
 
-    public void RemoveMethod(Guid? classId, Guid? methodId)
+    #endregion
+
+    #region RemoveMethod
+
+     public void RemoveMethod(Guid? classId, Guid? methodId)
     {
         ArgumentNullException.ThrowIfNull(classId);
         ArgumentNullException.ThrowIfNull(methodId);
@@ -138,9 +154,56 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
         }
     }
 
-    public void RemoveAttribute(Guid? classId, Guid? attributeId)
+    #endregion
+
+    #region RemoveAttribute
+
+    public void RemoveAttribute(Guid classId, Guid attributeId)
     {
-        throw new NotImplementedException();//Hay que ver por que para mi los atributos tambien son local variables q pueden usar los metodos.
+        var classObj = GetById(classId);
+        ValidateIfClassHasAttributes(classObj);
+
+        var attribute = GetAttributeFromClass(classObj, attributeId);
+        ValidateAttributeNotUsedInMethods(classObj, attribute);
+
+        classObj.Attributes!.Remove(attribute);
+        classRepository.Update(classObj);
     }
+
+    private static void ValidateIfClassHasAttributes(Class classObj)
+    {
+        if(classObj.Attributes == null || classObj.Attributes.Count == 0)
+        {
+            throw new ArgumentException("The class have no attributes.");
+        }
+    }
+
+    private static Attribute GetAttributeFromClass(Class classObj, Guid? attributeId)
+    {
+        var attribute = classObj.Attributes!.FirstOrDefault(a => a.Id == attributeId);
+        if(attribute == null)
+        {
+            throw new ArgumentException("That attribute does not exist in the class.");
+        }
+        return attribute;
+    }
+
+    private static void ValidateAttributeNotUsedInMethods(Class classObj, Attribute attribute)
+    {
+        if(classObj.Methods == null || classObj.Methods.Count == 0)
+        {
+            return;
+        }
+
+        foreach(var method in classObj.Methods)
+        {
+            if(method.LocalVariables != null && method.LocalVariables.Any(lv => lv.Name == attribute.Name))
+            {
+                throw new ArgumentException("Attribute is being used in method.");
+            }
+        }
+    }
+
+    #endregion
 
 }
