@@ -207,8 +207,8 @@ public class AttributeServiceTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void DeleteAttribute_InvalidId_ShouldThrowException()
+    [ExpectedException(typeof(KeyNotFoundException))]
+    public void DeleteAttribute_InvalidId_ShouldThrowKeyNotFoundException()
     {
         _attributeRepositoryMock!
             .Setup(repo => repo.Get(It.IsAny<Func<Attribute, bool>>()))

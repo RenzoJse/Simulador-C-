@@ -78,11 +78,12 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
 
     public bool Delete(Guid id)
     {
-        var attribute = attributeRepository.Get(att1 => id == att1.Id);
+        var attribute = attributeRepository.Get(att1 => att1.Id == id);
         if(attribute == null)
         {
-            throw new Exception("Attribute not found.");
+            throw new KeyNotFoundException($"Attribute with ID {id} not found.");
         }
+
         attributeRepository.Delete(attribute);
         return true;
     }
