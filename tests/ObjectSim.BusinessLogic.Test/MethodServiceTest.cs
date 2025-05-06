@@ -460,7 +460,39 @@ public class MethodServiceTest
         act.Should().Throw<Exception>().WithMessage("Method where you want to add the invoke method not found");
     }
 
+    [TestMethod]
+    public void AddInvokeMethod_WhenInvokeMethodDoNotExist_ThrowsException()
+    {
+        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns(_testMethod);
+
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs>
+        {
+            new CreateInvokeMethodArgs(Guid.NewGuid(), Guid.NewGuid(), "init")
+        };
+
+        Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
+
+        act.Should().Throw<Exception>().WithMessage("Invoke method not found");
+    }
+    
     #endregion
 
+    #region Success
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenInvokeMethodListEmpty_SetsEmptyList()
+    {
+        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns(_testMethod);
+
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs>();
+
+        _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
+        _testMethod!.MethodsInvoke.Should().BeEmpty();
+    }
+
+    #endregion
+    
     #endregion
 }
