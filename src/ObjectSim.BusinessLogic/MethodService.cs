@@ -171,6 +171,15 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             throw new Exception("Method where you want to add the invoke method not found");
         }
 
+        foreach(var invokeMethod in invokeMethodArgs)
+        {
+            var methodToInvoke = methodRepository.Get(m => m.Id == invokeMethod.MethodId);
+            if (methodToInvoke == null)
+            {
+                throw new Exception($"Method to invoke with id {invokeMethod.MethodId} not found");
+            }
+        }
+
         return null!;
     }
 

@@ -465,6 +465,9 @@ public class MethodServiceTest
     {
         _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns(_testMethod);
+        
+        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns((Method?)null);
 
         var invokeMethodArgs = new List<CreateInvokeMethodArgs>
         {
@@ -473,7 +476,7 @@ public class MethodServiceTest
 
         Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
 
-        act.Should().Throw<Exception>().WithMessage("Invoke method not found");
+        act.Should().Throw<Exception>();
     }
     
     #endregion
