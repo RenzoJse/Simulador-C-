@@ -190,12 +190,13 @@ public class MethodControllerTest
 
     #region AddInvokeMethod-Test
 
+
     [TestMethod]
     public void AddInvokeMethod_WhenEverythingIsValid_ShouldReturnOk()
     {
         var methodId = Guid.NewGuid();
         var invokeMethodId = Guid.NewGuid();
-        var reference = "init";
+        const string reference = "init";
         var invokeMethodDto = new CreateInvokeMethodDtoIn()
         {
             MethodId = methodId,
@@ -203,16 +204,18 @@ public class MethodControllerTest
             Reference = reference
         };
 
+        var invokeMethodArgs = new CreateInvokeMethodArgs(methodId, invokeMethodId, reference);
+
         _methodServiceMock
-            .Setup(service => service.AddInvokeMethod(methodId, [invokeMethodDto]))
+            .Setup(service => service.AddInvokeMethod(methodId, It.IsAny<List<CreateInvokeMethodArgs>>()))
             .Returns(_testMethod);
 
-        var result = _methodController.AddInvokeMethod(methodId, new CreateInvokeMethodDtoIn
+        var result = _methodController.AddInvokeMethods(methodId, [new CreateInvokeMethodDtoIn
         {
             MethodId = methodId,
             InvokeMethodId = invokeMethodId,
             Reference = reference
-        });
+        }]);
 
         var okResult = result as OkObjectResult;
         okResult.Should().NotBeNull();

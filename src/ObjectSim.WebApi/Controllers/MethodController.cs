@@ -51,4 +51,14 @@ public class MethodController(IMethodService methodService) : ControllerBase
         return Ok(response);
     }
 
+    [HttpPatch("{id:guid}/invokeMethods")]
+    public IActionResult AddInvokeMethods([FromRoute]Guid id, List<CreateInvokeMethodDtoIn> invokeMethodDtoIn)
+    {
+        var invokeMethod = methodService.AddInvokeMethod(id, invokeMethodDtoIn.Select(dto => dto.ToArgs()).ToList());
+
+        var response = new MethodInformationDtoOut(invokeMethod);
+
+        return Ok(response);
+    }
+
 }
