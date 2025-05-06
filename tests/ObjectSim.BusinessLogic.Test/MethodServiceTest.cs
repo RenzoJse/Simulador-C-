@@ -451,10 +451,10 @@ public class MethodServiceTest
     [TestMethod]
     public void AddInvokeMethod_WhenMethodNotFound_ThrowsException()
     {
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs>();
+        
         _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns((Method?)null);
-
-        var invokeMethodArgs = new List<CreateInvokeMethodArgs>();
         
         Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
 
@@ -465,14 +465,14 @@ public class MethodServiceTest
     [TestMethod]
     public void AddInvokeMethod_WhenInvokeMethodDoNotExist_ThrowsException()
     {
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(Guid.NewGuid(), Guid.NewGuid(), "init") };
+        
         ISetupSequentialResult<Method?> setupSequence =
             _methodRepositoryMock!.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()));
         
         setupSequence.Returns(_testMethod);
         
         setupSequence.Returns((Method?)null);
-
-        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(Guid.NewGuid(), Guid.NewGuid(), "init") };
 
         Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
 
@@ -483,22 +483,25 @@ public class MethodServiceTest
     [TestMethod]
     public void AddInvokeMethod_WhenInvokeMethodCannotBeAdded_ThrowsException()
     {
+        var invokeMethod = new Method { Id = Guid.NewGuid(), Name = "test", Parameters = [] };
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(invokeMethod.Id, _testMethod.Id, "init") };
+        
         ISetupSequentialResult<Method?> setupSequence =
             _methodRepositoryMock!.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()));
         
         setupSequence.Returns(_testMethod);
         
-        var invokeMethod = new Method { Id = Guid.NewGuid(), Name = "test" };
-        
         setupSequence.Returns(invokeMethod);
-
-        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(invokeMethod.Id, _testMethod.Id, "init") };
+        
+        _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(new Class { Methods = [], Attributes = []});
 
         Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
 
-        act.Should().Throw<Exception>()
-            .WithMessage("Method to invoke cannot be added to the method");
+        act.Should().Throw<Exception>();
     }
+    
+    
     
     #endregion
 

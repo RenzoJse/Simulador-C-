@@ -166,12 +166,12 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     {
         var method = GetById(methodId);
         
-        ValidateInvokedMethods(invokeMethodArgs);
+        ValidateInvokedMethods(invokeMethodArgs, method);
 
         return null!;
     }
     
-    private void ValidateInvokedMethods(List<CreateInvokeMethodArgs> invokeMethodArgs)
+    private void ValidateInvokedMethods(List<CreateInvokeMethodArgs> invokeMethodArgs, Method method)
     {
         foreach (var invokeMethod in invokeMethodArgs)
         {
@@ -180,6 +180,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             {
                 throw new Exception($"Method to invoke with id {invokeMethod.MethodId} not found");
             }
+            method.CanAddInvokeMethod(methodToInvoke, GetClassById(method.Id), "this");
         }
     }
     
