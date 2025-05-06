@@ -479,6 +479,26 @@ public class MethodServiceTest
         act.Should().Throw<Exception>()
             .WithMessage($"Method to invoke with id {invokeMethodArgs[0].MethodId} not found");
     }
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenInvokeMethodCannotBeAdded_ThrowsException()
+    {
+        ISetupSequentialResult<Method?> setupSequence =
+            _methodRepositoryMock!.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()));
+        
+        setupSequence.Returns(_testMethod);
+        
+        var invokeMethod = new Method { Id = Guid.NewGuid(), Name = "test" };
+        
+        setupSequence.Returns(invokeMethod);
+
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(invokeMethod.Id, _testMethod.Id, "init") };
+
+        Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
+
+        act.Should().Throw<Exception>()
+            .WithMessage("Method to invoke cannot be added to the method");
+    }
     
     #endregion
 
