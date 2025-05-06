@@ -1,5 +1,6 @@
 ﻿namespace ObjectSim.Domain;
 
-public class InvokeMethod
+public class InvokeMethod(Guid methodId)
 {
+    public Guid MethodId { get; set; } = methodId;
 }
