@@ -348,6 +348,23 @@ public class AttributeControllerTest
 
         _attributeServiceMock.Verify(service => service.Delete(id), Times.Once);
     }
+    [TestMethod]
+    public void Delete_InvalidId_ShouldThrowException()
+    {
+        var invalidId = Guid.NewGuid();
+
+        _attributeServiceMock
+            .Setup(service => service.Delete(invalidId))
+            .Throws(new Exception("Attribute cannot be null."));
+
+        Action act = () => _attributeController.Delete(invalidId);
+
+        act.Should().Throw<Exception>()
+           .WithMessage("Attribute cannot be null.");
+
+        _attributeServiceMock.Verify(service => service.Delete(invalidId), Times.Once);
+    }
+
 
 
 }
