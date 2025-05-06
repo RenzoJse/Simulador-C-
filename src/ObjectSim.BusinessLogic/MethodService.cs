@@ -163,32 +163,15 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     #region AddInvokeMethod
 
-    public Method AddInvokeMethod(Guid methodId, Guid invokeMethodId)
+    public Method AddInvokeMethod(Guid methodId, List<CreateInvokeMethodArgs> invokeMethodArgs)
     {
-        throw new NotImplementedException("AddInvokeMethod not implemented.");
-    }
-    
-    private List<Method> GetInvokeMethods(List<Guid> invokeMethodIds)
-    {
-        if(invokeMethodIds.Count == 0)
+        var method = methodRepository.Get(m => m.Id == methodId);
+        if (method == null)
         {
-            return [];
+            throw new Exception("Method where you want to add the invoke method not found");
         }
 
-        var invokeMethods = new List<Method>();
-
-        foreach(var methodId in invokeMethodIds)
-        {
-            var invokeMethod = methodRepository.Get(m => m.Id == methodId);
-            if(invokeMethod == null)
-            {
-                throw new Exception($"Method with ID {methodId} not found.");
-            }
-
-            invokeMethods.Add(invokeMethod);
-        }
-
-        return invokeMethods;
+        return null!;
     }
 
     #endregion
