@@ -25,7 +25,7 @@ public class MethodTest
         Type = new ValueType("int", "int", []),
     };
 
-    private readonly InvokeMethod _testInvokeMethod = new InvokeMethod(Guid.NewGuid(), OtherMethod.Id, "this");
+    private readonly InvokeMethod _testInvokeMethod = new InvokeMethod(OtherMethod.Id, Guid.NewGuid(), "this");
 
     [TestInitialize]
     public void Initialize()
@@ -313,13 +313,13 @@ public class MethodTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void AddInvokeMethod_WhenMethodsInvokeAreNull_ThrowsNullException()
     {
-        _testMethod!.CanAddInvokeMethod(null!, _testClass!);
+        _testMethod!.CanAddInvokeMethod(null!, _testClass!, "this");
     }
 
     [TestMethod]
     public void AddInvokeMethod_WhenOtherMethodIsNotInClass_ThrowsException()
     {
-        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!);
+        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!, "this");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
@@ -335,7 +335,7 @@ public class MethodTest
         };
         _testClass!.Attributes = [attribute];
 
-        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!);
+        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!, "this");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
@@ -349,7 +349,7 @@ public class MethodTest
 
         _testClass.Methods!.Add(new Method { Name = "OtherMethod" });
 
-        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!);
+        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!, "this");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
@@ -362,7 +362,7 @@ public class MethodTest
 
         OtherMethod!.LocalVariables = [localVariable];
 
-        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!);
+        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "this");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
@@ -375,7 +375,7 @@ public class MethodTest
 
         OtherMethod!.Parameters = [parameter];
 
-        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!);
+        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!,"this");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
@@ -398,7 +398,8 @@ public class MethodTest
 
         parentClass.Methods!.Add(OtherMethod!);
 
-        _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!);
+        _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!, "this");
+        _testMethod.MethodsInvoke.Add(_testInvokeMethod);
         _testMethod.MethodsInvoke.Should().Contain(_testInvokeMethod!);
     }
 
@@ -418,8 +419,8 @@ public class MethodTest
 
         _testClass!.Attributes = [attribute];
 
-        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass);
-
+        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass, "this");
+        _testMethod.MethodsInvoke.Add(_testInvokeMethod);
         _testMethod.MethodsInvoke.Should().Contain(_testInvokeMethod);
     }
 
@@ -430,8 +431,8 @@ public class MethodTest
 
         OtherMethod!.LocalVariables = [localVariable];
 
-        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!);
-
+        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "this");
+        _testMethod.MethodsInvoke.Add(_testInvokeMethod);
         _testMethod.MethodsInvoke.Should().Contain(_testInvokeMethod);
     }
 

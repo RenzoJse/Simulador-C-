@@ -83,13 +83,8 @@ public class Method
         get => _methodsInvoke;
         init => _methodsInvoke = value ?? [];
     }
-    
-    public void AddInvokeMethod(InvokeMethod invokeMethod)
-    {
-        MethodsInvoke.Add(invokeMethod);
-    }
 
-    public void CanAddInvokeMethod(Method method, Class classObj)
+    public void CanAddInvokeMethod(Method method, Class classObj, string reference)
     {
         if (method == null)
         {
@@ -104,6 +99,7 @@ public class Method
         {
             throw new ArgumentException("The invoked method must be reachable from the current method.");
         }
+        
     }
 
     private static bool MethodIsNotInParameters(Method method)
