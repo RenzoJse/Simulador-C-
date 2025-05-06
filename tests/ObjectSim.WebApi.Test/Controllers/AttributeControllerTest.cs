@@ -331,5 +331,23 @@ public class AttributeControllerTest
 
         _attributeServiceMock.Verify(s => s.GetByClassId(invalidId), Times.Once);
     }
+    [TestMethod]
+    public void Delete_ValidId_ShouldReturnOk()
+    {
+        var id = Guid.NewGuid();
+
+        _attributeServiceMock
+            .Setup(service => service.Delete(id))
+            .Returns(true);
+
+        var result = _attributeController.Delete(id) as OkObjectResult;
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(200, result.StatusCode);
+        Assert.AreEqual(true, result.Value);
+
+        _attributeServiceMock.Verify(service => service.Delete(id), Times.Once);
+    }
+
 
 }
