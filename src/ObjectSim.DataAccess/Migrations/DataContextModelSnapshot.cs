@@ -149,6 +149,25 @@ namespace ObjectSim.DataAccess.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("ObjectSim.Domain.InvokeMethod", b =>
+                {
+                    b.Property<Guid>("MethodId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("InvokeMethodId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MethodId", "InvokeMethodId");
+
+                    b.HasIndex("InvokeMethodId");
+
+                    b.ToTable("InvokeMethod");
+                });
+
             modelBuilder.Entity("ObjectSim.Domain.Method", b =>
                 {
                     b.Property<Guid>("Id")
@@ -170,9 +189,6 @@ namespace ObjectSim.DataAccess.Migrations
                     b.Property<bool>("IsSealed")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("MethodId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -182,8 +198,6 @@ namespace ObjectSim.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClassId");
-
-                    b.HasIndex("MethodId");
 
                     b.HasIndex("TypeId");
 
@@ -409,17 +423,27 @@ namespace ObjectSim.DataAccess.Migrations
                     b.Navigation("Parent");
                 });
 
+            modelBuilder.Entity("ObjectSim.Domain.InvokeMethod", b =>
+                {
+                    b.HasOne("ObjectSim.Domain.Method", null)
+                        .WithMany("MethodsInvoke")
+                        .HasForeignKey("InvokeMethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ObjectSim.Domain.Method", null)
+                        .WithMany()
+                        .HasForeignKey("MethodId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ObjectSim.Domain.Method", b =>
                 {
                     b.HasOne("ObjectSim.Domain.Class", null)
                         .WithMany("Methods")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ObjectSim.Domain.Method", null)
-                        .WithMany("MethodsInvoke")
-                        .HasForeignKey("MethodId")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ObjectSim.Domain.DataType", "Type")
                         .WithMany()

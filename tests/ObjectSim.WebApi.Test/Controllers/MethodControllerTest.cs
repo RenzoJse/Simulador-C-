@@ -199,7 +199,7 @@ public class MethodControllerTest
         const string reference = "init";
         var invokeMethodDto = new CreateInvokeMethodDtoIn()
         {
-            InvokeMethodId = invokeMethodId,
+            InvokeMethodId = invokeMethodId.ToString(),
             Reference = reference
         };
 
@@ -211,7 +211,7 @@ public class MethodControllerTest
 
         var result = _methodController.AddInvokeMethods(methodId, [new CreateInvokeMethodDtoIn
         {
-            InvokeMethodId = invokeMethodId,
+            InvokeMethodId = invokeMethodId.ToString(),
             Reference = reference
         }]);
 

@@ -12,7 +12,7 @@ public class Method
     }
     public Guid Id { get; init; } = Guid.NewGuid();
 
-    public Guid? ClassId { get; set; }
+    public Guid ClassId { get; set; }
 
     #region Name
 
@@ -99,7 +99,7 @@ public class Method
         {
             throw new ArgumentException("The invoked method must be reachable from the current method.");
         }
-        
+
     }
 
     private static bool MethodIsNotInParameters(Method method)
