@@ -22,7 +22,7 @@ public class InvokeMethodTest
         var invokeMethod = new InvokeMethod(Guid.NewGuid(), Guid.NewGuid());
         var newId = Guid.NewGuid();
         
-        InvokeMethod.InvokeMethodId = newId;
+        invokeMethod.InvokeMethodId = newId;
      
         invokeMethod.InvokeMethodId.Should().Be(newId);
     }
