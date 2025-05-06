@@ -338,4 +338,34 @@ public class AttributeServiceTest
 
         _attributeServiceTest!.GetByClassId(_testAttribute!.ClassId);
     }
+    [TestMethod]
+    [ExpectedException(typeof(KeyNotFoundException))]
+    public void UpdateAttribute_ClassDoesNotExist_ShouldThrowKeyNotFoundException()
+    {
+        var validAttribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Attr",
+            ClassId = Guid.NewGuid(),
+            Visibility = Attribute.AttributeVisibility.Public,
+            DataType = new ValueType("Attr", "int", [])
+        };
+
+        var args = new CreateAttributeArgs(
+            new CreateDataTypeArgs("Attr", "Value"),
+            "Public",
+            validAttribute.ClassId,
+            validAttribute.Name
+        );
+
+        _attributeRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Func<Attribute, bool>>()))
+            .Returns(validAttribute);
+
+        _classRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns((Class)null!);
+
+        _attributeServiceTest.Update(validAttribute.Id, args);
+    }
 }
