@@ -355,12 +355,12 @@ public class AttributeControllerTest
 
         _attributeServiceMock
             .Setup(service => service.Delete(invalidId))
-            .Throws(new Exception("Attribute cannot be null."));
+            .Throws(new Exception("Attribute not found."));
 
         Action act = () => _attributeController.Delete(invalidId);
 
         act.Should().Throw<Exception>()
-           .WithMessage("Attribute cannot be null.");
+           .WithMessage("Attribute not found.");
 
         _attributeServiceMock.Verify(service => service.Delete(invalidId), Times.Once);
     }

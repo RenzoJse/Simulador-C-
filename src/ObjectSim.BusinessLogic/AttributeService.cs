@@ -81,7 +81,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         var attribute = attributeRepository.Get(att1 => id == att1.Id);
         if(attribute == null)
         {
-            throw new Exception("Attribute cannot be null.");
+            throw new Exception("Attribute not found.");
         }
         attributeRepository.Delete(attribute);
         return true;
