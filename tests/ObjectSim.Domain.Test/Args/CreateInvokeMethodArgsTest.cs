@@ -19,8 +19,17 @@ public class CreateInvokeMethodArgsTest
     public void MethodId_SetAndGet_ShouldReturnSameValue()
     {
         var methodId = Guid.NewGuid();
-        var invokeMethodArgs = new CreateInvokeMethodArgs(_randomId, methodId);
+        var invokeMethodArgs = new CreateInvokeMethodArgs(_randomId, methodId) { MethodId = methodId };
         
         Assert.AreEqual(methodId, invokeMethodArgs.MethodId);
+    }
+
+    [TestMethod]
+    public void Reference_SetAndGet_ShouldReturnSameValue()
+    {
+        const string reference = "this";
+        var invokeMethodArgs = new CreateInvokeMethodArgs(_randomId, _randomId, reference) { Reference = reference };
+        
+        Assert.AreEqual(reference, invokeMethodArgs.Reference);
     }
 }

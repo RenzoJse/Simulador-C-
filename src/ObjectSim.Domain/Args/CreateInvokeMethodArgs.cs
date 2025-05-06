@@ -1,7 +1,7 @@
 ﻿namespace ObjectSim.Domain.Args;
 
-public class CreateInvokeMethodArgs(Guid invokeMethodId, Guid MethodId)
+public record CreateInvokeMethodArgs(Guid invokeMethodId, Guid methodId)
 {
-    public Guid InvokeMethodId { get; set; } =  invokeMethodId;
-    public Guid MethodId { get; set; } = MethodId;
+    public Guid InvokeMethodId { get; init; } =  invokeMethodId;
+    public Guid MethodId { get; init; } = methodId;
 }
