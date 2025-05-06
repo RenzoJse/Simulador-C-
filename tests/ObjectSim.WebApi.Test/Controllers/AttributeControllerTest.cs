@@ -126,10 +126,16 @@ public class AttributeControllerTest
     [TestMethod]
     public void Create_NullModel_ShouldReturnBadRequest()
     {
-        var result = _attributeController.Create(null!);
-        var badRequest = result as BadRequestResult;
-        Assert.IsNotNull(badRequest);
-        Assert.AreEqual(400, badRequest.StatusCode);
+        var invalidId = Guid.NewGuid();
+
+        _attributeServiceMock
+            .Setup(s => s.GetByClassId(invalidId))
+            .Throws(new ArgumentException("Invalid ClassId"));
+
+        Action act = () => _attributeController.GetByClassId(invalidId);
+
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Invalid ClassId");
     }
 
     [TestMethod]
@@ -164,72 +170,6 @@ public class AttributeControllerTest
         Assert.AreEqual("Create", created.ActionName);
         Assert.AreEqual(domainAttr.Id, ((AttributeDtoOut)created.Value!).Id);
     }
-    /*
-    [TestMethod]
-    public void Update_ValidModel_ShouldReturnUpdatedAttribute()
-    {
-        var id = Guid.NewGuid();
-        var modelIn = new CreateAttributeDtoIn
-        {
-            Name = "Size",
-            Visibility = "Public",
-            DataTypeName = "int",
-            DataTypeKind = "Value",
-            ClassId = Guid.NewGuid()
-        };
-
-        var updatedAttribute = new Domain.Attribute
-        {
-            Id = id,
-            Name = modelIn.Name,
-            Visibility = Domain.Attribute.AttributeVisibility.Public,
-            ClassId = modelIn.ClassId,
-            DataType = new ReferenceType("myString", "string", []),
-        };
-
-        _attributeServiceMock
-            .Setup(s => s.Update(id, It.Is<Domain.Attribute>(a =>
-                a.Name == modelIn.Name &&
-                a.ClassId == modelIn.ClassId &&
-                a.Visibility == Domain.Attribute.AttributeVisibility.Public &&
-                a.DataType.Name == modelIn.DataTypeName)))
-            .Returns(updatedAttribute);
-
-        var result = _attributeController.Update(id, modelIn);
-
-        var okResult = result as OkObjectResult;
-        Assert.IsNotNull(okResult);
-        Assert.AreEqual(200, okResult.StatusCode);
-
-        var dtoOut = okResult.Value as AttributeDtoOut;
-        Assert.IsNotNull(dtoOut);
-        Assert.AreEqual("Size", dtoOut.Name);
-        Assert.AreEqual("Public", dtoOut.Visibility);
-        _attributeServiceMock.Verify(x => x.Update(id, It.IsAny<Domain.Attribute>()), Times.Once);
-    }
-
-    [TestMethod]
-    public void Update_InvalidModel_ShouldReturnBadRequest()
-    {
-        var id = Guid.NewGuid();
-        var modelIn = new CreateAttributeDtoIn
-        {
-            Name = "",
-            Visibility = "Public",
-            DataTypeName = "int",
-            DataTypeKind = "Value",
-            ClassId = Guid.NewGuid()
-        };
-
-        _attributeController.ModelState.AddModelError("Name", "Name is required.");
-
-        var result = _attributeController.Update(id, modelIn);
-
-        var badRequest = result as BadRequestObjectResult;
-        Assert.IsNotNull(badRequest);
-        Assert.AreEqual(400, badRequest.StatusCode);
-    }
-       */
     [TestMethod]
     public void GetById_ValidId_ShouldReturnAttribute()
     {
@@ -312,17 +252,162 @@ public class AttributeControllerTest
     [TestMethod]
     public void GetByClassId_InvalidId_ShouldReturnBadRequest()
     {
-
         var invalidId = Guid.Empty;
 
-        var result = _attributeController.GetByClassId(invalidId);
+        _attributeServiceMock
+            .Setup(s => s.GetByClassId(invalidId))
+            .Throws(new ArgumentException("Invalid ClassId"));
 
-        var badRequest = result as BadRequestObjectResult;
-        Assert.IsNotNull(badRequest);
-        Assert.AreEqual(400, badRequest.StatusCode);
-        Assert.AreEqual("Invalid ClassId.", badRequest.Value);
+        Action act = () => _attributeController.GetByClassId(invalidId);
 
-        _attributeServiceMock.Verify(s => s.GetByClassId(It.IsAny<Guid>()), Times.Never);
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Invalid ClassId");
+
+        _attributeServiceMock.Verify(s => s.GetByClassId(invalidId), Times.Once);
     }
+    [TestMethod]
+    public void Delete_ValidId_ShouldReturnOk()
+    {
+        var id = Guid.NewGuid();
+
+        _attributeServiceMock
+            .Setup(service => service.Delete(id))
+            .Returns(true);
+
+        var result = _attributeController.Delete(id) as OkObjectResult;
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(200, result.StatusCode);
+        Assert.AreEqual(true, result.Value);
+
+        _attributeServiceMock.Verify(service => service.Delete(id), Times.Once);
+    }
+    [TestMethod]
+    public void Delete_InvalidId_ShouldThrowException()
+    {
+        var invalidId = Guid.NewGuid();
+
+        _attributeServiceMock
+            .Setup(service => service.Delete(invalidId))
+            .Throws(new Exception("Attribute not found."));
+
+        Action act = () => _attributeController.Delete(invalidId);
+
+        act.Should().Throw<Exception>()
+           .WithMessage("Attribute not found.");
+
+        _attributeServiceMock.Verify(service => service.Delete(invalidId), Times.Once);
+    }
+
+    [TestMethod]
+    public void Delete_EmptyGuid_ShouldThrowArgumentException()
+    {
+        var emptyId = Guid.Empty;
+
+        _attributeServiceMock
+            .Setup(service => service.Delete(emptyId))
+            .Throws(new ArgumentException("Id must not be empty."));
+
+        Action act = () => _attributeController.Delete(emptyId);
+
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Id must not be empty.");
+
+        _attributeServiceMock.Verify(service => service.Delete(emptyId), Times.Once);
+    }
+    [TestMethod]
+    public void Update_ValidInput_ShouldReturnUpdatedDto()
+    {
+        var id = Guid.NewGuid();
+        var dtoIn = new CreateAttributeDtoIn
+        {
+            Name = "Color",
+            Visibility = "Public",
+            DataTypeKind = "string",
+            DataTypeName = "myString",
+            ClassId = Guid.NewGuid()
+        };
+
+        var updatedAttr = new Domain.Attribute
+        {
+            Id = id,
+            Name = "Color",
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            DataType = new ReferenceType("myString", "string", []),
+            ClassId = dtoIn.ClassId
+        };
+
+        _attributeServiceMock
+            .Setup(s => s.Update(id, It.IsAny<CreateAttributeArgs>()))
+            .Returns(updatedAttr);
+
+        var result = _attributeController.Update(id, dtoIn);
+        var ok = result as OkObjectResult;
+
+        Assert.IsNotNull(ok);
+        Assert.AreEqual(200, ok.StatusCode);
+
+        var dtoOut = ok.Value as AttributeDtoOut;
+        Assert.IsNotNull(dtoOut);
+        Assert.AreEqual("Color", dtoOut.Name);
+        Assert.AreEqual("Public", dtoOut.Visibility);
+        Assert.AreEqual("string", dtoOut.DataTypeKind);
+    }
+    [TestMethod]
+    public void Update_InvalidId_ShouldThrowException()
+    {
+        var id = Guid.NewGuid();
+        var dtoIn = new CreateAttributeDtoIn
+        {
+            Name = "Color",
+            Visibility = "Public",
+            DataTypeKind = "string",
+            DataTypeName = "myString",
+            ClassId = Guid.NewGuid()
+        };
+
+        _attributeServiceMock
+            .Setup(s => s.Update(id, It.IsAny<CreateAttributeArgs>()))
+            .Throws(new KeyNotFoundException("Attribute not found."));
+
+        Action act = () => _attributeController.Update(id, dtoIn);
+
+        act.Should().Throw<KeyNotFoundException>()
+           .WithMessage("Attribute not found.");
+    }
+    [TestMethod]
+    public void Update_NullModel_ShouldThrowNullReferenceException()
+    {
+        var id = Guid.NewGuid();
+
+        Action act = () => _attributeController.Update(id, null!);
+
+        act.Should().Throw<NullReferenceException>();
+    }
+
+    [TestMethod]
+    public void Update_EmptyGuid_ShouldThrowArgumentException()
+    {
+        var dtoIn = new CreateAttributeDtoIn
+        {
+            Name = "Something",
+            Visibility = "Public",
+            DataTypeKind = "int",
+            DataTypeName = "age",
+            ClassId = Guid.NewGuid()
+        };
+
+        var emptyId = Guid.Empty;
+
+        _attributeServiceMock
+            .Setup(s => s.Update(emptyId, It.IsAny<CreateAttributeArgs>()))
+            .Throws(new ArgumentException("Id must not be empty."));
+
+        Action act = () => _attributeController.Update(emptyId, dtoIn);
+
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Id must not be empty.");
+    }
+
 
 }

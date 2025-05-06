@@ -676,7 +676,8 @@ public class ClassServiceTest
 
         _classRepositoryMock!
             .Setup(repo => repo.Update(It.IsAny<Class>()))
-            .Callback<Class>(c => {
+            .Callback<Class>(c =>
+            {
                 c.Attributes!.Should().NotContain(attribute);
             })
             .Returns((Class c) => c);
@@ -716,7 +717,8 @@ public class ClassServiceTest
 
         _classRepositoryMock!
             .Setup(repo => repo.Update(It.IsAny<Class>()))
-            .Callback<Class>(c => {
+            .Callback<Class>(c =>
+            {
                 c.Attributes!.Should().NotContain(attribute);
             })
             .Returns((Class c) => c);

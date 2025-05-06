@@ -4,6 +4,7 @@ using ObjectSim.WebApi.Filter;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ExceptionFilter>();

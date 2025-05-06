@@ -86,12 +86,12 @@ public class Method
 
     public void AddInvokeMethod(Method method, Class classObj)
     {
-        if (method == null)
+        if(method == null)
         {
             throw new ArgumentNullException(nameof(method), "Method cannot be null.");
         }
 
-        if (MethodIsNotInClass(method, classObj)
+        if(MethodIsNotInClass(method, classObj)
             && MethodIsNotFromParent(method, classObj)
             && MethodIsNotInAttributes(method, classObj)
             && MethodIsNotInLocalVariable(method)
@@ -132,7 +132,7 @@ public class Method
 
     private bool MethodIsNotFromParent(Method methods, Class classObj)
     {
-        if (MethodClassHasParent(classObj))
+        if(MethodClassHasParent(classObj))
         {
             var parentClass = classObj.Parent;
             if(parentClass!.Methods!.Contains(methods))
