@@ -501,8 +501,6 @@ public class MethodServiceTest
         act.Should().Throw<Exception>();
     }
     
-    
-    
     #endregion
 
     #region Success
@@ -518,7 +516,29 @@ public class MethodServiceTest
         _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
         _testMethod!.MethodsInvoke.Should().BeEmpty();
     }
+    
+    [TestMethod]
+    public void AddInvokeMethod_WhenInvokeIsValid_AddsInvokeMethod()
+    {
+        var invokeMethod = new Method { Id = Guid.NewGuid(), Name = "test", Parameters = [] };
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(invokeMethod.Id, _testMethod!.Id, "init") };
+        
+        ISetupSequentialResult<Method?> setupSequence =
+            _methodRepositoryMock!.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()));
+        
+        setupSequence.Returns(_testMethod);
+        
+        setupSequence.Returns(invokeMethod);
+        
+        _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(new Class { Methods = [invokeMethod], Attributes = []});
 
+        var result = _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
+
+        result.Should().NotBeNull();
+        result.MethodsInvoke.Should().ContainSingle(m => m.MethodId == invokeMethod.Id);
+    }
+    
     #endregion
     
     #endregion
