@@ -8,23 +8,59 @@ namespace ObjectSim.BusinessLogic;
 public class DataTypeService(IRepository<Class> classRepository) : IDataTypeService
 {
     public DataType CreateDataType(CreateDataTypeArgs args)
-    {//si esta en la lista de clases, traer todos los metodos pubicos y asignarlos a la lista.
-     //precargar los metodos de .NET que esos se levantan automaticamente de la bd.CargarMetodosDeEnteros y demas. mirar link que pasa profe
-        ArgumentNullException.ThrowIfNull(args);
+    {
+        ValidateArgsNotNull(args);
 
-        if(Domain.ValueType.BuiltinTypes.Contains(args.Type))
+        if (IsBuiltinType(args.Type))
         {
-            return new Domain.ValueType(args.Name, args.Type, []);
+            return CreateBuiltinValueType(args);
         }
-        if(args.Type == "string")
+
+        if (IsStringType(args.Type))
         {
-            return new ReferenceType(args.Name, args.Type, []);
+            return CreateStringReferenceType(args);
         }
-        var classExists = classRepository.GetAll(c => c.Name == args.Type).Any();
-        if(!classExists)
+
+        if (!ClassExists(args.Type))
         {
             throw new ArgumentException($"Cannot create ReferenceType: class '{args.Type}' not found.");
         }
+
+        return CreateReferenceType(args);
+    }
+
+    private static void ValidateArgsNotNull(CreateDataTypeArgs args)
+    {
+        ArgumentNullException.ThrowIfNull(args);
+    }
+
+    private static bool IsBuiltinType(string type)
+    {
+        return Domain.ValueType.BuiltinTypes.Contains(type);
+    }
+
+    private static bool IsStringType(string type)
+    {
+        return type == "string";
+    }
+
+    private bool ClassExists(string typeName)
+    {
+        return classRepository.GetAll(c => c.Name == typeName).Count != 0;
+    }
+
+    private static Domain.ValueType CreateBuiltinValueType(CreateDataTypeArgs args)
+    {
+        return new Domain.ValueType(args.Name, args.Type, []);
+    }
+
+    private static ReferenceType CreateStringReferenceType(CreateDataTypeArgs args)
+    {
+        return new ReferenceType(args.Name, args.Type, []);
+    }
+
+    private static ReferenceType CreateReferenceType(CreateDataTypeArgs args)
+    {
         return new ReferenceType(args.Name, args.Type, []);
     }
 }
