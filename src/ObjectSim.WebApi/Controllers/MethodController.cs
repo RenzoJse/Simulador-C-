@@ -10,8 +10,8 @@ namespace ObjectSim.WebApi.Controllers;
 [Route("api/methods")]
 public class MethodController(IMethodService methodService) : ControllerBase
 {
+
     [HttpPost]
-    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult CreateMethod(MethodDtoIn createMethodDtoIn)
     {
         var methodInfo = methodService.CreateMethod(createMethodDtoIn.ToArgs());
@@ -22,7 +22,6 @@ public class MethodController(IMethodService methodService) : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult DeleteMethod(Guid id)
     {
         methodService.Delete(id);
@@ -30,7 +29,6 @@ public class MethodController(IMethodService methodService) : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult GetMethodById(Guid id)
     {
         var methodInfo = methodService.GetById(id);
@@ -41,7 +39,6 @@ public class MethodController(IMethodService methodService) : ControllerBase
     }
 
     [HttpGet]
-    [TypeFilter(typeof(ExceptionFilter))]
     public IActionResult GetAllMethods()
     {
         var methods = methodService.GetAll();

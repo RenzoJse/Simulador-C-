@@ -8,7 +8,6 @@ namespace ObjectSim.WebApi.Controllers;
 
 [ApiController]
 [Route("api/simulator")]
-[TypeFilter(typeof(ExceptionFilter))]
 public class SimulatorController(IMethodSimulatorService simulatorService) : ControllerBase
 {
 
