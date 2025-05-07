@@ -144,7 +144,23 @@ public class MethodSimulatorServiceTest
     [TestMethod]
     public void Simulate_WhenMethodDoesNotExistInType_ThrowsException()
     {
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceType = "ReferenceType",
+            InstanceType = "InstanceType",
+            MethodName = "NonExistentMethod"
+        };
 
+        var referenceType = new ReferenceType("Reference", "ReferenceClass", []);
+        var instanceType = new ReferenceType("Instance", "ReferenceClass", []);
+
+        _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
+            .Returns(referenceType)
+            .Returns(instanceType);
+
+        Action act = () => _methodSimulatorServiceTest.Simulate(args);
+
+        act.Should().Throw<Exception>().WithMessage("Method not found in reference type");
     }
 
     #endregion
