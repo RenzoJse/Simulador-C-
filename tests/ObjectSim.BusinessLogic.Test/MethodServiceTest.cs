@@ -86,6 +86,10 @@ public class MethodServiceTest
 
         Action act = () => _methodServiceTest!.CreateMethod(emptyArgs);
 
+        _dataTypeServiceMock!
+            .Setup(service => service.CreateDataType(null!))
+            .Throws<ArgumentException>();
+
         act.Should().Throw<ArgumentException>();
     }
 

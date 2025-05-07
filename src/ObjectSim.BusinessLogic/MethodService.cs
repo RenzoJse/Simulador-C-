@@ -9,57 +9,55 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     #region CreateMethod
 
-    public Method CreateMethod(CreateMethodArgs methodsArgs)
+    public Method CreateMethod(CreateMethodArgs methodArgs)
     {
-        ValidateNullMethodArgs(methodsArgs);
+        ValidateMethodArgsNotNull(methodArgs);
 
-        var method = BuildMethod(methodsArgs);
+        var method = BuildMethodFromArgs(methodArgs);
 
-        AddMethod(methodsArgs.ClassId, method);
+        AddMethodToClass(methodArgs.ClassId, method);
 
-        methodRepository.Add(method);
+        SaveMethod(method);
 
         return method;
     }
 
-    private static void ValidateNullMethodArgs(CreateMethodArgs methodsArgs)
+    private static void ValidateMethodArgsNotNull(CreateMethodArgs methodArgs)
     {
-        if(methodsArgs is null)
+        if(methodArgs is null)
         {
-            throw new ArgumentNullException(nameof(methodsArgs), "Method arguments cannot be null.");
+            throw new ArgumentNullException(nameof(methodArgs), "Method arguments cannot be null.");
         }
     }
 
-    private Method BuildMethod(CreateMethodArgs methodsArgs)
+    private Method BuildMethodFromArgs(CreateMethodArgs methodArgs)
     {
-        List<DataType> parameters = [];
-        parameters.AddRange(methodsArgs.Parameters.Select(dataTypeService.CreateDataType));
-        List<DataType> localVariables = [];
-        localVariables.AddRange(methodsArgs.LocalVariables.Select(dataTypeService.CreateDataType));
+        var parameters = BuildDataTypes(methodArgs.Parameters);
+        var localVariables = BuildDataTypes(methodArgs.LocalVariables);
 
-        var method = new Method
+        var type = dataTypeService.CreateDataType(methodArgs.Type);
+
+        return new Method
         {
-            Name = methodsArgs.Name,
-            ClassId = methodsArgs.ClassId,
-            Abstract = methodsArgs.IsAbstract ?? false,
-            IsSealed = methodsArgs.IsSealed ?? false,
-            IsOverride = methodsArgs.IsOverride ?? false,
-            Type = dataTypeService.CreateDataType(methodsArgs.Type),
-            TypeId = dataTypeService.CreateDataType(methodsArgs.Type).Id,
+            Name = methodArgs.Name,
+            ClassId = methodArgs.ClassId,
+            Abstract = methodArgs.IsAbstract ?? false,
+            IsSealed = methodArgs.IsSealed ?? false,
+            IsOverride = methodArgs.IsOverride ?? false,
+            Type = type,
+            TypeId = type.Id,
             Parameters = parameters,
             LocalVariables = localVariables,
             MethodsInvoke = []
         };
-
-        return method;
     }
 
-    private Class GetClassById(Guid classId)
+    private List<DataType> BuildDataTypes(IEnumerable<CreateDataTypeArgs> dataTypeArgs)
     {
-        return classRepository.Get(c => c.Id == classId) ?? throw new ArgumentException("Class not found.");
+        return dataTypeArgs.Select(dataTypeService.CreateDataType).ToList();
     }
 
-    private void AddMethod(Guid classId, Method? method)
+    private void AddMethodToClass(Guid classId, Method method)
     {
         ArgumentNullException.ThrowIfNull(classId);
         ArgumentNullException.ThrowIfNull(method);
@@ -71,7 +69,20 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         classObj.Methods!.Add(method);
     }
 
+    private void SaveMethod(Method method)
+    {
+        methodRepository.Add(method);
+    }
+
+    private Class GetClassById(Guid classId)
+    {
+        return classRepository.Get(c => c.Id == classId)
+               ?? throw new ArgumentException("Class not found.");
+    }
+
     #endregion
+
+    #region Delete
 
     public bool Delete(Guid id)
     {
@@ -84,6 +95,8 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         methodRepository.Delete(method);
         return true;
     }
+
+    #endregion
 
     public List<Method> GetAll()
     {
