@@ -248,6 +248,61 @@ public class MethodSimulatorServiceTest
         result[0].Should().Be("this.MainMethod() ->");
     }
 
+    [TestMethod]
+    public void Simulate_WhenArgumentsAreValidAndInvokedMethodInvokeOtherMethods_Executes()
+    {
+        var methodId = Guid.NewGuid();
+        var invokeMethodId1 = Guid.NewGuid();
+        var invokeMethodId2 = Guid.NewGuid();
+
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceType = "ReferenceType", InstanceType = "ReferenceType", MethodId = methodId
+        };
+
+        var method = new Method
+        {
+            Id = methodId,
+            Name = "MainMethod",
+            MethodsInvoke =
+            [
+                new InvokeMethod(methodId, invokeMethodId1, "this")
+            ]
+        };
+
+        var invokedMethod1 = new Method
+        {
+            Id = invokeMethodId1,
+            Name = "FirstInvoked",
+            MethodsInvoke =
+            [
+                new InvokeMethod(methodId, invokeMethodId2, "this")
+            ]
+        };
+
+        var invokedMethod2 = new Method { Id = invokeMethodId2, Name = "SecondInvoked" };
+
+        var referenceType = new ReferenceType("ReferenceType", "ReferenceType", [methodId]);
+
+        _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
+            .Returns(referenceType)
+            .Returns(referenceType);
+
+        var classObj = new Class { Name = "ReferenceType", Methods = new List<Method> { method } };
+
+        _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(classObj);
+
+        _methodRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns((Func<Method, bool> predicate) =>
+                new[] { method, invokedMethod1, invokedMethod2 }.FirstOrDefault(predicate));
+
+        List<string> result = _methodSimulatorServiceTest.Simulate(args);
+
+        result.Should().HaveCount(2);
+        result[0].Should().Be("this.MainMethod() ->");
+    }
+
     #endregion
 
     #endregion
