@@ -15,6 +15,11 @@ public class MethodSimulatorServiceTest
     private Mock<IRepository<Class>> _classRepositoryMock = null!;
     private IMethodSimulatorService _methodSimulatorServiceTest = null!;
 
+    private SimulateExecutionArgs _simulateArgs = new SimulateExecutionArgs()
+    {
+        ReferenceType = "UnknownType", InstanceType = "DoesNotMatter", MethodId = Guid.NewGuid(),
+    };
+
     [TestInitialize]
     public void Setup()
     {
@@ -29,6 +34,7 @@ public class MethodSimulatorServiceTest
     {
         _methodRepositoryMock.VerifyAll();
         _dataTypeRepositoryMock.VerifyAll();
+        _classRepositoryMock.VerifyAll();
     }
 
     #region Simulate
@@ -38,17 +44,10 @@ public class MethodSimulatorServiceTest
     [TestMethod]
     public void Simulate_WhenReferenceTypeNotFound_ThrowsException()
     {
-        var args = new SimulateExecutionArgs
-        {
-            ReferenceType = "UnknownType",
-            InstanceType = "DoesNotMatter",
-            MethodId = Guid.NewGuid(),
-        };
-
         _dataTypeRepositoryMock.Setup(r => r.Get(It.IsAny<Func<DataType, bool>>()))
                            .Returns((DataType)null!);
 
-        Action act = () => _methodSimulatorServiceTest.Simulate(args);
+        Action act = () => _methodSimulatorServiceTest.Simulate(_simulateArgs);
 
         act.Should().Throw<Exception>().WithMessage("Type 'UnknownType' not found");
     }
@@ -56,22 +55,15 @@ public class MethodSimulatorServiceTest
     [TestMethod]
     public void Simulate_WhenInstanceTypeNotFound_ThrowsException()
     {
-        var args = new SimulateExecutionArgs
-        {
-            ReferenceType = "ReferenceType",
-            InstanceType = "UnknownType",
-            MethodId = Guid.NewGuid(),
-        };
-
         var referenceType = new ReferenceType("Reference", "ReferenceClass", []);
 
         _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
             .Returns(referenceType)
             .Returns((DataType)null!);
 
-        Action act = () => _methodSimulatorServiceTest.Simulate(args);
+        Action act = () => _methodSimulatorServiceTest.Simulate(_simulateArgs);
 
-        act.Should().Throw<Exception>().WithMessage("Type 'UnknownType' not found");
+        act.Should().Throw<Exception>().WithMessage("Type '" + _simulateArgs.InstanceType + "' not found");
     }
 
     [TestMethod]
