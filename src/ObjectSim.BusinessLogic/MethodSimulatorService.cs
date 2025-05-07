@@ -18,18 +18,25 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
             ValidateHierarchy(referenceType, instanceType);
         }
 
-        var method = FindMethodByName(referenceType, args.MethodName); //aca consigo el metodo IniciarViaje
+        var method = FindMethodByName(referenceType, args.MethodId); //aca consigo el metodo IniciarViaje
 
         return SimulateInternal(method.MethodsInvoke);
     }
 
     private Method FindMethodByName(DataType referenceType, string methodName)
     {
-        return referenceType.MethodIds
-                   .Select(id => methodRepository.Get(m => m.Id == id))
-                   .FirstOrDefault(m => m?.Name != null &&
-                                        string.Equals(m.Name, methodName, StringComparison.OrdinalIgnoreCase))
-               ?? throw new Exception("Method not found in reference type");
+        Class? classObj = classRepository.Get(c => c.Name == referenceType.Name);
+
+        foreach(var method in classObj!.Methods!)
+        {
+            Method method = methodRepository.Get(m => m. == methodId);
+            if(method != null && method.Name == methodName)
+            {
+                return method;
+            }
+        }
+
+        throw new Exception("Method not found in reference type");
     }
 
     private DataType GetReferenceType(string typeName)

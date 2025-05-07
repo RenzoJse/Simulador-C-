@@ -42,7 +42,7 @@ public class MethodSimulatorServiceTest
         {
             ReferenceType = "UnknownType",
             InstanceType = "DoesNotMatter",
-            MethodName = "AnyMethod"
+            MethodId = "AnyMethod"
         };
 
         _dataTypeRepositoryMock.Setup(r => r.Get(It.IsAny<Func<DataType, bool>>()))
@@ -60,7 +60,7 @@ public class MethodSimulatorServiceTest
         {
             ReferenceType = "ReferenceType",
             InstanceType = "UnknownType",
-            MethodName = "AnyMethod"
+            MethodId = "AnyMethod"
         };
 
         var referenceType = new ReferenceType("Reference", "ReferenceClass", []);
@@ -81,7 +81,7 @@ public class MethodSimulatorServiceTest
         {
             ReferenceType = "VehicleTest", //Vehiculo
             InstanceType = "NotVehicle", //Algo q no es un vehiculo
-            MethodName = "methodInNotVehicle" //iniciarViaje
+            MethodId = "methodInNotVehicle" //iniciarViaje
         };
 
         var methodInNotVehicle = new Method
@@ -115,7 +115,7 @@ public class MethodSimulatorServiceTest
         {
             ReferenceType = "VehicleTest", //Vehiculo
             InstanceType = "NotVehicle", //Algo q no es un vehiculo
-            MethodName = "methodInNotVehicle" //iniciarViaje
+            MethodId = "methodInNotVehicle" //iniciarViaje
         };
 
         var methodInNotVehicle = new Method
@@ -147,16 +147,23 @@ public class MethodSimulatorServiceTest
         var args = new SimulateExecutionArgs
         {
             ReferenceType = "ReferenceType",
-            InstanceType = "InstanceType",
-            MethodName = "NonExistentMethod"
+            InstanceType = "ReferenceType",
+            MethodId = "NonExistentMethod"
         };
 
-        var referenceType = new ReferenceType("Reference", "ReferenceClass", []);
-        var instanceType = new ReferenceType("Instance", "ReferenceClass", []);
+        var methodId = Guid.NewGuid();
+        var referenceType = new ReferenceType("ReferenceType", "ReferenceType", [methodId]);
 
         _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
             .Returns(referenceType)
-            .Returns(instanceType);
+            .Returns(referenceType);
+
+        var classObj = new Class() { Name = "ReferenceType" };
+        _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(classObj);
+
+        _methodRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns((Method)null!);
 
         Action act = () => _methodSimulatorServiceTest.Simulate(args);
 
@@ -189,7 +196,7 @@ public class MethodSimulatorServiceTest
         {
             ReferenceType = "ReferenceClass",
             InstanceType = "ReferenceClass",
-            MethodName = "MainStep"
+            MethodId = "MainStep"
         };
 
         var service = new MethodSimulatorService(refRepoMock.Object, methodRepoMock.Object);
@@ -215,7 +222,7 @@ public class MethodSimulatorServiceTest
         {
             ReferenceType = "UnknownType",
             InstanceType = "DoesNotMatter",
-            MethodName = "AnyMethod"
+            MethodId = "AnyMethod"
         };
 
         var service = new MethodSimulatorService(refRepoMock.Object, methodRepoMock.Object);
