@@ -4,14 +4,14 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IRepository<Method> methodRepository) : IMethodSimulatorService
+public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IRepository<Method> methodRepository, IRepository<Class> classRepository) : IMethodSimulatorService
 {
     public List<string> Simulate(SimulateExecutionArgs args)
     {
         ArgumentNullException.ThrowIfNull(args);
 
-        var referenceType = GetReferenceType(args.ReferenceType);
-        var instanceType = GetReferenceType(args.InstanceType); // hasta aca es Auto, Auto
+        var referenceType = GetReferenceType(args.ReferenceType); // vehiculo
+        var instanceType = GetReferenceType(args.InstanceType); // Auto
 
         ValidateHierarchy(referenceType, instanceType);
 
@@ -37,6 +37,15 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
 
     private void ValidateHierarchy(DataType reference, DataType instance)
     {
+        var classObj = classRepository.Get(c => c.Name == instance.Name);
+        if(classObj!.Parent != null)
+        {
+            var parentClass = classObj.Parent;
+            if(parentClass.Name != reference.Type)
+            {
+                throw new Exception($"Parent class '{parentClass.Name}' not found in reference type '{reference.Type}'");
+            }
+        }
     }
 
     private List<string> SimulateInternal(List<InvokeMethod> methodsToInvoke)
