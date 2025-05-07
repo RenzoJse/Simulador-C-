@@ -138,34 +138,43 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
 
     #region Update
 
-    public Attribute Update(Guid id, CreateAttributeArgs entity)
+    public Attribute Update(Guid id, CreateAttributeArgs args)
     {
-        if(entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity), "Attribute arguments cannot be null.");
-        }
+        ValidateAttributeArgsNotNull(args);
 
-        var existing = attributeRepository.Get(att => att.Id == id);
-        if(existing == null)
-        {
-            throw new KeyNotFoundException($"Attribute with ID {id} not found.");
-        }
-        var classExists = classRepository.Get(c => c.Id == entity.ClassId);
-        if(classExists == null)
-        {
-            throw new KeyNotFoundException($"Class with ID {entity.ClassId} not found.");
-        }
+        var existing = attributeRepository.Get(a => a.Id == id)
+                       ?? throw new KeyNotFoundException($"Attribute with ID {id} not found.");
 
-        var visibility = ParseVisibility(entity.Visibility);
-        var dataType = dataTypeService.CreateDataType(entity.DataType);
+        EnsureClassExists(args.ClassId);
 
-        existing.Name = entity.Name;
-        existing.ClassId = entity.ClassId;
-        existing.Visibility = visibility;
-        existing.DataType = dataType;
+        UpdateAttributeProperties(existing, args);
 
         attributeRepository.Update(existing);
         return existing;
+    }
+
+    private static void ValidateAttributeArgsNotNull(CreateAttributeArgs args)
+    {
+        if (args is null)
+        {
+            throw new ArgumentNullException(nameof(args), "Attribute arguments cannot be null.");
+        }
+    }
+
+    private void EnsureClassExists(Guid classId)
+    {
+        if (classRepository.Get(c => c.Id == classId) == null)
+        {
+            throw new KeyNotFoundException($"Class with ID {classId} not found.");
+        }
+    }
+
+    private void UpdateAttributeProperties(Attribute attribute, CreateAttributeArgs args)
+    {
+        attribute.Name = args.Name;
+        attribute.ClassId = args.ClassId;
+        attribute.Visibility = ParseVisibility(args.Visibility);
+        attribute.DataType = dataTypeService.CreateDataType(args.DataType);
     }
 
     #endregion
