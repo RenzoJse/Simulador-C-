@@ -19,21 +19,15 @@ public class DataTypeServiceTest
         _dataTypeServiceTest = new DataTypeService(_classRepositoryMock.Object);
     }
 
-    [TestMethod]
-    public void CreateDataType_ReferenceType_ObjectWithRegisteredClass_ShouldSucceed()
+    [TestCleanup]
+    public void Cleanup()
     {
-        var args = new CreateDataTypeArgs("object", "Reference");
-
-        _classRepositoryMock
-            .Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
-            .Returns([new Class { Name = "object" }]);
-
-        DataType result = _dataTypeServiceTest.CreateDataType(args);
-
-        Assert.IsInstanceOfType(result, typeof(ReferenceType));
-        Assert.AreEqual("object", result.Name);
-        Assert.AreEqual("Reference", result.Type);
+        _classRepositoryMock.VerifyAll();
     }
+
+    #region CreateDataType
+
+    #region Error
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -46,6 +40,26 @@ public class DataTypeServiceTest
         _dataTypeServiceTest.CreateDataType(args);
     }
 
+    #endregion
+
+    #region Success
+
+    [TestMethod]
+    public void CreateDataType_ReferenceType_ObjectWithRegisteredClass_ShouldSucceed()
+    {
+        var args = new CreateDataTypeArgs("object", "Reference");
+
+        _classRepositoryMock
+            .Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
+            .Returns([new Class { Name = "object" }]);
+
+        var result = _dataTypeServiceTest.CreateDataType(args);
+
+        Assert.IsInstanceOfType(result, typeof(ReferenceType));
+        Assert.AreEqual("object", result.Name);
+        Assert.AreEqual("Reference", result.Type);
+    }
+
     [TestMethod]
     public void CreateDataType_ObjectReferenceTypeWithClass_ShouldSucceed()
     {
@@ -54,7 +68,7 @@ public class DataTypeServiceTest
         _classRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
             .Returns([new Class { Name = "object" }]);
 
-        DataType result = _dataTypeServiceTest.CreateDataType(args);
+        var result = _dataTypeServiceTest.CreateDataType(args);
 
         Assert.IsInstanceOfType(result, typeof(ReferenceType));
         Assert.AreEqual("object", result.Name);
@@ -65,7 +79,7 @@ public class DataTypeServiceTest
     {
         var args = new CreateDataTypeArgs("MyInt", "int");
 
-        DataType result = _dataTypeServiceTest.CreateDataType(args);
+        var result = _dataTypeServiceTest.CreateDataType(args);
 
         Assert.IsInstanceOfType(result, typeof(ValueType));
         Assert.AreEqual("MyInt", result.Name);
@@ -93,7 +107,7 @@ public class DataTypeServiceTest
         _classRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
             .Returns([new Class { Name = "Client" }]);
 
-        DataType result = _dataTypeServiceTest.CreateDataType(args);
+        var result = _dataTypeServiceTest.CreateDataType(args);
 
         Assert.IsInstanceOfType(result, typeof(ReferenceType));
         Assert.AreEqual("MyClientRef", result.Name);
@@ -105,11 +119,16 @@ public class DataTypeServiceTest
     {
         var args = new CreateDataTypeArgs("MyString", "string");
 
-        DataType result = _dataTypeServiceTest.CreateDataType(args);
+        var result = _dataTypeServiceTest.CreateDataType(args);
 
         Assert.IsInstanceOfType(result, typeof(ReferenceType));
         Assert.AreEqual("MyString", result.Name);
         Assert.AreEqual("string", result.Type);
         Assert.AreEqual(0, result.MethodIds.Count);
     }
+
+    #endregion
+
+    #endregion
+
 }
