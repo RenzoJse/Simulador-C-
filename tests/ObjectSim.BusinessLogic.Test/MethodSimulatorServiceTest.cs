@@ -3,17 +3,58 @@ using Moq;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain.Args;
 using ObjectSim.Domain;
+using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic.Test;
 
 [TestClass]
 public class MethodSimulatorServiceTest
 {
+    private Mock<IRepository<Method>> _methodRepositoryMock = null!;
+    private Mock<IRepository<DataType>> _dataTypeRepositoryMock = null!;
+    private IMethodSimulatorService _methodSimulatorServiceTest = null!;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
+        _dataTypeRepositoryMock = new Mock<IRepository<DataType>>(MockBehavior.Strict);
+        _methodSimulatorServiceTest = new MethodSimulatorService(_dataTypeRepositoryMock.Object, _methodRepositoryMock.Object);
+    }
+
+    #region Simulate
+
+    #region Error
+
+    [TestMethod]
+    public void Simulate_WhenReferenceTypeNotFound_ThrowsException()
+    {
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceType = "UnknownType",
+            InstanceType = "DoesNotMatter",
+            MethodName = "AnyMethod"
+        };
+
+        _dataTypeRepositoryMock.Setup(r => r.Get(It.IsAny<Func<DataType, bool>>()))
+                           .Returns((DataType)null!);
+
+        Action act = () => _methodSimulatorServiceTest.Simulate(args);
+
+        act.Should().Throw<Exception>().WithMessage("Type 'UnknownType' not found");
+    }
+
+    #endregion
+
+
+    #endregion
+
+
     [TestMethod]
     public void Simulate_ShouldReturnCorrectTrace()
     {
         var method2 = new Method { Id = Guid.NewGuid(), Name = "SubStep" };
-        var method1 = new Method { Id = Guid.NewGuid(), Name = "MainStep", MethodsInvoke = [method2] };
+        var method1 = new Method { Id = Guid.NewGuid(), Name = "MainStep", MethodsInvoke = [] };
 
         var referenceType = new ReferenceType("Reference", "ReferenceClass", [method1.Id]);
         var instanceType = new ReferenceType("Instance", "ReferenceClass", [method2.Id]);

@@ -15,23 +15,17 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
 
         ValidateHierarchy(referenceType, instanceType);
 
-        var methodId = FindMethodIdByName(referenceType, args.MethodName); //aca consigo el metodo IniciarViaje
+        var method = FindMethodByName(referenceType, args.MethodName); //aca consigo el metodo IniciarViaje
 
-        var method = methodRepository.Get(m => m.Id == methodId)
-            ?? throw new Exception("Method entity not found");
-
-        var result = new List<string>();
-        SimulateInternal(instanceType.Name, method, result);
-
-        return result;
+        return SimulateInternal(method.MethodsInvoke);
     }
 
-    private Guid FindMethodIdByName(DataType referenceType, string methodName)
+    private Method FindMethodByName(DataType referenceType, string methodName)
     {
         return referenceType.MethodIds
                    .Select(id => methodRepository.Get(m => m.Id == id))
                    .FirstOrDefault(m => m?.Name != null &&
-                                        string.Equals(m.Name, methodName, StringComparison.OrdinalIgnoreCase))?.Id
+                                        string.Equals(m.Name, methodName, StringComparison.OrdinalIgnoreCase))
                ?? throw new Exception("Method not found in reference type");
     }
 
@@ -49,12 +43,16 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
         }
     }
 
-    private void SimulateInternal(string className, Method method, List<string> result)
+    private List<string> SimulateInternal(List<InvokeMethod> methodsToInvoke)
     {
-        result.Add($"{className}.this.{method.Name}()");
-        foreach(var invoked in method.MethodsInvoke)
+        var result = new List<string>();
+
+        foreach(var invoked in methodsToInvoke)
         {
-            SimulateInternal(className, invoked, result);
+            var methodToInvoke = methodRepository.Get(m => m.Id == invoked.MethodId);
+            result.Add($"{invoked.Reference}.{methodToInvoke!.Name}() ->");
         }
+
+        return result;
     }
 }
