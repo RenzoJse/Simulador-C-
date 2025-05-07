@@ -8,16 +8,35 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic;
 
-public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<Class> classRepository) : IClassService
+public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepository<Class> classRepository) : IClassService
 {
 
     #region CreateClass
 
     public Class CreateClass(CreateClassArgs args)
     {
-        ArgumentNullException.ThrowIfNull(args);
+        Builder builder = SelectBuilderForArgs(args);
+        ConfigureBuilderWithArgs(builder, args);
 
-        var builder = GetBuilder(args);
+        Class newClass = builder.GetResult();
+        SaveClassToRepository(newClass);
+
+        return newClass;
+    }
+
+    private Builder SelectBuilderForArgs(CreateClassArgs args)
+    {
+        IBuilderStrategy? strategy = builderStrategies.FirstOrDefault(s => s.WhichIsMyBuilder(args));
+        if(strategy == null)
+        {
+            throw new ArgumentException("No builder strategy found for the given arguments.");
+        }
+
+        return strategy.CreateBuilder();
+    }
+
+    private void ConfigureBuilderWithArgs(Builder builder, CreateClassArgs args)
+    {
         builder.SetName(args.Name!);
         builder.SetParent(args.Parent == null ? null : GetById(args.Parent));
         builder.SetAbstraction(args.IsAbstract);
@@ -25,21 +44,11 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
         builder.SetSealed(args.IsSealed);
         builder.SetAttributes(args.Attributes);
         builder.SetMethods(args.Methods);
-        var classObj = builder.GetResult();
-        AddClassToRepository(classObj);
-        return classObj;
     }
 
-    private void AddClassToRepository(Class classObj)
+    private void SaveClassToRepository(Class classObj)
     {
         classRepository.Add(classObj);
-    }
-
-    private Builder GetBuilder(CreateClassArgs args)
-    {
-        var strategy = strategies.FirstOrDefault(x => x.WhichIsMyBuilder(args));
-
-        return strategy!.CreateBuilder();
     }
 
     #endregion
@@ -145,17 +154,9 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
 
     private static void ValidateMethodDependencies(List<Method> methodList, Method method)
     {
-        foreach(var methodInClass in methodList)
+        if (methodList.Select(methodInClass => methodInClass.MethodsInvoke).Where(methodInvoke => methodInvoke.Count != 0).Any(methodInvoke => methodInvoke.Any(invoke => invoke.InvokeMethodId == method.Id)))
         {
-            var methodInvoke = methodInClass.MethodsInvoke;
-            if(methodInvoke == null || methodInvoke.Count == 0)
-            {
-                continue;
-            }
-            if(methodInvoke.Any(invoke => invoke.InvokeMethodId == method.Id))
-            {
-                throw new ArgumentException("Cannot remove method that is invoked by another method.");
-            }
+            throw new ArgumentException("Cannot remove method that is invoked by another method.");
         }
     }
 

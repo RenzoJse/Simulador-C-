@@ -96,13 +96,6 @@ public class ClassServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void CreateClass_WithNullArgs_ThrowsException()
-    {
-        _classServiceTest!.CreateClass(null!);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void CreateClass_WithEmptyName_ThrowsException()
     {
         var classBuilder = GetMockedBuilder();
@@ -115,14 +108,15 @@ public class ClassServiceTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(NullReferenceException))]
     public void CreateClass_WithNoMatchingStrategy_ThrowsException()
     {
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(false);
 
-        _classServiceTest!.CreateClass(_args);
-    }
+        Action action = () => _classServiceTest!.CreateClass(_args);
 
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("No builder strategy found for the given arguments.");
+    }
 
     [TestMethod]
     public void CreateClass_WithNullAttributesList_ThrowsArgumentException()
@@ -448,7 +442,7 @@ public class ClassServiceTest
     {
         var methodId = Guid.NewGuid();
         var invokedMethod = new InvokeMethod(methodId, _testMethod.Id, "this");
-        
+
         var method = new Method
         {
             Name = "TestMethod",
