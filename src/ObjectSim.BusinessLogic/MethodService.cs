@@ -86,14 +86,15 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     public bool Delete(Guid id)
     {
-        var method = methodRepository.Get(method1 => id == method1.Id);
-        if(method == null)
-        {
-            throw new KeyNotFoundException($"Method with id {id} not found.");
-        }
-
+        var method = GetMethodById(id);
         methodRepository.Delete(method);
         return true;
+    }
+
+    private Method GetMethodById(Guid id)
+    {
+        return methodRepository.Get(m => m.Id == id)
+               ?? throw new KeyNotFoundException($"Method with ID {id} not found.");
     }
 
     #endregion
@@ -102,8 +103,8 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     public List<Method> GetAll()
     {
-        var methods = methodRepository.GetAll(method1 => method1.Id != Guid.Empty);
-        if(methods == null || !methods.Any())
+        var methods = methodRepository.GetAll(m => m.Id != Guid.Empty)?.ToList();
+        if (methods == null || methods.Count == 0)
         {
             throw new Exception("No methods found.");
         }
@@ -117,38 +118,44 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     public Method GetById(Guid id)
     {
-        var method = methodRepository.Get(method1 => id == method1.Id);
-        if (method == null)
-        {
-            throw new KeyNotFoundException($"Method with ID {id} not found.");
-        }
-
-        return method;
+        return methodRepository.Get(m => m.Id == id)
+               ?? throw new KeyNotFoundException($"Method with ID {id} not found.");
     }
 
     #endregion
 
     #region Update
 
-    public Method Update(Guid id, Method entity)
+    public Method Update(Guid id, Method updatedMethod)
     {
-        Method method = methodRepository.Get(method1 => id == method1.Id)!;
-        if(entity.Name == string.Empty)
-        {
-            throw new Exception("Incorrect name method");
-        }
+        var method = GetMethodById(id);
 
-        method.Name = entity.Name;
-        method.Type = entity.Type;
-        method.Abstract = entity.Abstract;
-        method.IsSealed = entity.IsSealed;
-        method.Parameters = entity.Parameters;
-        method.LocalVariables = entity.LocalVariables;
-        method.Accessibility = entity.Accessibility;
+        ValidateMethodName(updatedMethod.Name!);
+
+        UpdateMethodProperties(method, updatedMethod);
 
         methodRepository.Update(method);
 
         return method;
+    }
+
+    private static void ValidateMethodName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new Exception("Incorrect name method");
+        }
+    }
+
+    private static void UpdateMethodProperties(Method method, Method updated)
+    {
+        method.Name = updated.Name;
+        method.Type = updated.Type;
+        method.Abstract = updated.Abstract;
+        method.IsSealed = updated.IsSealed;
+        method.Parameters = updated.Parameters;
+        method.LocalVariables = updated.LocalVariables;
+        method.Accessibility = updated.Accessibility;
     }
 
     #endregion
