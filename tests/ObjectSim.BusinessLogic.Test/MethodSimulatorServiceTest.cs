@@ -72,6 +72,35 @@ public class MethodSimulatorServiceTest
         act.Should().Throw<Exception>().WithMessage("Type 'UnknownType' not found");
     }
 
+    [TestMethod]
+    public void Simulate_WhenHierarchyIsInvalid_ThrowsException()
+    {
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceType = "VehicleTest", //Vehiculo
+            InstanceType = "NotVehicle", //Algo q no es un vehiculo
+            MethodName = "methodInNotVehicle" //iniciarViaje
+        };
+
+        var methodInNotVehicle = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "methodInNotVehicle",
+            MethodsInvoke = []
+        };
+
+        var referenceType = new ReferenceType("VehicleTest", "VehicleTest", []);
+        var instanceType = new ReferenceType("NotVehicle", "NotVehicle", [methodInNotVehicle.Id]);
+
+        _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
+            .Returns(referenceType)
+            .Returns(instanceType);
+
+        Action act = () => _methodSimulatorServiceTest.Simulate(args);
+
+        act.Should().Throw<Exception>().WithMessage("Hierarchy is invalid");
+    }
+
     #endregion
 
     #endregion

@@ -37,10 +37,6 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
 
     private void ValidateHierarchy(DataType reference, DataType instance)
     {
-        if(reference.Type != instance.Type && reference.Name != instance.Name)
-        {
-            throw new Exception($"'{instance.Type}' is not a valid subtype of '{reference.Type}'");
-        }
     }
 
     private List<string> SimulateInternal(List<InvokeMethod> methodsToInvoke)
