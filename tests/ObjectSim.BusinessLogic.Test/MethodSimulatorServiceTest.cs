@@ -132,14 +132,13 @@ public class MethodSimulatorServiceTest
             .Returns(referenceType)
             .Returns(instanceType);
 
-        var parentClass = new Class { Name = "OtroTipo" };
         var classObj = new Class { Name = "NotVehicle", Parent = null };
         _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(classObj);
 
         Action act = () => _methodSimulatorServiceTest.Simulate(args);
 
-        act.Should().Throw<Exception>().WithMessage($"Parent class 'OtroTipo' not found in reference type 'VehicleTest'");
+        act.Should().Throw<Exception>().WithMessage($"Parent class 'NotVehicle' not found in reference type 'VehicleTest'");
     }
 
     #endregion

@@ -46,6 +46,10 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
                 throw new Exception($"Parent class '{parentClass.Name}' not found in reference type '{reference.Type}'");
             }
         }
+        else
+        {
+            throw new Exception($"Parent class '{instance.Name}' not found in reference type '{reference.Type}'");
+        }
     }
 
     private List<string> SimulateInternal(List<InvokeMethod> methodsToInvoke)
