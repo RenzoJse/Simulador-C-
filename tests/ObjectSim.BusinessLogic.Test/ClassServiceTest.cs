@@ -584,7 +584,7 @@ public class ClassServiceTest
             .Returns(classWithoutAttributes);
 
         Action action = () => _classServiceTest!.RemoveAttribute(classWithoutAttributes.Id, Guid.NewGuid());
-        action.Should().Throw<ArgumentException>().WithMessage("The class have no attributes.");
+        action.Should().Throw<ArgumentException>().WithMessage("The class has no attributes.");
     }
 
     [TestMethod]

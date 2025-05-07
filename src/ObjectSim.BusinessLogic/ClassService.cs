@@ -195,43 +195,44 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
     public void RemoveAttribute(Guid classId, Guid attributeId)
     {
         var classObj = GetById(classId);
-        ValidateIfClassHasAttributes(classObj);
+        EnsureClassHasAttributes(classObj);
 
-        var attribute = GetAttributeFromClass(classObj, attributeId);
-        ValidateAttributeNotUsedInMethods(classObj, attribute);
+        var attribute = FindAttributeInClass(classObj, attributeId);
+        EnsureAttributeNotUsedInMethods(classObj, attribute);
 
         classObj.Attributes!.Remove(attribute);
         classRepository.Update(classObj);
     }
 
-    private static void ValidateIfClassHasAttributes(Class classObj)
+    private static void EnsureClassHasAttributes(Class classObj)
     {
-        if(classObj.Attributes == null || classObj.Attributes.Count == 0)
+        if (classObj.Attributes == null || classObj.Attributes.Count == 0)
         {
-            throw new ArgumentException("The class have no attributes.");
+            throw new ArgumentException("The class has no attributes.");
         }
     }
 
-    private static Attribute GetAttributeFromClass(Class classObj, Guid? attributeId)
+    private static Attribute FindAttributeInClass(Class classObj, Guid? attributeId)
     {
         var attribute = classObj.Attributes!.FirstOrDefault(a => a.Id == attributeId);
-        if(attribute == null)
+        if (attribute == null)
         {
             throw new ArgumentException("That attribute does not exist in the class.");
         }
+
         return attribute;
     }
 
-    private static void ValidateAttributeNotUsedInMethods(Class classObj, Attribute attribute)
+    private static void EnsureAttributeNotUsedInMethods(Class classObj, Attribute attribute)
     {
-        if(classObj.Methods == null || classObj.Methods.Count == 0)
+        if (classObj.Methods == null || classObj.Methods.Count == 0)
         {
             return;
         }
 
-        foreach(var method in classObj.Methods)
+        foreach (var method in classObj.Methods)
         {
-            if(method.LocalVariables != null && method.LocalVariables.Any(lv => lv.Name == attribute.Name))
+            if (method.LocalVariables != null && method.LocalVariables.Any(lv => lv.Name == attribute.Name))
             {
                 throw new ArgumentException("Attribute is being used in method.");
             }
