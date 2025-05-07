@@ -26,15 +26,15 @@ public  class SimulatorControllerTest
     {
         var args = new CreateSimulateExecutionDtoIn()
         {
-            ReferenceId = "ReferenceClass",
-            InstanceId = "Instance",
+            ReferenceId = Guid.NewGuid().ToString(),
+            InstanceId = Guid.NewGuid().ToString(),
             MethodId = Guid.NewGuid().ToString()
         };
 
         const string expected = "Execution: \nInstance.MainMethod() -> Instance.MainMethod() -> \nthis.FirstInvoked() -> other.SecondInvoked() -> ";
 
         _simulatorServiceMock
-            .Setup(s => s.Simulate(args.ToArgs()))
+            .Setup(s => s.Simulate(It.IsAny<SimulateExecutionArgs>()))
             .Returns(expected);
 
         var result = _simulatorController.SimulateExecution(args);
@@ -52,8 +52,8 @@ public  class SimulatorControllerTest
     {
         var args = new CreateSimulateExecutionDtoIn
         {
-            ReferenceId = "ReferenceClass",
-            InstanceId = "InstanceClass",
+            ReferenceId =Guid.NewGuid().ToString(),
+            InstanceId = Guid.NewGuid().ToString(),
             MethodId = Guid.NewGuid().ToString()
         };
 
