@@ -64,7 +64,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
         var classObj = GetClassById(classId);
 
-        classObj.CanAddMethod(method); //TODO Tengo que ver lo de si abstract haga la clase abstract
+        classObj.CanAddMethod(method);
 
         classObj.Methods!.Add(method);
     }
