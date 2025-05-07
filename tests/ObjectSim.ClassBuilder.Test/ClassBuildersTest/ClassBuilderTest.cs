@@ -205,7 +205,7 @@ public class ClassBuilderTest
         Action action = () => _classBuilderTest!.SetMethods([TestCreateMethodArgs]);
 
         action.Should().Throw<ArgumentException>()
-            .WithMessage("Parent class is an interface. Should implement all his methods");
+            .WithMessage("Parent class is an interface. Should implement all its methods");
     }
 
     [TestMethod]

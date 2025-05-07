@@ -16,7 +16,7 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
         {
             try
             {
-                Attribute newAttribute = attributeService.CreateAttribute(attr);
+                var newAttribute = attributeService.CreateAttribute(attr);
                 if(Result.CanAddAttribute(newAttribute))
                 {
                     newAttributes.Add(newAttribute);
@@ -24,6 +24,7 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
             }
             catch
             {
+                //ignored to build if it is not possible to create attribute
             }
         }
 
@@ -33,8 +34,14 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
     public override void SetMethods(List<CreateMethodArgs> methods)
     {
         base.SetMethods(methods);
+        var newMethods = BuildValidMethods(methods);
+        ValidateInterfaceImplementation(newMethods);
+        Result.Methods = newMethods;
+    }
 
-        List<Method> newMethods = [];
+    private List<Method> BuildValidMethods(List<CreateMethodArgs> methods)
+    {
+        var validMethods = new List<Method>();
         foreach(var method in methods)
         {
             try
@@ -42,27 +49,26 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
                 var newMethod = methodService.CreateMethod(method);
                 if(Result.CanAddMethod(newMethod))
                 {
-                    newMethods.Add(newMethod);
+                    validMethods.Add(newMethod);
                 }
             }
             catch
             {
+                //ignored to build if it is not possible to create method
             }
         }
+        return validMethods;
+    }
 
+    private void ValidateInterfaceImplementation(List<Method> methods)
+    {
         var parent = Result.Parent;
-        if(parent is not null && (bool)parent.IsInterface!)
+        if (parent is not null && parent.IsInterface == true)
         {
-            foreach(var parentMethod in parent.Methods!)
+            if ((from parentMethod in parent.Methods ?? Enumerable.Empty<Method>() select methods.Any(m => m.Name == parentMethod.Name)).Any(isImplemented => !isImplemented))
             {
-                var isImplemented = newMethods.Any(m => m.Name == parentMethod.Name);
-                if(!isImplemented)
-                {
-                    throw new ArgumentException("Parent class is an interface. Should implement all his methods");
-                }
+                throw new ArgumentException("Parent class is an interface. Should implement all its methods");
             }
         }
-
-        Result.Methods = newMethods;
     }
 }
