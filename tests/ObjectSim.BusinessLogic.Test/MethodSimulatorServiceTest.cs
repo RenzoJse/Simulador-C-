@@ -22,6 +22,13 @@ public class MethodSimulatorServiceTest
         _methodSimulatorServiceTest = new MethodSimulatorService(_dataTypeRepositoryMock.Object, _methodRepositoryMock.Object);
     }
 
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _methodRepositoryMock.VerifyAll();
+        _dataTypeRepositoryMock.VerifyAll();
+    }
+
     #region Simulate
 
     #region Error
