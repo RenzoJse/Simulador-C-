@@ -27,10 +27,10 @@ public  class SimulatorControllerTest
         {
             ReferenceType = "ReferenceClass",
             InstanceType = "Instance",
-            MethodId = "Method1"
+            MethodId = Guid.NewGuid()
         };
 
-        var expected = new List<string> { "MyType.this.Method1()", "MyType.this.Method2()" };
+        const string expected = "Execution: \nInstance.MainMethod() -> Instance.MainMethod() -> \nthis.FirstInvoked() -> other.SecondInvoked() -> ";
 
         _simulatorServiceMock
             .Setup(s => s.Simulate(args))
@@ -42,7 +42,7 @@ public  class SimulatorControllerTest
         okResult.Should().NotBeNull();
         okResult!.StatusCode.Should().Be(200);
 
-        var trace = okResult.Value as List<string>;
+        var trace = okResult.Value as string;
         trace.Should().BeEquivalentTo(expected);
     }
 
@@ -53,7 +53,7 @@ public  class SimulatorControllerTest
         {
             ReferenceType = "ReferenceClass",
             InstanceType = "InstanceClass",
-            MethodId = "Method1"
+            MethodId = Guid.NewGuid()
         };
 
         _simulatorServiceMock

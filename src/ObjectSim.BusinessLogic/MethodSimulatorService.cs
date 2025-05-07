@@ -19,8 +19,9 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
         }
 
         var method = FindMethodById(referenceType, args.MethodId); //aca consigo el metodo IniciarViaje
-
-        return SimulateInternal(method, 0);
+        var result = "Execution: \n"
+                     + instanceType.Type + "." + method.Name + "() -> " + instanceType.Type + "." + method.Name + "() -> \n";
+        return result + SimulateInternal(method, 0);
     }
 
     private Method FindMethodById(DataType referenceType, Guid methodId)
