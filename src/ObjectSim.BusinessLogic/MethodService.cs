@@ -98,6 +98,8 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     #endregion
 
+    #region GetAll
+
     public List<Method> GetAll()
     {
         var methods = methodRepository.GetAll(method1 => method1.Id != Guid.Empty);
@@ -109,6 +111,10 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         return methods;
     }
 
+    #endregion
+
+    #region GetById
+
     public Method GetById(Guid id)
     {
         var method = methodRepository.Get(method1 => id == method1.Id);
@@ -119,6 +125,10 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
         return method;
     }
+
+    #endregion
+
+    #region Update
 
     public Method Update(Guid id, Method entity)
     {
@@ -141,10 +151,14 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         return method;
     }
 
+    #endregion
+
+    #region AddParameter
+
     public DataType AddParameter(Guid methodId, DataType parameter)
     {
         var method = methodRepository.Get(m => m.Id == methodId)
-            ?? throw new Exception("Method not found");
+                     ?? throw new Exception("Method not found");
 
         if(method.Parameters.Any(p => p.Name == parameter.Name))
         {
@@ -157,10 +171,14 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         return parameter;
     }
 
+    #endregion
+
+    #region AddLocalVariable
+
     public DataType AddLocalVariable(Guid methodId, DataType localVariable)
     {
         var method = methodRepository.Get(m => m.Id == methodId)
-            ?? throw new Exception("Method not found");
+                     ?? throw new Exception("Method not found");
 
         if(method.LocalVariables.Any(lv => lv.Name == localVariable.Name))
         {
@@ -172,6 +190,8 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
         return localVariable;
     }
+
+    #endregion
 
     #region AddInvokeMethod
 
