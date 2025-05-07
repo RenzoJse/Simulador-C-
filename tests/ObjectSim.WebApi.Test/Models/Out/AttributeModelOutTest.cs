@@ -12,7 +12,7 @@ public class AttributeModelOutTest
             Id = Guid.NewGuid(),
             Name = "TestName",
             DataTypeName = "string",
-            DataTypeKind = "ReferenceType",
+            DataTypeKind = "ReferenceId",
             Visibility = "Private",
             ClassId = Guid.NewGuid()
         };
@@ -20,7 +20,7 @@ public class AttributeModelOutTest
         Assert.IsNotNull(model);
         Assert.AreEqual("TestName", model.Name);
         Assert.AreEqual("string", model.DataTypeName);
-        Assert.AreEqual("ReferenceType", model.DataTypeKind);
+        Assert.AreEqual("ReferenceId", model.DataTypeKind);
         Assert.AreEqual("Private", model.Visibility);
         Assert.AreNotEqual(Guid.Empty, model.Id);
         Assert.AreNotEqual(Guid.Empty, model.ClassId);
