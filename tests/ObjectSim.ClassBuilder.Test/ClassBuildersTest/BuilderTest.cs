@@ -3,6 +3,7 @@ using Moq;
 using ObjectSim.ClassConstructor.ClassBuilders;
 using ObjectSim.ClassConstructor.ClassBuilders.Builders;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using Attribute = ObjectSim.Domain.Attribute;
 
@@ -269,20 +270,46 @@ public class BuilderTest
     [TestMethod]
     public void CreateClass_GetResultWhenCreationIsValid_ReturnsClass()
     {
-        //TODO
-        /*_builder!.SetName("ValidName");
+        var attributeArgs = new CreateAttributeArgs(
+            new CreateDataTypeArgs("int", "int"),
+            "Public",
+            Guid.NewGuid(),
+            "Attr1"
+        );
+
+        var methodArgs = new CreateMethodArgs(
+            "Method1",
+            new CreateDataTypeArgs("void", "void"),
+            "Public",
+            false,
+            false,
+            false,
+            Guid.NewGuid(),
+            [],
+            [],
+            []
+        );
+
+        var attribute = new Attribute { Id = attributeArgs.Id, Name = attributeArgs.Name };
+        var method = new Method { Name = methodArgs.Name };
+
+        _attributeServiceMock!.Setup(s => s.CreateAttribute(It.IsAny<CreateAttributeArgs>())).Returns(attribute);
+        _methodServiceCreateMock!.Setup(s => s.CreateMethod(It.IsAny<CreateMethodArgs>())).Returns(method);
+
+        _builder!.SetName("ValidName");
         _builder.SetAbstraction(true);
         _builder.SetSealed(true);
-        _builder.SetAttributes([Guid.NewGuid()]);
-        _builder.SetMethods([Guid.NewGuid()]);
-        _builder.SetParent(Guid.NewGuid());
+        _builder.SetAttributes([attributeArgs]);
+        _builder.SetMethods([methodArgs]);
 
         var result = _builder.GetResult();
 
         result.Should().NotBeNull();
         result.Name.Should().Be("ValidName");
         result.IsAbstract.Should().BeTrue();
-        result.IsSealed.Should().BeTrue();*/
+        result.IsSealed.Should().BeTrue();
+        result.Attributes.Should().ContainSingle(a => a.Name == "Attr1");
+        result.Methods.Should().ContainSingle(m => m.Name == "Method1");
     }
 
     #endregion

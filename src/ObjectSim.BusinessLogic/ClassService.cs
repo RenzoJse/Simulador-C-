@@ -8,16 +8,35 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic;
 
-public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<Class> classRepository) : IClassService
+public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepository<Class> classRepository) : IClassService
 {
 
     #region CreateClass
 
     public Class CreateClass(CreateClassArgs args)
     {
-        ArgumentNullException.ThrowIfNull(args);
+        var builder = SelectBuilderForArgs(args);
+        ConfigureBuilderWithArgs(builder, args);
 
-        var builder = GetBuilder(args);
+        var newClass = builder.GetResult();
+        SaveClassToRepository(newClass);
+
+        return newClass;
+    }
+
+    private Builder SelectBuilderForArgs(CreateClassArgs args)
+    {
+        var strategy = builderStrategies.FirstOrDefault(s => s.WhichIsMyBuilder(args));
+        if(strategy == null)
+        {
+            throw new ArgumentException("No builder strategy found for the given arguments.");
+        }
+
+        return strategy.CreateBuilder();
+    }
+
+    private void ConfigureBuilderWithArgs(Builder builder, CreateClassArgs args)
+    {
         builder.SetName(args.Name!);
         builder.SetParent(args.Parent == null ? null : GetById(args.Parent));
         builder.SetAbstraction(args.IsAbstract);
@@ -25,21 +44,11 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
         builder.SetSealed(args.IsSealed);
         builder.SetAttributes(args.Attributes);
         builder.SetMethods(args.Methods);
-        var classObj = builder.GetResult();
-        AddClassToRepository(classObj);
-        return classObj;
     }
 
-    private void AddClassToRepository(Class classObj)
+    private void SaveClassToRepository(Class classObj)
     {
         classRepository.Add(classObj);
-    }
-
-    private Builder GetBuilder(CreateClassArgs args)
-    {
-        var strategy = strategies.FirstOrDefault(x => x.WhichIsMyBuilder(args));
-
-        return strategy!.CreateBuilder();
     }
 
     #endregion
@@ -48,11 +57,21 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
 
     public Class GetById(Guid? classId)
     {
+        ValidateNullClassId(classId);
+        return GetClassById((Guid)classId!) ?? throw new ArgumentException("Class not found.");
+    }
+
+    private static void ValidateNullClassId(Guid? classId)
+    {
         if(classId == null)
         {
             throw new ArgumentNullException(nameof(classId));
         }
-        return classRepository.Get(c => c.Id == classId) ?? throw new ArgumentException("Class not found.");
+    }
+
+    private Class? GetClassById(Guid classId)
+    {
+        return classRepository.Get(c => c.Id == classId);
     }
 
     #endregion
@@ -61,8 +80,13 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
 
     public void DeleteClass(Guid? classId)
     {
-        var classObj = GetById(classId);
+        var classToDelete = GetById(classId);
+        EnsureClassIsNotParent(classId);
+        classRepository.Delete(classToDelete);
+    }
 
+    private void EnsureClassIsNotParent(Guid? classId)
+    {
         var hasDependentClasses = classRepository.GetAll(c => c.Parent != null)
             .Any(c => c.Parent != null && c.Parent.Id == classId);
 
@@ -70,8 +94,6 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
         {
             throw new ArgumentException("Cannot delete class that is implemented by another class.");
         }
-
-        classRepository.Delete(classObj);
     }
 
     #endregion
@@ -80,82 +102,89 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
 
     public void RemoveMethod(Guid? classId, Guid? methodId)
     {
-        ArgumentNullException.ThrowIfNull(classId);
-        ArgumentNullException.ThrowIfNull(methodId);
+        ValidateRemoveMethodArgs(classId, methodId);
 
         var classObj = GetById(classId);
-        ValidateIfClassHasMethods(classObj);
+        EnsureClassHasMethods(classObj);
 
-        var method = GetMethodFromClass(classObj, methodId);
-        ValidateParentClassConstraints(classObj, method);
-        ValidateMethodDependencies(classObj.Methods!, method);
+        var method = FindMethodInClass(classObj, methodId);
+        EnsureMethodCanBeRemoved(classObj, method);
 
         classObj.Methods!.Remove(method);
     }
 
-    private static void ValidateIfClassHasMethods(Class classObj)
+    private static void ValidateRemoveMethodArgs(Guid? classId, Guid? methodId)
     {
-        if(classObj.Methods == null || classObj.Methods.Count == 0)
+        ArgumentNullException.ThrowIfNull(classId);
+        ArgumentNullException.ThrowIfNull(methodId);
+    }
+
+    private static void EnsureClassHasMethods(Class classObj)
+    {
+        if (classObj.Methods == null || classObj.Methods.Count == 0)
         {
             throw new ArgumentException("Class has no methods.");
         }
     }
 
-    private static Method GetMethodFromClass(Class classObj, Guid? methodId)
+    private static Method FindMethodInClass(Class classObj, Guid? methodId)
     {
         var method = classObj.Methods!.FirstOrDefault(m => m.Id == methodId);
-        if(method == null)
+        if (method == null)
         {
             throw new ArgumentException("Method not found in class.");
         }
+
         return method;
+    }
+
+    private static void EnsureMethodCanBeRemoved(Class classObj, Method method)
+    {
+        ValidateParentClassConstraints(classObj, method);
+        ValidateMethodIsNotInvokedByOthers(classObj.Methods!, method);
     }
 
     private static void ValidateParentClassConstraints(Class classObj, Method method)
     {
-        if(classObj.Parent == null)
+        if (classObj.Parent == null)
         {
             return;
         }
 
         var parentClass = classObj.Parent;
 
-        if((bool)parentClass.IsInterface!)
+        if ((bool)parentClass.IsInterface!)
         {
-            ValidateInterfaceMethod(parentClass, method);
+            EnsureMethodNotInInterface(parentClass, method);
         }
 
-        if((bool)parentClass.IsAbstract! && method.IsOverride)
+        if ((bool)parentClass.IsAbstract! && method.IsOverride)
         {
             throw new ArgumentException("Cannot remove method that is overriding abstract parent method you implement.");
         }
     }
 
-    private static void ValidateInterfaceMethod(Class parentClass, Method method)
+    private static void EnsureMethodNotInInterface(Class parentClass, Method method)
     {
         try
         {
             parentClass.ValidateMethodUniqueness(method);
         }
-        catch(Exception)
+        catch
         {
             throw new ArgumentException("Cannot remove method that is in an interface you implement.");
         }
     }
 
-    private static void ValidateMethodDependencies(List<Method> methodList, Method method)
+    private static void ValidateMethodIsNotInvokedByOthers(List<Method> methods, Method method)
     {
-        foreach(var methodInClass in methodList)
+        var isInvoked = methods
+            .SelectMany(m => m.MethodsInvoke)
+            .Any(invocation => invocation.InvokeMethodId == method.Id);
+
+        if (isInvoked)
         {
-            var methodInvoke = methodInClass.MethodsInvoke;
-            if(methodInvoke == null || methodInvoke.Count == 0)
-            {
-                continue;
-            }
-            if(methodInvoke.Any(invoke => invoke.InvokeMethodId == method.Id))
-            {
-                throw new ArgumentException("Cannot remove method that is invoked by another method.");
-            }
+            throw new ArgumentException("Cannot remove method that is invoked by another method.");
         }
     }
 
@@ -166,43 +195,44 @@ public class ClassService(IEnumerable<IBuilderStrategy> strategies, IRepository<
     public void RemoveAttribute(Guid classId, Guid attributeId)
     {
         var classObj = GetById(classId);
-        ValidateIfClassHasAttributes(classObj);
+        EnsureClassHasAttributes(classObj);
 
-        var attribute = GetAttributeFromClass(classObj, attributeId);
-        ValidateAttributeNotUsedInMethods(classObj, attribute);
+        var attribute = FindAttributeInClass(classObj, attributeId);
+        EnsureAttributeNotUsedInMethods(classObj, attribute);
 
         classObj.Attributes!.Remove(attribute);
         classRepository.Update(classObj);
     }
 
-    private static void ValidateIfClassHasAttributes(Class classObj)
+    private static void EnsureClassHasAttributes(Class classObj)
     {
-        if(classObj.Attributes == null || classObj.Attributes.Count == 0)
+        if (classObj.Attributes == null || classObj.Attributes.Count == 0)
         {
-            throw new ArgumentException("The class have no attributes.");
+            throw new ArgumentException("The class has no attributes.");
         }
     }
 
-    private static Attribute GetAttributeFromClass(Class classObj, Guid? attributeId)
+    private static Attribute FindAttributeInClass(Class classObj, Guid? attributeId)
     {
         var attribute = classObj.Attributes!.FirstOrDefault(a => a.Id == attributeId);
-        if(attribute == null)
+        if (attribute == null)
         {
             throw new ArgumentException("That attribute does not exist in the class.");
         }
+
         return attribute;
     }
 
-    private static void ValidateAttributeNotUsedInMethods(Class classObj, Attribute attribute)
+    private static void EnsureAttributeNotUsedInMethods(Class classObj, Attribute attribute)
     {
-        if(classObj.Methods == null || classObj.Methods.Count == 0)
+        if (classObj.Methods == null || classObj.Methods.Count == 0)
         {
             return;
         }
 
-        foreach(var method in classObj.Methods)
+        foreach (var method in classObj.Methods)
         {
-            if(method.LocalVariables != null && method.LocalVariables.Any(lv => lv.Name == attribute.Name))
+            if (method.LocalVariables != null && method.LocalVariables.Any(lv => lv.Name == attribute.Name))
             {
                 throw new ArgumentException("Attribute is being used in method.");
             }

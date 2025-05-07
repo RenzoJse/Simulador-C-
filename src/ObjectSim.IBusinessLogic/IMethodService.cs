@@ -5,7 +5,7 @@ namespace ObjectSim.IBusinessLogic;
 
 public interface IMethodService
 {
-    Method CreateMethod(CreateMethodArgs method);
+    Method CreateMethod(CreateMethodArgs methodArgs);
     List<Method> GetAll();
     bool Delete(Guid id);
     Method GetById(Guid id);

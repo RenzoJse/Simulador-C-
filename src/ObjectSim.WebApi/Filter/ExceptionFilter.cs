@@ -20,14 +20,13 @@ public sealed class ExceptionFilter : IExceptionFilter
         var exception = context.Exception;
         var exceptionType = exception.GetType();
 
-        var (statusCode, innerCode) = ExceptionMappings.TryGetValue(exceptionType, out var mapped)
+        (HttpStatusCode statusCode, var innerCode) = ExceptionMappings.TryGetValue(exceptionType, out var mapped)
             ? mapped
             : (HttpStatusCode.InternalServerError, "InternalError");
 
         context.Result = new ObjectResult(new
         {
-            InnerCode = innerCode,
-            Message = exception.Message
+            InnerCode = innerCode, exception.Message
         })
         {
             StatusCode = (int)statusCode

@@ -7,8 +7,7 @@ namespace ObjectSim.WebApi.Controllers;
 
 [ApiController]
 [Route("api/classes")]
-public class ClassController(IClassService classService)
-    : ControllerBase
+public class ClassController(IClassService classService) : ControllerBase
 {
 
     [HttpPost]

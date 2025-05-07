@@ -4,17 +4,18 @@ namespace ObjectSim.WebApi.DTOs.In;
 
 public record CreateClassDtoIn
 {
-    public required string Name { get; init; }
-    public bool IsAbstract { get; init; }
-    public bool IsInterface { get; init; }
-    public bool IsSealed { get; init; }
+    public required string Name { get; init; } = String.Empty;
+    public bool IsAbstract { get; init; } = false;
+    public bool IsInterface { get; init; } = false;
+    public bool IsSealed { get; init; } = false;
     public List<CreateAttributeArgs> Attributes { get; init; } = [];
     public List<CreateMethodArgs> Methods { get; init; } = [];
-    public Guid? Parent { get; init; }
+    public string? Parent { get; init; } = String.Empty;
 
     public CreateClassArgs ToArgs()
     {
         ArgumentNullException.ThrowIfNull(Name, nameof(Name));
-        return new CreateClassArgs(Name, IsAbstract, IsSealed, IsInterface, Attributes, Methods, Parent);
+        Guid? parentId = string.IsNullOrWhiteSpace(Parent) ? null : Guid.Parse(Parent);
+        return new CreateClassArgs(Name, IsAbstract, IsSealed, IsInterface, Attributes, Methods, parentId);
     }
 }

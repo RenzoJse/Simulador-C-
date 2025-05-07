@@ -6,50 +6,25 @@ using Attribute = ObjectSim.Domain.Attribute;
 namespace ObjectSim.BusinessLogic;
 public class AttributeService(IRepository<Attribute> attributeRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService) : IAttributeService
 {
+
+    #region CreateAttribute
+
     public Attribute CreateAttribute(CreateAttributeArgs args)
     {
-        ValidateNullArgs(args);
+        var attribute = BuildAttributeFromArgs(args);
 
-        var visibility = ParseVisibility(args.Visibility);
-        var dataType = dataTypeService.CreateDataType(args.DataType);
+        AddAttributeToClass(args.ClassId, attribute);
 
-        var attribute = BuildAttribute(args, dataType, visibility);
-        var classObj = GetClassById(args.ClassId);
-
-        classObj.AddAttribute(attribute);
-        AddAttributeToRepository(attribute);
+        SaveAttribute(attribute);
 
         return attribute;
     }
 
-    private Class GetClassById(Guid? classId)
+    private Attribute BuildAttributeFromArgs(CreateAttributeArgs args)
     {
-        if(classId == null)
-        {
-            throw new ArgumentNullException(nameof(classId));
-        }
-        return classRepository.Get(c => c.Id == classId) ?? throw new ArgumentException("Class not found.");
-    }
+        var visibility = ParseVisibility(args.Visibility);
+        var dataType = dataTypeService.CreateDataType(args.DataType);
 
-    private static void ValidateNullArgs(CreateAttributeArgs args)
-    {
-        if(args == null)
-        {
-            throw new ArgumentNullException(nameof(args), "Attribute cannot be null.");
-        }
-    }
-
-    private static Attribute.AttributeVisibility ParseVisibility(string visibilityValue)
-    {
-        if(!Enum.TryParse(visibilityValue, true, out Attribute.AttributeVisibility visibility))
-        {
-            throw new ArgumentException($"Invalid visibility value: {visibilityValue}");
-        }
-        return visibility;
-    }
-
-    private static Attribute BuildAttribute(CreateAttributeArgs args, DataType dataType, Attribute.AttributeVisibility visibility)
-    {
         return new Attribute
         {
             Id = args.Id,
@@ -60,21 +35,57 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         };
     }
 
-    private void AddAttributeToRepository(Attribute attribute)
+    private void AddAttributeToClass(Guid? classId, Attribute attribute)
+    {
+        if (classId is null)
+        {
+            throw new ArgumentNullException(nameof(classId));
+        }
+
+        var classObj = GetClassById(classId.Value);
+
+        classObj.AddAttribute(attribute);
+    }
+
+    private void SaveAttribute(Attribute attribute)
     {
         attributeRepository.Add(attribute);
     }
 
+    private Class GetClassById(Guid classId)
+    {
+        return classRepository.Get(c => c.Id == classId)
+               ?? throw new ArgumentException("Class not found.");
+    }
+
+    private static Attribute.AttributeVisibility ParseVisibility(string visibilityValue)
+    {
+        if (!Enum.TryParse(visibilityValue, true, out Attribute.AttributeVisibility visibility))
+        {
+            throw new ArgumentException($"Invalid visibility value: {visibilityValue}");
+        }
+
+        return visibility;
+    }
+
+    #endregion
+
+    #region GetAll
+
     public List<Attribute> GetAll()
     {
         var attributes = attributeRepository.GetAll(att1 => att1.Id != Guid.Empty);
-        if(attributes == null || !attributes.Any())
+        if(attributes == null || attributes.Count == 0)
         {
             throw new KeyNotFoundException("No attributes found.");
         }
 
         return attributes;
     }
+
+    #endregion
+
+    #region Delete
 
     public bool Delete(Guid id)
     {
@@ -88,64 +99,84 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         return true;
     }
 
+    #endregion
+
+    #region GetById
+
     public Attribute GetById(Guid id)
     {
-        if(id == Guid.Empty)
-        {
-            throw new ArgumentException("Id must be a valid non-empty GUID.", nameof(id));
-        }
-
-        var attribute = attributeRepository.Get(att => att.Id == id);
-        if(attribute == null)
-        {
-            throw new KeyNotFoundException($"Attribute with ID {id} not found.");
-        }
-
-        return attribute;
+        ValidateGuidNotEmpty(id, nameof(id));
+        return attributeRepository.Get(a => a.Id == id)
+               ?? throw new KeyNotFoundException($"Attribute with ID {id} not found.");
     }
 
-    public Attribute Update(Guid id, CreateAttributeArgs entity)
+    private static void ValidateGuidNotEmpty(Guid id, string paramName)
     {
-        if(entity == null)
+        if (id == Guid.Empty)
         {
-            throw new ArgumentNullException(nameof(entity), "Attribute arguments cannot be null.");
+            throw new ArgumentException($"{paramName} must be a valid non-empty GUID.", paramName);
         }
-
-        var existing = attributeRepository.Get(att => att.Id == id);
-        if(existing == null)
-        {
-            throw new KeyNotFoundException($"Attribute with ID {id} not found.");
-        }
-        var classExists = classRepository.Get(c => c.Id == entity.ClassId);
-        if(classExists == null)
-        {
-            throw new KeyNotFoundException($"Class with ID {entity.ClassId} not found.");
-        }
-
-        var visibility = ParseVisibility(entity.Visibility);
-        var dataType = dataTypeService.CreateDataType(entity.DataType);
-
-        existing.Name = entity.Name;
-        existing.ClassId = entity.ClassId;
-        existing.Visibility = visibility;
-        existing.DataType = dataType;
-
-        attributeRepository.Update(existing);
-        return existing;
     }
+
+    #endregion
+
+    #region GetByClassId
+
     public List<Attribute> GetByClassId(Guid classId)
     {
-        if(classId == Guid.Empty)
-        {
-            throw new ArgumentException("ClassId must be a valid non-empty GUID.");
-        }
-
-        var attributes = attributeRepository.GetAll(a => a.ClassId == classId);
-        if(!attributes.Any())
+        ValidateGuidNotEmpty(classId, nameof(classId));
+        var attributes = attributeRepository.GetAll(a => a.ClassId == classId).ToList();
+        if (attributes.Count == 0)
         {
             throw new KeyNotFoundException($"No attributes found for ClassId: {classId}");
         }
 
-        return attributes.ToList();
+        return attributes;
     }
+
+    #endregion
+
+    #region Update
+
+    public Attribute Update(Guid id, CreateAttributeArgs args)
+    {
+        ValidateAttributeArgsNotNull(args);
+
+        var existing = attributeRepository.Get(a => a.Id == id)
+                       ?? throw new KeyNotFoundException($"Attribute with ID {id} not found.");
+
+        EnsureClassExists(args.ClassId);
+
+        UpdateAttributeProperties(existing, args);
+
+        attributeRepository.Update(existing);
+        return existing;
+    }
+
+    private static void ValidateAttributeArgsNotNull(CreateAttributeArgs args)
+    {
+        if (args is null)
+        {
+            throw new ArgumentNullException(nameof(args), "Attribute arguments cannot be null.");
+        }
+    }
+
+    private void EnsureClassExists(Guid classId)
+    {
+        if (classRepository.Get(c => c.Id == classId) == null)
+        {
+            throw new KeyNotFoundException($"Class with ID {classId} not found.");
+        }
+    }
+
+    private void UpdateAttributeProperties(Attribute attribute, CreateAttributeArgs args)
+    {
+        attribute.Name = args.Name;
+        attribute.ClassId = args.ClassId;
+        attribute.Visibility = ParseVisibility(args.Visibility);
+        attribute.DataType = dataTypeService.CreateDataType(args.DataType);
+    }
+
+    #endregion
+
 }

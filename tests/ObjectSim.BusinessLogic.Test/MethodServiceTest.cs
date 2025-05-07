@@ -20,11 +20,11 @@ public class MethodServiceTest
     private static readonly Guid ClassId = Guid.NewGuid();
     private static readonly Guid MethodId = Guid.NewGuid();
 
-    private static readonly ReferenceType TestLocalVariable = new ReferenceType("TestLocalVariable", "string", []);
+    private static readonly ReferenceType TestLocalVariable = new("TestLocalVariable", "string", []);
 
-    private static readonly ValueType TestParameter = new ValueType("TestParameter", "int", []);
+    private static readonly ValueType TestParameter = new("TestParameter", "int", []);
 
-    private readonly CreateMethodArgs _testCreateMethodArgs = new CreateMethodArgs(
+    private readonly CreateMethodArgs _testCreateMethodArgs = new(
         "TestMethod",
         new CreateDataTypeArgs("MethodType", "int"),
         "public",
@@ -37,7 +37,7 @@ public class MethodServiceTest
         []
     );
 
-    private readonly Method? _testMethod = new Method
+    private readonly Method? _testMethod = new()
     {
         Id = MethodId,
         Name = "TestMethod",
@@ -86,19 +86,11 @@ public class MethodServiceTest
 
         Action act = () => _methodServiceTest!.CreateMethod(emptyArgs);
 
+        _dataTypeServiceMock!
+            .Setup(service => service.CreateDataType(null!))
+            .Throws<ArgumentException>();
+
         act.Should().Throw<ArgumentException>();
-    }
-
-    [TestMethod]
-    //[ExpectedException(typeof(Exception))]
-    public void CreateMethod_WhenMethodInvokeMethodsDosentExists_ThrowsException()
-    {/*
-        _methodRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns((Method)null!);
-
-        _testCreateMethodArgs.InvokeMethods = [Guid.NewGuid()];
-
-        _methodServiceTest!.CreateMethod(_testCreateMethodArgs);*/
     }
 
     #endregion
@@ -323,9 +315,8 @@ public class MethodServiceTest
 
         Action act = () => _methodServiceTest!.AddParameter(_testMethod!.Id, TestParameter);
 
-        act.Should().Throw<Exception>().WithMessage("Method not found");
-
-        _methodRepositoryMock.Verify(r => r.Get(It.IsAny<Func<Method, bool>>()), Times.Once);
+        act.Should().Throw<Exception>()
+            .WithMessage($"Method with ID {_testMethod!.Id} not found.");
     }
 
     [TestMethod]
@@ -380,7 +371,8 @@ public class MethodServiceTest
 
         Action act = () => _methodServiceTest!.AddLocalVariable(_testMethod!.Id, TestLocalVariable);
 
-        act.Should().Throw<Exception>().WithMessage("Method not found");
+        act.Should().Throw<Exception>()
+            .WithMessage($"Method with ID {_testMethod!.Id} not found.");
     }
 
     [TestMethod]
