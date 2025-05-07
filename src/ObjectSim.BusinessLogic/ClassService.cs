@@ -15,10 +15,10 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     public Class CreateClass(CreateClassArgs args)
     {
-        Builder builder = SelectBuilderForArgs(args);
+        var builder = SelectBuilderForArgs(args);
         ConfigureBuilderWithArgs(builder, args);
 
-        Class newClass = builder.GetResult();
+        var newClass = builder.GetResult();
         SaveClassToRepository(newClass);
 
         return newClass;
@@ -26,7 +26,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     private Builder SelectBuilderForArgs(CreateClassArgs args)
     {
-        IBuilderStrategy? strategy = builderStrategies.FirstOrDefault(s => s.WhichIsMyBuilder(args));
+        var strategy = builderStrategies.FirstOrDefault(s => s.WhichIsMyBuilder(args));
         if(strategy == null)
         {
             throw new ArgumentException("No builder strategy found for the given arguments.");
@@ -57,11 +57,21 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     public Class GetById(Guid? classId)
     {
+        ValidateNullClassId(classId);
+        return GetClassById((Guid)classId!) ?? throw new ArgumentException("Class not found.");
+    }
+
+    private static void ValidateNullClassId(Guid? classId)
+    {
         if(classId == null)
         {
             throw new ArgumentNullException(nameof(classId));
         }
-        return classRepository.Get(c => c.Id == classId) ?? throw new ArgumentException("Class not found.");
+    }
+
+    private Class? GetClassById(Guid classId)
+    {
+        return classRepository.Get(c => c.Id == classId);
     }
 
     #endregion
@@ -70,8 +80,13 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     public void DeleteClass(Guid? classId)
     {
-        var classObj = GetById(classId);
+        var classToDelete = GetById(classId);
+        EnsureClassIsNotParent(classId);
+        classRepository.Delete(classToDelete);
+    }
 
+    private void EnsureClassIsNotParent(Guid? classId)
+    {
         var hasDependentClasses = classRepository.GetAll(c => c.Parent != null)
             .Any(c => c.Parent != null && c.Parent.Id == classId);
 
@@ -79,8 +94,6 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
         {
             throw new ArgumentException("Cannot delete class that is implemented by another class.");
         }
-
-        classRepository.Delete(classObj);
     }
 
     #endregion
@@ -89,72 +102,87 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     public void RemoveMethod(Guid? classId, Guid? methodId)
     {
-        ArgumentNullException.ThrowIfNull(classId);
-        ArgumentNullException.ThrowIfNull(methodId);
+        ValidateRemoveMethodArgs(classId, methodId);
 
         var classObj = GetById(classId);
-        ValidateIfClassHasMethods(classObj);
+        EnsureClassHasMethods(classObj);
 
-        var method = GetMethodFromClass(classObj, methodId);
-        ValidateParentClassConstraints(classObj, method);
-        ValidateMethodDependencies(classObj.Methods!, method);
+        var method = FindMethodInClass(classObj, methodId);
+        EnsureMethodCanBeRemoved(classObj, method);
 
         classObj.Methods!.Remove(method);
     }
 
-    private static void ValidateIfClassHasMethods(Class classObj)
+    private static void ValidateRemoveMethodArgs(Guid? classId, Guid? methodId)
     {
-        if(classObj.Methods == null || classObj.Methods.Count == 0)
+        ArgumentNullException.ThrowIfNull(classId);
+        ArgumentNullException.ThrowIfNull(methodId);
+    }
+
+    private static void EnsureClassHasMethods(Class classObj)
+    {
+        if (classObj.Methods == null || classObj.Methods.Count == 0)
         {
             throw new ArgumentException("Class has no methods.");
         }
     }
 
-    private static Method GetMethodFromClass(Class classObj, Guid? methodId)
+    private static Method FindMethodInClass(Class classObj, Guid? methodId)
     {
         var method = classObj.Methods!.FirstOrDefault(m => m.Id == methodId);
-        if(method == null)
+        if (method == null)
         {
             throw new ArgumentException("Method not found in class.");
         }
+
         return method;
+    }
+
+    private static void EnsureMethodCanBeRemoved(Class classObj, Method method)
+    {
+        ValidateParentClassConstraints(classObj, method);
+        ValidateMethodIsNotInvokedByOthers(classObj.Methods!, method);
     }
 
     private static void ValidateParentClassConstraints(Class classObj, Method method)
     {
-        if(classObj.Parent == null)
+        if (classObj.Parent == null)
         {
             return;
         }
 
         var parentClass = classObj.Parent;
 
-        if((bool)parentClass.IsInterface!)
+        if ((bool)parentClass.IsInterface!)
         {
-            ValidateInterfaceMethod(parentClass, method);
+            EnsureMethodNotInInterface(parentClass, method);
         }
 
-        if((bool)parentClass.IsAbstract! && method.IsOverride)
+        if ((bool)parentClass.IsAbstract! && method.IsOverride)
         {
             throw new ArgumentException("Cannot remove method that is overriding abstract parent method you implement.");
         }
     }
 
-    private static void ValidateInterfaceMethod(Class parentClass, Method method)
+    private static void EnsureMethodNotInInterface(Class parentClass, Method method)
     {
         try
         {
             parentClass.ValidateMethodUniqueness(method);
         }
-        catch(Exception)
+        catch
         {
             throw new ArgumentException("Cannot remove method that is in an interface you implement.");
         }
     }
 
-    private static void ValidateMethodDependencies(List<Method> methodList, Method method)
+    private static void ValidateMethodIsNotInvokedByOthers(List<Method> methods, Method method)
     {
-        if (methodList.Select(methodInClass => methodInClass.MethodsInvoke).Where(methodInvoke => methodInvoke.Count != 0).Any(methodInvoke => methodInvoke.Any(invoke => invoke.InvokeMethodId == method.Id)))
+        var isInvoked = methods
+            .SelectMany(m => m.MethodsInvoke)
+            .Any(invocation => invocation.InvokeMethodId == method.Id);
+
+        if (isInvoked)
         {
             throw new ArgumentException("Cannot remove method that is invoked by another method.");
         }
