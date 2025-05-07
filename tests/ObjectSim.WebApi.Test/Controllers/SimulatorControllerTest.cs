@@ -4,6 +4,7 @@ using Moq;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.Controllers;
+using ObjectSim.WebApi.DTOs.In;
 
 namespace ObjectSim.WebApi.Test.Controllers;
 
@@ -23,17 +24,17 @@ public  class SimulatorControllerTest
     [TestMethod]
     public void SimulateExecution_ShouldReturnOkResult_WithTrace()
     {
-        var args = new SimulateExecutionArgs
+        var args = new CreateSimulateExecutionDtoIn()
         {
-            ReferenceType = "ReferenceClass",
-            InstanceType = "Instance",
-            MethodId = Guid.NewGuid()
+            ReferenceId = "ReferenceClass",
+            InstanceId = "Instance",
+            MethodId = Guid.NewGuid().ToString()
         };
 
         const string expected = "Execution: \nInstance.MainMethod() -> Instance.MainMethod() -> \nthis.FirstInvoked() -> other.SecondInvoked() -> ";
 
         _simulatorServiceMock
-            .Setup(s => s.Simulate(args))
+            .Setup(s => s.Simulate(args.ToArgs()))
             .Returns(expected);
 
         var result = _simulatorController.SimulateExecution(args);
@@ -49,11 +50,11 @@ public  class SimulatorControllerTest
     [TestMethod]
     public void SimulateExecution_WhenExceptionThrown_ShouldThrowException()
     {
-        var args = new SimulateExecutionArgs
+        var args = new CreateSimulateExecutionDtoIn
         {
-            ReferenceType = "ReferenceClass",
-            InstanceType = "InstanceClass",
-            MethodId = Guid.NewGuid()
+            ReferenceId = "ReferenceClass",
+            InstanceId = "InstanceClass",
+            MethodId = Guid.NewGuid().ToString()
         };
 
         _simulatorServiceMock

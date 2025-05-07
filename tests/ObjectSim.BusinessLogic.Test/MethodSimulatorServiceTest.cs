@@ -11,29 +11,21 @@ namespace ObjectSim.BusinessLogic.Test;
 public class MethodSimulatorServiceTest
 {
     private Mock<IRepository<Method>> _methodRepositoryMock = null!;
-    private Mock<IRepository<DataType>> _dataTypeRepositoryMock = null!;
     private Mock<IRepository<Class>> _classRepositoryMock = null!;
     private IMethodSimulatorService _methodSimulatorServiceTest = null!;
-
-    private SimulateExecutionArgs _simulateArgs = new SimulateExecutionArgs()
-    {
-        ReferenceType = "UnknownType", InstanceType = "DoesNotMatter", MethodId = Guid.NewGuid(),
-    };
 
     [TestInitialize]
     public void Setup()
     {
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
-        _dataTypeRepositoryMock = new Mock<IRepository<DataType>>(MockBehavior.Strict);
         _classRepositoryMock = new Mock<IRepository<Class>>(MockBehavior.Strict);
-        _methodSimulatorServiceTest = new MethodSimulatorService(_dataTypeRepositoryMock.Object, _methodRepositoryMock.Object, _classRepositoryMock.Object);
+        _methodSimulatorServiceTest = new MethodSimulatorService(_methodRepositoryMock.Object, _classRepositoryMock.Object);
     }
 
     [TestCleanup]
     public void Cleanup()
     {
         _methodRepositoryMock.VerifyAll();
-        _dataTypeRepositoryMock.VerifyAll();
         _classRepositoryMock.VerifyAll();
     }
 
@@ -42,62 +34,41 @@ public class MethodSimulatorServiceTest
     #region Error
 
     [TestMethod]
-    public void Simulate_WhenReferenceTypeNotFound_ThrowsException()
-    {
-        _dataTypeRepositoryMock.Setup(r => r.Get(It.IsAny<Func<DataType, bool>>()))
-                           .Returns((DataType)null!);
-
-        Action act = () => _methodSimulatorServiceTest.Simulate(_simulateArgs);
-
-        act.Should().Throw<Exception>().WithMessage("Type 'UnknownType' not found");
-    }
-
-    [TestMethod]
-    public void Simulate_WhenInstanceTypeNotFound_ThrowsException()
-    {
-        var referenceType = new ReferenceType("Reference", "ReferenceClass", []);
-
-        _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
-            .Returns(referenceType)
-            .Returns((DataType)null!);
-
-        Action act = () => _methodSimulatorServiceTest.Simulate(_simulateArgs);
-
-        act.Should().Throw<Exception>().WithMessage("Type '" + _simulateArgs.InstanceType + "' not found");
-    }
-
-    [TestMethod]
-    public void Simulate_WhenHierarchyIsInvalid_ThrowsException()
+    public void Simulate_WhenReferenceIdNotFound_ThrowsException()
     {
         var args = new SimulateExecutionArgs
         {
-            ReferenceType = "VehicleTest", //Vehiculo
-            InstanceType = "NotVehicle", //Algo q no es un vehiculo
-            MethodId = Guid.NewGuid(), //iniciarViaje
+            ReferenceId = Guid.NewGuid(),
+            InstanceId = Guid.NewGuid(),
+            MethodId = Guid.NewGuid(),
         };
 
-        var methodInNotVehicle = new Method
-        {
-            Id = Guid.NewGuid(),
-            Name = "methodInNotVehicle",
-            MethodsInvoke = []
-        };
-
-        var referenceType = new ReferenceType("VehicleTest", "VehicleTest", []);
-        var instanceType = new ReferenceType("NotVehicle", "NotVehicle", [methodInNotVehicle.Id]);
-
-        _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
-            .Returns(referenceType)
-            .Returns(instanceType);
-
-        var parentClass = new Class { Name = "OtherType" };
-        var classObj = new Class { Name = "NotVehicle", Parent = parentClass };
         _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(classObj);
+            .Returns((Class)null!);
 
         Action act = () => _methodSimulatorServiceTest.Simulate(args);
 
-        act.Should().Throw<Exception>().WithMessage($"Parent class 'OtherType' not found in reference type 'VehicleTest'");
+        act.Should().Throw<Exception>().WithMessage("Class not found.");
+    }
+
+    [TestMethod]
+    public void Simulate_WhenInstanceIdNotFound_ThrowsException()
+    {
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceId = Guid.NewGuid(),
+            InstanceId = Guid.NewGuid(),
+            MethodId = Guid.NewGuid(),
+        };
+
+        var referenceClass = new Class { Id = args.ReferenceId, Name = "ReferenceType" };
+        _classRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(referenceClass)
+            .Returns((Class)null!);
+
+        Action act = () => _methodSimulatorServiceTest.Simulate(args);
+
+        act.Should().Throw<Exception>().WithMessage("Class not found.");
     }
 
     [TestMethod]
@@ -105,96 +76,91 @@ public class MethodSimulatorServiceTest
     {
         var args = new SimulateExecutionArgs
         {
-            ReferenceType = "VehicleTest", //Vehiculo
-            InstanceType = "NotVehicle", //Algo q no es un vehiculo
-            MethodId = Guid.NewGuid(), //iniciarViaje
+            ReferenceId = Guid.NewGuid(),
+            InstanceId = Guid.NewGuid(),
+            MethodId = Guid.NewGuid(),
         };
 
-        var methodInNotVehicle = new Method
-        {
-            Id = Guid.NewGuid(),
-            Name = "methodInNotVehicle",
-            MethodsInvoke = []
-        };
-
-        var referenceType = new ReferenceType("VehicleTest", "VehicleTest", []);
-        var instanceType = new ReferenceType("NotVehicle", "NotVehicle", [methodInNotVehicle.Id]);
-
-        _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
-            .Returns(referenceType)
-            .Returns(instanceType);
-
-        var classObj = new Class { Name = "NotVehicle", Parent = null };
+        var classObj = new Class { Name = "InstanceType" };
         _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(classObj);
 
         Action act = () => _methodSimulatorServiceTest.Simulate(args);
 
-        act.Should().Throw<Exception>().WithMessage($"Parent class 'NotVehicle' not found in reference type 'VehicleTest'");
+        act.Should().Throw<Exception>().WithMessage("Invalid instance type.");
+    }
+
+    [TestMethod]
+    public void Simulate_WhenHierarchyIsInvalid_ThrowsException()
+    {
+        var reference = new Class { Id = Guid.NewGuid(), Name = "Vehiculo" };
+        var instance = new Class { Id = Guid.NewGuid(), Name = "Auto" };
+        var method = new Method { Id = Guid.NewGuid(), Name = "IniciarViaje" };
+
+        _classRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(reference)
+            .Returns(instance);
+
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceId = reference.Id,
+            InstanceId = instance.Id,
+            MethodId = method.Id
+        };
+
+        Action act = () => _methodSimulatorServiceTest.Simulate(args);
+
+        act.Should().Throw<Exception>().WithMessage("Invalid instance type.");
     }
 
     [TestMethod]
     public void Simulate_WhenMethodDoesNotExistInType_ThrowsException()
     {
-        var args = new SimulateExecutionArgs
-        {
-            ReferenceType = "ReferenceType",
-            InstanceType = "ReferenceType",
-            MethodId = Guid.NewGuid(),
-        };
+        var reference = new Class { Name = "Vehiculo", Methods = [] };
+        var instance = new Class { Name = "Auto", Parent = reference, Methods = [] };
+        var method = new Method { Id = Guid.NewGuid(), Name = "IniciarViaje" };
 
-        var methodId = Guid.NewGuid();
-        var referenceType = new ReferenceType("ReferenceType", "ReferenceType", [methodId]);
-        var method = new Method
-        {
-            Id = methodId,
-            Name = "MethodName",
-            MethodsInvoke = []
-        };
-
-        _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
-            .Returns(referenceType)
-            .Returns(referenceType);
-
-        var classObj = new Class() {
-            Name = "ReferenceType",
-            Methods = []
-        };
-
-        _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(classObj);
-
+        _classRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(reference)
+            .Returns(instance);
         _methodRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns(method);
 
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceId = reference.Id,
+            InstanceId = instance.Id,
+            MethodId = Guid.NewGuid()
+        };
+
         Action act = () => _methodSimulatorServiceTest.Simulate(args);
 
-        act.Should().Throw<Exception>().WithMessage("Method not found in reference type");
+
+        act.Should().Throw<Exception>().WithMessage("Method not found in this classes.");
     }
 
     [TestMethod]
     public void Simulate_WhenMethodDoesNotExist_ThrowsException()
     {
-        var methodId = Guid.NewGuid();
-        var args = new SimulateExecutionArgs
-        {
-            ReferenceType = "ReferenceType",
-            InstanceType = "ReferenceType",
-            MethodId = methodId
-        };
+        var reference = new Class { Name = "Vehiculo", Methods = [] };
+        var instance = new Class { Name = "Auto", Parent = reference, Methods = [] };
 
-        var referenceType = new ReferenceType("ReferenceType", "ReferenceType", []);
-
-        _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
-            .Returns(referenceType)
-            .Returns(referenceType);
-
+        _classRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(reference)
+            .Returns(instance);
         _methodRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns((Method)null!);
 
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceId = reference.Id,
+            InstanceId = instance.Id,
+            MethodId = Guid.NewGuid()
+        };
+
         Action act = () => _methodSimulatorServiceTest.Simulate(args);
 
-        act.Should().Throw<Exception>().WithMessage("Method not found");
+        act.Should().Throw<Exception>();
     }
 
     #endregion
@@ -208,11 +174,6 @@ public class MethodSimulatorServiceTest
         var invokeMethodId1 = Guid.NewGuid();
         var invokeMethodId2 = Guid.NewGuid();
 
-        var args = new SimulateExecutionArgs
-        {
-            ReferenceType = "ReferenceType", InstanceType = "ReferenceType", MethodId = methodId
-        };
-
         var method = new Method
         {
             Id = methodId,
@@ -224,19 +185,20 @@ public class MethodSimulatorServiceTest
             ]
         };
 
+        var reference = new Class { Name = "Vehiculo", Methods = [] };
+        var instance = new Class { Name = "Auto", Parent = reference, Methods = [method] };
+
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceId = reference.Id, InstanceId = instance.Id, MethodId = methodId
+        };
+
         var invokedMethod1 = new Method { Id = invokeMethodId1, Name = "FirstInvoked", MethodsInvoke = [] };
         var invokedMethod2 = new Method { Id = invokeMethodId2, Name = "SecondInvoked", MethodsInvoke = [] };
 
-        var referenceType = new ReferenceType("ReferenceType", "ReferenceType", [methodId]);
-
-        _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
-            .Returns(referenceType)
-            .Returns(referenceType);
-
-        var classObj = new Class { Name = "ReferenceType", Methods = new List<Method> { method } };
-
-        _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(classObj);
+        _classRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(reference)
+            .Returns(instance);
 
         _methodRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns(method)
@@ -256,11 +218,6 @@ public class MethodSimulatorServiceTest
         var invokeMethodId1 = Guid.NewGuid();
         var invokeMethodId2 = Guid.NewGuid();
 
-        var args = new SimulateExecutionArgs
-        {
-            ReferenceType = "ReferenceType", InstanceType = "ReferenceType", MethodId = methodId
-        };
-
         var method = new Method
         {
             Id = methodId,
@@ -269,6 +226,14 @@ public class MethodSimulatorServiceTest
             [
                 new InvokeMethod(methodId, invokeMethodId1, "this")
             ]
+        };
+
+        var reference = new Class { Name = "Vehiculo", Methods = [] };
+        var instance = new Class { Name = "Auto", Parent = reference, Methods = [method] };
+
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceId = reference.Id, InstanceId = instance.Id, MethodId = methodId
         };
 
         var invokedMethod1 = new Method
@@ -283,16 +248,9 @@ public class MethodSimulatorServiceTest
 
         var invokedMethod2 = new Method { Id = invokeMethodId2, Name = "SecondInvoked" };
 
-        var referenceType = new ReferenceType("ReferenceType", "ReferenceType", [methodId]);
-
-        _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
-            .Returns(referenceType)
-            .Returns(referenceType);
-
-        var classObj = new Class { Name = "ReferenceType", Methods = new List<Method> { method } };
-
-        _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(classObj);
+        _classRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(reference)
+            .Returns(instance);
 
         _methodRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns(method)

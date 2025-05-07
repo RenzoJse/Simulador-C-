@@ -4,31 +4,49 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IRepository<Method> methodRepository, IRepository<Class> classRepository) : IMethodSimulatorService
+public class MethodSimulatorService(IRepository<Method> methodRepository, IRepository<Class> classRepository) : IMethodSimulatorService
 {
     public string Simulate(SimulateExecutionArgs args)
     {
         ArgumentNullException.ThrowIfNull(args);
 
-        var referenceType = GetReferenceType(args.ReferenceType); // vehiculo
-        var instanceType = GetReferenceType(args.InstanceType); // Auto
+        var referenceType = GetClassById(args.ReferenceId); // vehiculo
+        var instanceType = GetClassById(args.InstanceId); // Auto
 
-        if(referenceType != instanceType)
+        ValidateIsValidInstance(instanceType, referenceType);
+
+        var method = GetMethodById(args.MethodId); // IniciarViaje
+        if(!instanceType.Methods!.Contains(method))
         {
-            ValidateHierarchy(referenceType, instanceType);
+            if(!referenceType.Methods!.Contains(method))
+            {
+                throw new Exception("Method not found in this classes.");
+            }
         }
 
-        var method = FindMethodById(referenceType, args.MethodId); //aca consigo el metodo IniciarViaje
         var result = "Execution: \n"
-                     + instanceType.Type + "." + method.Name + "() -> " + instanceType.Type + "." + method.Name + "() -> \n";
-        return result + SimulateInternal(method, 0);
+                     + instanceType.Name + "." + method.Name + "() -> " + instanceType.Name + "." + method.Name + "()\n";
+        result += SimulateInternal(method, 0);
+
+        return result;
     }
 
-    private Method FindMethodById(DataType referenceType, Guid methodId)
+    private void ValidateIsValidInstance(Class instanceType, Class referenceType)
     {
-        var method = GetMethodById(methodId);
-        ValidateMethodBelongsToClass(method, referenceType);
-        return method;
+        if(instanceType.Parent != referenceType)
+        {
+            throw new Exception("Invalid instance type.");
+        }
+    }
+
+    private Class GetClassById(Guid classId)
+    {
+        var classObj = classRepository.Get(c => c.Id == classId);
+        if (classObj == null)
+        {
+            throw new Exception("Class not found.");
+        }
+        return classObj;
     }
 
     private Method GetMethodById(Guid methodId)
@@ -36,41 +54,9 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
         var method = methodRepository.Get(m => m.Id == methodId);
         if (method == null)
         {
-            throw new Exception("Method not found");
+            throw new Exception("Method not found.");
         }
         return method;
-    }
-
-    private void ValidateMethodBelongsToClass(Method method, DataType referenceType)
-    {
-        var classObj = classRepository.Get(c => c.Name == referenceType.Name);
-        if (!classObj!.Methods!.Contains(method))
-        {
-            throw new Exception("Method not found in reference type");
-        }
-    }
-
-    private DataType GetReferenceType(string typeName)
-    {
-        var dataType = dataTypeRepository.Get(dt => dt.Type == typeName);
-        return dataType ?? throw new Exception($"Type '{typeName}' not found");
-    }
-
-    private void ValidateHierarchy(DataType reference, DataType instance)
-    {
-        var classObj = classRepository.Get(c => c.Name == instance.Name);
-        if(classObj!.Parent != null)
-        {
-            var parentClass = classObj.Parent;
-            if(parentClass.Name != reference.Type)
-            {
-                throw new Exception($"Parent class '{parentClass.Name}' not found in reference type '{reference.Type}'");
-            }
-        }
-        else
-        {
-            throw new Exception($"Parent class '{instance.Name}' not found in reference type '{reference.Type}'");
-        }
     }
 
     private string SimulateInternal(Method method, int indentLevel)
