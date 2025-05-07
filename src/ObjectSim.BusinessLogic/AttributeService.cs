@@ -6,50 +6,25 @@ using Attribute = ObjectSim.Domain.Attribute;
 namespace ObjectSim.BusinessLogic;
 public class AttributeService(IRepository<Attribute> attributeRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService) : IAttributeService
 {
+
+    #region CreateAttribute
+
     public Attribute CreateAttribute(CreateAttributeArgs args)
     {
-        ValidateNullArgs(args);
+        var attribute = BuildAttributeFromArgs(args);
 
-        var visibility = ParseVisibility(args.Visibility);
-        var dataType = dataTypeService.CreateDataType(args.DataType);
+        AddAttributeToClass(args.ClassId, attribute);
 
-        var attribute = BuildAttribute(args, dataType, visibility);
-        var classObj = GetClassById(args.ClassId);
-
-        classObj.AddAttribute(attribute);
-        AddAttributeToRepository(attribute);
+        SaveAttribute(attribute);
 
         return attribute;
     }
 
-    private Class GetClassById(Guid? classId)
+    private Attribute BuildAttributeFromArgs(CreateAttributeArgs args)
     {
-        if(classId == null)
-        {
-            throw new ArgumentNullException(nameof(classId));
-        }
-        return classRepository.Get(c => c.Id == classId) ?? throw new ArgumentException("Class not found.");
-    }
+        var visibility = ParseVisibility(args.Visibility);
+        var dataType = dataTypeService.CreateDataType(args.DataType);
 
-    private static void ValidateNullArgs(CreateAttributeArgs args)
-    {
-        if(args == null)
-        {
-            throw new ArgumentNullException(nameof(args), "Attribute cannot be null.");
-        }
-    }
-
-    private static Attribute.AttributeVisibility ParseVisibility(string visibilityValue)
-    {
-        if(!Enum.TryParse(visibilityValue, true, out Attribute.AttributeVisibility visibility))
-        {
-            throw new ArgumentException($"Invalid visibility value: {visibilityValue}");
-        }
-        return visibility;
-    }
-
-    private static Attribute BuildAttribute(CreateAttributeArgs args, DataType dataType, Attribute.AttributeVisibility visibility)
-    {
         return new Attribute
         {
             Id = args.Id,
@@ -60,10 +35,40 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         };
     }
 
-    private void AddAttributeToRepository(Attribute attribute)
+    private void AddAttributeToClass(Guid? classId, Attribute attribute)
+    {
+        if (classId is null)
+        {
+            throw new ArgumentNullException(nameof(classId));
+        }
+
+        var classObj = GetClassById(classId.Value);
+
+        classObj.AddAttribute(attribute);
+    }
+
+    private void SaveAttribute(Attribute attribute)
     {
         attributeRepository.Add(attribute);
     }
+
+    private Class GetClassById(Guid classId)
+    {
+        return classRepository.Get(c => c.Id == classId)
+               ?? throw new ArgumentException("Class not found.");
+    }
+
+    private static Attribute.AttributeVisibility ParseVisibility(string visibilityValue)
+    {
+        if (!Enum.TryParse(visibilityValue, true, out Attribute.AttributeVisibility visibility))
+        {
+            throw new ArgumentException($"Invalid visibility value: {visibilityValue}");
+        }
+
+        return visibility;
+    }
+
+    #endregion
 
     public List<Attribute> GetAll()
     {

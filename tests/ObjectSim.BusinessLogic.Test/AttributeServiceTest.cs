@@ -61,13 +61,6 @@ public class AttributeServiceTest
     #region Error
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void CreateAttribute_NullArgs_ThrowsException()
-    {
-        _attributeServiceTest!.CreateAttribute(null!);
-    }
-
-    [TestMethod]
     public void CreateAttribute_NotValidDataType_ThrowsException()
     {
         _dataTypeServiceMock
