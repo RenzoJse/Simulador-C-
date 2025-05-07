@@ -6,7 +6,7 @@ using ObjectSim.IBusinessLogic;
 namespace ObjectSim.BusinessLogic;
 public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IRepository<Method> methodRepository, IRepository<Class> classRepository) : IMethodSimulatorService
 {
-    public List<string> Simulate(SimulateExecutionArgs args)
+    public string Simulate(SimulateExecutionArgs args)
     {
         ArgumentNullException.ThrowIfNull(args);
 
@@ -20,7 +20,7 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
 
         var method = FindMethodById(referenceType, args.MethodId); //aca consigo el metodo IniciarViaje
 
-        return SimulateInternal(method.MethodsInvoke);
+        return SimulateInternal(method, 0);
     }
 
     private Method FindMethodById(DataType referenceType, Guid methodId)
@@ -72,14 +72,22 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
         }
     }
 
-    private List<string> SimulateInternal(List<InvokeMethod> methodsToInvoke)
+    private string SimulateInternal(Method method, int indentLevel)
     {
-        var result = new List<string>();
+        var result = "";
 
-        foreach(var invoked in methodsToInvoke)
+        var indent = new string(' ', indentLevel * 5);
+
+        foreach (var methodInvoke in method.MethodsInvoke)
         {
-            var methodToInvoke = methodRepository.Get(m => m.Id == invoked.MethodId);
-            result.Add($"{invoked.Reference}.{methodToInvoke!.Name}() ->");
+            var objMethodToInvoke = methodRepository.Get(m => m.Id == methodInvoke.MethodId);
+
+            result += $"{indent}{methodInvoke.Reference}.{objMethodToInvoke!.Name}() -> ";
+
+            if (objMethodToInvoke.MethodsInvoke.Count > 0)
+            {
+                result += SimulateInternal(objMethodToInvoke, indentLevel + 1);
+            }
         }
 
         return result;

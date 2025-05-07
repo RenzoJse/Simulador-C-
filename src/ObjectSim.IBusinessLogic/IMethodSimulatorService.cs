@@ -3,5 +3,5 @@
 namespace ObjectSim.IBusinessLogic;
 public interface IMethodSimulatorService
 {
-    List<string> Simulate(SimulateExecutionArgs args);
+    string Simulate(SimulateExecutionArgs args);
 }

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Xml.XPath;
+using FluentAssertions;
 using Moq;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain.Args;
@@ -224,8 +225,8 @@ public class MethodSimulatorServiceTest
             ]
         };
 
-        var invokedMethod1 = new Method { Id = invokeMethodId1, Name = "FirstInvoked" };
-        var invokedMethod2 = new Method { Id = invokeMethodId2, Name = "SecondInvoked" };
+        var invokedMethod1 = new Method { Id = invokeMethodId1, Name = "FirstInvoked", MethodsInvoke = [] };
+        var invokedMethod2 = new Method { Id = invokeMethodId2, Name = "SecondInvoked", MethodsInvoke = [] };
 
         var referenceType = new ReferenceType("ReferenceType", "ReferenceType", [methodId]);
 
@@ -238,14 +239,15 @@ public class MethodSimulatorServiceTest
         _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(classObj);
 
-        _methodRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns((Func<Method, bool> predicate) =>
-                new[] { method, invokedMethod1, invokedMethod2 }.FirstOrDefault(predicate));
+        _methodRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns(method)
+            .Returns(invokedMethod1)
+            .Returns(invokedMethod2);
 
-        List<string> result = _methodSimulatorServiceTest.Simulate(args);
+        var result = _methodSimulatorServiceTest.Simulate(args);
 
-        result.Should().HaveCount(2);
-        result[0].Should().Be("this.MainMethod() ->");
+        result.Should().Contain("this.FirstInvoked() ->");
+        result.Should().Contain("other.SecondInvoked() ->");
     }
 
     [TestMethod]
@@ -293,14 +295,14 @@ public class MethodSimulatorServiceTest
         _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(classObj);
 
-        _methodRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns((Func<Method, bool> predicate) =>
-                new[] { method, invokedMethod1, invokedMethod2 }.FirstOrDefault(predicate));
+        _methodRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns(method)
+            .Returns(invokedMethod1)
+            .Returns(invokedMethod2);
 
-        List<string> result = _methodSimulatorServiceTest.Simulate(args);
-
-        result.Should().HaveCount(2);
-        result[0].Should().Be("this.MainMethod() ->");
+        var result = _methodSimulatorServiceTest.Simulate(args);
+        result.Should().Contain("this.FirstInvoked() ->");
+        result.Should().Contain("     this.SecondInvoked() ->");
     }
 
     #endregion
