@@ -42,7 +42,7 @@ public class MethodSimulatorServiceTest
         {
             ReferenceType = "UnknownType",
             InstanceType = "DoesNotMatter",
-            MethodId = "AnyMethod"
+            MethodId = Guid.NewGuid(),
         };
 
         _dataTypeRepositoryMock.Setup(r => r.Get(It.IsAny<Func<DataType, bool>>()))
@@ -60,7 +60,7 @@ public class MethodSimulatorServiceTest
         {
             ReferenceType = "ReferenceType",
             InstanceType = "UnknownType",
-            MethodId = "AnyMethod"
+            MethodId = Guid.NewGuid(),
         };
 
         var referenceType = new ReferenceType("Reference", "ReferenceClass", []);
@@ -81,7 +81,7 @@ public class MethodSimulatorServiceTest
         {
             ReferenceType = "VehicleTest", //Vehiculo
             InstanceType = "NotVehicle", //Algo q no es un vehiculo
-            MethodId = "methodInNotVehicle" //iniciarViaje
+            MethodId = Guid.NewGuid(), //iniciarViaje
         };
 
         var methodInNotVehicle = new Method
@@ -115,7 +115,7 @@ public class MethodSimulatorServiceTest
         {
             ReferenceType = "VehicleTest", //Vehiculo
             InstanceType = "NotVehicle", //Algo q no es un vehiculo
-            MethodId = "methodInNotVehicle" //iniciarViaje
+            MethodId = Guid.NewGuid(), //iniciarViaje
         };
 
         var methodInNotVehicle = new Method
@@ -148,22 +148,32 @@ public class MethodSimulatorServiceTest
         {
             ReferenceType = "ReferenceType",
             InstanceType = "ReferenceType",
-            MethodId = "NonExistentMethod"
+            MethodId = Guid.NewGuid(),
         };
 
         var methodId = Guid.NewGuid();
         var referenceType = new ReferenceType("ReferenceType", "ReferenceType", [methodId]);
+        var method = new Method
+        {
+            Id = methodId,
+            Name = "MethodName",
+            MethodsInvoke = []
+        };
 
         _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
             .Returns(referenceType)
             .Returns(referenceType);
 
-        var classObj = new Class() { Name = "ReferenceType" };
+        var classObj = new Class() {
+            Name = "ReferenceType",
+            Methods = []
+        };
+
         _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(classObj);
 
         _methodRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns((Method)null!);
+            .Returns(method);
 
         Action act = () => _methodSimulatorServiceTest.Simulate(args);
 

@@ -3,5 +3,5 @@ public class SimulateExecutionArgs
 {
     public string ReferenceType { get; set; } = null!;
     public string InstanceType { get; set; } = null!;
-    public string MethodId { get; set; } = null!;
+    public Guid MethodId { get; set; } = Guid.Empty;
 }
