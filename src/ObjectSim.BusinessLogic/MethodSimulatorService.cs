@@ -13,7 +13,10 @@ public class MethodSimulatorService(IRepository<DataType> dataTypeRepository, IR
         var referenceType = GetReferenceType(args.ReferenceType); // vehiculo
         var instanceType = GetReferenceType(args.InstanceType); // Auto
 
-        ValidateHierarchy(referenceType, instanceType);
+        if(referenceType != instanceType)
+        {
+            ValidateHierarchy(referenceType, instanceType);
+        }
 
         var method = FindMethodByName(referenceType, args.MethodName); //aca consigo el metodo IniciarViaje
 

@@ -141,6 +141,12 @@ public class MethodSimulatorServiceTest
         act.Should().Throw<Exception>().WithMessage($"Parent class 'NotVehicle' not found in reference type 'VehicleTest'");
     }
 
+    [TestMethod]
+    public void Simulate_WhenMethodDoesNotExistInType_ThrowsException()
+    {
+
+    }
+
     #endregion
 
     #endregion
