@@ -98,8 +98,42 @@ public class MethodSimulatorServiceTest
             .Returns(referenceType)
             .Returns(instanceType);
 
-        var parentClass = new Class { Name = "OtroTipo" };
+        var parentClass = new Class { Name = "OtherType" };
         var classObj = new Class { Name = "NotVehicle", Parent = parentClass };
+        _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(classObj);
+
+        Action act = () => _methodSimulatorServiceTest.Simulate(args);
+
+        act.Should().Throw<Exception>().WithMessage($"Parent class 'OtherType' not found in reference type 'VehicleTest'");
+    }
+
+    [TestMethod]
+    public void Simulate_WhenInstanceIsNotReferenceParent_ThrowsException()
+    {
+        var args = new SimulateExecutionArgs
+        {
+            ReferenceType = "VehicleTest", //Vehiculo
+            InstanceType = "NotVehicle", //Algo q no es un vehiculo
+            MethodName = "methodInNotVehicle" //iniciarViaje
+        };
+
+        var methodInNotVehicle = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "methodInNotVehicle",
+            MethodsInvoke = []
+        };
+
+        var referenceType = new ReferenceType("VehicleTest", "VehicleTest", []);
+        var instanceType = new ReferenceType("NotVehicle", "NotVehicle", [methodInNotVehicle.Id]);
+
+        _dataTypeRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<DataType, bool>>()))
+            .Returns(referenceType)
+            .Returns(instanceType);
+
+        var parentClass = new Class { Name = "OtroTipo" };
+        var classObj = new Class { Name = "NotVehicle", Parent = null };
         _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(classObj);
 
