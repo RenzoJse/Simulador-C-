@@ -7,6 +7,9 @@ namespace ObjectSim.BusinessLogic;
 
 public class DataTypeService(IRepository<Class> classRepository) : IDataTypeService
 {
+
+    #region CreateDataType
+
     public DataType CreateDataType(CreateDataTypeArgs args)
     {
         ValidateArgsNotNull(args);
@@ -63,4 +66,7 @@ public class DataTypeService(IRepository<Class> classRepository) : IDataTypeServ
     {
         return new ReferenceType(args.Name, args.Type, []);
     }
+
+    #endregion
+
 }
