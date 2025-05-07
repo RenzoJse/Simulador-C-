@@ -60,17 +60,17 @@ public abstract class Builder()
     {
         ArgumentNullException.ThrowIfNull(methods);
 
-        if(methods.Count == 0)
+        if (methods.Count == 0 && ParentIsInterfaceWithUnimplementedMethods())
         {
-            if(Result.Parent is not null)
-            {
-                if((bool)Result.Parent.IsInterface!)
-                {
-                    throw new ArgumentException("Parent class is an interface and has methods that are not implemented");
-                }
-            }
-            Result.Methods = [];
+            throw new ArgumentException("Parent class is an interface and has methods that are not implemented");
         }
+
+        Result.Methods = [];
+    }
+
+    private bool ParentIsInterfaceWithUnimplementedMethods()
+    {
+        return Result.Parent is not null && Result.Parent.IsInterface == true;
     }
 
     public Class GetResult()
