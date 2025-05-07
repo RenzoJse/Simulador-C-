@@ -70,16 +70,22 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
 
     #endregion
 
+    #region GetAll
+
     public List<Attribute> GetAll()
     {
         var attributes = attributeRepository.GetAll(att1 => att1.Id != Guid.Empty);
-        if(attributes == null || !attributes.Any())
+        if(attributes == null || attributes.Count == 0)
         {
             throw new KeyNotFoundException("No attributes found.");
         }
 
         return attributes;
     }
+
+    #endregion
+
+    #region Delete
 
     public bool Delete(Guid id)
     {
@@ -93,21 +99,44 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         return true;
     }
 
+    #endregion
+
+    #region GetById
+
     public Attribute GetById(Guid id)
     {
-        if(id == Guid.Empty)
-        {
-            throw new ArgumentException("Id must be a valid non-empty GUID.", nameof(id));
-        }
-
-        var attribute = attributeRepository.Get(att => att.Id == id);
-        if(attribute == null)
-        {
-            throw new KeyNotFoundException($"Attribute with ID {id} not found.");
-        }
-
-        return attribute;
+        ValidateGuidNotEmpty(id, nameof(id));
+        return attributeRepository.Get(a => a.Id == id)
+               ?? throw new KeyNotFoundException($"Attribute with ID {id} not found.");
     }
+
+    private static void ValidateGuidNotEmpty(Guid id, string paramName)
+    {
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentException($"{paramName} must be a valid non-empty GUID.", paramName);
+        }
+    }
+
+    #endregion
+
+    #region GetByClassId
+
+    public List<Attribute> GetByClassId(Guid classId)
+    {
+        ValidateGuidNotEmpty(classId, nameof(classId));
+        var attributes = attributeRepository.GetAll(a => a.ClassId == classId).ToList();
+        if (attributes.Count == 0)
+        {
+            throw new KeyNotFoundException($"No attributes found for ClassId: {classId}");
+        }
+
+        return attributes;
+    }
+
+    #endregion
+
+    #region Update
 
     public Attribute Update(Guid id, CreateAttributeArgs entity)
     {
@@ -138,19 +167,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         attributeRepository.Update(existing);
         return existing;
     }
-    public List<Attribute> GetByClassId(Guid classId)
-    {
-        if(classId == Guid.Empty)
-        {
-            throw new ArgumentException("ClassId must be a valid non-empty GUID.");
-        }
 
-        var attributes = attributeRepository.GetAll(a => a.ClassId == classId);
-        if(!attributes.Any())
-        {
-            throw new KeyNotFoundException($"No attributes found for ClassId: {classId}");
-        }
+    #endregion
 
-        return attributes.ToList();
-    }
 }
