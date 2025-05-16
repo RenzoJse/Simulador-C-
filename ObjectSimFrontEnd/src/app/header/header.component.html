@@ -1,0 +1,70 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid justify-content-between">
+    <span class="navbar-brand fs-3 fw-bold">Object Simulator</span>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Métodos
+          </a>
+          <ul class="dropdown-menu text-center">
+            <li><a class="dropdown-item" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Crear Método</a></li>
+            <li><a class="dropdown-item" routerLink="/about" routerLinkActive="active">Eliminar Método</a></li>
+            <li><a class="dropdown-item" routerLink="/contact" routerLinkActive="active">Actualizar Método</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Atributos
+          </a>
+          <ul class="dropdown-menu text-center">
+            <li><a class="dropdown-item" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Crear Atributo</a></li>
+            <li><a class="dropdown-item" routerLink="/about" routerLinkActive="active">Eliminar Atributo</a></li>
+            <li><a class="dropdown-item" routerLink="/contact" routerLinkActive="active">Actualizar Atributo</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Clases
+          </a>
+          <ul class="dropdown-menu text-center">
+            <li><a class="dropdown-item" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Crear Clase</a></li>
+            <li><a class="dropdown-item" routerLink="/about" routerLinkActive="active">Eliminar Clase</a></li>
+            <li><a class="dropdown-item" routerLink="/contact" routerLinkActive="active">Actualizar Clase</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
