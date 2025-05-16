@@ -6,8 +6,6 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-root',
     standalone: true,
   template: `
-    <h1>Welcome to {{title}}!</h1>
-
     <router-outlet><router-outlet />
   `,
     imports: [HeaderComponent, RouterOutlet],
