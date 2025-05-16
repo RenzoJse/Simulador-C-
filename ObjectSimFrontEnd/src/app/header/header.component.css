@@ -1,9 +1,17 @@
 .navbar-brand {
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  color: #fff;
 }
 
-.nav-link.active {
-  font-weight: bold;
-  text-decoration: underline;
+.navbar-nav .nav-link {
+  font-size: 1.1rem;
+}
+
+.dropdown-menu {
+  background-color: #e9ecef;
+}
+
+.dropdown-item:hover {
+  background-color: #cce5ff;
 }
