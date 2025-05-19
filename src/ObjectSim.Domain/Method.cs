@@ -47,6 +47,10 @@ public class Method
     public bool IsSealed { get; set; } = false;
     #endregion
 
+    #region IsVirtual
+    public bool IsVirtual { get; set; } = false;
+    #endregion
+
     #region IsOverride
     public bool IsOverride { get; set; } = false;
     #endregion

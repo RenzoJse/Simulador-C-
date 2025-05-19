@@ -31,6 +31,7 @@ public class MethodServiceTest
         false,
         false,
         false,
+        false,
         ClassId,
         [],
         [],
@@ -82,7 +83,7 @@ public class MethodServiceTest
     [TestMethod]
     public void CreateMethod_WithEmptyArgs_ThrowsException()
     {
-        var emptyArgs = new CreateMethodArgs("", null!, "", null, null, null, Guid.Empty, [], [], []);
+        var emptyArgs = new CreateMethodArgs("", null!, "", null, null, null, null, Guid.Empty, [], [], []);
 
         Action act = () => _methodServiceTest!.CreateMethod(emptyArgs);
 
@@ -466,7 +467,7 @@ public class MethodServiceTest
         setupSequence.Returns(invokeMethod);
 
         _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(new Class { Methods = [], Attributes = []});
+            .Returns(new Class { Methods = [], Attributes = [] });
 
         Action act = () => _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
 
@@ -502,7 +503,7 @@ public class MethodServiceTest
         setupSequence.Returns(invokeMethod);
 
         _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(new Class { Methods = [invokeMethod], Attributes = []});
+            .Returns(new Class { Methods = [invokeMethod], Attributes = [] });
 
         _testMethod!.MethodsInvoke.Add(new InvokeMethod(invokeMethod.Id, _testMethod.Id, "init"));
 

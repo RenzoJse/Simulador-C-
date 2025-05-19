@@ -319,7 +319,22 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenOtherMethodIsNotInClass_ThrowsException()
     {
-        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!, "this");
+        var unreachableMethod = new Method { Name = "HiddenMethod" };
+
+        var classObj = new Class
+        {
+            Methods = [],
+            Attributes = [],
+        };
+
+        var currentMethod = new Method
+        {
+            Name = "Caller",
+            Parameters = [],
+            LocalVariables = []
+        };
+
+        Action act = () => currentMethod.CanAddInvokeMethod(unreachableMethod, classObj, "this");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
@@ -344,12 +359,13 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenUsingMethodThatIsNotInClassNeitherParentClass_ThrowsException()
     {
+        var unreachableMethod = new Method { Name = "GhostMethod" };
+
         var parentClass = new Class { Methods = [] };
         _testClass!.Parent = parentClass;
+        _testClass.Methods!.Add(new Method { Name = "UnrelatedMethod" });
 
-        _testClass.Methods!.Add(new Method { Name = "OtherMethod" });
-
-        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!, "this");
+        Action act = () => _testMethod!.CanAddInvokeMethod(unreachableMethod, _testClass!, "this");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
@@ -375,7 +391,7 @@ public class MethodTest
 
         OtherMethod!.Parameters = [parameter];
 
-        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!,"this");
+        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "this");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");

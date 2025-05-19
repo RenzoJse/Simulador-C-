@@ -14,17 +14,17 @@ public class DataTypeService(IRepository<Class> classRepository) : IDataTypeServ
     {
         ValidateArgsNotNull(args);
 
-        if (IsBuiltinType(args.Type))
+        if(IsBuiltinType(args.Type))
         {
             return CreateBuiltinValueType(args);
         }
 
-        if (IsStringType(args.Type))
+        if(IsStringType(args.Type))
         {
             return CreateStringReferenceType(args);
         }
 
-        if (!ClassExists(args.Type))
+        if(!ClassExists(args.Type))
         {
             throw new ArgumentException($"Cannot create ReferenceType: class '{args.Type}' not found.");
         }

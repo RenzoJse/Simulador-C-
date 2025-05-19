@@ -26,7 +26,8 @@ public sealed class ExceptionFilter : IExceptionFilter
 
         context.Result = new ObjectResult(new
         {
-            InnerCode = innerCode, exception.Message
+            InnerCode = innerCode,
+            exception.Message
         })
         {
             StatusCode = (int)statusCode

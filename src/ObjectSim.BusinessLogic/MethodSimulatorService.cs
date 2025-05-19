@@ -42,7 +42,7 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
     private Class GetClassById(Guid classId)
     {
         var classObj = classRepository.Get(c => c.Id == classId);
-        if (classObj == null)
+        if(classObj == null)
         {
             throw new Exception("Class not found.");
         }
@@ -52,7 +52,7 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
     private Method GetMethodById(Guid methodId)
     {
         var method = methodRepository.Get(m => m.Id == methodId);
-        if (method == null)
+        if(method == null)
         {
             throw new Exception("Method not found.");
         }
@@ -65,13 +65,13 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
 
         var indent = new string(' ', indentLevel * 5);
 
-        foreach (var methodInvoke in method.MethodsInvoke)
+        foreach(var methodInvoke in method.MethodsInvoke)
         {
             var objMethodToInvoke = methodRepository.Get(m => m.Id == methodInvoke.MethodId);
 
             result += $"{indent}{methodInvoke.Reference}.{objMethodToInvoke!.Name}() -> ";
 
-            if (objMethodToInvoke.MethodsInvoke.Count > 0)
+            if(objMethodToInvoke.MethodsInvoke.Count > 0)
             {
                 result += SimulateInternal(objMethodToInvoke, indentLevel + 1);
             }

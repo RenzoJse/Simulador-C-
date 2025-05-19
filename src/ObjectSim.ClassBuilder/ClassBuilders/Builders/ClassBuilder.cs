@@ -63,9 +63,9 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
     private void ValidateInterfaceImplementation(List<Method> methods)
     {
         var parent = Result.Parent;
-        if (parent is not null && parent.IsInterface == true)
+        if(parent is not null && parent.IsInterface == true)
         {
-            if ((from parentMethod in parent.Methods ?? Enumerable.Empty<Method>() select methods.Any(m => m.Name == parentMethod.Name)).Any(isImplemented => !isImplemented))
+            if((from parentMethod in parent.Methods ?? Enumerable.Empty<Method>() select methods.Any(m => m.Name == parentMethod.Name)).Any(isImplemented => !isImplemented))
             {
                 throw new ArgumentException("Parent class is an interface. Should implement all its methods");
             }

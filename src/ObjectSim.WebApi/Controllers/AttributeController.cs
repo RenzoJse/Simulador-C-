@@ -2,7 +2,6 @@
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
-using ObjectSim.WebApi.Filter;
 using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.WebApi.Controllers;

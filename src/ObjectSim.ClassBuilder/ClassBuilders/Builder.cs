@@ -60,7 +60,7 @@ public abstract class Builder()
     {
         ArgumentNullException.ThrowIfNull(methods);
 
-        if (methods.Count == 0 && ParentIsInterfaceWithUnimplementedMethods())
+        if(methods.Count == 0 && ParentIsInterfaceWithUnimplementedMethods())
         {
             throw new ArgumentException("Parent class is an interface and has methods that are not implemented");
         }
