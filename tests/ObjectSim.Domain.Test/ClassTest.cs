@@ -368,9 +368,54 @@ public class ClassTest
             .WithMessage("Method already exists in class.");
     }
 
+    [TestMethod]
+    public void CanAddMethod_WhenOverrideWithoutVirtualParent_ShouldThrow()
+    {
+        var parentMethod = new Method { Name = "Test", IsVirtual = false };
+        var parentClass = new Class { Methods = [parentMethod] };
+        var childClass = new Class { Parent = parentClass, Methods = [] };
+
+        var method = new Method { Name = "Test", IsOverride = true };
+
+        Action act = () => childClass.CanAddMethod(method);
+
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Override method must override a method from the parent class.");
+    }
+
+    [TestMethod]
+    public void CanAddMethod_WhenSameNameAndNotOverride_ShouldThrow()
+    {
+        var classObj = new Class
+        {
+            Methods = [new Method { Name = "Test", IsVirtual = false }]
+        };
+
+        var newMethod = new Method { Name = "Test", IsOverride = false };
+
+        Action act = () => classObj.CanAddMethod(newMethod);
+
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("A non-override method with the same name already exists.");
+    }
+
     #endregion
 
     #region Success
+
+    [TestMethod]
+    public void CanAddMethod_WhenOverrideWithVirtualParent_ShouldSucceed()
+    {
+        var parentMethod = new Method { Name = "Test", IsVirtual = true };
+        var parentClass = new Class { Methods = [parentMethod] };
+        var childClass = new Class { Parent = parentClass, Methods = [] };
+
+        var method = new Method { Name = "Test", IsOverride = true };
+
+        Action act = () => childClass.CanAddMethod(method);
+
+        act.Should().NotThrow();
+    }
 
     [TestMethod]
     public void CanAddMethod_WithCompletelyDifferentMethod_AddsMethods()
