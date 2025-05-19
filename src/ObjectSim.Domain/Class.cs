@@ -161,11 +161,28 @@ public class Class
 
     public bool CanAddMethod(Method method)
     {
+        ArgumentNullException.ThrowIfNull(method);
+
         ValidateMethodUniqueness(method);
 
         if(IsInterface == true)
         {
             ValidateInterfaceMethodConstraints(method);
+        }
+
+        if(method.IsOverride)
+        {
+            if(Parent == null)
+            {
+                throw new ArgumentException("Override method must override a method from the parent class.");
+            }
+
+            var parentMethod = Parent.Methods?.FirstOrDefault(m => m.Name == method.Name);
+
+            if(parentMethod == null || !parentMethod.IsVirtual)
+            {
+                throw new ArgumentException("Override method must override a method from the parent class.");
+            }
         }
 
         return true;
