@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
-using ObjectSim.WebApi.Filter;
 
 namespace ObjectSim.WebApi.Controllers;
 
@@ -12,7 +10,7 @@ public class SimulatorController(IMethodSimulatorService simulatorService) : Con
 {
 
     [HttpPost]
-    public IActionResult SimulateExecution([FromBody]CreateSimulateExecutionDtoIn methodExcecution)
+    public IActionResult SimulateExecution([FromBody] CreateSimulateExecutionDtoIn methodExcecution)
     {
         var result = simulatorService.Simulate(methodExcecution.ToArgs());
         return Ok(result);

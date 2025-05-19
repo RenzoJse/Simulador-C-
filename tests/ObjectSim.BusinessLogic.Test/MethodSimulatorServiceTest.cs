@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using Moq;
 using ObjectSim.DataAccess.Interface;
-using ObjectSim.Domain.Args;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic.Test;
@@ -190,7 +190,9 @@ public class MethodSimulatorServiceTest
 
         var args = new SimulateExecutionArgs
         {
-            ReferenceId = reference.Id, InstanceId = instance.Id, MethodId = methodId
+            ReferenceId = reference.Id,
+            InstanceId = instance.Id,
+            MethodId = methodId
         };
 
         var invokedMethod1 = new Method { Id = invokeMethodId1, Name = "FirstInvoked", MethodsInvoke = [] };
@@ -233,7 +235,9 @@ public class MethodSimulatorServiceTest
 
         var args = new SimulateExecutionArgs
         {
-            ReferenceId = reference.Id, InstanceId = instance.Id, MethodId = methodId
+            ReferenceId = reference.Id,
+            InstanceId = instance.Id,
+            MethodId = methodId
         };
 
         var invokedMethod1 = new Method

@@ -104,7 +104,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     public List<Method> GetAll()
     {
         var methods = methodRepository.GetAll(m => m.Id != Guid.Empty)?.ToList();
-        if (methods == null || methods.Count == 0)
+        if(methods == null || methods.Count == 0)
         {
             throw new Exception("No methods found.");
         }
@@ -141,7 +141,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     private static void ValidateMethodName(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if(string.IsNullOrWhiteSpace(name))
         {
             throw new Exception("Incorrect name method");
         }
@@ -215,7 +215,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     private static void ValidateInvokeMethodArgs(List<CreateInvokeMethodArgs> invokeMethodArgs)
     {
-        if (invokeMethodArgs == null || invokeMethodArgs.Count == 0)
+        if(invokeMethodArgs == null || invokeMethodArgs.Count == 0)
         {
             throw new ArgumentException("Invoke method arguments cannot be null or empty.");
         }
@@ -224,7 +224,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     private List<InvokeMethod> BuildInvokeMethods(List<CreateInvokeMethodArgs> invokeMethodArgs, Method method)
     {
         var invokeMethods = new List<InvokeMethod>();
-        foreach (var invokeArg in invokeMethodArgs)
+        foreach(var invokeArg in invokeMethodArgs)
         {
             var methodToInvoke = methodRepository.Get(m => m.Id == invokeArg.InvokeMethodId)
                                  ?? throw new Exception($"Method to invoke with id {invokeArg.InvokeMethodId} not found");

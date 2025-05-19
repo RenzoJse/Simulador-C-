@@ -24,6 +24,6 @@ public class MethodDtoIn
         parameters.AddRange(Parameters.Select(parameter => new CreateDataTypeArgs(parameter.Name, parameter.Type)));
         var type = new CreateDataTypeArgs(Type.Name, Type.Type);
         return new CreateMethodArgs(Name, type, Accessibility,
-            IsAbstract, IsSealed, IsOverride, IsVirtual,Guid.Parse(ClassId!), localVariables, parameters, InvokeMethodsId);
+            IsAbstract, IsSealed, IsOverride, IsVirtual, Guid.Parse(ClassId!), localVariables, parameters, InvokeMethodsId);
     }
 }

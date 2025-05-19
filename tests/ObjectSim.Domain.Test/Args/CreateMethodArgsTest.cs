@@ -19,7 +19,7 @@ public class CreateMethodArgsTest
     public void Type_SetAndGet_ShouldReturnExpectedValue()
     {
         var type = new CreateDataTypeArgs("Type", "int");
-        var args = new CreateMethodArgs("Test", type, "public", true, false, true, false,Guid.NewGuid(), [], [], []);
+        var args = new CreateMethodArgs("Test", type, "public", true, false, true, false, Guid.NewGuid(), [], [], []);
         var newType = new CreateDataTypeArgs("OtherType", "float");
         args.Type = newType;
         args.Type.Should().Be(newType);

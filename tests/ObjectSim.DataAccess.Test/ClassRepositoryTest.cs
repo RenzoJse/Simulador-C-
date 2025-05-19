@@ -65,7 +65,7 @@ public class ClassRepositoryTest
                     Id = Guid.NewGuid(),
                     Name = "TestAttribute",
                     ClassId = classId,
-                    DataType = new ValueType("myVariable","int", []),
+                    DataType = new ValueType("myVariable", "int", []),
                     Visibility = 0
                 }
             ]

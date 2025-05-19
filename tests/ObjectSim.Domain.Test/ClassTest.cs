@@ -330,7 +330,7 @@ public class ClassTest
         };
 
         _testClass.Methods = [methodToInvoke];
-        
+
         var invokeMethod = new InvokeMethod(_existingMethod.Id, methodToInvoke.Id, "this");
 
         _existingMethod.CanAddInvokeMethod(methodToInvoke, _testClass, "this");
@@ -392,7 +392,7 @@ public class ClassTest
         {
             Name = "TestMethod",
             Type = dataType,
-            Parameters = new List<DataType> { new FakeDataType { Name = "a", Type = "Int" } },
+            Parameters = [new FakeDataType { Name = "a", Type = "Int" }],
             IsOverride = false
         };
 
@@ -400,13 +400,13 @@ public class ClassTest
         {
             Name = "TestMethod",
             Type = dataType,
-            Parameters = new List<DataType> { new FakeDataType { Name = "a", Type = "Int" } },
+            Parameters = [new FakeDataType { Name = "a", Type = "Int" }],
             IsOverride = false
         };
 
         var classObj = new Class
         {
-            Methods = new List<Method> { method1 }
+            Methods = [method1]
         };
 
         Action act = () => classObj.CanAddMethod(method2);
@@ -530,7 +530,7 @@ public class ClassTest
         {
             Name = "DoWork",
             Type = dataType,
-            Parameters = new List<DataType> { parameter },
+            Parameters = [parameter],
             IsVirtual = true,
             IsOverride = false
         };
@@ -539,20 +539,20 @@ public class ClassTest
         {
             Name = "DoWork",
             Type = dataType,
-            Parameters = new List<DataType> { parameter },
+            Parameters = [parameter],
             IsOverride = true,
             IsVirtual = false
         };
 
         var parentClass = new Class
         {
-            Methods = new List<Method> { parentMethod }
+            Methods = [parentMethod]
         };
 
         var childClass = new Class
         {
             Parent = parentClass,
-            Methods = new List<Method>()
+            Methods = []
         };
 
         Action act = () => childClass.CanAddMethod(childOverride);

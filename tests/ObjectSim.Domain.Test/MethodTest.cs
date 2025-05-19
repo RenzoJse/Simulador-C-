@@ -323,15 +323,15 @@ public class MethodTest
 
         var classObj = new Class
         {
-            Methods = new List<Method>(),
-            Attributes = new List<Attribute>(),
+            Methods = [],
+            Attributes = [],
         };
 
         var currentMethod = new Method
         {
             Name = "Caller",
-            Parameters = new List<DataType>(),
-            LocalVariables = new List<DataType>()
+            Parameters = [],
+            LocalVariables = []
         };
 
         Action act = () => currentMethod.CanAddInvokeMethod(unreachableMethod, classObj, "this");
@@ -391,7 +391,7 @@ public class MethodTest
 
         OtherMethod!.Parameters = [parameter];
 
-        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!,"this");
+        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "this");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
