@@ -386,17 +386,33 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_WhenSameNameAndNotOverride_ShouldThrow()
     {
-        var classObj = new Class
+        var dataType = new FakeDataType { Name = "int", Type = "Int" };
+
+        var method1 = new Method
         {
-            Methods = [new Method { Name = "Test", IsVirtual = false }]
+            Name = "TestMethod",
+            Type = dataType,
+            Parameters = new List<DataType> { new FakeDataType { Name = "a", Type = "Int" } },
+            IsOverride = false
         };
 
-        var newMethod = new Method { Name = "Test", IsOverride = false };
+        var method2 = new Method
+        {
+            Name = "TestMethod",
+            Type = dataType,
+            Parameters = new List<DataType> { new FakeDataType { Name = "a", Type = "Int" } },
+            IsOverride = false
+        };
 
-        Action act = () => classObj.CanAddMethod(newMethod);
+        var classObj = new Class
+        {
+            Methods = new List<Method> { method1 }
+        };
+
+        Action act = () => classObj.CanAddMethod(method2);
 
         act.Should().Throw<ArgumentException>()
-           .WithMessage("A non-override method with the same name already exists.");
+           .WithMessage("Method already exists in class.");
     }
 
     #endregion
@@ -507,29 +523,41 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_TryingToAddOverridingParentMethod_AddsMethod()
     {
+        var dataType = new FakeDataType { Name = "int", Type = "Int" };
+        var parameter = new FakeDataType { Name = "a", Type = "Int" };
+
         var parentMethod = new Method
         {
-            Name = "ParentMethod",
-            Type = ValueType,
-            Parameters = [],
+            Name = "DoWork",
+            Type = dataType,
+            Parameters = new List<DataType> { parameter },
+            IsVirtual = true,
             IsOverride = false
         };
 
-        var parent = new Class { Methods = [parentMethod] };
-
-        _testClass!.Parent = parent;
-
-        var method = new Method
+        var childOverride = new Method
         {
-            Name = "ParentMethod",
-            Type = ValueType,
-            Parameters = [],
-            IsOverride = true
+            Name = "DoWork",
+            Type = dataType,
+            Parameters = new List<DataType> { parameter },
+            IsOverride = true,
+            IsVirtual = false
         };
 
-        Action action = () => _testClass!.CanAddMethod(method);
+        var parentClass = new Class
+        {
+            Methods = new List<Method> { parentMethod }
+        };
 
-        action.Should().NotThrow();
+        var childClass = new Class
+        {
+            Parent = parentClass,
+            Methods = new List<Method>()
+        };
+
+        Action act = () => childClass.CanAddMethod(childOverride);
+
+        act.Should().NotThrow();
     }
 
     [TestMethod]
@@ -649,4 +677,13 @@ public class ClassTest
     #endregion
 
     #endregion
+}
+public class FakeDataType : DataType
+{
+    public override bool IsSameType(DataType other)
+    {
+        return other is FakeDataType fake &&
+               fake.Name == Name &&
+               fake.Type == Type;
+    }
 }
