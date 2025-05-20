@@ -147,5 +147,14 @@ public class DataTypeServiceTest
         Assert.IsInstanceOfType(result, typeof(ValueType));
         Assert.AreEqual(vt, result);
     }
+    [TestMethod]
+    [ExpectedException(typeof(KeyNotFoundException))]
+    public void GetById_WhenNotFound_Throws()
+    {
+        _dataTypeRepositoryMock.Setup(r => r.Get(It.IsAny<Func<DataType, bool>>()))
+        .Returns((DataType?)null);
+
+        _dataTypeServiceTest.GetById(new Guid());
+    }
 
 }
