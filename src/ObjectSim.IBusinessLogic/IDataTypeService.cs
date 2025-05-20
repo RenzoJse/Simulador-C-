@@ -7,4 +7,5 @@ public interface IDataTypeService
 {
     DataType CreateDataType(CreateDataTypeArgs dataType);
     DataType GetById(Guid id);
+    List<DataType> GetAll();
 }

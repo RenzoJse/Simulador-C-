@@ -167,10 +167,10 @@ public class DataTypeServiceTest
             new ReferenceType("str", "string", [])
         };
 
-        _dataTypeRepo.Setup(r => r.GetAll(It.IsAny<Func<DataType, bool>>()))
+        _dataTypeRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<DataType, bool>>()))
             .Returns(list);
 
-        var result = _service.GetAll();
+        var result = _dataTypeServiceTest.GetAll();
 
         CollectionAssert.AreEquivalent(list, result);
     }
