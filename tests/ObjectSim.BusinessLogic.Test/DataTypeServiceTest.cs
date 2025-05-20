@@ -11,12 +11,16 @@ public class DataTypeServiceTest
 {
     private Mock<IRepository<Class>> _classRepositoryMock = null!;
     private DataTypeService _dataTypeServiceTest = null!;
+    private Mock<IRepository<DataType>> _dataTypeRepositoryMock = null!;
+
+    private readonly Guid _valueTypeId = Guid.NewGuid();
 
     [TestInitialize]
     public void Setup()
     {
         _classRepositoryMock = new Mock<IRepository<Class>>();
-        _dataTypeServiceTest = new DataTypeService(_classRepositoryMock.Object);
+        _dataTypeRepositoryMock = new Mock<IRepository<DataType>>();
+        _dataTypeServiceTest = new DataTypeService(_classRepositoryMock.Object,_dataTypeRepositoryMock.Object);
     }
 
     [TestCleanup]
@@ -133,11 +137,14 @@ public class DataTypeServiceTest
     [TestMethod]
     public void GetById_WhenValueTypeExists_ReturnsValueType()
     {
-        var vt = new ValueType { Id = _valueTypeId, Name = "int" };
-        _valueTypeRepoMock.Setup(r => r.GetById(_valueTypeId)).Returns(vt);
+        var vt = new ValueType { Id = _valueTypeId, Name = "int", Type = "int" };
+        _dataTypeRepositoryMock
+            .Setup(r => r.Get(It.Is<Func<DataType, bool>>(f => f(vt))))
+            .Returns(vt);
 
-        var result = _service.GetById(_valueTypeId);
+        var result = _dataTypeServiceTest.GetById(_valueTypeId);
 
+        Assert.IsInstanceOfType(result, typeof(ValueType));
         Assert.AreEqual(vt, result);
     }
 
