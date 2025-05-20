@@ -156,5 +156,24 @@ public class DataTypeServiceTest
 
         _dataTypeServiceTest.GetById(new Guid());
     }
+    #region GetAll
 
+    [TestMethod]
+    public void GetAll_ShouldReturnListOfDataTypes()
+    {
+        var list = new List<DataType>
+        {
+            new ValueType("int", "int", []),
+            new ReferenceType("str", "string", [])
+        };
+
+        _dataTypeRepo.Setup(r => r.GetAll(It.IsAny<Func<DataType, bool>>()))
+            .Returns(list);
+
+        var result = _service.GetAll();
+
+        CollectionAssert.AreEquivalent(list, result);
+    }
+
+    #endregion
 }
