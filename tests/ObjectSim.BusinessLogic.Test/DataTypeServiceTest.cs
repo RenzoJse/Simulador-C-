@@ -130,5 +130,15 @@ public class DataTypeServiceTest
     #endregion
 
     #endregion
+    [TestMethod]
+    public void GetById_WhenValueTypeExists_ReturnsValueType()
+    {
+        var vt = new ValueType { Id = _valueTypeId, Name = "int" };
+        _valueTypeRepoMock.Setup(r => r.GetById(_valueTypeId)).Returns(vt);
+
+        var result = _service.GetById(_valueTypeId);
+
+        Assert.AreEqual(vt, result);
+    }
 
 }
