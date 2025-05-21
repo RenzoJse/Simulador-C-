@@ -46,4 +46,25 @@ public class DataTypeControllerTest
         Assert.IsNotNull(actualDtos);
         CollectionAssert.AreEqual(expectedDtos, actualDtos);
     }
+    [TestMethod]
+    public void GetById_WhenExists_ReturnsOkWithDto()
+    {
+        var id = Guid.NewGuid();
+        var dataType = new Domain.ValueType("int", "int", []) { Id = id, MethodIds = [Guid.NewGuid()] };
+        var expectedDto = DataTypeInformationDtoOut.ToInfo(dataType);
+
+        _dataTypeServiceMock
+            .Setup(s => s.GetById(id))
+            .Returns(dataType);
+
+        var result = _controller.GetById(id);
+
+        var okResult = result.Result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        Assert.AreEqual(200, okResult.StatusCode);
+
+        var actualDto = okResult.Value as DataTypeInformationDtoOut;
+        Assert.IsNotNull(actualDto);
+        Assert.AreEqual(expectedDto, actualDto);
+    }
 }
