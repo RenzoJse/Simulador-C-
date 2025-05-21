@@ -330,7 +330,7 @@ public class ClassTest
         };
 
         _testClass.Methods = [methodToInvoke];
-        
+
         var invokeMethod = new InvokeMethod(_existingMethod.Id, methodToInvoke.Id, "this");
 
         _existingMethod.CanAddInvokeMethod(methodToInvoke, _testClass, "this");

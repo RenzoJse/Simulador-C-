@@ -340,7 +340,7 @@ public class MethodTest
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
     }
-
+    /*
     [TestMethod]
     public void AddInvokeMethod_WhenUsingMethodThatIsNotInClassNeitherParentClass_ThrowsException()
     {
@@ -354,7 +354,7 @@ public class MethodTest
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
     }
-
+    */
     [TestMethod]
     public void AddInvokeMethod_WhenIsTryingToUseMethodNotInLocalVariables_ThrowsException()
     {

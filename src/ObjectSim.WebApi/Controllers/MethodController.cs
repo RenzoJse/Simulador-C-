@@ -2,7 +2,6 @@
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
-using ObjectSim.WebApi.Filter;
 
 namespace ObjectSim.WebApi.Controllers;
 
@@ -49,7 +48,7 @@ public class MethodController(IMethodService methodService) : ControllerBase
     }
 
     [HttpPatch("{id:guid}/invokeMethods")]
-    public IActionResult AddInvokeMethods([FromRoute]Guid id, List<CreateInvokeMethodDtoIn> invokeMethodDtoIn)
+    public IActionResult AddInvokeMethods([FromRoute] Guid id, List<CreateInvokeMethodDtoIn> invokeMethodDtoIn)
     {
         var invokeMethod = methodService.AddInvokeMethod(id, invokeMethodDtoIn.Select(dto => dto.ToArgs()).ToList());
 

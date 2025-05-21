@@ -121,7 +121,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     private static void EnsureClassHasMethods(Class classObj)
     {
-        if (classObj.Methods == null || classObj.Methods.Count == 0)
+        if(classObj.Methods == null || classObj.Methods.Count == 0)
         {
             throw new ArgumentException("Class has no methods.");
         }
@@ -130,7 +130,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
     private static Method FindMethodInClass(Class classObj, Guid? methodId)
     {
         var method = classObj.Methods!.FirstOrDefault(m => m.Id == methodId);
-        if (method == null)
+        if(method == null)
         {
             throw new ArgumentException("Method not found in class.");
         }
@@ -146,19 +146,19 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     private static void ValidateParentClassConstraints(Class classObj, Method method)
     {
-        if (classObj.Parent == null)
+        if(classObj.Parent == null)
         {
             return;
         }
 
         var parentClass = classObj.Parent;
 
-        if ((bool)parentClass.IsInterface!)
+        if((bool)parentClass.IsInterface!)
         {
             EnsureMethodNotInInterface(parentClass, method);
         }
 
-        if ((bool)parentClass.IsAbstract! && method.IsOverride)
+        if((bool)parentClass.IsAbstract! && method.IsOverride)
         {
             throw new ArgumentException("Cannot remove method that is overriding abstract parent method you implement.");
         }
@@ -182,7 +182,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
             .SelectMany(m => m.MethodsInvoke)
             .Any(invocation => invocation.InvokeMethodId == method.Id);
 
-        if (isInvoked)
+        if(isInvoked)
         {
             throw new ArgumentException("Cannot remove method that is invoked by another method.");
         }
@@ -206,7 +206,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     private static void EnsureClassHasAttributes(Class classObj)
     {
-        if (classObj.Attributes == null || classObj.Attributes.Count == 0)
+        if(classObj.Attributes == null || classObj.Attributes.Count == 0)
         {
             throw new ArgumentException("The class has no attributes.");
         }
@@ -215,7 +215,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
     private static Attribute FindAttributeInClass(Class classObj, Guid? attributeId)
     {
         var attribute = classObj.Attributes!.FirstOrDefault(a => a.Id == attributeId);
-        if (attribute == null)
+        if(attribute == null)
         {
             throw new ArgumentException("That attribute does not exist in the class.");
         }
@@ -225,14 +225,14 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     private static void EnsureAttributeNotUsedInMethods(Class classObj, Attribute attribute)
     {
-        if (classObj.Methods == null || classObj.Methods.Count == 0)
+        if(classObj.Methods == null || classObj.Methods.Count == 0)
         {
             return;
         }
 
-        foreach (var method in classObj.Methods)
+        foreach(var method in classObj.Methods)
         {
-            if (method.LocalVariables != null && method.LocalVariables.Any(lv => lv.Name == attribute.Name))
+            if(method.LocalVariables != null && method.LocalVariables.Any(lv => lv.Name == attribute.Name))
             {
                 throw new ArgumentException("Attribute is being used in method.");
             }

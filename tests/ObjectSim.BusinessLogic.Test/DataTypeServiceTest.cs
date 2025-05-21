@@ -20,7 +20,7 @@ public class DataTypeServiceTest
     {
         _classRepositoryMock = new Mock<IRepository<Class>>();
         _dataTypeRepositoryMock = new Mock<IRepository<DataType>>();
-        _dataTypeServiceTest = new DataTypeService(_classRepositoryMock.Object,_dataTypeRepositoryMock.Object);
+        _dataTypeServiceTest = new DataTypeService(_classRepositoryMock.Object, _dataTypeRepositoryMock.Object);
     }
 
     [TestCleanup]

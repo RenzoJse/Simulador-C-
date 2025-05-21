@@ -9,7 +9,7 @@ using ObjectSim.WebApi.DTOs.In;
 namespace ObjectSim.WebApi.Test.Controllers;
 
 [TestClass]
-public  class SimulatorControllerTest
+public class SimulatorControllerTest
 {
     private Mock<IMethodSimulatorService> _simulatorServiceMock = null!;
     private SimulatorController _simulatorController = null!;
@@ -52,7 +52,7 @@ public  class SimulatorControllerTest
     {
         var args = new CreateSimulateExecutionDtoIn
         {
-            ReferenceId =Guid.NewGuid().ToString(),
+            ReferenceId = Guid.NewGuid().ToString(),
             InstanceId = Guid.NewGuid().ToString(),
             MethodId = Guid.NewGuid().ToString()
         };
