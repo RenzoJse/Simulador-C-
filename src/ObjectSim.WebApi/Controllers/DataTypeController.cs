@@ -16,4 +16,11 @@ public class DataTypeController(IDataTypeService dataTypeService) : ControllerBa
 
         return Ok(result);
     }
+    [HttpGet]
+    [Route("{id}")]
+    public ActionResult<DataTypeInformationDtoOut> GetById(Guid id)
+    {
+            var dt = dataTypeService.GetById(id);
+            return Ok(DataTypeInformationDtoOut.ToInfo(dt));
+    }
 }
