@@ -67,4 +67,17 @@ public class DataTypeControllerTest
         Assert.IsNotNull(actualDto);
         Assert.AreEqual(expectedDto, actualDto);
     }
+    [TestMethod]
+    public void GetById_WhenNotFound_ThrowsKeyNotFoundException()
+    {
+        var id = Guid.NewGuid();
+
+        _dataTypeServiceMock
+            .Setup(s => s.GetById(id))
+            .Throws(new KeyNotFoundException("DataType not found"));
+
+        Action act = () => _controller.GetById(id);
+        Assert.ThrowsException<KeyNotFoundException>(act);
+    }
+
 }
