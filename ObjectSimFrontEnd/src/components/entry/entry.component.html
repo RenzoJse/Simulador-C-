@@ -1,0 +1,49 @@
+
+<div [formGroup]="form">
+    <ng-container [ngSwitch]="type">
+
+        <!-- checkbox -->
+        <input
+                *ngSwitchCase="'checkbox'"
+                class="form-check-input"
+                type="checkbox"
+                [formControlName]="controlName"
+                [ngClass]="{ 'is-invalid': invalid }"/>
+
+        <!-- case -->
+        <input
+                *ngSwitchCase="'case'"
+                class="form-check-input mb-3"
+                type="checkbox"
+                [formControlName]="controlName"/>
+        <label class="form-check-label" [for]="controlName">
+            {{ tag }}
+        </label>
+
+        <!-- option -->
+        <div *ngSwitchCase="'option'">
+            <div *ngFor="let option of options" class="form-check">
+                <input
+                        type="radio"
+                        class="form-check-input"
+                        [formControlName]="controlName"
+                        [value]="option.value"
+                        [id]="option.value" />
+                <label class="form-check-label" [for]="option.value">
+                    {{ option.tag }}
+                </label>
+            </div>
+        </div>
+
+        <!-- Default  -->
+        <input
+                *ngSwitchDefault
+                class="form-control"
+                [type]="type"
+                [formControlName]="controlName"
+                [placeholder]="reserve"
+                [value]="value"
+                [ngClass]="{ 'is-invalid': invalid }"
+        />
+    </ng-container>
+</div>
