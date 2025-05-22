@@ -6,7 +6,6 @@ using ObjectSim.IBusinessLogic;
 namespace ObjectSim.BusinessLogic;
 public class MethodService(IRepository<Method> methodRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService) : IMethodService, IMethodServiceCreate
 {
-
     #region CreateMethod
 
     public Method CreateMethod(CreateMethodArgs methodArgs)
@@ -44,6 +43,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             Abstract = methodArgs.IsAbstract ?? false,
             IsSealed = methodArgs.IsSealed ?? false,
             IsOverride = methodArgs.IsOverride ?? false,
+            IsVirtual = methodArgs.IsVirtual ?? false,
             Type = type,
             TypeId = type.Id,
             Parameters = parameters,

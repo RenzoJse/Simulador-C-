@@ -6,6 +6,7 @@ public class CreateMethodArgs(
     bool? isAbstract,
     bool? isSealed,
     bool? isOverride,
+    bool? IsVirtual,
     Guid classId,
     List<CreateDataTypeArgs> localVariables,
     List<CreateDataTypeArgs> parameters,
@@ -17,6 +18,7 @@ public class CreateMethodArgs(
     public bool? IsAbstract { get; set; } = isAbstract;
     public bool? IsSealed { get; set; } = isSealed;
     public bool? IsOverride { get; set; } = isOverride;
+    public bool? IsVirtual { get; set; } = IsVirtual;
     public Guid ClassId { get; set; } = classId;
     public List<CreateDataTypeArgs> LocalVariables { get; set; } = localVariables;
     public List<CreateDataTypeArgs> Parameters { get; set; } = parameters;

@@ -10,6 +10,7 @@ public class MethodDtoIn
     public bool IsAbstract { get; init; }
     public bool IsSealed { get; init; }
     public bool IsOverride { get; init; }
+    public bool? IsVirtual { get; set; }
     public string? ClassId { get; set; }
     public List<CreateDataTypeDtoIn> LocalVariables { get; init; } = [];
     public List<CreateDataTypeDtoIn> Parameters { get; init; } = [];
@@ -23,6 +24,6 @@ public class MethodDtoIn
         parameters.AddRange(Parameters.Select(parameter => new CreateDataTypeArgs(parameter.Name, parameter.Type)));
         var type = new CreateDataTypeArgs(Type.Name, Type.Type);
         return new CreateMethodArgs(Name, type, Accessibility,
-            IsAbstract, IsSealed, IsOverride, Guid.Parse(ClassId!), localVariables, parameters, InvokeMethodsId);
+            IsAbstract, IsSealed, IsOverride, IsVirtual, Guid.Parse(ClassId!), localVariables, parameters, InvokeMethodsId);
     }
 }

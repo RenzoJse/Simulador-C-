@@ -368,9 +368,70 @@ public class ClassTest
             .WithMessage("Method already exists in class.");
     }
 
+    [TestMethod]
+    public void CanAddMethod_WhenOverrideWithoutVirtualParent_ShouldThrow()
+    {
+        var parentMethod = new Method { Name = "Test", IsVirtual = false };
+        var parentClass = new Class { Methods = [parentMethod] };
+        var childClass = new Class { Parent = parentClass, Methods = [] };
+
+        var method = new Method { Name = "Test", IsOverride = true };
+
+        Action act = () => childClass.CanAddMethod(method);
+
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Override method must override a method from the parent class.");
+    }
+
+    [TestMethod]
+    public void CanAddMethod_WhenSameNameAndNotOverride_ShouldThrow()
+    {
+        var dataType = new FakeDataType { Name = "int", Type = "Int" };
+
+        var method1 = new Method
+        {
+            Name = "TestMethod",
+            Type = dataType,
+            Parameters = [new FakeDataType { Name = "a", Type = "Int" }],
+            IsOverride = false
+        };
+
+        var method2 = new Method
+        {
+            Name = "TestMethod",
+            Type = dataType,
+            Parameters = [new FakeDataType { Name = "a", Type = "Int" }],
+            IsOverride = false
+        };
+
+        var classObj = new Class
+        {
+            Methods = [method1]
+        };
+
+        Action act = () => classObj.CanAddMethod(method2);
+
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Method already exists in class.");
+    }
+
     #endregion
 
     #region Success
+
+    [TestMethod]
+    public void CanAddMethod_WhenOverrideWithVirtualParent_ShouldSucceed()
+    {
+        var parentMethod = new Method { Name = "Test", IsVirtual = true };
+        var parentClass = new Class { Methods = [parentMethod] };
+        var childClass = new Class { Parent = parentClass, Methods = [] };
+
+        var method = new Method { Name = "Test", IsOverride = true };
+
+        Action act = () => childClass.CanAddMethod(method);
+
+        act.Should().NotThrow();
+    }
 
     [TestMethod]
     public void CanAddMethod_WithCompletelyDifferentMethod_AddsMethods()
@@ -462,29 +523,41 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_TryingToAddOverridingParentMethod_AddsMethod()
     {
+        var dataType = new FakeDataType { Name = "int", Type = "Int" };
+        var parameter = new FakeDataType { Name = "a", Type = "Int" };
+
         var parentMethod = new Method
         {
-            Name = "ParentMethod",
-            Type = ValueType,
-            Parameters = [],
+            Name = "DoWork",
+            Type = dataType,
+            Parameters = [parameter],
+            IsVirtual = true,
             IsOverride = false
         };
 
-        var parent = new Class { Methods = [parentMethod] };
-
-        _testClass!.Parent = parent;
-
-        var method = new Method
+        var childOverride = new Method
         {
-            Name = "ParentMethod",
-            Type = ValueType,
-            Parameters = [],
-            IsOverride = true
+            Name = "DoWork",
+            Type = dataType,
+            Parameters = [parameter],
+            IsOverride = true,
+            IsVirtual = false
         };
 
-        Action action = () => _testClass!.CanAddMethod(method);
+        var parentClass = new Class
+        {
+            Methods = [parentMethod]
+        };
 
-        action.Should().NotThrow();
+        var childClass = new Class
+        {
+            Parent = parentClass,
+            Methods = []
+        };
+
+        Action act = () => childClass.CanAddMethod(childOverride);
+
+        act.Should().NotThrow();
     }
 
     [TestMethod]
@@ -604,4 +677,13 @@ public class ClassTest
     #endregion
 
     #endregion
+}
+public class FakeDataType : DataType
+{
+    public override bool IsSameType(DataType other)
+    {
+        return other is FakeDataType fake &&
+               fake.Name == Name &&
+               fake.Type == Type;
+    }
 }
