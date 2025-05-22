@@ -11,7 +11,6 @@ public class Method
         Protected,
     }
     public Guid Id { get; init; } = Guid.NewGuid();
-
     public Guid ClassId { get; set; }
 
     #region Name
