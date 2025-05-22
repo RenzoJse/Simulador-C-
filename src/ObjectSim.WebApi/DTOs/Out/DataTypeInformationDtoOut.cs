@@ -4,11 +4,19 @@ namespace ObjectSim.WebApi.DTOs.Out;
 
 public record DataTypeInformationDtoOut
 {
-    public string? Name { get; init; } = String.Empty;
-    public string? Type { get; init; } = String.Empty;
+    public Guid Id { get; init; }
+    public string Name { get; init; } = string.Empty;
+    public string Type { get; init; } = string.Empty;
+    public List<Guid> MethodIds { get; init; } = [];
 
     public static DataTypeInformationDtoOut ToInfo(DataType dataType)
     {
-        return new DataTypeInformationDtoOut { Name = dataType.Name, Type = dataType.Type };
+        return new DataTypeInformationDtoOut
+        {
+            Id = dataType.Id,
+            Name = dataType.Name,
+            Type = dataType.Type,
+            MethodIds = dataType.MethodIds ?? []
+        };
     }
 }

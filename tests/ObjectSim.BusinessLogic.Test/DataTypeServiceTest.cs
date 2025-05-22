@@ -11,12 +11,16 @@ public class DataTypeServiceTest
 {
     private Mock<IRepository<Class>> _classRepositoryMock = null!;
     private DataTypeService _dataTypeServiceTest = null!;
+    private Mock<IRepository<DataType>> _dataTypeRepositoryMock = null!;
+
+    private readonly Guid _valueTypeId = Guid.NewGuid();
 
     [TestInitialize]
     public void Setup()
     {
         _classRepositoryMock = new Mock<IRepository<Class>>();
-        _dataTypeServiceTest = new DataTypeService(_classRepositoryMock.Object);
+        _dataTypeRepositoryMock = new Mock<IRepository<DataType>>();
+        _dataTypeServiceTest = new DataTypeService(_classRepositoryMock.Object, _dataTypeRepositoryMock.Object);
     }
 
     [TestCleanup]
@@ -130,5 +134,46 @@ public class DataTypeServiceTest
     #endregion
 
     #endregion
+    [TestMethod]
+    public void GetById_WhenValueTypeExists_ReturnsValueType()
+    {
+        var vt = new ValueType { Id = _valueTypeId, Name = "int", Type = "int" };
+        _dataTypeRepositoryMock
+            .Setup(r => r.Get(It.Is<Func<DataType, bool>>(f => f(vt))))
+            .Returns(vt);
 
+        var result = _dataTypeServiceTest.GetById(_valueTypeId);
+
+        Assert.IsInstanceOfType(result, typeof(ValueType));
+        Assert.AreEqual(vt, result);
+    }
+    [TestMethod]
+    [ExpectedException(typeof(KeyNotFoundException))]
+    public void GetById_WhenNotFound_Throws()
+    {
+        _dataTypeRepositoryMock.Setup(r => r.Get(It.IsAny<Func<DataType, bool>>()))
+        .Returns((DataType?)null);
+
+        _dataTypeServiceTest.GetById(new Guid());
+    }
+    #region GetAll
+
+    [TestMethod]
+    public void GetAll_ShouldReturnListOfDataTypes()
+    {
+        var list = new List<DataType>
+        {
+            new ValueType("int", "int", []),
+            new ReferenceType("str", "string", [])
+        };
+
+        _dataTypeRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<DataType, bool>>()))
+            .Returns(list);
+
+        var result = _dataTypeServiceTest.GetAll();
+
+        CollectionAssert.AreEquivalent(list, result);
+    }
+
+    #endregion
 }
