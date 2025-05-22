@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
       landing-page works!
     </p>
   `,
+  standalone: true,
   templateUrl: "./landing-page.component.html",
 })
 

@@ -10,9 +10,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LandingPageComponent } from './landing-page/landing-page/landing-page.component';
 
+import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
+
 @NgModule({
-    declarations: [AppComponent, LandingPageComponent],
-    imports: [BrowserModule, CommonModule, FormsModule, ReactiveFormsModule, AppRoutingModule],
+    declarations: [AppComponent],
+    imports: [BrowserModule, CommonModule, FormsModule, ReactiveFormsModule, AppRoutingModule, 
+        LandingPageComponent, HeaderComponent, FooterComponent],
     providers: [provideHttpClient()],
     bootstrap: [AppComponent]
 })
