@@ -20,7 +20,7 @@ public class DataTypeController(IDataTypeService dataTypeService) : ControllerBa
     [Route("{id}")]
     public ActionResult<DataTypeInformationDtoOut> GetById(Guid id)
     {
-            var dt = dataTypeService.GetById(id);
-            return Ok(DataTypeInformationDtoOut.ToInfo(dt));
+        var dt = dataTypeService.GetById(id);
+        return Ok(DataTypeInformationDtoOut.ToInfo(dt));
     }
 }
