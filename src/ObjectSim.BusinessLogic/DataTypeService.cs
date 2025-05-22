@@ -5,7 +5,7 @@ using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
 
-public class DataTypeService(IRepository<Class> classRepository) : IDataTypeService
+public class DataTypeService(IRepository<Class> classRepository, IRepository<DataType> dataTypeRepository) : IDataTypeService
 {
 
     #region CreateDataType
@@ -66,7 +66,15 @@ public class DataTypeService(IRepository<Class> classRepository) : IDataTypeServ
     {
         return new ReferenceType(args.Name, args.Type, []);
     }
-
+    public DataType GetById(Guid id)
+    {
+        var dt = dataTypeRepository.Get(c => c.Id == id);
+        return dt is null ? throw new KeyNotFoundException("DataType not found") : dt;
+    }
+    public List<DataType> GetAll()
+    {
+        return dataTypeRepository.GetAll(_ => true);
+    }
     #endregion
 
 }
