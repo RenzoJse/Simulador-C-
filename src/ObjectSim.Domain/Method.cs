@@ -95,32 +95,45 @@ public class Method
             throw new ArgumentNullException(nameof(method), "Method cannot be null.");
         }
 
-        if(MethodIsNotInClass(method, classObj)
-            && MethodIsNotFromParent(method, classObj)
-            && MethodIsNotInAttributes(method, classObj)
-            && MethodIsNotInLocalVariable(method)
-            && MethodIsNotInParameters(method))
+        if(IsReservedReference(reference))
         {
-            throw new ArgumentException("The invoked method must be reachable from the current method.");
+            if(MethodIsNotInClass(method, classObj)
+               && MethodIsNotFromParent(method, classObj))
+            {
+                throw new ArgumentException("The invoked method must be reachable from the current method.");
+            }
+        }
+        else
+        {
+            if(MethodIsNotInAttributes(classObj, reference)
+               && MethodIsNotInLocalVariable(method, reference)
+               && MethodIsNotInParameters(method, reference))
+            {
+                throw new ArgumentException("The invoked method must be reachable from the current method.");
+            }
         }
 
     }
 
-    private static bool MethodIsNotInParameters(Method method)
+    private static bool IsReservedReference(string reference)
+    {
+        return reference is "this" or "base";
+    }
+
+    private static bool MethodIsNotInParameters(Method method, string reference)
     {
         var parameters = method.Parameters;
-        return parameters.All(parameter => !parameter.MethodIds.Contains(method.Id));
+        return parameters.All(parameter => parameter.Name != reference) && parameters.All(parameter => !parameter.MethodIds.Contains(method.Id));
     }
 
-    private static bool MethodIsNotInLocalVariable(Method method)
+    private static bool MethodIsNotInLocalVariable(Method method, string reference)
     {
         var localVariables = method.LocalVariables;
-        return localVariables.All(localVariable => !localVariable.MethodIds.Contains(method.Id));
+        return localVariables.All(localVariable => localVariable.Name != reference) && localVariables.All(localVariable => !localVariable.MethodIds.Contains(method.Id));
     }
-
-    private static bool MethodIsNotInAttributes(Method methods, Class classObj)
+    private static bool MethodIsNotInAttributes(Class classObj, string reference)
     {
-        return classObj.Attributes!.Select(attribute => attribute.DataType).All(attributeDataType => !attributeDataType.MethodIds.Contains(methods.Id));
+        return classObj.Attributes!.Any(attribute => attribute.Name != reference);
     }
 
     private static bool MethodIsNotInClass(Method methods, Class classObj)

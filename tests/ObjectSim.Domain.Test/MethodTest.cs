@@ -416,12 +416,13 @@ public class MethodTest
         var attribute = new Attribute
         {
             Id = Guid.NewGuid(),
-            DataType = dataType
+            DataType = dataType,
+            Name = "test"
         };
 
         _testClass!.Attributes = [attribute];
 
-        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass, "this");
+        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass, "test");
         _testMethod.MethodsInvoke.Add(_testInvokeMethod);
         _testMethod.MethodsInvoke.Should().Contain(_testInvokeMethod);
     }

@@ -493,7 +493,7 @@ public class MethodServiceTest
     public void AddInvokeMethod_WhenInvokeIsValid_AddsInvokeMethod()
     {
         var invokeMethod = new Method { Id = Guid.NewGuid(), Name = "test", Parameters = [] };
-        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(invokeMethod.Id, "init") };
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(invokeMethod.Id, "this") };
 
         ISetupSequentialResult<Method?> setupSequence =
             _methodRepositoryMock!.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()));
@@ -505,7 +505,7 @@ public class MethodServiceTest
         _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(new Class { Methods = [invokeMethod], Attributes = [] });
 
-        _testMethod!.MethodsInvoke.Add(new InvokeMethod(invokeMethod.Id, _testMethod.Id, "init"));
+        _testMethod!.MethodsInvoke.Add(new InvokeMethod(invokeMethod.Id, _testMethod.Id, "this"));
 
         _methodRepositoryMock.Setup(r => r.Update(It.IsAny<Method>()))
             .Returns(_testMethod);
