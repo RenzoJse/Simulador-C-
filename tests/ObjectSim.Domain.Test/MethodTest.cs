@@ -430,11 +430,11 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenMethodIsInLocalVariable_AddsMethod()
     {
-        var localVariable = new ValueType("int", "int", [OtherMethod!.Id]);
+        var localVariable = new ValueType("test", "int", [OtherMethod!.Id]);
 
         OtherMethod!.LocalVariables = [localVariable];
 
-        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "this");
+        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "test");
         _testMethod.MethodsInvoke.Add(_testInvokeMethod);
         _testMethod.MethodsInvoke.Should().Contain(_testInvokeMethod);
     }
