@@ -21,4 +21,16 @@ public class Namespace
 
         Children.Remove(child);
     }
+    public IEnumerable<Namespace> GetAllDescendants()
+    {
+        foreach(var child in Children)
+        {
+            yield return child;
+
+            foreach(var descendant in child.GetAllDescendants())
+            {
+                yield return descendant;
+            }
+        }
+    }
 }
