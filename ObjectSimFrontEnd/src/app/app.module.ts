@@ -12,7 +12,7 @@ import { LandingPageComponent } from './landing-page/landing-page/landing-page.c
 
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
-import { CreateMethodComponent } from './methods/create-method/create-method.component';
+import { CreateMethodComponent } from './components/methods/create-method/create-method.component'; 
 
 @NgModule({
     declarations: [AppComponent, CreateMethodComponent],
