@@ -1,13 +1,15 @@
 ﻿
 using Moq;
 using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain.Args;
+using ObjectSim.Domain;
 
 namespace ObjectSim.BusinessLogic.Test;
 [TestClass]
 public class NamespaceServiceTest
 {
-    private NamespaceService _namespaceService;
-    private Mock<IRepository<Namespace>> _namespaceRepositoryMock;
+    private Mock<IRepository<Namespace>> _namespaceRepositoryMock = null!;
+    private NamespaceService _namespaceService = null!;
     [TestInitialize]
     public void Setup()
     {
@@ -15,15 +17,13 @@ public class NamespaceServiceTest
         _namespaceService = new NamespaceService(_namespaceRepositoryMock.Object);
     }
     [TestMethod]
-    public void Create_WithValidNamespace_CallsAddOnRepository()
+    public void Create_WithValidArgs_CallsAddOnRepository()
     {
-        // Arrange
-        var ns = new Namespace { Name = "Utilities" };
+        var args = new CreateNamespaceArgs("MyNamespace", null);
 
-        // Act
-        _service.Create(ns);
+        _namespaceService.Create(args);
 
-        // Assert
-        _namespaceRepoMock.Verify(r => r.Add(ns), Times.Once);
+        _namespaceRepositoryMock.Verify(r =>
+            r.Add(It.Is<Namespace>(n => n.Name == "MyNamespace" && n.ParentId == null)), Times.Once);
     }
 }
