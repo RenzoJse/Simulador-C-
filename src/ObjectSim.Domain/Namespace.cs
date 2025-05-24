@@ -15,4 +15,10 @@ public class Namespace
         child.ParentId = Id;
         Children.Add(child);
     }
+    public void RemoveChild(Namespace child)
+    {
+        ArgumentNullException.ThrowIfNull(child);
+
+        Children.Remove(child);
+    }
 }

@@ -5,15 +5,23 @@ public class NamespaceTest
     [TestMethod]
     public void AddChild_ShouldAddChildAndSetParentId()
     {
-        // Arrange
         var parent = new Namespace { Name = "Root" };
         var child = new Namespace { Name = "Child" };
 
-        // Act
         parent.AddChild(child);
 
-        // Assert
         Assert.AreEqual(parent.Id, child.ParentId);
         Assert.IsTrue(parent.Children.Contains(child));
+    }
+    [TestMethod]
+    public void RemoveChild_ShouldRemoveChild()
+    {
+        var parent = new Namespace { Name = "Root" };
+        var child = new Namespace { Name = "Child" };
+        parent.AddChild(child);
+
+        parent.RemoveChild(child);
+
+        Assert.IsFalse(parent.Children.Contains(child));
     }
 }
