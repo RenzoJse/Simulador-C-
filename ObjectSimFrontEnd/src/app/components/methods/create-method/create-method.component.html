@@ -1,62 +1,70 @@
 <div class="container mt-4">
-    <h2>Crear Método</h2>
-  
-    <form (ngSubmit)="createMethod()" #form="ngForm" class="row g-3">
-  
-      <div class="col-md-6">
-        <label class="form-label">Nombre</label>
-        <input type="text" class="form-control" [(ngModel)]="method.name" name="name" required maxlength="50" />
+  <h2 class="mb-4">Crear Método</h2>
+
+  <form (ngSubmit)="createMethod()" #form="ngForm" class="mx-auto" style="max-width: 600px;">
+
+
+    <div class="mb-3">
+      <label class="form-label">Nombre</label>
+      <input type="text" class="form-control enhanced-input" [(ngModel)]="method.name" name="name" required maxlength="50" />
+    </div>
+    
+
+    <div class="mb-3">
+      <label class="form-label">Tipo (name)</label>
+      <input type="text" class="form-control enhanced-input" [(ngModel)]="method.type.name" name="typeName" required />
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Tipo (type)</label>
+      <input type="text" class="form-control enhanced-input" [(ngModel)]="method.type.type" name="typeType" required />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Accesibilidad</label>
+      <select class="form-select" [(ngModel)]="method.accessibility" name="accessibility">
+        <option value="Public">Public</option>
+        <option value="Private">Private</option>
+        <option value="Protected">Protected</option>
+      </select>
+    </div>
+
+
+    <div class="mb-3 border rounded p-3 bg-light">
+      <label class="form-label d-block mb-2 fw-bold">Modificadores</label>
+
+      <div class="form-check mb-2 form-check-lg">
+        <input class="form-check-input big-checkbox" type="checkbox" [(ngModel)]="method.isAbstract" name="isAbstract" id="isAbstract">
+        <label class="form-check-label fs-5" for="isAbstract">Abstract</label>
       </div>
-  
-      <div class="col-md-3">
-        <label class="form-label">Tipo (name)</label>
-        <input type="text" class="form-control" [(ngModel)]="method.type.name" name="typeName" required />
+
+      <div class="form-check mb-2">
+        <input class="form-check-input big-checkbox" type="checkbox" [(ngModel)]="method.isSealed" name="isSealed" id="isSealed">
+        <label class="form-check-label fs-5" for="isSealed">Sealed</label>
       </div>
-  
-      <div class="col-md-3">
-        <label class="form-label">Tipo (type)</label>
-        <input type="text" class="form-control" [(ngModel)]="method.type.type" name="typeType" required />
+
+      <div class="form-check mb-2">
+        <input class="form-check-input big-checkbox" type="checkbox" [(ngModel)]="method.isOverride" name="isOverride" id="isOverride">
+        <label class="form-check-label fs-5" for="isOverride">Override</label>
       </div>
-  
-      <div class="col-md-4">
-        <label class="form-label">Accesibilidad</label>
-        <select class="form-select" [(ngModel)]="method.accessibility" name="accessibility">
-          <option value="Public">Public</option>
-          <option value="Private">Private</option>
-          <option value="Protected">Protected</option>
-        </select>
+
+      <div class="form-check">
+        <input class="form-check-input big-checkbox" type="checkbox" [(ngModel)]="method.isVirtual" name="isVirtual" id="isVirtual">
+        <label class="form-check-label fs-5" for="isVirtual">Virtual</label>
       </div>
-  
-      <div class="col-md-8 d-flex flex-wrap gap-4 align-items-center">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" [(ngModel)]="method.isAbstract" name="isAbstract">
-          <label class="form-check-label">Abstract</label>
-        </div>
-  
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" [(ngModel)]="method.isSealed" name="isSealed">
-          <label class="form-check-label">Sealed</label>
-        </div>
-  
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" [(ngModel)]="method.isOverride" name="isOverride">
-          <label class="form-check-label">Override</label>
-        </div>
-  
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" [(ngModel)]="method.isVirtual" name="isVirtual">
-          <label class="form-check-label">Virtual</label>
-        </div>
-      </div>
-  
-      <div class="col-12">
-        <label class="form-label">ID de la Clase</label>
-        <input type="text" class="form-control" [(ngModel)]="method.classId" name="classId" required />
-      </div>
-  
-      <div class="col-12">
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Crear Método</button>
-      </div>
-  
-    </form>
-  </div>
+    </div>
+
+
+    <div class="mb-3">
+      <label class="form-label">ID de la Clase</label>
+      <input type="text" class="form-control enhanced-input" [(ngModel)]="method.classId" name="classId" required />
+    </div>
+
+    <div class="d-grid">
+      <button type="submit" class="btn btn-primary btn-lg" [disabled]="form.invalid">
+        Crear Método
+      </button>
+    </div>
+
+  </form>
+</div>
