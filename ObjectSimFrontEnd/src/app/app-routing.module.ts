@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CreateMethodComponent } from './method/create-method/create-method.component'; 
 
 const routes: Routes = [
   {
@@ -8,8 +7,8 @@ const routes: Routes = [
     loadChildren: () => import('./landing-page/landing-page.module').then(m => m.LandingPageModule),
   },
   {
-    path: 'methods/create',
-    component: CreateMethodComponent
+    path: 'methods',
+    loadChildren: () => import('./method/method.module').then(m => m.MethodModule),
   }
 ]
 

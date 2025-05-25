@@ -9,23 +9,23 @@ import { FormComponent } from '../../components/form/form/form.component';
 import MethodCreateModel from '../../backend/services/method/models/method-dto.model';
 
 @Component({
-  selector: 'app-create-method',
+  selector: 'app-create-method-form',
   standalone: true,
   imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent],
   templateUrl: './create-method-form.component.html',
   styleUrls: ['./create-method-form.component.css']
 })
-export class CreateMethodComponent {
+export class CreateMethodFormComponent {
     @Input() title: string = '';
 
     createMethodForm: FormGroup;
-    @Output() onSubmit = new EventEmitter<MethodCreateModel>();
+    @Output() atSubmit = new EventEmitter<MethodCreateModel>();
 
     createMethodStatus: {
         loading?: true;
         error?: string;
     } | null = null;
-    
+
     constructor(private fb: FormBuilder) {
         this.createMethodForm = this.fb.group({
             name: ['', [
@@ -38,7 +38,7 @@ export class CreateMethodComponent {
         });
     }
 
-    public onSubmitForm() {
+    public onSubmit() {
         if (this.createMethodForm.invalid) {
             this.markAsTouched();
             return;
@@ -58,7 +58,7 @@ export class CreateMethodComponent {
             parameters: []
         };
 
-        this.onSubmit.emit(newMethod);
+        this.atSubmit.emit(newMethod);
     }
 
     private markAsTouched() {

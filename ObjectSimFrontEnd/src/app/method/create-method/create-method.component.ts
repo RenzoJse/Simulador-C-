@@ -14,7 +14,7 @@ import MethodCreateModel from "../../../backend/services/method/models/method-dt
 export class CreateMethodComponent {
     createMethodForm: FormGroup;
     status: { loading?: true; error?: string } | null = null;
-    
+
     constructor(
         private readonly _router: Router,
         @Inject(MethodService) private readonly _methodService: MethodService

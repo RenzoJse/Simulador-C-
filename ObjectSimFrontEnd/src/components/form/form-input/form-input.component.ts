@@ -19,7 +19,7 @@ export class FormInputComponent {
     @Input() options: { value: string; tag: string }[] = [];
 
     @Input() controlName!: string;
-    @Input() errorMessage: { [key: string]: string } = {};
+    @Input() errorMessages: { [key: string]: string } = {};
 
     @Output() changeValue = new EventEmitter<string>();
 
@@ -27,11 +27,11 @@ export class FormInputComponent {
         return this.form.get(this.controlName);
     }
 
-    get mensajeError() {
+    get errorMessage() {
         if (this.control?.errors) {
             for (const key in this.control.errors) {
                 if (this.control.errors.hasOwnProperty(key)) {
-                    return this.errorMessage[key];
+                    return this.errorMessages[key];
                 }
             }
         }
@@ -42,7 +42,7 @@ export class FormInputComponent {
         return this.form.get(this.name)?.value;
     }
 
-    set valor(valor: string) {
+    set value(valor: string) {
         const control = this.form.get(this.name);
         if (control) {
             control.setValue(valor);

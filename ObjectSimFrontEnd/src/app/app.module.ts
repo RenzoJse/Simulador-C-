@@ -12,12 +12,12 @@ import { LandingPageComponent } from './landing-page/landing-page/landing-page.c
 
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
-import { CreateMethodComponent } from './components/methods/create-method/create-method.component'; 
+
 
 @NgModule({
     declarations: [AppComponent],
-    imports: [BrowserModule, CommonModule, FormsModule, ReactiveFormsModule, AppRoutingModule, 
-        LandingPageComponent, HeaderComponent, FooterComponent, CreateMethodComponent],
+    imports: [BrowserModule, CommonModule, FormsModule, ReactiveFormsModule, AppRoutingModule,
+        LandingPageComponent, HeaderComponent, FooterComponent],
     providers: [provideHttpClient()],
     bootstrap: [AppComponent]
 })
