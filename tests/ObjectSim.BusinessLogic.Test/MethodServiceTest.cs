@@ -26,7 +26,7 @@ public class MethodServiceTest
 
     private readonly CreateMethodArgs _testCreateMethodArgs = new(
         "TestMethod",
-        new CreateDataTypeArgs("MethodType", "int"),
+        Guid.NewGuid(),
         "public",
         false,
         false,
@@ -42,7 +42,7 @@ public class MethodServiceTest
     {
         Id = MethodId,
         Name = "TestMethod",
-        Type = new ValueType("MethodType", "int", []),
+        TypeId = Guid.NewGuid(),
         Abstract = false,
         IsSealed = false,
         Accessibility = Method.MethodAccessibility.Public,
@@ -83,7 +83,7 @@ public class MethodServiceTest
     [TestMethod]
     public void CreateMethod_WithEmptyArgs_ThrowsException()
     {
-        var emptyArgs = new CreateMethodArgs("", null!, "", null, null, null, null, Guid.Empty, [], [], []);
+        var emptyArgs = new CreateMethodArgs("", Guid.Empty, "", null, null, null, null, Guid.Empty, [], [], []);
 
         Action act = () => _methodServiceTest!.CreateMethod(emptyArgs);
 
@@ -122,7 +122,7 @@ public class MethodServiceTest
 
         result.Should().NotBeNull();
         result.Name.Should().Be(_testCreateMethodArgs.Name);
-        result.Type.Should().NotBeNull();
+        result.TypeId.Should().BeEmpty();
     }
 
     #endregion
@@ -252,7 +252,7 @@ public class MethodServiceTest
         {
             Id = ClassId,
             Name = "UpdatedMethod",
-            Type = new ValueType("TestParameter", "int", []),
+            TypeId = Guid.NewGuid(),
             Abstract = true,
             IsSealed = true,
             Accessibility = Method.MethodAccessibility.Private,
@@ -273,7 +273,7 @@ public class MethodServiceTest
         result.Should().NotBeNull();
         result.Id.Should().Be(_testMethod.Id);
         result.Name.Should().Be(newMethod.Name);
-        result.Type.Should().Be(newMethod.Type);
+        result.TypeId.Should().Be(newMethod.TypeId);
         result.Abstract.Should().Be(newMethod.Abstract);
         result.IsSealed.Should().Be(newMethod.IsSealed);
         result.Accessibility.Should().Be(newMethod.Accessibility);
@@ -287,7 +287,7 @@ public class MethodServiceTest
         {
             Id = _testMethod!.Id,
             Name = "",
-            Type = new ValueType("TestParameter", "int", []),
+            TypeId = Guid.NewGuid(),
             Abstract = true,
             IsSealed = false,
             Accessibility = Method.MethodAccessibility.Private,
