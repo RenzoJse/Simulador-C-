@@ -15,13 +15,35 @@
 
         <app-form-input
                 [form]="createMethodForm"
-                controlName="type.name"
-                [name]="'typeName'"
-                label="Tipo (name)"
+                controlName="typeId"
+                [name]="'typeId'"
+                label="Type ID"
                 [errorMessages]="{ required: 'El tipo es requerido.' }"
                 [type]="'text'"
                 placeholder="Tipo del método">
         </app-form-input>
+
+        <app-form-input
+                [form]="createMethodForm"
+                controlName="Class ID"
+                [name]="'classId'"
+                label="Class ID"
+                [errorMessages]="{ required: 'El Id de la clase es requerido.' }"
+                [type]="'text'"
+                placeholder="Id de la clase del método">
+        </app-form-input>
+
+        <div *ngIf="createMethodStatus?.loading; else notLoading">
+            Cargando...
+        </div>
+
+        <ng-template #notLoading>
+            <div *ngIf="createMethodStatus?.error">
+                {{ createMethodStatus!.error }}
+            </div>
+
+            <app-form-button title="Crear Metodo"></app-form-button>
+        </ng-template>
 
         </app-form>
 </div>

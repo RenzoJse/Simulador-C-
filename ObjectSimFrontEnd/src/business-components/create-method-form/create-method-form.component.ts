@@ -35,6 +35,9 @@ export class CreateMethodFormComponent {
             type: ['', [
                 Validators.required
             ]],
+            classId: ['', [
+                Validators.required
+            ]]
         });
     }
 
