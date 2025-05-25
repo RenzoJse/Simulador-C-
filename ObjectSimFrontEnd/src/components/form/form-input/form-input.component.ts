@@ -2,15 +2,15 @@ import {Component, EventEmitter, Input, Output} from "@angular/core";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 
-import { EntryComponent } from "../../entry/entry.component";
+import { InputComponent } from "../../input/input.component";
 
 @Component({
-    selector: 'app-form-entry',
-    templateUrl: './form-entry.component.html',
+    selector: 'app-form-input',
+    templateUrl: './form-input.component.html',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, EntryComponent]
+    imports: [CommonModule, ReactiveFormsModule, InputComponent]
 })
-export class FormEntryComponent {
+export class FormInputComponent {
     @Input() type: "text" | "number" | "case" | "option" = "text";
     @Input() tag: string | null = null;
     @Input() reserve: string | null = null;

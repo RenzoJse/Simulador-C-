@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-    selector: "app-entry",
-    templateUrl: "./entry.component.html",
+    selector: "app-input",
+    templateUrl: "./input.component.html",
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule],
 })
-export class EntryComponent {
+export class InputComponent {
     @Input() type: "text" | "number" | "case" | "option" = "text";
     @Input() form!: FormGroup;
     @Input() tag: string | null = null;

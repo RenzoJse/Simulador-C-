@@ -1,9 +1,6 @@
 export default interface MethodDTO {
     name: string;
-    type: {
-      name: string;
-      type: string;
-    };
+    type: string;
     accessibility: 'Public' | 'Private' | 'Protected';
     isAbstract: boolean;
     isSealed: boolean;

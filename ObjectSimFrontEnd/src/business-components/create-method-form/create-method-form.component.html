@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <h2 class="mb-4">Crear Método</h2>
 
-    <app-form-create-method [form]="methodForm" (atSend)="onSubmit()">
+    <app-form-create-method [form]="createMethodForm" (atSubmit)="onSubmit()">
 
         <app-form-input
           [methodForm]="methodForm"
@@ -18,16 +18,6 @@
           controlName="type.name"
           [name]="'typeName'"
           label="Tipo (name)"
-          [errorMessages]="{ required: 'El tipo es requerido.' }"
-          [type]="'text'"
-          placeholder="Tipo del método">
-        </app-form-input>
-
-        <app-form-input
-          [methodForm]="methodForm"
-          controlName="type.type"
-          [name]="'typeType'"
-          label="Tipo (type)"
           [errorMessages]="{ required: 'El tipo es requerido.' }"
           [type]="'text'"
           placeholder="Tipo del método">
