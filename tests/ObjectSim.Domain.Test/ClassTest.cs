@@ -7,10 +7,11 @@ public class ClassTest
 {
     private Class? _testClass;
     private static readonly DataType ValueType = new ValueType("int", "int", []);
+    private static readonly Guid TypeId = Guid.NewGuid();
     private readonly Method _existingMethod = new()
     {
         Name = "ExistingMethod",
-        Type = ValueType,
+        TypeId = TypeId,
         Parameters = [],
         IsOverride = false
     };
@@ -234,7 +235,7 @@ public class ClassTest
         var newMethod = new Method
         {
             Name = "ExistingMethod",
-            Type = ValueType,
+            TypeId = TypeId,
             Parameters = [],
             IsOverride = false
         };
@@ -253,7 +254,7 @@ public class ClassTest
         var newMethod = new Method
         {
             Name = "ExistingMethod",
-            Type = ValueType,
+            TypeId = TypeId,
             Parameters = [],
             IsOverride = false
         };
@@ -325,7 +326,7 @@ public class ClassTest
         {
             Id = Guid.NewGuid(),
             Name = "MethodToInvoke",
-            Type = ValueType,
+            TypeId = TypeId,
             Abstract = true
         };
 
@@ -347,7 +348,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = ValueType,
+            TypeId = TypeId,
             Parameters = [ValueType],
             IsOverride = false
         };
@@ -357,7 +358,7 @@ public class ClassTest
         var newMethod = new Method
         {
             Name = "NewMethod",
-            Type = ValueType,
+            TypeId = TypeId,
             Parameters = [ValueType],
             IsOverride = false
         };
@@ -386,12 +387,12 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_WhenSameNameAndNotOverride_ShouldThrow()
     {
-        var dataType = new FakeDataType { Name = "int", Type = "Int" };
+        var typeId = Guid.NewGuid();
 
         var method1 = new Method
         {
             Name = "TestMethod",
-            Type = dataType,
+            TypeId = typeId,
             Parameters = [new FakeDataType { Name = "a", Type = "Int" }],
             IsOverride = false
         };
@@ -399,7 +400,7 @@ public class ClassTest
         var method2 = new Method
         {
             Name = "TestMethod",
-            Type = dataType,
+            TypeId = typeId,
             Parameters = [new FakeDataType { Name = "a", Type = "Int" }],
             IsOverride = false
         };
@@ -439,7 +440,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = ValueType,
+            TypeId = TypeId,
             Parameters = [],
             IsOverride = false
         };
@@ -458,7 +459,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = ValueType,
+            TypeId = TypeId,
             Parameters = [parameterOne, parameterTwo],
             IsOverride = false
         };
@@ -468,7 +469,7 @@ public class ClassTest
         var newMethod = new Method
         {
             Name = "NewMethod",
-            Type = ValueType,
+            TypeId = TypeId,
             Parameters = [parameterTwo, parameterOne],
             IsOverride = false
         };
@@ -484,7 +485,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = ValueType,
+            TypeId = TypeId,
             Parameters = [new ValueType("int", "int", [])],
             IsOverride = false
         };
@@ -500,7 +501,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = ValueType,
+            TypeId = TypeId,
             Parameters = [new ValueType("int", "int", []), new ReferenceType("string", "string", [])],
             IsOverride = false
         };
@@ -510,7 +511,7 @@ public class ClassTest
         var newMethod = new Method
         {
             Name = "NewMethod",
-            Type = ValueType,
+            TypeId = TypeId,
             Parameters = [new ValueType("int", "int", [])],
             IsOverride = false
         };
@@ -523,13 +524,13 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_TryingToAddOverridingParentMethod_AddsMethod()
     {
-        var dataType = new FakeDataType { Name = "int", Type = "Int" };
+        var typeId = Guid.NewGuid();
         var parameter = new FakeDataType { Name = "a", Type = "Int" };
 
         var parentMethod = new Method
         {
             Name = "DoWork",
-            Type = dataType,
+            TypeId = typeId,
             Parameters = [parameter],
             IsVirtual = true,
             IsOverride = false
@@ -538,7 +539,7 @@ public class ClassTest
         var childOverride = new Method
         {
             Name = "DoWork",
-            Type = dataType,
+            TypeId = typeId,
             Parameters = [parameter],
             IsOverride = true,
             IsVirtual = false
@@ -568,7 +569,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = ValueType,
+            TypeId = TypeId,
             Parameters = [],
             IsOverride = false
         };
@@ -587,7 +588,7 @@ public class ClassTest
         var method = new Method
         {
             Name = "NewMethod",
-            Type = ValueType,
+            TypeId = TypeId,
             Parameters = [],
             IsOverride = false,
             Abstract = true,

@@ -55,7 +55,7 @@ public class ClassRepositoryTest
                     Abstract = false,
                     IsOverride = false,
                     IsSealed = false,
-                    Type = new ReferenceType("TestParameter", "string", [])
+                    TypeId = Guid.NewGuid()
                 }
             ],
             Attributes =

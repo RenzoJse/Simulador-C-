@@ -22,7 +22,7 @@ public class MethodTest
     {
         Id = Guid.NewGuid(),
         Name = "OtherMethod",
-        Type = new ValueType("int", "int", []),
+        TypeId = Guid.NewGuid()
     };
 
     private readonly InvokeMethod _testInvokeMethod = new InvokeMethod(OtherMethod.Id, Guid.NewGuid(), "this");
@@ -34,7 +34,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "TestMethod",
-            Type = new ValueType("int", "int", []),
+            TypeId = Guid.NewGuid(),
             Accessibility = Method.MethodAccessibility.Public,
             Abstract = false,
             IsSealed = false,
@@ -46,8 +46,8 @@ public class MethodTest
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqual()
     {
-        var method = new Method { Type = _methodType };
-        method.Type.Should().Be(_methodType);
+        var method = new Method { TypeId = _methodType.Id };
+        method.TypeId.Should().Be(_methodType.Id);
     }
 
     [TestMethod]
@@ -60,8 +60,8 @@ public class MethodTest
     [TestMethod]
     public void MethodDataType_CreateMethod_ShouldSetCorrectly()
     {
-        var method = new Method { Type = _methodReferenceType };
-        Assert.AreEqual(_methodReferenceType, method.Type);
+        var method = new Method { TypeId = _methodReferenceType.Id };
+        Assert.AreEqual(_methodReferenceType.Id, method.TypeId);
     }
 
     [TestMethod]
@@ -127,7 +127,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -143,7 +143,7 @@ public class MethodTest
         {
             Id = Guid.Empty,
             Name = "Test",
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -160,7 +160,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "mmmm",
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -176,7 +176,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "test",
-            Type = _methodReferenceType
+            TypeId = _methodReferenceType.Id
         };
 
         var accessibilityField = typeof(Method).GetField("_accessibility", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -195,7 +195,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "test",
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -248,7 +248,7 @@ public class MethodTest
         var method = new Method
         {
             Id = Guid.NewGuid(),
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -265,7 +265,7 @@ public class MethodTest
         var method = new Method
         {
             Id = Guid.NewGuid(),
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
 

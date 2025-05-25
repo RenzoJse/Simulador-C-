@@ -279,7 +279,7 @@ public class BuilderTest
 
         var methodArgs = new CreateMethodArgs(
             "Method1",
-            new CreateDataTypeArgs("void", "void"),
+            Guid.NewGuid(),
             "Public",
             false,
             false,

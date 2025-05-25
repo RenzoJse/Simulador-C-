@@ -23,7 +23,7 @@ public class InterfaceBuilderTest
 
     private readonly CreateMethodArgs _testCreateMethodArgs = new CreateMethodArgs(
         "TestMethod",
-        new CreateDataTypeArgs("int", "reference"),
+        Guid.NewGuid(),
         "public",
         false,
         false,
