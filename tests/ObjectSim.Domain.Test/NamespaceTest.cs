@@ -43,4 +43,15 @@ public class NamespaceTest
         CollectionAssert.Contains(descendants, child2);
         CollectionAssert.Contains(descendants, grandChild);
     }
+    [TestMethod]
+    public void Validate_WithValidNamespace_ShouldNotThrow()
+    {
+        var ns = new Namespace
+        {
+            Id = Guid.NewGuid(),
+            Name = "Core"
+        };
+
+        ns.Validate();
+    }
 }
