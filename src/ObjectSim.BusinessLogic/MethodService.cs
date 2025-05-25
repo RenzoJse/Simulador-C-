@@ -34,8 +34,6 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         var parameters = BuildDataTypes(methodArgs.Parameters);
         var localVariables = BuildDataTypes(methodArgs.LocalVariables);
 
-        var type = dataTypeService.CreateDataType(methodArgs.Type);
-
         return new Method
         {
             Name = methodArgs.Name,
@@ -44,8 +42,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             IsSealed = methodArgs.IsSealed ?? false,
             IsOverride = methodArgs.IsOverride ?? false,
             IsVirtual = methodArgs.IsVirtual ?? false,
-            Type = type,
-            TypeId = type.Id,
+            TypeId = methodArgs.TypeId,
             Parameters = parameters,
             LocalVariables = localVariables,
             MethodsInvoke = []
@@ -150,7 +147,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     private static void UpdateMethodProperties(Method method, Method updated)
     {
         method.Name = updated.Name;
-        method.Type = updated.Type;
+        method.TypeId = updated.TypeId;
         method.Abstract = updated.Abstract;
         method.IsSealed = updated.IsSealed;
         method.Parameters = updated.Parameters;

@@ -2,21 +2,21 @@
 
 namespace ObjectSim.WebApi.DTOs.Out;
 
-public record MethodInformationDtoOut(Method methodInfo)
+public record MethodInformationDtoOut(Method MethodInfo)
 {
-    public string Name { get; } = methodInfo.Name!;
-    public string Type { get; } = methodInfo.GetTypeString();
-    public string Accessibility { get; } = methodInfo.Accessibility.ToString();
-    public bool IsAbstract { get; } = methodInfo.Abstract;
-    public bool IsSealed { get; } = methodInfo.IsSealed;
-    public bool IsOverride { get; } = methodInfo.IsOverride;
-    public List<DataTypeInformationDtoOut> LocalVariables { get; } = methodInfo.LocalVariables != null
-            ? methodInfo.LocalVariables.Select(DataTypeInformationDtoOut.ToInfo).ToList()
+    public string Name { get; } = MethodInfo.Name!;
+    public string Type { get; } = MethodInfo.TypeId.ToString();
+    public string Accessibility { get; } = MethodInfo.Accessibility.ToString();
+    public bool IsAbstract { get; } = MethodInfo.Abstract;
+    public bool IsSealed { get; } = MethodInfo.IsSealed;
+    public bool IsOverride { get; } = MethodInfo.IsOverride;
+    public List<DataTypeInformationDtoOut> LocalVariables { get; } = MethodInfo.LocalVariables != null
+            ? MethodInfo.LocalVariables.Select(DataTypeInformationDtoOut.ToInfo).ToList()
             : [];
-    public List<DataTypeInformationDtoOut> Parameters { get; } = methodInfo.Parameters != null
-            ? methodInfo.Parameters.Select(DataTypeInformationDtoOut.ToInfo).ToList()
+    public List<DataTypeInformationDtoOut> Parameters { get; } = MethodInfo.Parameters != null
+            ? MethodInfo.Parameters.Select(DataTypeInformationDtoOut.ToInfo).ToList()
             : [];
-    public List<string> InvokeMethodsIds { get; } = methodInfo.MethodsInvoke != null
-        ? methodInfo.MethodsInvoke.Select(m => m.InvokeMethodId.ToString()).ToList()
+    public List<string> InvokeMethodsIds { get; } = MethodInfo.MethodsInvoke != null
+        ? MethodInfo.MethodsInvoke.Select(m => m.InvokeMethodId.ToString()).ToList()
         : [];
 }

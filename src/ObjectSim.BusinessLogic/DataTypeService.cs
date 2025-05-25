@@ -71,6 +71,7 @@ public class DataTypeService(IRepository<Class> classRepository, IRepository<Dat
         var dt = dataTypeRepository.Get(c => c.Id == id);
         return dt is null ? throw new KeyNotFoundException("DataType not found") : dt;
     }
+
     public List<DataType> GetAll()
     {
         return dataTypeRepository.GetAll(_ => true);

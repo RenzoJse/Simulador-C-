@@ -33,9 +33,6 @@ public class Method
     #region Type
 
     public Guid TypeId { get; set; }
-    public DataType Type { get; set; } = null!;
-
-    public string GetTypeString() => Type?.Type ?? string.Empty;
 
     #endregion
 

@@ -1,7 +1,7 @@
 ﻿namespace ObjectSim.Domain.Args;
 public class CreateMethodArgs(
     string name,
-    CreateDataTypeArgs type,
+    Guid typeId,
     string accessibility,
     bool? isAbstract,
     bool? isSealed,
@@ -13,7 +13,7 @@ public class CreateMethodArgs(
     List<Guid> invokeMethods)
 {
     public string? Name { get; set; } = name;
-    public CreateDataTypeArgs Type { get; set; } = type;
+    public Guid TypeId { get; set; } = typeId;
     public string Accessibility { get; set; } = accessibility;
     public bool? IsAbstract { get; set; } = isAbstract;
     public bool? IsSealed { get; set; } = isSealed;
