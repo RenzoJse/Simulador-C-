@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CreateMethodComponent } from './components/methods/create-method/create-method.component'; 
+import { CreateMethodComponent } from './method/create-method/create-method.component'; 
 
 const routes: Routes = [
   {

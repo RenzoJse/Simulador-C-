@@ -41,4 +41,6 @@ export class CreateMethodComponent {
       }
     });
   }
+
+  protected readonly onsubmit = onsubmit;
 }

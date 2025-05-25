@@ -1,4 +1,4 @@
-export interface MethodDTO {
+export default interface MethodDTO {
     name: string;
     type: {
       name: string;
