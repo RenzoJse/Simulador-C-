@@ -11,7 +11,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     public Method CreateMethod(CreateMethodArgs methodArgs)
     {
         ValidateMethodArgsNotNull(methodArgs);
-
+        ValidateTypeIdExists(methodArgs.TypeId);
         var method = BuildMethodFromArgs(methodArgs);
 
         AddMethodToClass(methodArgs.ClassId, method);
@@ -19,6 +19,16 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         SaveMethod(method);
 
         return method;
+    }
+
+    private Guid ValidateTypeIdExists(Guid typeId)
+    {
+        if(typeId == Guid.Empty)
+        {
+            throw new ArgumentException("Type ID cannot be empty.");
+        }
+
+        return dataTypeService.GetById(typeId).Id;
     }
 
     private static void ValidateMethodArgsNotNull(CreateMethodArgs methodArgs)

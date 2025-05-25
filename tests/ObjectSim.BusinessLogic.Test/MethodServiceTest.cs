@@ -87,10 +87,6 @@ public class MethodServiceTest
 
         Action act = () => _methodServiceTest!.CreateMethod(emptyArgs);
 
-        _dataTypeServiceMock!
-            .Setup(service => service.CreateDataType(null!))
-            .Throws<ArgumentException>();
-
         act.Should().Throw<ArgumentException>();
     }
 
@@ -112,7 +108,7 @@ public class MethodServiceTest
         _classRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
             .Returns(classObj);
 
-        _dataTypeServiceMock!.Setup(service => service.CreateDataType(It.IsAny<CreateDataTypeArgs>()))
+        _dataTypeServiceMock!.Setup(service => service.GetById(It.IsAny<Guid>()))
             .Returns(new ValueType("MethodType", "int", []));
 
         _methodRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Method>()))
@@ -122,7 +118,7 @@ public class MethodServiceTest
 
         result.Should().NotBeNull();
         result.Name.Should().Be(_testCreateMethodArgs.Name);
-        result.TypeId.Should().BeEmpty();
+        result.TypeId.Should().NotBeEmpty();
     }
 
     #endregion
