@@ -22,10 +22,12 @@ public class MethodControllerTest
 
     private static readonly InvokeMethod TestInvokeMethod = new InvokeMethod(Guid.NewGuid(), Guid.NewGuid(), "this");
 
+    private static readonly ReferenceType TestReferenceType = new ReferenceType("TestReferenceType", "string", []);
+
     private readonly Method _testMethod = new Method
     {
         Name = "TestMethod",
-        Type = new ReferenceType("TestParameter", "string", []),
+        TypeId = TestReferenceType.Id,
         Accessibility = Method.MethodAccessibility.Public,
         Abstract = false,
         IsOverride = false,
@@ -60,7 +62,7 @@ public class MethodControllerTest
         var result = _methodController.CreateMethod(new MethodDtoIn
         {
             Name = "TestClass",
-            Type = new CreateDataTypeDtoIn(),
+            Type = Guid.NewGuid().ToString(),
             Accessibility = nameof(Method.MethodAccessibility.Public),
             IsAbstract = false,
             IsOverride = false,

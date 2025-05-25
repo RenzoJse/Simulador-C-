@@ -10,12 +10,10 @@ public class MethodInformationDtoOutTest
     [TestMethod]
     public void MethodInformationDtoOut_ShouldCreateInstance()
     {
-        var type = new ValueType("TestName", "int", []);
-
         var method = new Method()
         {
             Name = "TestMethod",
-            Type = type,
+            TypeId = Guid.NewGuid(),
             Accessibility = Method.MethodAccessibility.Public,
             Abstract = false,
             IsSealed = false,
