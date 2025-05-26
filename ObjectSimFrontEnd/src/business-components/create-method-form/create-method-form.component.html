@@ -25,8 +25,19 @@
 
         <app-form-input
                 [form]="createMethodForm"
-                controlName="Class ID"
-                [name]="'classId'"
+                controlName="Modificadores"
+                [name]="'Modificadores'"
+                label="Tipo de Método"
+                [errorMessages]="{ required: 'El tipo es requerido.' }"
+                [type]="'option'"
+                [options]="Modificadores"
+                placeholder="Selecciona el tipo de método">
+        </app-form-input>
+
+        <app-form-input
+                [form]="createMethodForm"
+                controlName="ClassID"
+                [name]="'ClassID'"
                 label="Class ID"
                 [errorMessages]="{ required: 'El Id de la clase es requerido.' }"
                 [type]="'text'"
@@ -34,7 +45,7 @@
         </app-form-input>
 
         <div *ngIf="createMethodStatus?.loading; else notLoading">
-            Cargando...
+            Loading...
         </div>
 
         <ng-template #notLoading>

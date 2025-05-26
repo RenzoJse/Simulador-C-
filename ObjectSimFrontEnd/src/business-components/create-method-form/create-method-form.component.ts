@@ -26,37 +26,51 @@ export class CreateMethodFormComponent {
         error?: string;
     } | null = null;
 
+    Modificadores: { value: string; tag: string }[] = [
+        { value: 'Abstract', tag: 'Abstract' },
+        { value: 'Sealed', tag: 'Sealed' },
+        { value: 'Override', tag: 'Override' },
+        { value: 'Virtual', tag: 'Virtual' }
+    ];
+
     constructor(private fb: FormBuilder) {
         this.createMethodForm = this.fb.group({
             name: ['', [
                 Validators.required,
                 Validators.maxLength(30)
             ]],
-            type: ['', [
+            typeId: ['', [
                 Validators.required
             ]],
-            classId: ['', [
+            ClassID: ['', [
                 Validators.required
-            ]]
+            ]],
+            Modificadores: ['', [Validators.required]],
+            accessibility: ['Public']
         });
     }
 
     public onSubmit() {
+        console.log('Form values:', this.createMethodForm.value);
+
         if (this.createMethodForm.invalid) {
             this.markAsTouched();
             return;
         }
+
+        const selectedModifier = this.createMethodForm.value.type;
+        console.log('Modificador seleccionado:', selectedModifier);
 
         const formValue = this.createMethodForm.value;
         const newMethod: MethodCreateModel = {
             name: formValue.name,
             type: formValue.type,
             accessibility: formValue.accessibility ?? 'Public',
-            isAbstract: formValue.isAbstract ?? false,
-            isSealed: formValue.isSealed ?? false,
-            isOverride: formValue.isOverride ?? false,
-            isVirtual: formValue.isVirtual ?? false,
-            classId: formValue.classId ?? '',
+            isAbstract: selectedModifier === 'Abstract',
+            isSealed: selectedModifier === 'Sealed',
+            isOverride: selectedModifier === 'Override',
+            isVirtual: selectedModifier === 'Virtual',
+            classId: formValue.ClassID ?? '',
             localVariables: [],
             parameters: []
         };

@@ -9,13 +9,13 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 })
 export class FormComponent {
   @Input({ required: true }) form!: FormGroup;
-  @Output() atSend = new EventEmitter<any>();
+  @Output() atSubmit = new EventEmitter<any>();
 
   public localSend() {
     const isValid = this.form.valid
 
     if (isValid) {
-      this.atSend.emit(this.form.value);
+      this.atSubmit.emit(this.form.value);
     } else {
       this.form.markAllAsTouched();
     }

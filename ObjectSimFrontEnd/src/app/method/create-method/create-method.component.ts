@@ -25,7 +25,7 @@ export class CreateMethodComponent {
         });
     }
 
-    protected atSend(method: MethodCreateModel) {
+    protected atSubmit(method: MethodCreateModel) {
         this.status = { loading: true };
 
         this._methodService.createMethod(method).subscribe({
