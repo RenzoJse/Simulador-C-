@@ -1,10 +1,39 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+﻿<div class ="container mt-4">
+  <h2 class="mb-4">Crear Clase</h2>
+
+  <app-form [form]="createClassForm" (atSubmit)="onSubmit()">
+
+    <app-form-input
+      [form]="createClassForm"
+      controlName="Name"
+      [reserve]="Class Name"
+      [name]="'Name'"
+      [tag]="'Name'"
+      [errorMessages]="{ required: 'The name is required.' }"
+      [type]="'text'">
+    </app-form-input>
+
+    <app-form-input
+      [form]="createClassForm"
+      controlName="classType"
+      [reserve]="'ClassType'"
+      [name]="'ClassType'"
+      [tag]="'Class Type'"
+      [errorMessages]="{ required: 'The Class Type is required' }"
+      [type]="'option'"
+      [options]="ClassTypes">
+    </app-form-input>
+
+    <div *ngIf="createClassStatus?.loading; else notLoading">
+        Loading...
+    </div>
+
+    <ng-template #notLoading>
+        <div *ngIf="createClassStatus?.error">
+            {{ createClassStatus!.error }}
+        </div>
+
+        <app-form-button title="Crear Clase"></app-form-button>
+    </ng-template>
+
+  </app-form>
