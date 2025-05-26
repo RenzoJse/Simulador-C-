@@ -23,4 +23,9 @@ public class NamespaceService(IRepository<Namespace> repository) : INamespaceSer
 
         return _repository.Add(ns);
     }
+
+    public List<Namespace> GetAll()
+    {
+        return _repository.GetAll(_ => true);
+    }
 }
