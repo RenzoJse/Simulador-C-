@@ -5,6 +5,10 @@ const routes: Routes = [
   {
     path: 'inicio',
     loadChildren: () => import('./landing-page/landing-page.module').then(m => m.LandingPageModule),
+  },
+  {
+    path: 'method',
+    loadChildren: () => import('./method/method.module').then(m => m.MethodModule),
   }
 ]
 

@@ -192,7 +192,7 @@ public class Class
     {
         if(Methods!.Any(classMethod =>
                classMethod.Name == method.Name &&
-               classMethod.Type.IsSameType(method.Type) &&
+               classMethod.TypeId == method.TypeId &&
                method.IsOverride == false &&
                AreParametersEqual(classMethod.Parameters, method.Parameters)))
         {

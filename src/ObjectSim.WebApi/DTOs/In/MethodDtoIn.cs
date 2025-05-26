@@ -5,7 +5,7 @@ namespace ObjectSim.WebApi.DTOs.In;
 public class MethodDtoIn
 {
     public required string Name { get; init; }
-    public required CreateDataTypeDtoIn Type { get; init; }
+    public required string? Type { get; init; }
     public required string Accessibility { get; init; }
     public bool IsAbstract { get; init; }
     public bool IsSealed { get; init; }
@@ -22,8 +22,7 @@ public class MethodDtoIn
         localVariables.AddRange(LocalVariables.Select(localVariable => new CreateDataTypeArgs(localVariable.Name, localVariable.Type)));
         List<CreateDataTypeArgs> parameters = [];
         parameters.AddRange(Parameters.Select(parameter => new CreateDataTypeArgs(parameter.Name, parameter.Type)));
-        var type = new CreateDataTypeArgs(Type.Name, Type.Type);
-        return new CreateMethodArgs(Name, type, Accessibility,
+        return new CreateMethodArgs(Name, Guid.Parse(Type!), Accessibility,
             IsAbstract, IsSealed, IsOverride, IsVirtual, Guid.Parse(ClassId!), localVariables, parameters, InvokeMethodsId);
     }
 }

@@ -66,7 +66,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             m.HasKey(m => m.Id);
 
-            m.HasOne(m => m.Type)
+            m.HasOne<DataType>()
                 .WithMany()
                 .HasForeignKey(m => m.TypeId)
                 .OnDelete(DeleteBehavior.Cascade);

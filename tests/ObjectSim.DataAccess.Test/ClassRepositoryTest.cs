@@ -39,47 +39,51 @@ public class ClassRepositoryTest
     [TestMethod]
     public void GetClass_WhenIdExists_ReturnsClassWithMethodsAndAttributes()
     {
-        var classId = Guid.NewGuid();
-        var classEntity = new Class
-        {
-            Id = classId,
-            Name = "TestClass",
-            Methods =
-            [
-                new Method
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "TestMethod",
-                    ClassId = classId,
-                    Accessibility = 0,
-                    Abstract = false,
-                    IsOverride = false,
-                    IsSealed = false,
-                    Type = new ReferenceType("TestParameter", "string", [])
-                }
-            ],
-            Attributes =
-            [
-                new Attribute
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "TestAttribute",
-                    ClassId = classId,
-                    DataType = new ValueType("myVariable", "int", []),
-                    Visibility = 0
-                }
-            ]
-        };
+    var classId = Guid.NewGuid();
+    var valueType = new ValueType("myVariable", "int", []);
+    _context.Set<ValueType>().Add(valueType);
+    _context.SaveChanges();
 
-        _context.Set<Class>().Add(classEntity);
-        _context.SaveChanges();
+    var classEntity = new Class
+    {
+        Id = classId,
+        Name = "TestClass",
+        Methods =
+        [
+            new Method
+            {
+                Id = Guid.NewGuid(),
+                Name = "TestMethod",
+                ClassId = classId,
+                Accessibility = 0,
+                Abstract = false,
+                IsOverride = false,
+                IsSealed = false,
+                TypeId = valueType.Id
+            }
+        ],
+        Attributes =
+        [
+            new Attribute
+            {
+                Id = Guid.NewGuid(),
+                Name = "TestAttribute",
+                ClassId = classId,
+                DataType = valueType,
+                Visibility = 0
+            }
+        ]
+    };
 
-        var result = _classRepository.Get(c => c.Id == classId);
+    _context.Set<Class>().Add(classEntity);
+    _context.SaveChanges();
 
-        Assert.IsNotNull(result);
-        Assert.AreEqual(classId, result.Id);
-        Assert.AreEqual(1, result.Methods!.Count);
-        Assert.AreEqual(1, result.Attributes!.Count);
+    var result = _classRepository.Get(c => c.Id == classId);
+
+    Assert.IsNotNull(result);
+    Assert.AreEqual(classId, result.Id);
+    Assert.AreEqual(1, result.Methods!.Count);
+    Assert.AreEqual(1, result.Attributes!.Count);
     }
 
 }

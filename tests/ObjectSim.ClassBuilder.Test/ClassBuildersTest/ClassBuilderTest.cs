@@ -47,7 +47,7 @@ public class ClassBuilderTest
 
     private static readonly CreateMethodArgs TestCreateMethodArgs = new(
         "TestMethod",
-        new CreateDataTypeArgs("TestParameter", "int"),
+        Guid.NewGuid(),
         "public",
         false,
         false,
@@ -214,7 +214,7 @@ public class ClassBuilderTest
     {
         var invalidMethodArgs = new CreateMethodArgs(
             "InvalidMethod",
-            new CreateDataTypeArgs("MethodType", "int"),
+            Guid.NewGuid(),
             "public",
             false,
             false,
@@ -252,7 +252,7 @@ public class ClassBuilderTest
 
         var methodCreateArgs2 = new CreateMethodArgs(
             "Method2",
-            new CreateDataTypeArgs("MethodType", "int"),
+            Guid.NewGuid(),
             "public",
             false,
             false,

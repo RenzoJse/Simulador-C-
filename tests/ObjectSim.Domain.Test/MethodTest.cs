@@ -22,7 +22,7 @@ public class MethodTest
     {
         Id = Guid.NewGuid(),
         Name = "OtherMethod",
-        Type = new ValueType("int", "int", []),
+        TypeId = Guid.NewGuid()
     };
 
     private readonly InvokeMethod _testInvokeMethod = new InvokeMethod(OtherMethod.Id, Guid.NewGuid(), "this");
@@ -34,7 +34,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "TestMethod",
-            Type = new ValueType("int", "int", []),
+            TypeId = Guid.NewGuid(),
             Accessibility = Method.MethodAccessibility.Public,
             Abstract = false,
             IsSealed = false,
@@ -46,8 +46,8 @@ public class MethodTest
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqual()
     {
-        var method = new Method { Type = _methodType };
-        method.Type.Should().Be(_methodType);
+        var method = new Method { TypeId = _methodType.Id };
+        method.TypeId.Should().Be(_methodType.Id);
     }
 
     [TestMethod]
@@ -60,8 +60,8 @@ public class MethodTest
     [TestMethod]
     public void MethodDataType_CreateMethod_ShouldSetCorrectly()
     {
-        var method = new Method { Type = _methodReferenceType };
-        Assert.AreEqual(_methodReferenceType, method.Type);
+        var method = new Method { TypeId = _methodReferenceType.Id };
+        Assert.AreEqual(_methodReferenceType.Id, method.TypeId);
     }
 
     [TestMethod]
@@ -127,7 +127,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -143,7 +143,7 @@ public class MethodTest
         {
             Id = Guid.Empty,
             Name = "Test",
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -160,7 +160,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "mmmm",
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -176,7 +176,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "test",
-            Type = _methodReferenceType
+            TypeId = _methodReferenceType.Id
         };
 
         var accessibilityField = typeof(Method).GetField("_accessibility", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -195,7 +195,7 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "test",
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -248,7 +248,7 @@ public class MethodTest
         var method = new Method
         {
             Id = Guid.NewGuid(),
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -265,7 +265,7 @@ public class MethodTest
         var method = new Method
         {
             Id = Guid.NewGuid(),
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
 
@@ -315,16 +315,16 @@ public class MethodTest
     {
         _testMethod!.CanAddInvokeMethod(null!, _testClass!, "this");
     }
-    /*
-        [TestMethod]
-        public void AddInvokeMethod_WhenOtherMethodIsNotInClass_ThrowsException()
-        {
-            Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!, "this");
 
-            act.Should().Throw<ArgumentException>()
-                .WithMessage("The invoked method must be reachable from the current method.");
-        }
-    */
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenOtherMethodIsNotInClass_ThrowsException()
+    {
+        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!, "this");
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("The invoked method must be reachable from the current method.");
+    }
 
     [TestMethod]
     public void AddInvokeMethod_WhenIsTryingToUseWrongAttributeMethod_ThrowsException()
@@ -341,7 +341,7 @@ public class MethodTest
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
     }
-    /*
+
     [TestMethod]
     public void AddInvokeMethod_WhenUsingMethodThatIsNotInClassNeitherParentClass_ThrowsException()
     {
@@ -356,7 +356,7 @@ public class MethodTest
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
     }
-    */
+
     [TestMethod]
     public void AddInvokeMethod_WhenIsTryingToUseMethodNotInLocalVariables_ThrowsException()
     {
@@ -378,6 +378,24 @@ public class MethodTest
         OtherMethod!.Parameters = [parameter];
 
         Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "this");
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("The invoked method must be reachable from the current method.");
+    }
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenIsTryingToUseMethodNotInAttributes_ThrowsException()
+    {
+        var attribute = new Attribute
+        {
+            Id = Guid.NewGuid(),
+            DataType = new ValueType("int", "int", []),
+            Name = "test"
+        };
+
+        _testClass!.Attributes = [attribute];
+
+        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!, "other");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
@@ -416,12 +434,13 @@ public class MethodTest
         var attribute = new Attribute
         {
             Id = Guid.NewGuid(),
-            DataType = dataType
+            DataType = dataType,
+            Name = "test"
         };
 
         _testClass!.Attributes = [attribute];
 
-        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass, "this");
+        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass, "test");
         _testMethod.MethodsInvoke.Add(_testInvokeMethod);
         _testMethod.MethodsInvoke.Should().Contain(_testInvokeMethod);
     }
@@ -429,11 +448,11 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenMethodIsInLocalVariable_AddsMethod()
     {
-        var localVariable = new ValueType("int", "int", [OtherMethod!.Id]);
+        var localVariable = new ValueType("test", "int", [OtherMethod!.Id]);
 
         OtherMethod!.LocalVariables = [localVariable];
 
-        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "this");
+        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "test");
         _testMethod.MethodsInvoke.Add(_testInvokeMethod);
         _testMethod.MethodsInvoke.Should().Contain(_testInvokeMethod);
     }

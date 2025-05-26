@@ -11,7 +11,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     public Method CreateMethod(CreateMethodArgs methodArgs)
     {
         ValidateMethodArgsNotNull(methodArgs);
-
+        ValidateTypeIdExists(methodArgs.TypeId);
         var method = BuildMethodFromArgs(methodArgs);
 
         AddMethodToClass(methodArgs.ClassId, method);
@@ -19,6 +19,16 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         SaveMethod(method);
 
         return method;
+    }
+
+    private Guid ValidateTypeIdExists(Guid typeId)
+    {
+        if(typeId == Guid.Empty)
+        {
+            throw new ArgumentException("Type ID cannot be empty.");
+        }
+
+        return dataTypeService.GetById(typeId).Id;
     }
 
     private static void ValidateMethodArgsNotNull(CreateMethodArgs methodArgs)
@@ -34,8 +44,6 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         var parameters = BuildDataTypes(methodArgs.Parameters);
         var localVariables = BuildDataTypes(methodArgs.LocalVariables);
 
-        var type = dataTypeService.CreateDataType(methodArgs.Type);
-
         return new Method
         {
             Name = methodArgs.Name,
@@ -44,8 +52,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             IsSealed = methodArgs.IsSealed ?? false,
             IsOverride = methodArgs.IsOverride ?? false,
             IsVirtual = methodArgs.IsVirtual ?? false,
-            Type = type,
-            TypeId = type.Id,
+            TypeId = methodArgs.TypeId,
             Parameters = parameters,
             LocalVariables = localVariables,
             MethodsInvoke = []
@@ -150,7 +157,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     private static void UpdateMethodProperties(Method method, Method updated)
     {
         method.Name = updated.Name;
-        method.Type = updated.Type;
+        method.TypeId = updated.TypeId;
         method.Abstract = updated.Abstract;
         method.IsSealed = updated.IsSealed;
         method.Parameters = updated.Parameters;
