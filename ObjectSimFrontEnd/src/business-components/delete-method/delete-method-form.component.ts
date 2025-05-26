@@ -1,14 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule, NgIf }      from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-delete-method-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
-  templateUrl: './delete-method-form.component.html',
-  styles: [`
-    .enhanced-input {}
-  `]
+  imports: [ CommonModule, ReactiveFormsModule, NgIf ],
+  templateUrl: './delete-method-form.component.html'
 })
 export class DeleteMethodFormComponent {
   @Input() methods: { id: string; name: string }[] = [];
