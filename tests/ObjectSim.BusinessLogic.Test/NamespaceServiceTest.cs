@@ -27,6 +27,12 @@ public class NamespaceServiceTest
             r.Add(It.Is<Namespace>(n => n.Name == "MyNamespace" && n.ParentId == null)), Times.Once);
     }
     [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void Create_WithNullArgs_ThrowsArgumentNullException()
+    {
+        _namespaceService.Create(null!);
+    }
+    [TestMethod]
     public void GetAll_ShouldReturnAllNamespaces()
     {
         var namespaces = new List<Namespace>
