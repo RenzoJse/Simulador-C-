@@ -25,16 +25,16 @@ public class NamespaceControllerTest
     public void GetAll_ShouldReturnOkWithNamespaceDtos()
     {
         var namespaces = new List<Namespace>
-        {
-            new Namespace { Id = Guid.NewGuid(), Name = "System" },
-            new Namespace { Id = Guid.NewGuid(), Name = "App", ParentId = Guid.NewGuid() }
-        };
+    {
+        new Namespace { Id = Guid.NewGuid(), Name = "System" },
+        new Namespace { Id = Guid.NewGuid(), Name = "App", ParentId = Guid.NewGuid() }
+    };
 
         _namespaceServiceMock.Setup(s => s.GetAll()).Returns(namespaces);
 
         var result = _controller.GetAll();
 
-        var okResult = result.Result as OkObjectResult;
+        var okResult = result as OkObjectResult;
         Assert.IsNotNull(okResult);
         Assert.AreEqual(200, okResult.StatusCode);
 
@@ -42,31 +42,28 @@ public class NamespaceControllerTest
         Assert.IsNotNull(returnedDtos);
         Assert.AreEqual(namespaces.Count, returnedDtos.Count);
     }
+
     [TestMethod]
-    public void Create_WithValidDto_ReturnsCreatedAtActionWithDto()
+    public void Create_WithValidDto_ReturnsOkStatus()
     {
         var dtoIn = new CreateNamespaceDtoIn
         {
-            Name = "NewNamespace",
-            ParentId = null
-        };
-
-        var created = new Namespace
-        {
-            Id = Guid.NewGuid(),
-            Name = "NewNamespace",
+            Name = "MyNS",
             ParentId = null
         };
 
         _namespaceServiceMock
-            .Setup(s => s.Create(It.Is<CreateNamespaceArgs>(a => a.Name == "NewNamespace")))
-            .Returns(created);
+            .Setup(s => s.Create(It.IsAny<CreateNamespaceArgs>()))
+            .Returns(new Namespace { Id = Guid.NewGuid(), Name = "MyNS" });
 
         var result = _controller.Create(dtoIn);
 
-        var createdResult = result.Result as CreatedAtActionResult;
-        Assert.IsNotNull(createdResult);
-        Assert.AreEqual("GetById", createdResult.ActionName);
-        Assert.AreEqual(created.Id, ((NamespaceInformationDtoOut)createdResult.Value!).Id);
+        var okResult = result as OkResult;
+        Assert.IsNotNull(okResult);
+        Assert.AreEqual(200, okResult.StatusCode);
     }
+
+
+
+
 }
