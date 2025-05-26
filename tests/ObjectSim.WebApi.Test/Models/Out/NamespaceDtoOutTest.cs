@@ -8,7 +8,7 @@ public class NamespaceDtoOutTest
     [TestMethod]
     public void FromEntity_ShouldMapPropertiesCorrectly()
     {
-        // Arrange
+
         var ns = new Namespace
         {
             Id = Guid.NewGuid(),
@@ -16,12 +16,23 @@ public class NamespaceDtoOutTest
             ParentId = Guid.NewGuid()
         };
 
-        // Act
         var dto = NamespaceInformationDtoOut.FromEntity(ns);
-
-        // Assert
         Assert.AreEqual(ns.Id, dto.Id);
         Assert.AreEqual(ns.Name, dto.Name);
         Assert.AreEqual(ns.ParentId, dto.ParentId);
+    }
+    [TestMethod]
+    public void FromEntity_WithNullParent_ShouldAllowNullParentId()
+    {
+        var ns = new Namespace
+        {
+            Id = Guid.NewGuid(),
+            Name = "Root",
+            ParentId = null
+        };
+
+        var dto = NamespaceInformationDtoOut.FromEntity(ns);
+
+        Assert.IsNull(dto.ParentId);
     }
 }
