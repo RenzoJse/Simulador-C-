@@ -20,4 +20,4 @@ import { ButtonComponent } from '../../components/button/button.component';
         ButtonComponent
     ]
 })
-export class MethodModule { }
+export class ClassModule { }
