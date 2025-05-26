@@ -24,7 +24,7 @@ export class CreateClassFormComponent {
         error?: string;
     } | null = null;
 
-    Modificadores: { value: string; tag: string }[] = [
+    ClassTypes: { value: string; tag: string }[] = [
         { value: 'Abstract', tag: 'Abstract' },
         { value: 'Interface', tag: 'Interface' },
         { value: 'Sealed', tag: 'Sealed' }
@@ -37,7 +37,7 @@ export class CreateClassFormComponent {
                 Validators.maxLength(20),
                 Validators.minLength(3)
             ]],
-            classType: ['', [Validators.required]],
+            ClassTypes: ['', [Validators.required]],
         });
     }
 
@@ -49,6 +49,19 @@ export class CreateClassFormComponent {
             return;
         }
 
+        const selectedType = this.createClassForm.value.ClassTypes;
+        var formValue = this.createClassForm.value;
+        var newClass = {
+            Name: formValue.Name,
+            Accesibility: '',
+            IsAbstract: selectedType === 'Abstract',
+            IsSealed: selectedType === 'Sealed',
+            IsVirtual: selectedType === 'Virtual',
+            Attributes: [],
+            Methods: [],
+            Parent: '',
+        };
+        
         this.atSubmit.emit(this.createClassForm.value);
     }
 

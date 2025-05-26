@@ -1,9 +1,8 @@
 ﻿export default interface CreateClassModel {
     name: string;
-    accessibility: 'Public' | 'Private' | 'Protected';
+    accessibility: string;
     isAbstract: boolean;
     isSealed: boolean;
-    isOverride: boolean;
     isVirtual: boolean;
     attributes: any[];
     methods: any[];
