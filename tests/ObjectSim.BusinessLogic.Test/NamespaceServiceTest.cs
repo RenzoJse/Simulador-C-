@@ -33,6 +33,26 @@ public class NamespaceServiceTest
         _namespaceService.Create(null!);
     }
     [TestMethod]
+    public void Create_WithParentId_SetsParentCorrectly()
+    {
+        var parentId = Guid.NewGuid();
+        var args = new CreateNamespaceArgs("ChildNamespace", parentId);
+
+        Namespace? capturedNamespace = null;
+
+        _namespaceRepositoryMock
+            .Setup(r => r.Add(It.IsAny<Namespace>()))
+            .Callback<Namespace>(ns => capturedNamespace = ns)
+            .Returns<Namespace>(ns => ns);
+
+        var result = _namespaceService.Create(args);
+
+        Assert.IsNotNull(capturedNamespace);
+        Assert.AreEqual("ChildNamespace", capturedNamespace!.Name);
+        Assert.AreEqual(parentId, capturedNamespace.ParentId);
+    }
+
+    [TestMethod]
     public void GetAll_ShouldReturnAllNamespaces()
     {
         var namespaces = new List<Namespace>
