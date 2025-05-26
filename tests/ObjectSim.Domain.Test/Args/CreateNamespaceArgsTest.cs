@@ -23,4 +23,15 @@ public class CreateNamespaceArgsTest
 
         Assert.IsNull(args.ParentId);
     }
+    [TestMethod]
+    public void Id_ShouldBeOverridable()
+    {
+        var customId = Guid.NewGuid();
+        var args = new CreateNamespaceArgs("Test", null)
+        {
+            Id = customId
+        };
+
+        Assert.AreEqual(customId, args.Id);
+    }
 }
