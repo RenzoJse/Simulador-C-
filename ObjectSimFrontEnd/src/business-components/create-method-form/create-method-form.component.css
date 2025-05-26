@@ -1,22 +1,11 @@
-.big-checkbox {
-    width: 1.5rem;
-    height: 1.5rem;
-    margin-right: 10px;
-    border: 2px solid #007bff;
-    accent-color: #007bff;
-  }
+:host ::ng-deep app-form-input input,
 
-  .enhanced-input {
-    font-size: 1.1rem;
-    padding: 0.6rem 1rem;
-    border: 2px solid #007bff;
-    border-radius: 0.375rem;
-    box-shadow: 0 0 3px rgba(0, 123, 255, 0.3);
-    transition: border-color 0.3s, box-shadow 0.3s;
-  }
-  
-  .enhanced-input:focus {
-    outline: none;
-    border-color: #0056b3;
-    box-shadow: 0 0 6px rgba(0, 86, 179, 0.6);
-  }
+:host ::ng-deep app-form-input input:focus,
+:host ::ng-deep app-form-input select:focus {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.08) !important;
+  outline: none !important;
+}
+
+:host ::ng-deep app-form-input label {
+  font-weight: 600 !important;
+}

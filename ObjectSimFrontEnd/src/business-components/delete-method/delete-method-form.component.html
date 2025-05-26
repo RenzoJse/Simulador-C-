@@ -2,7 +2,7 @@
   <div class="mb-3">
     <label for="methodSelect" class="form-label">Selecciona Método</label>
     <select id="methodSelect" formControlName="methodId" class="form-select enhanced-input">
-      <option value="" disabled>-- Elige uno --</option>
+      <option value="" disabled>- Elige uno -</option>
       <option *ngFor="let m of methods" [value]="m.id">
         {{ m.name }}
       </option>
