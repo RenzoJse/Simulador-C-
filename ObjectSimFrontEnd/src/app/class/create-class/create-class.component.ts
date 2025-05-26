@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { ClassService } from "../../../backend/services/class/class.service";
+import CreateClassModel from "../../../backend/services/class/models/create-class.model";
 
 @Component({
     selector: 'app-create-class',
@@ -27,7 +28,7 @@ export class CreateClassComponent {
         console.log('Formulario enviado:', classObj);
         this.status = { loading: true };
 
-        this._classService.createMethod(classObj).subscribe({
+        this._classService.createClass(classObj).subscribe({
             next: (response) => {
                 this.status = null;
                 this._router.navigate([""]);
