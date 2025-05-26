@@ -3,8 +3,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.Controllers;
+using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
 
 namespace ObjectSim.WebApi.Test.Controllers;
@@ -22,7 +24,6 @@ public class NamespaceControllerTest
     [TestMethod]
     public void GetAll_ShouldReturnOkWithNamespaceDtos()
     {
-        // Arrange
         var namespaces = new List<Namespace>
         {
             new Namespace { Id = Guid.NewGuid(), Name = "System" },
@@ -40,5 +41,32 @@ public class NamespaceControllerTest
         var returnedDtos = okResult.Value as List<NamespaceInformationDtoOut>;
         Assert.IsNotNull(returnedDtos);
         Assert.AreEqual(namespaces.Count, returnedDtos.Count);
+    }
+    [TestMethod]
+    public void Create_WithValidDto_ReturnsCreatedAtActionWithDto()
+    {
+        var dtoIn = new CreateNamespaceDtoIn
+        {
+            Name = "NewNamespace",
+            ParentId = null
+        };
+
+        var created = new Namespace
+        {
+            Id = Guid.NewGuid(),
+            Name = "NewNamespace",
+            ParentId = null
+        };
+
+        _namespaceServiceMock
+            .Setup(s => s.Create(It.Is<CreateNamespaceArgs>(a => a.Name == "NewNamespace")))
+            .Returns(created);
+
+        var result = _controller.Create(dtoIn);
+
+        var createdResult = result.Result as CreatedAtActionResult;
+        Assert.IsNotNull(createdResult);
+        Assert.AreEqual("GetById", createdResult.ActionName);
+        Assert.AreEqual(created.Id, ((NamespaceInformationDtoOut)createdResult.Value!).Id);
     }
 }
