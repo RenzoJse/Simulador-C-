@@ -9,6 +9,10 @@ const routes: Routes = [
   {
     path: 'method',
     loadChildren: () => import('./method/method.module').then(m => m.MethodModule),
+  },
+  {
+    path: 'class',
+    loadChildren: () => import('./class/class.module').then(c => c.classModule),
   }
 ]
 
