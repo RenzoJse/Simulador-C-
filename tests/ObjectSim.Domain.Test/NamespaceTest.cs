@@ -65,4 +65,15 @@ public class NamespaceTest
 
         Assert.ThrowsException<ArgumentException>(ns.Validate, "Name cannot be less than 1 or more than 10 characters.");
     }
+    [TestMethod]
+    public void Validate_WhenNameTooShort_ShouldThrow()
+    {
+        var ns = new Namespace
+        {
+            Id = Guid.NewGuid(),
+            Name = ""
+        };
+
+        Assert.ThrowsException<ArgumentException>(ns.Validate, "Name cannot be null or whitespace.");
+    }
 }
