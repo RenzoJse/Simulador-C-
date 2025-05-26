@@ -8,16 +8,21 @@ import { MethodRoutingModule } from './method-routing.module';
 import { CreateMethodFormComponent } from '../../business-components/create-method-form/create-method-form.component';
 import { ButtonComponent } from '../../components/button/button.component';
 
+import { DeleteMethodComponent } from './delete-method/delete-method.component';
+import { DeleteMethodFormComponent } from '../../business-components/delete-method/delete-method-form.component';
+
 @NgModule({
-    declarations: [
-        CreateMethodComponent,
-    ],
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MethodRoutingModule,
-        CreateMethodFormComponent,
-        ButtonComponent
-    ]
+  declarations: [
+    CreateMethodComponent,
+  ],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MethodRoutingModule,
+    CreateMethodFormComponent,
+    DeleteMethodFormComponent,
+    ButtonComponent,
+    DeleteMethodComponent,
+  ]
 })
 export class MethodModule { }
