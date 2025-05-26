@@ -54,4 +54,15 @@ public class NamespaceTest
 
         ns.Validate();
     }
+    [TestMethod]
+    public void Validate_WhenNameTooLong_ShouldThrow()
+    {
+        var ns = new Namespace
+        {
+            Id = Guid.NewGuid(),
+            Name = "ThisIsTooLong"
+        };
+
+        Assert.ThrowsException<ArgumentException>(ns.Validate, "Name cannot be less than 1 or more than 10 characters.");
+    }
 }
