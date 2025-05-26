@@ -51,6 +51,29 @@ public class NamespaceServiceTest
         Assert.AreEqual("ChildNamespace", capturedNamespace!.Name);
         Assert.AreEqual(parentId, capturedNamespace.ParentId);
     }
+    [TestMethod]
+    public void Create_ReturnsCreatedNamespace()
+    {
+        var args = new CreateNamespaceArgs("ReturnedNS", null);
+
+        var expected = new Namespace
+        {
+            Id = args.Id,
+            Name = args.Name,
+            ParentId = args.ParentId
+        };
+
+        _namespaceRepositoryMock
+            .Setup(r => r.Add(It.IsAny<Namespace>()))
+            .Returns(expected);
+
+        var result = _namespaceService.Create(args);
+
+        Assert.AreEqual(expected.Id, result.Id);
+        Assert.AreEqual(expected.Name, result.Name);
+        Assert.AreEqual(expected.ParentId, result.ParentId);
+    }
+
 
     [TestMethod]
     public void GetAll_ShouldReturnAllNamespaces()
