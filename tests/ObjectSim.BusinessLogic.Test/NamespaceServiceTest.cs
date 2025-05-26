@@ -26,4 +26,22 @@ public class NamespaceServiceTest
         _namespaceRepositoryMock.Verify(r =>
             r.Add(It.Is<Namespace>(n => n.Name == "MyNamespace" && n.ParentId == null)), Times.Once);
     }
+    [TestMethod]
+    public void GetAll_ShouldReturnAllNamespaces()
+    {
+        // Arrange
+        var namespaces = new List<Namespace>
+        {
+            new Namespace { Id = Guid.NewGuid(), Name = "System" },
+            new Namespace { Id = Guid.NewGuid(), Name = "App" }
+        };
+
+        _namespaceRepositoryMock
+            .Setup(r => r.GetAll(It.IsAny<Func<Namespace, bool>>()))
+            .Returns(namespaces);
+
+        var result = _namespaceService.GetAll();
+
+        CollectionAssert.AreEqual(namespaces, result);
+    }
 }
