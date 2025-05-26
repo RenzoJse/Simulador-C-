@@ -1,0 +1,37 @@
+﻿using ObjectSim.Domain.Args;
+
+namespace ObjectSim.Domain.Test.Args;
+[TestClass]
+public class CreateNamespaceArgsTest
+{
+    [TestMethod]
+    public void Constructor_WithValidValues_ShouldSetProperties()
+    {
+        var name = "MyNamespace";
+        Guid? parentId = Guid.NewGuid();
+
+        var args = new CreateNamespaceArgs(name, parentId);
+
+        Assert.AreEqual(name, args.Name);
+        Assert.AreEqual(parentId, args.ParentId);
+        Assert.AreNotEqual(Guid.Empty, args.Id);
+    }
+    [TestMethod]
+    public void Constructor_WithNullParentId_ShouldAllowRootNamespace()
+    {
+        var args = new CreateNamespaceArgs("Root", null);
+
+        Assert.IsNull(args.ParentId);
+    }
+    [TestMethod]
+    public void Id_ShouldBeOverridable()
+    {
+        var customId = Guid.NewGuid();
+        var args = new CreateNamespaceArgs("Test", null)
+        {
+            Id = customId
+        };
+
+        Assert.AreEqual(customId, args.Id);
+    }
+}
