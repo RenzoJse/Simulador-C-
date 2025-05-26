@@ -29,7 +29,6 @@ public class NamespaceServiceTest
     [TestMethod]
     public void GetAll_ShouldReturnAllNamespaces()
     {
-        // Arrange
         var namespaces = new List<Namespace>
         {
             new Namespace { Id = Guid.NewGuid(), Name = "System" },
