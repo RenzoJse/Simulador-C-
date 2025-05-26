@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
+using ObjectSim.WebApi.Controllers;
 using ObjectSim.WebApi.DTOs.Out;
 
 namespace ObjectSim.WebApi.Test.Controllers;
