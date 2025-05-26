@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import MethodDTO from './models/method-dto.model';
+import { MethodListItem } from './models/method-list-item.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class MethodService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  getMethods(): Observable<MethodDTO[]> {
-    return this.http.get<MethodDTO[]>(this.apiUrl);
+  getMethods(): Observable<MethodListItem[]> {
+    return this.http.get<MethodListItem[]>(this.apiUrl);
   }
 }
