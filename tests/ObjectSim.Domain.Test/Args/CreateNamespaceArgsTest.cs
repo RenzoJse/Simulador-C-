@@ -16,4 +16,11 @@ public class CreateNamespaceArgsTest
         Assert.AreEqual(parentId, args.ParentId);
         Assert.AreNotEqual(Guid.Empty, args.Id);
     }
+    [TestMethod]
+    public void Constructor_WithNullParentId_ShouldAllowRootNamespace()
+    {
+        var args = new CreateNamespaceArgs("Root", null);
+
+        Assert.IsNull(args.ParentId);
+    }
 }
