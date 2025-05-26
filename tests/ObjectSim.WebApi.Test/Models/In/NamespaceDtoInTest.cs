@@ -21,4 +21,13 @@ public class NamespaceDtoInTest
         Assert.AreEqual(dto.ParentId, args.ParentId);
         Assert.AreNotEqual(Guid.Empty, args.Id);
     }
+    [TestMethod]
+    public void ToArgs_WhenParentIdIsNull_ShouldAllowRootNamespace()
+    {
+        var dto = new CreateNamespaceDtoIn { Name = "Root", ParentId = null };
+
+        var args = dto.ToArgs();
+
+        Assert.IsNull(args.ParentId);
+    }
 }
