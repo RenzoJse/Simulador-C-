@@ -23,6 +23,7 @@ export class CreateMethodComponent {
             name: new FormControl("", [Validators.required]),
             typeID: new FormControl("", [Validators.required]),
         });
+        console.log('CreateMethodComponent inicializado');
     }
 
     protected atSubmit(method: MethodCreateModel) {
