@@ -27,6 +27,7 @@ export class CreateMethodComponent {
     }
 
     protected atSubmit(method: MethodCreateModel) {
+        console.log('Formulario enviado:', method);
         this.status = { loading: true };
 
         this._methodService.createMethod(method).subscribe({

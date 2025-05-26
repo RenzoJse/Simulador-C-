@@ -7,7 +7,7 @@ import MethodDTO from './models/method-dto.model';
   providedIn: 'root'
 })
 export class MethodService {
-  private readonly apiUrl = 'http://localhost:5000/api/methods';
+  private readonly apiUrl = 'http://localhost:5018/api/methods';
 
   constructor(private http: HttpClient) {}
 

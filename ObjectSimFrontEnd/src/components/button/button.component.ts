@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   styles: ``,
 })
 
-export class BotonComponent {
+export class ButtonComponent {
   @Input({ required: true }) title!: string;
   @Input({ required: true }) whenClicked!: () => void;
   @Input() status: string = '';
