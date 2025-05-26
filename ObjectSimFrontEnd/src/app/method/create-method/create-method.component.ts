@@ -21,7 +21,7 @@ export class CreateMethodComponent {
     ) {
         this.createMethodForm = new FormGroup({
             name: new FormControl("", [Validators.required]),
-            type: new FormControl("", [Validators.required]),
+            typeID: new FormControl("", [Validators.required]),
         });
     }
 

@@ -35,7 +35,7 @@ export class CreateMethodFormComponent {
 
     constructor(private fb: FormBuilder) {
         this.createMethodForm = this.fb.group({
-            name: ['', [
+            Name: ['', [
                 Validators.required,
                 Validators.maxLength(30)
             ]],
@@ -58,13 +58,12 @@ export class CreateMethodFormComponent {
             return;
         }
 
-        const selectedModifier = this.createMethodForm.value.type;
-        console.log('Modificador seleccionado:', selectedModifier);
+        const selectedModifier = this.createMethodForm.value.Modificadores;
 
         const formValue = this.createMethodForm.value;
         const newMethod: MethodCreateModel = {
-            name: formValue.name,
-            type: formValue.type,
+            name: formValue.Name,
+            type: formValue.typeId,
             accessibility: formValue.accessibility ?? 'Public',
             isAbstract: selectedModifier === 'Abstract',
             isSealed: selectedModifier === 'Sealed',

@@ -19,9 +19,7 @@ export class InputComponent {
     @Input() invalid: boolean = false;
 
     @Output() valueChange = new EventEmitter<string>(); //
-
-    public showPassword: boolean = false;
-
+    
     public inValueChange(event: any): void { //
         this.valueChange.emit(event.target.value); //
     }
