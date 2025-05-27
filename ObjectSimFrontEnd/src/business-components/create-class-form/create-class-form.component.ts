@@ -1,21 +1,24 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { NgIf } from '@angular/common';
 
 import { FormInputComponent } from '../../components/form/form-input/form-input.component';
 import { FormButtonComponent } from '../../components/form/form-button/form-button.component';
 import { FormComponent } from '../../components/form/form/form.component';
 
+import { CreateMethodFormComponent } from '../../business-components/create-method-form/create-method-form.component'
+
 @Component({
     selector: 'app-create-class-form',
     standalone: true,
-    imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent],
+    imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent, CreateMethodFormComponent],
     templateUrl: './create-class-form.component.html'
 })
 
 export class CreateClassFormComponent {
     @Input() title: string = '';
 
+    createMethodForm: FormGroup;
     createClassForm: FormGroup;
     @Output() atSubmit = new EventEmitter<any>();
 
@@ -39,6 +42,24 @@ export class CreateClassFormComponent {
             ]],
             ClassTypes: ['', [Validators.required]],
         });
+        this.createMethodForm = new FormGroup({
+            name: new FormControl("", [Validators.required]),
+            typeID: new FormControl("", [Validators.required]),
+        });
+    }
+
+    showMethodForm = false;
+    methods: any[] = [];
+
+    addMethod(method: any) {
+        this.methods.push(method);
+        console.log('Form values:', this.createMethodForm.value);
+        console.log('Metodos guardados:', this.methods);
+        this.showMethodForm = false;
+    }
+
+    showAddMethodForm() {
+        this.showMethodForm = true;
     }
 
     public onSubmit() {
@@ -58,13 +79,14 @@ export class CreateClassFormComponent {
             IsSealed: selectedType === 'Sealed',
             IsVirtual: selectedType === 'Virtual',
             Attributes: [],
-            Methods: [],
+            Methods: this.methods,
             Parent: '',
         };
         
-        this.atSubmit.emit(this.createClassForm.value);
+        this.atSubmit.emit(newClass);
+        console.log('Nueva Clase: ', newClass);
     }
-
+    
     private markAsTouched() {
         Object.keys(this.createClassForm.controls).forEach(field => {
             const control = this.createClassForm.get(field);

@@ -28,12 +28,21 @@
         Loading...
     </div>
 
-    <ng-template #notLoading>
+      <button type="button" (click)="showAddMethodForm()">Add Methods To Class</button>
+
+      <app-create-method-form
+              *ngIf="showMethodForm"
+              [title]="'Method'"
+              (atSubmit)="addMethod($event)">
+      </app-create-method-form>
+
+        <ng-template #notLoading>
         <div *ngIf="createClassStatus?.error">
             {{ createClassStatus!.error }}
         </div>
 
-        <app-form-button title="Crear Clase"></app-form-button>
+        <app-form-button title="Create Class"></app-form-button>
     </ng-template>
 
   </app-form>
+</div>
