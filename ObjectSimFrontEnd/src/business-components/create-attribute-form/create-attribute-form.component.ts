@@ -6,7 +6,7 @@ import { FormInputComponent } from '../../components/form/form-input/form-input.
 import { FormButtonComponent } from '../../components/form/form-button/form-button.component';
 import { FormComponent } from '../../components/form/form/form.component';
 
-import AttributeFormComponent from '../../backend/';
+import CreateAttributeModel from '../../backend/services/class/models/create-attribute.model';
 
 @Component({
     selector: 'app-create-attribute-form',
@@ -18,11 +18,9 @@ import AttributeFormComponent from '../../backend/';
 
 export class CreateAttributeFormComponent {
     @Input() tittle : string = '';
-    
-    createAttributeForm: FormGroup;
-    @Output() attributeCreated = new EventEmitter<void>();
 
-    attributeForm: FormGroup;
+    createAttributeForm: FormGroup;
+    @Output() atSubmit = new EventEmitter<CreateAttributeModel>();
 
     createAttributeStatus: {
         loading?: true;
@@ -36,7 +34,7 @@ export class CreateAttributeFormComponent {
     ];
 
     constructor(private formBuilder: FormBuilder) {
-        this.attributeForm = this.formBuilder.group({
+        this.createAttributeForm = this.formBuilder.group({
             name: ['', [Validators.required, Validators.maxLength(10)]],
             dataTypeID: ['', Validators.required],
             accessibility: ['', Validators.required]
@@ -44,16 +42,16 @@ export class CreateAttributeFormComponent {
     }
 
     public onSubmit() {
-        console.log('Form attribute submitted:', this.attributeForm.value);
+        console.log('Form attribute submitted:', this.createAttributeForm.value);
         
         if(this.createAttributeForm.invalid) {
             this.markAsTouched()
             return;
         }
         
-        var selectedModifier = this.attributeForm.value.accessibility;
-        var formValue = this.attributeForm.value;
-        var newAttribute: AttributeCreateModel = {
+        var selectedModifier = this.createAttributeForm.value.accessibility;
+        var formValue = this.createAttributeForm.value;
+        var newAttribute: CreateAttributeModel = {
             name: formValue.name,
             dataTypeID: formValue.dataTypeID,
             accessibility: selectedModifier
