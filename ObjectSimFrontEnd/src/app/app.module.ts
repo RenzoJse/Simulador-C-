@@ -12,10 +12,11 @@ import { LandingPageComponent } from './landing-page/landing-page/landing-page.c
 
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
+import { CreateAttributeComponent } from './attribute/create-attribute/create-attribute.component';
 
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, CreateAttributeComponent],
     imports: [BrowserModule, CommonModule, FormsModule, ReactiveFormsModule, AppRoutingModule,
         LandingPageComponent, HeaderComponent, FooterComponent],
     providers: [provideHttpClient()],
