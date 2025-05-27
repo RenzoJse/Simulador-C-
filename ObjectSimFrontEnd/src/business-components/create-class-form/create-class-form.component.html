@@ -36,6 +36,15 @@
               (atSubmit)="addMethod($event)">
       </app-create-method-form>
 
+      <app-form-input
+              [form]="createClassForm"
+              controlName="ParentClassID"
+              [reserve]="'ParentClassID'"
+              [name]="'ParentClassID'"
+              [tag]="'ParentClassID'"
+              [type]="'text'">
+      </app-form-input>
+
         <ng-template #notLoading>
         <div *ngIf="createClassStatus?.error">
             {{ createClassStatus!.error }}

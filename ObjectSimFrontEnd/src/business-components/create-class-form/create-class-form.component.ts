@@ -41,6 +41,7 @@ export class CreateClassFormComponent {
                 Validators.minLength(3)
             ]],
             ClassTypes: ['', [Validators.required]],
+            ParentClassID: ['', []],
         });
         this.createMethodForm = new FormGroup({
             name: new FormControl("", [Validators.required]),
