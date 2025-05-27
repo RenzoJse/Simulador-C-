@@ -40,7 +40,7 @@ export class CreateClassFormComponent {
                 Validators.maxLength(20),
                 Validators.minLength(3)
             ]],
-            ClassTypes: ['', [Validators.required]],
+            ClassType: ['', [Validators.required]],
             ParentClassID: ['', []],
         });
         this.createMethodForm = new FormGroup({
