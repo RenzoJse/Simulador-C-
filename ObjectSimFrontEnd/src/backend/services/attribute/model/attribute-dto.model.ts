@@ -1,4 +1,4 @@
-export interface CreateAttributeDto {
+export default interface AttributeDto {
   name: string;
   dataTypeName: string;
   dataTypeKind: string;
