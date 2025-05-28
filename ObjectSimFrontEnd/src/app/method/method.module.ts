@@ -9,7 +9,7 @@ import { CreateMethodFormComponent } from '../../business-components/method/crea
 import { ButtonComponent } from '../../components/button/button.component';
 
 import { DeleteMethodComponent } from './delete-method/delete-method.component';
-import { DeleteMethodFormComponent } from '../../business-components/delete-method/delete-method-form.component';
+import { DeleteMethodFormComponent } from '../../business-components/method/delete-method/delete-method-form.component';
 
 @NgModule({
   declarations: [

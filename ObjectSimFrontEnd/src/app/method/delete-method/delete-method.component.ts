@@ -4,7 +4,7 @@ import { Router }                  from '@angular/router';
 
 import { MethodService }           from '../../../backend/services/method/method.service';
 import { MethodListItem }          from '../../../backend/services/method/models/method-list-item.model';
-import { DeleteMethodFormComponent } from '../../../business-components/delete-method/delete-method-form.component';
+import { DeleteMethodFormComponent } from '../../../business-components/method/delete-method/delete-method-form.component';
 
 @Component({
   selector: 'app-delete-method',
