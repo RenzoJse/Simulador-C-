@@ -6,7 +6,6 @@ import { DeleteMethodComponent } from './delete-method/delete-method.component';
 const routes: Routes = [
     { path: 'create', component: CreateMethodComponent },
     { path: 'delete', component: DeleteMethodComponent},
-    
 ];
 
 @NgModule({
