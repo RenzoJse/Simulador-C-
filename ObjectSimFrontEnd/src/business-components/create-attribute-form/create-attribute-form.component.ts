@@ -1,23 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { NgIf } from '@angular/common';
 import { FormButtonComponent } from '../../components/form/form-button/form-button.component';
 import { FormInputComponent } from '../../components/form/form-input/form-input.component';
 import { FormComponent } from '../../components/form/form/form.component';
+import AttributeDto from '../../backend/services/attribute/model/attribute-dto.model';
 
 @Component({
   selector: 'app-create-attribute-form',
-  template: './create-attribute-form.component.html',
+  templateUrl: './create-attribute-form.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent],
-  styles: ['./create-attribute-form.component.css']
+  imports: [
+    ReactiveFormsModule,
+    FormInputComponent,
+    FormButtonComponent,
+    NgIf,
+    FormComponent
+  ],
+  styleUrls: ['./create-attribute-form.component.css']
 })
 export class CreateAttributeFormComponent {
-createAttributeForm: FormGroup;
+  @Output() atSubmit = new EventEmitter<AttributeDto>();
+
+  createAttributeForm: FormGroup;
   createAttributeStatus: { loading: boolean; error?: string } | null = null;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder) {
     this.createAttributeForm = this.fb.group({
       name: ['', Validators.required],
       dataTypeName: ['', Validators.required],
@@ -30,31 +38,22 @@ createAttributeForm: FormGroup;
   onSubmit(): void {
     if (this.createAttributeForm.invalid) return;
 
-    this.createAttributeStatus = { loading: true };
-
-    const formData = this.createAttributeForm.value;
-
-    this.http.post('/api/attributes', formData).subscribe({
-      next: () => {
-        this.createAttributeStatus = null;
-        this.createAttributeForm.reset();
-        alert('Attribute created successfully!');
-      },
-      error: (err) => {
-        this.createAttributeStatus = {
-          loading: false,
-          error: 'Failed to create attribute.'
-        };
-        console.error(err);
-      }
-    });
+    const formData: AttributeDto = this.createAttributeForm.value;
+    this.atSubmit.emit(formData); // ✅ lo emite al padre
   }
 
-  get dataTypeKinds(): string[] {
-    return ['Value', 'Reference'];
+  get dataTypeKinds(): { value: string; tag: string }[] {
+    return [
+      { value: 'Value', tag: 'Value Type' },
+      { value: 'Reference', tag: 'Reference Type' }
+    ];
   }
 
-  get visibilities(): string[] {
-    return ['Public', 'Private', 'Protected'];
+  get visibilities(): { value: string; tag: string }[] {
+    return [
+      { value: 'Public', tag: 'Public' },
+      { value: 'Private', tag: 'Private' },
+      { value: 'Protected', tag: 'Protected' }
+    ];
   }
 }

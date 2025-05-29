@@ -5,9 +5,9 @@
 
     <app-form-input
       [form]="createAttributeForm"
-      controlName="Name"
+      controlName="name"
       [reserve]="'Attribute Name'"
-      [name]="'Name'"
+      [name]="'name'"
       [tag]="'Name'"
       [errorMessages]="{ required: 'Name is required.' }"
       [type]="'text'">
@@ -19,7 +19,7 @@
       [reserve]="'Data Type Name'"
       [name]="'dataTypeName'"
       [tag]="'Data Type Name'"
-      [errorMessages]="{ required: 'Data Type Name is required.' }"
+      [errorMessages]="{ required: 'Data type name is required.' }"
       [type]="'text'">
     </app-form-input>
 
@@ -29,9 +29,9 @@
       [reserve]="'Data Type Kind'"
       [name]="'dataTypeKind'"
       [tag]="'Data Type Kind'"
-      [errorMessages]="{ required: 'Data Type Kind is required.' }"
+      [errorMessages]="{ required: 'Kind is required.' }"
       [type]="'option'"
-      [options]="['Value', 'Reference']">
+      [options]="dataTypeKinds">
     </app-form-input>
 
     <app-form-input
@@ -42,10 +42,10 @@
       [tag]="'Visibility'"
       [errorMessages]="{ required: 'Visibility is required.' }"
       [type]="'option'"
-      [options]="['Public', 'Private', 'Protected']">
+      [options]="visibilities">
     </app-form-input>
 
-        <app-form-input
+    <app-form-input
       [form]="createAttributeForm"
       controlName="classId"
       [reserve]="'Class ID'"
@@ -55,17 +55,15 @@
       [type]="'text'">
     </app-form-input>
 
-    <div *ngIf="createMethodStatus?.loading; else notLoading">
+    <div *ngIf="createAttributeStatus?.loading; else notLoading">
       Loading...
     </div>
 
     <ng-template #notLoading>
-      <div *ngIf="createMethodStatus?.error">
-        {{ createMethodStatus!.error }}
+      <div *ngIf="createAttributeStatus?.error">
+        {{ createAttributeStatus!.error }}
       </div>
-
       <app-form-button title="Create Attribute"></app-form-button>
     </ng-template>
-
   </app-form>
 </div>
