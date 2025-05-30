@@ -22,13 +22,10 @@ public class ClassBuilderTest
         Name = "TestMethod",
     };
 
-    private static readonly CreateDataTypeArgs TestArgsDataType = new(
-        "int", "value");
-
     private static readonly DataType TestDataType = new ValueType("test", "int", []);
 
     private static readonly CreateAttributeArgs TestCreateAttributeArgs = new(
-        TestArgsDataType,
+        Guid.NewGuid(),
         "public",
         Guid.NewGuid(),
         "Test"
@@ -110,8 +107,8 @@ public class ClassBuilderTest
 
         _classBuilderTest!.SetParent(ParentClass);
 
-        var invalidAttributeArgs = new CreateAttributeArgs(TestArgsDataType, "public", Guid.NewGuid(), "TestAttribute");
-        var validAttributeArgs = new CreateAttributeArgs(TestArgsDataType, "public", Guid.NewGuid(), "NewAttribute");
+        var invalidAttributeArgs = new CreateAttributeArgs(Guid.NewGuid(), "public", Guid.NewGuid(), "TestAttribute");
+        var validAttributeArgs = new CreateAttributeArgs(Guid.NewGuid(), "public", Guid.NewGuid(), "NewAttribute");
 
         _attributeServiceMock!.Setup(m => m.CreateAttribute(invalidAttributeArgs))
             .Throws(new ArgumentException());
@@ -137,8 +134,8 @@ public class ClassBuilderTest
         _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
             .Returns(attribute2);
 
-        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataType, "public", Guid.NewGuid(), "Attribute1");
-        var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataType, "public", Guid.NewGuid(), "Attribute2");
+        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute1");
+        var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute2");
 
         _classBuilderTest!.SetAttributes([attributeArgs1, attributeArgs2]);
 
