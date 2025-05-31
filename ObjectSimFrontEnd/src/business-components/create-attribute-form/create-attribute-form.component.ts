@@ -48,12 +48,11 @@ export class CreateAttributeFormComponent {
             return;
         }
 
-        var selectedModifier = this.createAttributeForm.value.accessibility;
         var formValue = this.createAttributeForm.value;
         var newAttribute: CreateAttributeModel = {
             name: formValue.name,
             dataTypeID: formValue.dataTypeID,
-            accessibility: selectedModifier
+            visibility: formValue.visibility
         };
 
         this.atSubmit.emit(newAttribute);

@@ -51,6 +51,15 @@
               (atSubmit)="addAttribute($event)">
       </app-create-attribute-form>
 
+      <div *ngIf="attributes.length > 0">
+          <h4>Added Attributes:</h4>
+          <ul>
+              <li *ngFor="let attr of attributes">
+                  {{ attr.name }} - {{ attr.dataTypeID }} - {{ attr.visibility || attr.visibility }}
+              </li>
+          </ul>
+      </div>
+
       <div *ngIf="createClassStatus?.loading; else notLoading">
           Loading...
       </div>

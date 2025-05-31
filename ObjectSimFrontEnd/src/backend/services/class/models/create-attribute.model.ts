@@ -1,5 +1,5 @@
 ﻿export default interface CreateAttributeModel {
     name: string;
-    accessibility: string;
+    visibility: string;
     dataTypeID: string;
 }

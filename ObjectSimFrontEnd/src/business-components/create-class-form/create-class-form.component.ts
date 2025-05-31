@@ -1,6 +1,6 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { NgIf } from '@angular/common';
+import { NgIf, CommonModule } from '@angular/common';
 
 import { FormInputComponent } from '../../components/form/form-input/form-input.component';
 import { FormButtonComponent } from '../../components/form/form-button/form-button.component';
@@ -14,7 +14,7 @@ import { CreateAttributeFormComponent } from '../../business-components/create-a
     standalone: true,
     imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent,
         NgIf, FormComponent, CreateMethodFormComponent,
-        CreateAttributeFormComponent],
+        CreateAttributeFormComponent, CommonModule],
     templateUrl: './create-class-form.component.html'
 })
 
@@ -52,16 +52,18 @@ export class CreateClassFormComponent {
             name: new FormControl("", [Validators.required]),
             typeID: new FormControl("", [Validators.required]),
         });
+
         this.createAttributeForm = new FormGroup({
             name: new FormControl("", [Validators.required]),
             dataTypeID: new FormControl("", [Validators.required]),
-            accessibility: new FormControl("", [Validators.required])
+            visibility: new FormControl("", [Validators.required])
         });
     }
 
     showAttributeForm = false;
     showMethodForm = false;
     methods: any[] = [];
+    attributes: any[] = [];
 
     addMethod(method: any) {
         this.methods.push(method);
@@ -71,7 +73,8 @@ export class CreateClassFormComponent {
     }
 
     addAttribute(attribute: any) {
-        console.log('Form values de Attribute:', this.createAttributeForm.value);
+        this.attributes.push(attribute);
+        console.log('Atributos guardados:', this.attributes);
         this.showAttributeForm = false;
     }
 
