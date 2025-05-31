@@ -1,60 +1,60 @@
 <div class="container mt-4">
-  <h2 class="mb-4">Crear Método</h2>
+  <h2 class="mb-4">Create Method</h2>
 
-    <app-form [form]="createMethodForm" (atSubmit)="onSubmit()">
+  <app-form [form]="createMethodForm" (atSubmit)="onSubmit()">
 
-        <app-form-input
-          [form]="createMethodForm"
-          controlName="Name"
-          [reserve]="'Nombre del método'"
-          [name]="'Name'"
-          [tag]="'Name'"
-          [errorMessages]="{ required: 'El nombre es requerido.' }"
-          [type]="'text'">
-        </app-form-input>
+    <app-form-input
+      [form]="createMethodForm"
+      controlName="Name"
+      [reserve]="'Method Name'"
+      [name]="'Name'"
+      [tag]="'Name'"
+      [errorMessages]="{ required: 'Name is required.' }"
+      [type]="'text'">
+    </app-form-input>
 
-        <app-form-input
-                [form]="createMethodForm"
-                controlName="typeId"
-                [reserve]="'Tipo del método'"
-                [name]="'typeId'"
-                [tag]="'Type ID'"
-                [errorMessages]="{ required: 'El tipo es requerido.' }"
-                [type]="'text'">
-        </app-form-input>
+    <app-form-input
+      [form]="createMethodForm"
+      controlName="typeId"
+      [reserve]="'Method Type'"
+      [name]="'typeId'"
+      [tag]="'Type ID'"
+      [errorMessages]="{ required: 'Type is required.' }"
+      [type]="'text'">
+    </app-form-input>
 
-        <app-form-input
-                [form]="createMethodForm"
-                controlName="Modificadores"
-                [reserve]="'Modificadores del método'"
-                [name]="'Modificadores'"
-                [tag]="'Modificadores'"
-                [errorMessages]="{ required: 'El tipo es requerido.' }"
-                [type]="'option'"
-                [options]="Modificadores">
-        </app-form-input>
+    <app-form-input
+      [form]="createMethodForm"
+      controlName="Modificadores"
+      [reserve]="'Method Modifiers'"
+      [name]="'Modifiers'"
+      [tag]="'Modifiers'"
+      [errorMessages]="{ required: 'At least one modifier is required.' }"
+      [type]="'option'"
+      [options]="Modificadores">
+    </app-form-input>
 
-        <app-form-input
-                [form]="createMethodForm"
-                controlName="ClassID"
-                [reserve]="'Id de la clase del método'"
-                [name]="'ClassID'"
-                [tag]="'Class ID:'"
-                [errorMessages]="{ required: 'El Id de la clase es requerido.' }"
-                [type]="'text'">
-        </app-form-input>
+    <app-form-input
+      [form]="createMethodForm"
+      controlName="ClassID"
+      [reserve]="'Class ID'"
+      [name]="'ClassID'"
+      [tag]="'Class ID'"
+      [errorMessages]="{ required: 'Class ID is required.' }"
+      [type]="'text'">
+    </app-form-input>
 
-        <div *ngIf="createMethodStatus?.loading; else notLoading">
-            Loading...
-        </div>
+    <div *ngIf="createMethodStatus?.loading; else notLoading">
+      Loading...
+    </div>
 
-        <ng-template #notLoading>
-            <div *ngIf="createMethodStatus?.error">
-                {{ createMethodStatus!.error }}
-            </div>
+    <ng-template #notLoading>
+      <div *ngIf="createMethodStatus?.error">
+        {{ createMethodStatus!.error }}
+      </div>
 
-            <app-form-button title="Crear Metodo"></app-form-button>
-        </ng-template>
+      <app-form-button title="Create Method"></app-form-button>
+    </ng-template>
 
-        </app-form>
+  </app-form>
 </div>

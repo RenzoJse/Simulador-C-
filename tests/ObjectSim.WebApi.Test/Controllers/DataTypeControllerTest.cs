@@ -38,7 +38,7 @@ public class DataTypeControllerTest
 
         var result = _controller.GetAll();
 
-        var okResult = result.Result as OkObjectResult;
+        var okResult = result as OkObjectResult;
         Assert.IsNotNull(okResult);
         Assert.AreEqual(200, okResult.StatusCode);
 
@@ -59,7 +59,7 @@ public class DataTypeControllerTest
 
         var result = _controller.GetById(id);
 
-        var okResult = result.Result as OkObjectResult;
+        var okResult = result as OkObjectResult;
         Assert.IsNotNull(okResult);
         Assert.AreEqual(200, okResult.StatusCode);
 

@@ -8,7 +8,7 @@ namespace ObjectSim.WebApi.Controllers;
 public class DataTypeController(IDataTypeService dataTypeService) : ControllerBase
 {
     [HttpGet]
-    public ActionResult<List<DataTypeInformationDtoOut>> GetAll()
+    public IActionResult GetAll()
     {
         var result = dataTypeService.GetAll()
             .Select(DataTypeInformationDtoOut.ToInfo)
@@ -18,7 +18,7 @@ public class DataTypeController(IDataTypeService dataTypeService) : ControllerBa
     }
     [HttpGet]
     [Route("{id}")]
-    public ActionResult<DataTypeInformationDtoOut> GetById(Guid id)
+    public IActionResult GetById(Guid id)
     {
         var dt = dataTypeService.GetById(id);
         return Ok(DataTypeInformationDtoOut.ToInfo(dt));

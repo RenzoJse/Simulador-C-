@@ -16,6 +16,8 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<ValueType> ValueTypes { get; set; }
     public DbSet<ReferenceType> ReferenceTypes { get; set; }
     public DbSet<InvokeMethod> InvokeMethod { get; set; }
+    public DbSet<Namespace> Namespaces { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -153,6 +155,13 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 .HasForeignKey(im => im.InvokeMethodId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+        modelBuilder.Entity<Namespace>()
+            .HasOne<Namespace>()
+            .WithMany()
+            .HasForeignKey(n => n.ParentId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
 
         base.OnModelCreating(modelBuilder);
         ModelSeedData(modelBuilder);
