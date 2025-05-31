@@ -21,8 +21,6 @@ export class DeleteMethodComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // No hace falta cargar la lista aquí,
-    //MethodDropdownComponent ya lo hará en su ngOnInit().
   }
 
   onSelectionChange(id: string) {
