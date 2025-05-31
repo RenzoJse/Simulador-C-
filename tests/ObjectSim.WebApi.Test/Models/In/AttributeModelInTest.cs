@@ -7,19 +7,18 @@ public class AttributeModelInTest
     [TestMethod]
     public void AttributeModelIn_ShouldCreateInstance()
     {
+        var dataTypeId = Guid.NewGuid();
         var model = new CreateAttributeDtoIn
         {
             Name = "TestName",
-            DataTypeName = "int",
-            DataTypeKind = "ValueType",
+            DataTypeId = dataTypeId.ToString(),
             Visibility = "Public",
             ClassId = Guid.NewGuid()
         };
 
         Assert.IsNotNull(model);
         Assert.AreEqual("TestName", model.Name);
-        Assert.AreEqual("int", model.DataTypeName);
-        Assert.AreEqual("ValueType", model.DataTypeKind);
+        Assert.AreEqual(dataTypeId.ToString(), model.DataTypeId);
         Assert.AreEqual("Public", model.Visibility);
         Assert.AreNotEqual(Guid.Empty, model.ClassId);
     }

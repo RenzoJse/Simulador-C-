@@ -9,13 +9,10 @@ public class InterfaceBuilderTest
 {
     private InterfaceBuilder? _interfaceBuilderTest;
 
-    private static readonly CreateDataTypeArgs TestArgsDataType = new(
-        "int", "reference");
-
     private static readonly Guid TestAttributeId = Guid.NewGuid();
 
     private readonly CreateAttributeArgs _testArgsAttribute = new(
-        TestArgsDataType,
+        Guid.NewGuid(),
         "public",
         TestAttributeId,
         "Test"

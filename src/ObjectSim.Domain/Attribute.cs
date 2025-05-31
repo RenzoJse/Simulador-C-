@@ -9,9 +9,7 @@ public class Attribute
         Public,
         Private,
         Protected,
-        Internal,
-        ProtectedInternal,
-        PrivateProtected
+        Internal
     }
     public DataType DataType { get; set; } = null!;
     public AttributeVisibility Visibility { get; set; }

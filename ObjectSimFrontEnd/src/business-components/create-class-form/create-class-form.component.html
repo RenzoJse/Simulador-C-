@@ -1,0 +1,88 @@
+﻿<div class ="container mt-4">
+  <h2 class="mb-4">Crear Clase</h2>
+
+  <app-form [form]="createClassForm" (atSubmit)="onSubmit()">
+
+    <app-form-input
+      [form]="createClassForm"
+      controlName="Name"
+      [reserve]="'Name of the class'"
+      [name]="'Name'"
+      [tag]="'Name'"
+      [errorMessages]="{ required: 'The name is required.' }"
+      [type]="'text'">
+    </app-form-input>
+
+    <app-form-input
+      [form]="createClassForm"
+      controlName="ClassType"
+      [reserve]="'Class Type'"
+      [name]="'ClassType'"
+      [tag]="'Class Type'"
+      [errorMessages]="{ required: 'The Class Type is required' }"
+      [type]="'option'"
+      [options]="ClassTypes">
+    </app-form-input>
+
+      <app-form-input
+              [form]="createClassForm"
+              controlName="ParentClassID"
+              [reserve]="'ParentClassID'"
+              [name]="'ParentClassID'"
+              [tag]="'ParentClassID'"
+              [type]="'text'">
+      </app-form-input>
+
+      <button type="button" (click)="showAddMethodForm()">Add Methods To Class</button>
+
+      <app-create-method-form
+              *ngIf="showMethodForm"
+              [title]="'Method'"
+              (atSubmit)="addMethod($event)">
+      </app-create-method-form>
+
+      <button type="button" (click)="showAddAttributeForm()">Add Attribute To Class</button>
+
+      <app-create-attribute-form
+              *ngIf="showAttributeForm"
+              [title]="'Attribute'"
+              (atSubmit)="addAttribute($event)">
+      </app-create-attribute-form>
+
+      <div *ngIf="attributes.length > 0"> //TODO en el futuro podria ser un componente de negocio de listar.
+          <h4>Added Attributes:</h4>
+          <ul>
+              <li *ngFor="let attr of attributes">
+                  {{ attr.visibility.toLowerCase() }} {{ attr.dataTypeID }} {{ attr.name }};
+              </li>
+          </ul>
+      </div>
+
+      <div *ngIf="methods.length > 0">
+          <h4>Added Methods:</h4>
+          <ul>
+              <li *ngFor="let meth of methods">
+                  {{ meth.accessibility.toLowerCase() }}
+                  <span *ngIf="meth.isAbstract">abstract</span>
+                  <span *ngIf="meth.isVirtual && !meth.isAbstract">virtual</span>
+                  <span *ngIf="meth.isOverride">override</span>
+                  <span *ngIf="meth.isSealed">sealed</span>
+                  {{ meth.type }} {{ meth.name }}()
+              </li>
+          </ul>
+      </div>
+
+      <app-form-button title="Create Class"></app-form-button>
+
+      <div *ngIf="createClassStatus?.loading; else notLoading">
+          Loading...
+      </div>
+
+      <ng-template #notLoading>
+          <div *ngIf="createClassStatus?.error">
+              {{ createClassStatus!.error }}
+          </div>
+      </ng-template>
+
+  </app-form>
+</div>
