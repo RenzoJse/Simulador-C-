@@ -61,9 +61,9 @@ public class AttributeTest
     [TestMethod]
     public void Visibility_Property_SetAndGet_ShouldBeEqual()
     {
-        var attribute = new Attribute { Visibility = Attribute.AttributeVisibility.ProtectedInternal };
+        var attribute = new Attribute { Visibility = Attribute.AttributeVisibility.Protected };
 
-        attribute.Visibility.Should().Be(Attribute.AttributeVisibility.ProtectedInternal);
+        attribute.Visibility.Should().Be(Attribute.AttributeVisibility.Protected);
     }
 
     [TestMethod]

@@ -271,7 +271,7 @@ public class BuilderTest
     public void CreateClass_GetResultWhenCreationIsValid_ReturnsClass()
     {
         var attributeArgs = new CreateAttributeArgs(
-            new CreateDataTypeArgs("int", "int"),
+            Guid.NewGuid(),
             "Public",
             Guid.NewGuid(),
             "Attr1"

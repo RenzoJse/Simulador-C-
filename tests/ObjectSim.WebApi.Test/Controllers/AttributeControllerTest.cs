@@ -90,8 +90,7 @@ public class AttributeControllerTest
         {
             Name = "Color",
             Visibility = "Public",
-            DataTypeName = "myString",
-            DataTypeKind = "string",
+            DataTypeId = Guid.NewGuid().ToString(),
             ClassId = Guid.NewGuid()
         };
 
@@ -145,8 +144,7 @@ public class AttributeControllerTest
         {
             Name = "TestAttr",
             Visibility = "Public",
-            DataTypeName = "string",
-            DataTypeKind = "Reference",
+            DataTypeId = Guid.NewGuid().ToString(),
             ClassId = Guid.NewGuid()
         };
 
@@ -323,8 +321,7 @@ public class AttributeControllerTest
         {
             Name = "Color",
             Visibility = "Public",
-            DataTypeKind = "string",
-            DataTypeName = "myString",
+            DataTypeId = Guid.NewGuid().ToString(),
             ClassId = Guid.NewGuid()
         };
 
@@ -361,8 +358,7 @@ public class AttributeControllerTest
         {
             Name = "Color",
             Visibility = "Public",
-            DataTypeKind = "string",
-            DataTypeName = "myString",
+            DataTypeId = Guid.NewGuid().ToString(),
             ClassId = Guid.NewGuid()
         };
 
@@ -392,8 +388,7 @@ public class AttributeControllerTest
         {
             Name = "Something",
             Visibility = "Public",
-            DataTypeKind = "int",
-            DataTypeName = "age",
+            DataTypeId = Guid.NewGuid().ToString(),
             ClassId = Guid.NewGuid()
         };
 

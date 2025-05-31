@@ -61,7 +61,7 @@ public class AttributeRepositoryTest
             DataType = valueType
         };
 
-        _context.Entry(attribute).Property("DataTypeId").CurrentValue = valueTypeId;
+        _context.Entry(attribute).Property("DataTypeIdId").CurrentValue = valueTypeId;
 
         _context.Set<Domain.Attribute>().Add(attribute);
         _context.SaveChanges();
@@ -102,7 +102,7 @@ public class AttributeRepositoryTest
             DataType = valueType
         };
 
-        _context.Entry(attribute).Property("DataTypeId").CurrentValue = valueTypeId;
+        _context.Entry(attribute).Property("DataTypeIdId").CurrentValue = valueTypeId;
 
         _attributeRepository.Add(attribute);
 

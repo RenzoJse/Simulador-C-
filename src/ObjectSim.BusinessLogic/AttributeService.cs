@@ -23,7 +23,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
     private Attribute BuildAttributeFromArgs(CreateAttributeArgs args)
     {
         var visibility = ParseVisibility(args.Visibility);
-        var dataType = dataTypeService.CreateDataType(args.DataType);
+        var dataType = dataTypeService.GetById(args.DataTypeIdId);
 
         return new Attribute
         {
@@ -174,7 +174,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         attribute.Name = args.Name;
         attribute.ClassId = args.ClassId;
         attribute.Visibility = ParseVisibility(args.Visibility);
-        attribute.DataType = dataTypeService.CreateDataType(args.DataType);
+        attribute.DataType = dataTypeService.GetById(args.DataTypeIdId);
     }
 
     #endregion
