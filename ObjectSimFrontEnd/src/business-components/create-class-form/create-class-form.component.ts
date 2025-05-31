@@ -35,7 +35,8 @@ export class CreateClassFormComponent {
     ClassTypes: { value: string; tag: string }[] = [
         { value: 'Abstract', tag: 'Abstract' },
         { value: 'Interface', tag: 'Interface' },
-        { value: 'Sealed', tag: 'Sealed' }
+        { value: 'Sealed', tag: 'Sealed' },
+        { value: 'Virtual', tag: 'Virtual' }
     ];
 
     constructor(private fb: FormBuilder) {
@@ -80,11 +81,11 @@ export class CreateClassFormComponent {
     }
 
     showAddAttributeForm() {
-        this.showAttributeForm = true;
+        this.showAttributeForm = !this.showAttributeForm;
     }
 
     showAddMethodForm() {
-        this.showMethodForm = true;
+        this.showMethodForm = !this.showMethodForm;
     }
 
     public onSubmit() {
@@ -103,7 +104,7 @@ export class CreateClassFormComponent {
             IsAbstract: selectedType === 'Abstract',
             IsSealed: selectedType === 'Sealed',
             IsVirtual: selectedType === 'Virtual',
-            Attributes: [],
+            Attributes: this.attributes,
             Methods: this.methods,
             Parent: '',
         };

@@ -41,8 +41,6 @@
               (atSubmit)="addMethod($event)">
       </app-create-method-form>
 
-      <app-form-button title="Create Class"></app-form-button>
-
       <button type="button" (click)="showAddAttributeForm()">Add Attribute To Class</button>
 
       <app-create-attribute-form
@@ -51,7 +49,7 @@
               (atSubmit)="addAttribute($event)">
       </app-create-attribute-form>
 
-      <div *ngIf="attributes.length > 0">
+      <div *ngIf="attributes.length > 0"> //TODO en el futuro podria ser un componente de negocio de listar.
           <h4>Added Attributes:</h4>
           <ul>
               <li *ngFor="let attr of attributes">
@@ -73,6 +71,8 @@
               </li>
           </ul>
       </div>
+
+      <app-form-button title="Create Class"></app-form-button>
 
       <div *ngIf="createClassStatus?.loading; else notLoading">
           Loading...
