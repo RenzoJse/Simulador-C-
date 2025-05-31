@@ -61,7 +61,7 @@ namespace ObjectSim.DataAccess.Migrations
                     b.Property<Guid>("ClassId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DataTypeId")
+                    b.Property<Guid>("DataTypeIdId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -74,7 +74,7 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.HasIndex("ClassId");
 
-                    b.HasIndex("DataTypeId");
+                    b.HasIndex("DataTypeIdId");
 
                     b.ToTable("Attributes");
                 });
@@ -417,7 +417,7 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.HasOne("ObjectSim.Domain.DataType", "DataType")
                         .WithMany()
-                        .HasForeignKey("DataTypeId")
+                        .HasForeignKey("DataTypeIdId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

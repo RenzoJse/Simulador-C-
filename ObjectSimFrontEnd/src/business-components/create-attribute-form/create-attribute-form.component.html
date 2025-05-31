@@ -1,69 +1,50 @@
-<div class="container mt-4">
-  <h2 class="mb-4">Create Attribute</h2>
+﻿<div class="container mt-4">
+    <h2 class="mb-4">Create Attribute</h2>
 
-  <app-form [form]="createAttributeForm" (atSubmit)="onSubmit()">
+    <app-form [form]="createAttributeForm" (atSubmit)="onSubmit()">
 
-    <app-form-input
-      [form]="createAttributeForm"
-      controlName="name"
-      [reserve]="'Attribute Name'"
-      [name]="'name'"
-      [tag]="'Name'"
-      [errorMessages]="{ required: 'Name is required.' }"
-      [type]="'text'">
-    </app-form-input>
+        <app-form-input
+                [form]="createAttributeForm"
+                controlName="name"
+                [reserve]="'Attribute Name'"
+                [name]="'Name'"
+                [tag]="'Name'"
+                [errorMessages]="{ required: 'El nombre es requerido.' }"
+                [type]="'text'">
+        </app-form-input>
 
-    <app-form-input
-      [form]="createAttributeForm"
-      controlName="dataTypeName"
-      [reserve]="'Data Type Name'"
-      [name]="'dataTypeName'"
-      [tag]="'Data Type Name'"
-      [errorMessages]="{ required: 'Data type name is required.' }"
-      [type]="'text'">
-    </app-form-input>
+        <app-form-input
+                [form]="createAttributeForm"
+                controlName="dataTypeID"
+                [reserve]="'DataTypeID of the attribute'"
+                [name]="'dataTypeID'"
+                [tag]="'DataType ID'"
+                [errorMessages]="{ required: 'DataTypeId is required' }"
+                [type]="'text'">
+        </app-form-input>
 
-    <app-form-input
-      [form]="createAttributeForm"
-      controlName="dataTypeKind"
-      [reserve]="'Data Type Kind'"
-      [name]="'dataTypeKind'"
-      [tag]="'Data Type Kind'"
-      [errorMessages]="{ required: 'Kind is required.' }"
-      [type]="'option'"
-      [options]="dataTypeKinds">
-    </app-form-input>
+        <app-form-input
+                [form]="createAttributeForm"
+                controlName="visibility"
+                [reserve]="'Visibility of the attribute'"
+                [name]="'Visibility'"
+                [tag]="'Visibility'"
+                [errorMessages]="{ required: 'The Visibility is required.' }"
+                [type]="'option'"
+                [options]="Visibilities">
+        </app-form-input>
 
-    <app-form-input
-      [form]="createAttributeForm"
-      controlName="visibility"
-      [reserve]="'Visibility'"
-      [name]="'visibility'"
-      [tag]="'Visibility'"
-      [errorMessages]="{ required: 'Visibility is required.' }"
-      [type]="'option'"
-      [options]="visibilities">
-    </app-form-input>
+        <div *ngIf="createAttributeStatus?.loading; else notLoading">
+            Loading...
+        </div>
 
-    <app-form-input
-      [form]="createAttributeForm"
-      controlName="classId"
-      [reserve]="'Class ID'"
-      [name]="'classId'"
-      [tag]="'Class ID'"
-      [errorMessages]="{ required: 'Class ID is required.' }"
-      [type]="'text'">
-    </app-form-input>
+        <ng-template #notLoading>
+            <div *ngIf="createAttributeStatus?.error">
+                {{ createAttributeStatus!.error }}
+            </div>
 
-    <div *ngIf="createAttributeStatus?.loading; else notLoading">
-      Loading...
-    </div>
+            <app-form-button title="Create Attribute"></app-form-button>
+        </ng-template>
 
-    <ng-template #notLoading>
-      <div *ngIf="createAttributeStatus?.error">
-        {{ createAttributeStatus!.error }}
-      </div>
-      <app-form-button title="Create Attribute"></app-form-button>
-    </ng-template>
-  </app-form>
+    </app-form>
 </div>

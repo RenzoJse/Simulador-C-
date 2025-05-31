@@ -23,7 +23,7 @@ namespace ObjectSim.DataAccess.Migrations
                 newName: "DataTypes");
 
             migrationBuilder.AddColumn<Guid>(
-                name: "DataTypeId",
+                name: "DataTypeIdId",
                 table: "Attributes",
                 type: "uniqueidentifier",
                 nullable: false,
@@ -60,12 +60,12 @@ namespace ObjectSim.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Attributes_DataTypeId",
                 table: "Attributes",
-                column: "DataTypeId");
+                column: "DataTypeIdId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Attributes_DataTypes_DataTypeId",
                 table: "Attributes",
-                column: "DataTypeId",
+                column: "DataTypeIdId",
                 principalTable: "DataTypes",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
@@ -87,7 +87,7 @@ namespace ObjectSim.DataAccess.Migrations
                 table: "DataTypes");
 
             migrationBuilder.DropColumn(
-                name: "DataTypeId",
+                name: "DataTypeIdId",
                 table: "Attributes");
 
             migrationBuilder.DropColumn(
