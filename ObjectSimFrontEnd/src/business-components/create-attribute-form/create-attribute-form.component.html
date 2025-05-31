@@ -5,7 +5,7 @@
 
         <app-form-input
                 [form]="createAttributeForm"
-                controlName="Name"
+                controlName="name"
                 [reserve]="'Attribute Name'"
                 [name]="'Name'"
                 [tag]="'Name'"
@@ -25,7 +25,7 @@
 
         <app-form-input
                 [form]="createAttributeForm"
-                controlName="Visibility"
+                controlName="visibility"
                 [reserve]="'Visibility of the attribute'"
                 [name]="'Visibility'"
                 [tag]="'Visibility'"
@@ -33,7 +33,7 @@
                 [type]="'option'"
                 [options]="Visibilities">
         </app-form-input>
-        
+
         <div *ngIf="createAttributeStatus?.loading; else notLoading">
             Loading...
         </div>

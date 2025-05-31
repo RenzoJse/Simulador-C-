@@ -116,7 +116,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             a.Ignore(a => a.DataType);
             a.HasOne(a => a.DataType)
                 .WithMany()
-                .HasForeignKey("DataTypeId")
+                .HasForeignKey("DataTypeIdId")
                 .OnDelete(DeleteBehavior.Restrict);
         });
 

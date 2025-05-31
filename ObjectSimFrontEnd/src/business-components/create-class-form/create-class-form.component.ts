@@ -7,11 +7,14 @@ import { FormButtonComponent } from '../../components/form/form-button/form-butt
 import { FormComponent } from '../../components/form/form/form.component';
 
 import { CreateMethodFormComponent } from '../../business-components/create-method-form/create-method-form.component'
+import { CreateAttributeFormComponent } from '../../business-components/create-attribute-form/create-attribute-form.component';
 
 @Component({
     selector: 'app-create-class-form',
     standalone: true,
-    imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent, CreateMethodFormComponent],
+    imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent,
+        NgIf, FormComponent, CreateMethodFormComponent,
+        CreateAttributeFormComponent],
     templateUrl: './create-class-form.component.html'
 })
 
@@ -20,6 +23,8 @@ export class CreateClassFormComponent {
 
     createMethodForm: FormGroup;
     createClassForm: FormGroup;
+    createAttributeForm: FormGroup;
+
     @Output() atSubmit = new EventEmitter<any>();
 
     createClassStatus: {
@@ -47,8 +52,14 @@ export class CreateClassFormComponent {
             name: new FormControl("", [Validators.required]),
             typeID: new FormControl("", [Validators.required]),
         });
+        this.createAttributeForm = new FormGroup({
+            name: new FormControl("", [Validators.required]),
+            dataTypeID: new FormControl("", [Validators.required]),
+            accessibility: new FormControl("", [Validators.required])
+        });
     }
 
+    showAttributeForm = false;
     showMethodForm = false;
     methods: any[] = [];
 
@@ -57,6 +68,15 @@ export class CreateClassFormComponent {
         console.log('Form values:', this.createMethodForm.value);
         console.log('Metodos guardados:', this.methods);
         this.showMethodForm = false;
+    }
+
+    addAttribute(attribute: any) {
+        console.log('Form values de Attribute:', this.createAttributeForm.value);
+        this.showAttributeForm = false;
+    }
+
+    showAddAttributeForm() {
+        this.showAttributeForm = true;
     }
 
     showAddMethodForm() {
@@ -83,11 +103,11 @@ export class CreateClassFormComponent {
             Methods: this.methods,
             Parent: '',
         };
-        
+
         this.atSubmit.emit(newClass);
         console.log('Nueva Clase: ', newClass);
     }
-    
+
     private markAsTouched() {
         Object.keys(this.createClassForm.controls).forEach(field => {
             const control = this.createClassForm.get(field);

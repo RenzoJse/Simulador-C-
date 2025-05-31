@@ -12,8 +12,7 @@ import CreateAttributeModel from '../../backend/services/class/models/create-att
     selector: 'app-create-attribute-form',
     standalone: true,
     imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent],
-    templateUrl: './create-attribute-form.component.html',
-    styleUrls: ['./create-attribute-form.component.css']
+    templateUrl: './create-attribute-form.component.html'
 })
 
 export class CreateAttributeFormComponent {
@@ -27,7 +26,7 @@ export class CreateAttributeFormComponent {
         error?: string;
     } | null = null;
 
-    Visibility: { value: string; tag: string }[] = [
+    Visibilities: { value: string; tag: string }[] = [
         { value: 'Public', tag: 'Public' },
         { value: 'Private', tag: 'Private' },
         { value: 'Protected', tag: 'Protected' }
@@ -37,18 +36,18 @@ export class CreateAttributeFormComponent {
         this.createAttributeForm = this.formBuilder.group({
             name: ['', [Validators.required, Validators.maxLength(10)]],
             dataTypeID: ['', Validators.required],
-            accessibility: ['', Validators.required]
+            visibility: ['', Validators.required]
         });
     }
 
     public onSubmit() {
         console.log('Form attribute submitted:', this.createAttributeForm.value);
-        
+
         if(this.createAttributeForm.invalid) {
             this.markAsTouched()
             return;
         }
-        
+
         var selectedModifier = this.createAttributeForm.value.accessibility;
         var formValue = this.createAttributeForm.value;
         var newAttribute: CreateAttributeModel = {
@@ -56,7 +55,7 @@ export class CreateAttributeFormComponent {
             dataTypeID: formValue.dataTypeID,
             accessibility: selectedModifier
         };
-        
+
         this.atSubmit.emit(newAttribute);
     }
 

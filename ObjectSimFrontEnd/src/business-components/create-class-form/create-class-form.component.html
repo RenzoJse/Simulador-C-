@@ -24,18 +24,6 @@
       [options]="ClassTypes">
     </app-form-input>
 
-    <div *ngIf="createClassStatus?.loading; else notLoading">
-        Loading...
-    </div>
-
-      <button type="button" (click)="showAddMethodForm()">Add Methods To Class</button>
-
-      <app-create-method-form
-              *ngIf="showMethodForm"
-              [title]="'Method'"
-              (atSubmit)="addMethod($event)">
-      </app-create-method-form>
-
       <app-form-input
               [form]="createClassForm"
               controlName="ParentClassID"
@@ -45,13 +33,33 @@
               [type]="'text'">
       </app-form-input>
 
-        <ng-template #notLoading>
-        <div *ngIf="createClassStatus?.error">
-            {{ createClassStatus!.error }}
-        </div>
+      <button type="button" (click)="showAddMethodForm()">Add Methods To Class</button>
 
-        <app-form-button title="Create Class"></app-form-button>
-    </ng-template>
+      <app-create-method-form
+              *ngIf="showMethodForm"
+              [title]="'Method'"
+              (atSubmit)="addMethod($event)">
+      </app-create-method-form>
+
+      <app-form-button title="Create Class"></app-form-button>
+
+      <button type="button" (click)="showAddAttributeForm()">Add Attribute To Class</button>
+
+      <app-create-attribute-form
+              *ngIf="showAttributeForm"
+              [title]="'Attribute'"
+              (atSubmit)="addAttribute($event)">
+      </app-create-attribute-form>
+
+      <div *ngIf="createClassStatus?.loading; else notLoading">
+          Loading...
+      </div>
+
+      <ng-template #notLoading>
+          <div *ngIf="createClassStatus?.error">
+              {{ createClassStatus!.error }}
+          </div>
+      </ng-template>
 
   </app-form>
 </div>
