@@ -55,7 +55,21 @@
           <h4>Added Attributes:</h4>
           <ul>
               <li *ngFor="let attr of attributes">
-                  {{ attr.name }} - {{ attr.dataTypeID }} - {{ attr.visibility || attr.visibility }}
+                  {{ attr.visibility.toLowerCase() }} {{ attr.dataTypeID }} {{ attr.name }};
+              </li>
+          </ul>
+      </div>
+
+      <div *ngIf="methods.length > 0">
+          <h4>Added Methods:</h4>
+          <ul>
+              <li *ngFor="let meth of methods">
+                  {{ meth.accessibility.toLowerCase() }}
+                  <span *ngIf="meth.isAbstract">abstract</span>
+                  <span *ngIf="meth.isVirtual && !meth.isAbstract">virtual</span>
+                  <span *ngIf="meth.isOverride">override</span>
+                  <span *ngIf="meth.isSealed">sealed</span>
+                  {{ meth.type }} {{ meth.name }}()
               </li>
           </ul>
       </div>

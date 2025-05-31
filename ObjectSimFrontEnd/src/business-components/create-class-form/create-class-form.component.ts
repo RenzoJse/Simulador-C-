@@ -50,7 +50,8 @@ export class CreateClassFormComponent {
         });
         this.createMethodForm = new FormGroup({
             name: new FormControl("", [Validators.required]),
-            typeID: new FormControl("", [Validators.required]),
+            dataTypeID: new FormControl("", [Validators.required]),
+            visibility: new FormControl("", [Validators.required]),
         });
 
         this.createAttributeForm = new FormGroup({
