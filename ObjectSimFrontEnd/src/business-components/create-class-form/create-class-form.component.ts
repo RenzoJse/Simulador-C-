@@ -6,7 +6,7 @@ import { FormInputComponent } from '../../components/form/form-input/form-input.
 import { FormButtonComponent } from '../../components/form/form-button/form-button.component';
 import { FormComponent } from '../../components/form/form/form.component';
 
-import { CreateMethodFormComponent } from '../../business-components/create-method-form/create-method-form.component'
+import { CreateMethodFormComponent } from '../method/create-method-form/create-method-form.component';
 import { CreateAttributeFormComponent } from '../../business-components/create-attribute-form/create-attribute-form.component';
 
 @Component({

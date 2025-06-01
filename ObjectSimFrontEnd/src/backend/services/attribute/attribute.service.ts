@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import AttributeDto from './model/attribute-dto.model';
+import CreateAttributeModel from '../class/models/create-attribute.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class AttributeService {
 
   constructor(private http: HttpClient) {}
 
-  createAttribute(dto: AttributeDto): Observable<AttributeDto> {
+  createAttribute(dto: CreateAttributeModel): Observable<AttributeDto> {
     return this.http.post<AttributeDto>(this.apiUrl, dto);
   }
 
