@@ -1,0 +1,50 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Update Attribute</h2>
+
+  <app-form [form]="updateAttributeForm" (atSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="attributeId">Attribute ID</label>
+      <input
+        type="text"
+        id="attributeId"
+        class="form-control"
+        [(ngModel)]="attributeId"
+        name="attributeId"
+        placeholder="Enter attribute ID"
+      />
+    </div>
+
+    <app-form-input
+      [form]="updateAttributeForm"
+      controlName="name"
+      [reserve]="'Attribute Name'"
+      [name]="'name'"
+      [tag]="'Name'"
+      [errorMessages]="{ required: 'Name is required' }"
+      [type]="'text'">
+    </app-form-input>
+
+    <app-form-input
+      [form]="updateAttributeForm"
+      controlName="dataTypeID"
+      [reserve]="'DataType ID'"
+      [name]="'dataTypeID'"
+      [tag]="'DataType'"
+      [errorMessages]="{ required: 'DataType is required' }"
+      [type]="'text'">
+    </app-form-input>
+
+    <app-form-input
+      [form]="updateAttributeForm"
+      controlName="visibility"
+      [reserve]="'Visibility'"
+      [name]="'visibility'"
+      [tag]="'Visibility'"
+      [errorMessages]="{ required: 'Visibility is required' }"
+      [type]="'option'"
+      [options]="visibilities">
+    </app-form-input>
+
+    <app-form-button title="Update Attribute"></app-form-button>
+  </app-form>
+</div>

@@ -1,0 +1,7 @@
+<app-update-attribute-form
+  [title]="'Update Attribute'"
+  (atSubmit)="onUpdateSubmit($event)">
+</app-update-attribute-form>
+
+<div *ngIf="status?.loading">Updating...</div>
+<div *ngIf="status?.error" class="text-danger">{{ status?.error }}</div>

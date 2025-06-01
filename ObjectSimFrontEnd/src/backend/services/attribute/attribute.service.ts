@@ -28,9 +28,9 @@ export class AttributeService {
     return this.http.get<AttributeDto[]>(`${this.apiUrl}/by-class/${classId}`);
   }
 
-  updateAttribute(id: string, dto: AttributeDto): Observable<AttributeDto> {
-    return this.http.put<AttributeDto>(`${this.apiUrl}/${id}`, dto);
-  }
+updateAttribute(id: string, dto: CreateAttributeModel): Observable<AttributeDto> {
+  return this.http.put<AttributeDto>(`${this.apiUrl}/${id}`, dto);
+}
 
   deleteAttribute(id: string): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiUrl}/${id}`);
