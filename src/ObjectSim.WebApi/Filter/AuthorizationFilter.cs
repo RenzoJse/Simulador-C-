@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Net.Http.Headers;
+using ObjectSim.Security;
 
 namespace ObjectSim.WebApi.Filter;
 
@@ -35,7 +36,7 @@ public sealed class AuthorizationFilter(string key)
         {
             var keyService = context.HttpContext.RequestServices.GetRequiredService<ISecurityService>();
 
-            if (keyService.IsValidKey(key))
+            if (keyService.isValidKey(key))
             {
                 context.Result = new ObjectResult(new
                 {

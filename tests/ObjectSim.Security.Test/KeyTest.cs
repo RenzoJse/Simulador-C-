@@ -3,8 +3,19 @@ namespace ObjectSim.Security.Test;
 [TestClass]
 public class KeyTest
 {
+    #region CreateKey
+
+    #region Success
+
     [TestMethod]
-    public void TestMethod1()
+    public void CreateKey_ValidInput_CreatesKey()
     {
+        var key = new Key();
+        Assert.IsNotNull(key);
+        Assert.AreNotEqual(Guid.Empty, key.AccessKey);
     }
+
+    #endregion
+
+    #endregion
 }
