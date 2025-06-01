@@ -21,7 +21,7 @@ public sealed class AuthorizationFilter(string key)
         {
             context.Result = new ObjectResult(new
             {
-                InnerCode = "Invalid Key.",
+                InnerCode = "Invalid KeyStrat.",
                 Message = "That is not a valid key."
             })
             {
@@ -36,7 +36,7 @@ public sealed class AuthorizationFilter(string key)
         {
             var keyService = context.HttpContext.RequestServices.GetRequiredService<ISecurityService>();
 
-            if (keyService.isValidKey(key))
+            if (keyService.IsValidKey(key))
             {
                 context.Result = new ObjectResult(new
                 {
