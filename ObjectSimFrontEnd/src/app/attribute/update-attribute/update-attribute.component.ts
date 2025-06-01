@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgIf } from '@angular/common';
 import { AttributeService } from '../../../backend/services/attribute/attribute.service';
 import CreateAttributeModel from '../../../backend/services/class/models/create-attribute.model';
 import { UpdateAttributeFormComponent } from "../../../business-components/attribute/update-attribute-form/update-attribute-form.component";
@@ -9,6 +10,7 @@ import { UpdateAttributeFormComponent } from "../../../business-components/attri
   standalone: true,
   templateUrl: './update-attribute.component.html',
   styles: [],
+  imports: [NgIf,UpdateAttributeFormComponent],
 
 })
 export class UpdateAttributeComponent {
