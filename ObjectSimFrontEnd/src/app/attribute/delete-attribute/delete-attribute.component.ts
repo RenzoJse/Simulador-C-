@@ -16,6 +16,7 @@ export class DeleteAttributeComponent {
     if (!this.attributeId) return;
 
     this.status = { loading: true };
+
     this.attributeService.deleteAttribute(this.attributeId).subscribe({
       next: () => {
         alert('Attribute deleted successfully');
@@ -23,7 +24,9 @@ export class DeleteAttributeComponent {
         this.attributeId = '';
       },
       error: (error) => {
-        this.status = { error: error.error?.message || 'Failed to delete attribute' };
+        this.status = {
+          error: error.error?.message || 'Failed to delete attribute'
+        };
         console.error(error);
       }
     });

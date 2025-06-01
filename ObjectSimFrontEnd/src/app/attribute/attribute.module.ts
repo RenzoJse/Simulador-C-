@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AttributeRoutingModule } from './attribute-routing.module';
 
 import { CreateAttributeComponent } from './create-attribute/create-attribute.component';
-import { CreateAttributeFormComponent } from '../../business-components/create-attribute-form/create-attribute-form.component';
+import { CreateAttributeFormComponent } from '../../business-components/attribute/create-attribute-form/create-attribute-form.component';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../components/button/button.component';
 import { DeleteAttributeComponent } from './delete-attribute/delete-attribute.component';

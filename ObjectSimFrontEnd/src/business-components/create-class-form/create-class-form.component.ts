@@ -7,7 +7,7 @@ import { FormButtonComponent } from '../../components/form/form-button/form-butt
 import { FormComponent } from '../../components/form/form/form.component';
 
 import { CreateMethodFormComponent } from '../method/create-method-form/create-method-form.component';
-import { CreateAttributeFormComponent } from '../../business-components/create-attribute-form/create-attribute-form.component';
+import { CreateAttributeFormComponent } from '../attribute/create-attribute-form/create-attribute-form.component';
 
 @Component({
     selector: 'app-create-class-form',
