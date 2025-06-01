@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
+using ObjectSim.WebApi.Filter;
 
 namespace ObjectSim.WebApi.Controllers;
 
 [ApiController]
 [Route("api/simulator")]
+[TypeFilter(typeof(AuthorizationFilter))]
 public class SimulatorController(IMethodSimulatorService simulatorService) : ControllerBase
 {
 

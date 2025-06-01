@@ -7,12 +7,9 @@ using ObjectSim.Security;
 namespace ObjectSim.WebApi.Filter;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public sealed class AuthorizationFilter(string key)
+public sealed class AuthorizationFilter()
     : Attribute, IAuthorizationFilter
 {
-
-    private string Key { get; } = key;
-
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         var authorizationHeader = context.HttpContext.Request.Headers[HeaderNames.Authorization];
@@ -22,7 +19,7 @@ public sealed class AuthorizationFilter(string key)
             context.Result = new ObjectResult(new
             {
                 InnerCode = "Invalid KeyStrat.",
-                Message = "That is not a valid key."
+                Message = "API Key Invalid or wrong."
             })
             {
                 StatusCode = (int)HttpStatusCode.Unauthorized
@@ -30,18 +27,18 @@ public sealed class AuthorizationFilter(string key)
             return;
         }
 
-        var token = authorizationHeader.ToString();
+        var apiKey = authorizationHeader.ToString();
 
         try
         {
             var keyService = context.HttpContext.RequestServices.GetRequiredService<ISecurityService>();
 
-            if (keyService.IsValidKey(key))
+            if (keyService.IsValidKey(apiKey))
             {
                 context.Result = new ObjectResult(new
                 {
                     InnerCode = "Invalid.",
-                    Message = $"This is not a valid key: {Key}."
+                    Message = $"This is not a valid key: {apiKey}."
                 })
                 {
                     StatusCode = (int)HttpStatusCode.Forbidden
