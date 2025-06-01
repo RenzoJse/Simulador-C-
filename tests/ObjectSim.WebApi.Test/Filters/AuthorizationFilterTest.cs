@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace ObjectSim.WebApi.Test.Filters;
 
 [TestClass]
-public class SecurityFilterTest
+public class AuthorizationFilterTest
 {
-    private SecurityFilterContext? _context;
-    private SecurityFilter _filter;
+    private AuthorizationFilterContext? _context;
+    private AuthorizationFilter _filter;
 
     [TestMethod]
     public void OnAuthorization_WhenKeyIsInvalid_ThrowsException()
