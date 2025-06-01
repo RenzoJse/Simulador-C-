@@ -2,5 +2,5 @@
 
 public interface ISecurityService
 {
-    public bool isValidKey(string key);
+    public bool IsValidKey(string key);
 }
