@@ -68,7 +68,7 @@ public class AuthorizationFilterTest
     {
         const string key = "invalid-key";
         _context!.HttpContext.Request.Headers.Authorization = key;
-        _securityServiceMock!.Setup(s => s.IsValidKey(key)).Returns(true);
+        _securityServiceMock!.Setup(s => s.IsValidKey(key)).Returns(false);
 
         _filter!.OnAuthorization(_context!);
 
@@ -99,7 +99,7 @@ public class AuthorizationFilterTest
     public void OnAuthorization_WhenKeyIsValid_DoesNotSetResult()
     {
         _context!.HttpContext.Request.Headers.Authorization = _validKey.ToString();
-        _securityServiceMock!.Setup(s => s.IsValidKey(_validKey.ToString())).Returns(false);
+        _securityServiceMock!.Setup(s => s.IsValidKey(_validKey.ToString())).Returns(true);
 
         _filter!.OnAuthorization(_context!);
 
