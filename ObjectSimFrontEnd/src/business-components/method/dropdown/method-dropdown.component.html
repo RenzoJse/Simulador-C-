@@ -1,0 +1,27 @@
+<div class="form-group" [formGroup]="form">
+
+  <label class="form-label">{{ label }}</label>
+
+  <div *ngIf="loading" class="text-muted mb-2">
+    Loading methods...
+  </div>
+
+    <select formControlName="methodId" class="form-control">
+    <option value="" disabled>- Choose one -</option>
+
+    <option *ngFor="let m of methods" [value]="m.id">
+      {{ m.name }}
+    </option>
+  </select>
+
+  <div *ngIf="error" class="text-danger mb-2">
+    {{ error }}
+  </div>
+
+  <div
+    *ngIf="form.get('methodId')?.touched && form.get('methodId')?.invalid"
+    class="text-danger mt-1"
+  >
+    You must select a method.
+  </div>
+</div>

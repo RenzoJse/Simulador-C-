@@ -13,6 +13,10 @@ const routes: Routes = [
   {
     path: 'class',
     loadChildren: () => import('./class/class.module').then(c => c.ClassModule),
+  },
+    {
+    path: 'attribute',
+    loadChildren: () => import('./attribute/attribute.module').then(c => c.AttributeModule),
   }
 ]
 
