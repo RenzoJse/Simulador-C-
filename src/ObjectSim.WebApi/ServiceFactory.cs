@@ -7,6 +7,9 @@ using ObjectSim.DataAccess.Interface;
 using ObjectSim.DataAccess.Repositories;
 using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
+using ObjectSim.Security;
+using ObjectSim.Security.Strategy;
+using ObjectSim.Security.Strategy.KeyStrat;
 using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.WebApi;
@@ -38,6 +41,9 @@ public static class ServiceFactory
         services.AddScoped<IBuilderStrategy, AbstractBuilderStrategy>();
         services.AddScoped<IClassService, ClassService>();
         services.AddScoped<IMethodSimulatorService, MethodSimulatorService>();
+
+        services.AddScoped<ISecurityService, SecurityService>();
+        services.AddScoped<IValidationStrategy, KeyStrategy>();
     }
 
     public static void AddDataAccess(IServiceCollection services)
@@ -46,5 +52,6 @@ public static class ServiceFactory
         services.AddScoped<IRepository<Method>, Repository<Method>>();
         services.AddScoped<IRepository<Attribute>, Repository<Attribute>>();
         services.AddScoped<IRepository<DataType>, Repository<DataType>>();
+        services.AddScoped<IRepository<Key>, Repository<Key>>();
     }
 }

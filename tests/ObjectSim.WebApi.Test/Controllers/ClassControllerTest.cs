@@ -177,4 +177,26 @@ public class ClassControllerTest
 
     #endregion
 
+    #region GetAll-Classes-Test
+    [TestMethod]
+    public void GetAllMethods_ShouldReturnAllMethods()
+    {
+        var classes = new List<Class> { _testClass };
+
+        _classServiceMock
+            .Setup(service => service.GetAll())
+            .Returns(classes);
+
+        var result = _classController.GetAllClasses();
+
+        var okResult = result as OkObjectResult;
+        okResult.Should().NotBeNull();
+        okResult!.StatusCode.Should().Be(200);
+
+        var response = okResult.Value as List<ClassDtoOut>;
+        response.Should().NotBeNull();
+        response!.Count.Should().Be(classes.Count);
+        response.First().Name.Should().Be(_testClass.Name);
+    }
+    #endregion
 }
