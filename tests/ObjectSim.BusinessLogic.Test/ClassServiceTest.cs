@@ -754,7 +754,7 @@ public class ClassServiceTest
     [TestMethod]
     public void GetAllMethods_ShouldReturnMethods()
     {
-        var Classes = new List<Class>
+        var classes = new List<Class>
         {
             new Class { Name = "c1Test" },
             new Class { Name = "c2Test" }
