@@ -33,7 +33,7 @@ public sealed class AuthorizationFilter()
         {
             var keyService = context.HttpContext.RequestServices.GetRequiredService<ISecurityService>();
 
-            if (keyService.IsValidKey(apiKey))
+            if (!keyService.IsValidKey(apiKey))
             {
                 context.Result = new ObjectResult(new
                 {
