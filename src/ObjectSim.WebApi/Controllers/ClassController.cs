@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ObjectSim.BusinessLogic;
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
@@ -53,6 +54,16 @@ public class ClassController(IClassService classService) : ControllerBase
     {
         classService.RemoveAttribute(classId, attributeId);
         return Ok();
+    }
+
+    [HttpGet]
+    public IActionResult GetAllClasses()
+    {
+        var classes = classService.GetAll();
+
+        var response = classes.Select(m => new ClassDtoOut(m)).ToList();
+
+        return Ok(response);
     }
 
 }
