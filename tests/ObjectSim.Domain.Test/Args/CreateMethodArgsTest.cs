@@ -28,7 +28,7 @@ public class CreateMethodArgsTest
     [TestMethod]
     public void Accessibility_SetAndGet_ShouldReturnExpectedValue()
     {
-        var args = new CreateMethodArgs("Test",Guid.NewGuid(), "public", true, false, true, false, Guid.NewGuid(), [], [], []);
+        var args = new CreateMethodArgs("Test", Guid.NewGuid(), "public", true, false, true, false, Guid.NewGuid(), [], [], []);
         const string newAccessibility = "private";
         args.Accessibility = newAccessibility;
         args.Accessibility.Should().Be(newAccessibility);
