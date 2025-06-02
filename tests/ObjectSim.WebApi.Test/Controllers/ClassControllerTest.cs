@@ -200,5 +200,4 @@ public class ClassControllerTest
         response.First().Name.Should().Be(_testClass.Name);
     }
     #endregion
-
 }
