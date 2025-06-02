@@ -17,7 +17,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<ReferenceType> ReferenceTypes { get; set; }
     public DbSet<InvokeMethod> InvokeMethod { get; set; }
     public DbSet<Namespace> Namespaces { get; set; }
-
+    public DbSet<Key> Keys { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -32,6 +32,11 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Key>(k =>
+        {
+            k.HasKey(k => k.AccessKey);
+        });
+
         modelBuilder.Entity<Class>(c =>
         {
             c.HasKey(c => c.Id);
@@ -332,6 +337,10 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 IsOverride = false
 
             }
+        );
+        modelBuilder.Entity<Key>().HasData(
+            new Key { AccessKey = Guid.Parse("9C0FF0B1-4ABD-45C6-8A4A-831748FB7A20") },
+            new Key { AccessKey = Guid.Parse("515DD649-30A0-4D57-9302-62A8DB8179BD") }
         );
     }
 
