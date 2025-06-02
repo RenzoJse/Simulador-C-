@@ -1,0 +1,24 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Delete Attribute</h2>
+
+  <app-form [form]="deleteForm" (atSubmit)="submitDelete()">
+    <app-form-input
+      [form]="deleteForm"
+      controlName="id"
+      [reserve]="'Attribute ID'"
+      [name]="'id'"
+      [tag]="'Attribute ID'"
+      [errorMessages]="{ required: 'Attribute ID is required.' }"
+      [type]="'text'">
+    </app-form-input>
+
+    <div *ngIf="deleteStatus?.loading; else notLoading">Deleting...</div>
+
+    <ng-template #notLoading>
+      <div *ngIf="deleteStatus?.error" class="text-danger">
+        {{ deleteStatus!.error }}
+      </div>
+      <app-form-button title="Delete Attribute"></app-form-button>
+    </ng-template>
+  </app-form>
+</div>
