@@ -86,14 +86,14 @@ public class Method
 
     public void CanAddInvokeMethod(Method method, Class classObj, string reference)
     {
-        if (method == null)
+        if(method == null)
         {
             throw new ArgumentNullException(nameof(method), "Method cannot be null.");
         }
 
-        if (IsReservedReference(reference))
+        if(IsReservedReference(reference))
         {
-            if (MethodIsNotInClass(method, classObj) && MethodIsNotFromParent(method, classObj))
+            if(MethodIsNotInClass(method, classObj) && MethodIsNotFromParent(method, classObj))
             {
                 throw new ArgumentException("The invoked method must be reachable from the current method.");
             }
@@ -104,7 +104,7 @@ public class Method
             var notInLocalVars = MethodIsNotInLocalVariable(method, reference);
             var notInParams = MethodIsNotInParameters(method, reference);
 
-            if (notInAttributes && notInLocalVars && notInParams)
+            if(notInAttributes && notInLocalVars && notInParams)
             {
                 throw new ArgumentException("The invoked method must be reachable from the current method.");
             }

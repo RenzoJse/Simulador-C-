@@ -729,4 +729,44 @@ public class ClassServiceTest
     #endregion
 
     #endregion
+
+    #region GetAll
+    #region Error
+    [TestMethod]
+    [ExpectedException(typeof(Exception))]
+    public void GetAllClasses_ShouldThrowException_WhenRepositoryFails()
+    {
+        _classRepositoryMock!.Setup(repo => repo.GetAll(It.IsAny<Func<Class, bool>>())).Throws(new Exception());
+
+        _classServiceTest!.GetAll();
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(Exception))]
+    public void GetAllClasses_WhenNoMethods_ShouldThrowException()
+    {
+        _classRepositoryMock!.Setup(repo => repo.GetAll(It.IsAny<Func<Class, bool>>())).Returns([]);
+        _classServiceTest!.GetAll();
+    }
+    #endregion
+
+    #region Success
+    [TestMethod]
+    public void GetAllMethods_ShouldReturnMethods()
+    {
+        var classes = new List<Class>
+        {
+            new Class { Name = "c1Test" },
+            new Class { Name = "c2Test" }
+        };
+
+        _classRepositoryMock!.Setup(repo => repo.GetAll(It.IsAny<Func<Class, bool>>())).Returns(classes);
+
+        var result = _classServiceTest!.GetAll();
+
+        result.Should().HaveCount(2);
+        _classRepositoryMock.Verify(repo => repo.GetAll(It.IsAny<Func<Class, bool>>()), Times.Once);
+    }
+    #endregion
+    #endregion
 }
