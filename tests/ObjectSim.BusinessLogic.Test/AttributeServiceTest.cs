@@ -358,14 +358,14 @@ public class AttributeServiceTest
             validAttribute.Name
         );
 
-        _attributeRepositoryMock
+        _attributeRepositoryMock!
             .Setup(r => r.Get(It.IsAny<Func<Attribute, bool>>()))
             .Returns(validAttribute);
 
-        _classRepositoryMock
+        _classRepositoryMock!
             .Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
             .Returns((Class)null!);
 
-        _attributeServiceTest.Update(validAttribute.Id, args);
+        _attributeServiceTest!.Update(validAttribute.Id, args);
     }
 }

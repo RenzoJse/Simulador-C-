@@ -25,7 +25,7 @@ public class MethodTest
         TypeId = Guid.NewGuid()
     };
 
-    private readonly InvokeMethod _testInvokeMethod = new InvokeMethod(OtherMethod.Id, Guid.NewGuid(), "this");
+    private readonly InvokeMethod _testInvokeMethod = new InvokeMethod(OtherMethod!.Id, Guid.NewGuid(), "this");
 
     [TestInitialize]
     public void Initialize()
