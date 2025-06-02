@@ -1,4 +1,5 @@
 ﻿using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain;
 
 namespace ObjectSim.Security.Strategy.KeyStrat;
 

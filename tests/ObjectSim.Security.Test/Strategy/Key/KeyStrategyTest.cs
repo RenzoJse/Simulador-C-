@@ -2,7 +2,7 @@
 using Moq;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.Security.Strategy.KeyStrat;
-using Keytest = ObjectSim.Security.Strategy.KeyStrat.Key;
+using Keytest = ObjectSim.Domain.Key;
 
 namespace ObjectSim.Security.Test.Strategy.Key;
 

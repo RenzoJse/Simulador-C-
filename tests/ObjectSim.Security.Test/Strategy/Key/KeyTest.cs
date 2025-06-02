@@ -10,7 +10,7 @@ public class KeyTest
     [TestMethod]
     public void CreateKey_ValidInput_CreatesKey()
     {
-        var key = new Security.Strategy.KeyStrat.Key();
+        var key = new Domain.Key();
         Assert.IsNotNull(key);
         Assert.AreNotEqual(Guid.Empty, key.AccessKey);
     }
