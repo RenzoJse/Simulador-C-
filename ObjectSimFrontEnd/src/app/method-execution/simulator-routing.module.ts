@@ -9,4 +9,4 @@ const routes: Routes = [
     exports: [RouterModule]
 })
 
-export class MethodExecutionRoutingModule { }
+export class SimulatorRoutingModule { }

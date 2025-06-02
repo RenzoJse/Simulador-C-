@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from "@angular/forms";
 
-import { MethodExecutionRoutingModule } from './method-execution-routing.module';
+import { SimulatorRoutingModule } from './simulator-routing.module';
 
 @NgModule({
     declarations: [
@@ -10,7 +10,7 @@ import { MethodExecutionRoutingModule } from './method-execution-routing.module'
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        MethodExecutionRoutingModule,
+        SimulatorRoutingModule,
     ]
 })
-export class MethodExecutionModule { }
+export class SimulatorModule { }
