@@ -1,8 +1,8 @@
 ﻿
 using Moq;
 using ObjectSim.DataAccess.Interface;
-using ObjectSim.Domain.Args;
 using ObjectSim.Domain;
+using ObjectSim.Domain.Args;
 
 namespace ObjectSim.BusinessLogic.Test;
 [TestClass]

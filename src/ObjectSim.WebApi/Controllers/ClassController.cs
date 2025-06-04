@@ -55,4 +55,14 @@ public class ClassController(IClassService classService) : ControllerBase
         return Ok();
     }
 
+    [HttpGet]
+    public IActionResult GetAllClasses()
+    {
+        var classes = classService.GetAll();
+
+        var response = classes.Select(m => new ClassDtoOut(m)).ToList();
+
+        return Ok(response);
+    }
+
 }

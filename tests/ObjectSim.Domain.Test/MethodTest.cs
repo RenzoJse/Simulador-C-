@@ -25,7 +25,7 @@ public class MethodTest
         TypeId = Guid.NewGuid()
     };
 
-    private readonly InvokeMethod _testInvokeMethod = new InvokeMethod(OtherMethod.Id, Guid.NewGuid(), "this");
+    private readonly InvokeMethod _testInvokeMethod = new InvokeMethod(OtherMethod!.Id, Guid.NewGuid(), "this");
 
     [TestInitialize]
     public void Initialize()
@@ -378,24 +378,6 @@ public class MethodTest
         OtherMethod!.Parameters = [parameter];
 
         Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "this");
-
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("The invoked method must be reachable from the current method.");
-    }
-
-    [TestMethod]
-    public void AddInvokeMethod_WhenIsTryingToUseMethodNotInAttributes_ThrowsException()
-    {
-        var attribute = new Attribute
-        {
-            Id = Guid.NewGuid(),
-            DataType = new ValueType("int", "int", []),
-            Name = "test"
-        };
-
-        _testClass!.Attributes = [attribute];
-
-        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!, "other");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");

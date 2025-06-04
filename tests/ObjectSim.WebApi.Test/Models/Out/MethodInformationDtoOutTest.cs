@@ -1,6 +1,5 @@
 ﻿using ObjectSim.Domain;
 using ObjectSim.WebApi.DTOs.Out;
-using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.WebApi.Test.Models.Out;
 

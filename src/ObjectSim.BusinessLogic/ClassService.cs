@@ -76,6 +76,21 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     #endregion
 
+    #region GetAll
+
+    public List<Class> GetAll()
+    {
+        var classes = classRepository.GetAll(c => c.Id != Guid.Empty)?.ToList();
+        if(classes == null || classes.Count == 0)
+        {
+            throw new Exception("No classes found.");
+        }
+
+        return classes;
+    }
+
+    #endregion
+
     #region DeleteClass
 
     public void DeleteClass(Guid? classId)
