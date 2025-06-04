@@ -1,0 +1,18 @@
+<div class="container mt-4">
+  <h2 class="mb-3">Namespaces</h2>
+
+  <div *ngIf="status?.loading">Loading...</div>
+  <div *ngIf="status?.error" class="text-danger">{{ status?.error }}</div>
+
+
+  <ul *ngIf="!status?.loading && namespaces.length > 0">
+    <li *ngFor="let ns of namespaces">
+      <strong>{{ ns.name }}</strong> - ID: {{ ns.id }}
+      <div *ngIf="ns.parentId">Parent: {{ ns.parentId }}</div>
+    </li>
+  </ul>
+
+  <div *ngIf="!status?.loading && namespaces.length === 0">
+    No namespaces found.
+  </div>
+</div>

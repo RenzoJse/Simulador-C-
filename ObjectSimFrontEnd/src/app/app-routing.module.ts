@@ -17,6 +17,10 @@ const routes: Routes = [
     {
     path: 'attribute',
     loadChildren: () => import('./attribute/attribute.module').then(c => c.AttributeModule),
+  },
+      {
+    path: 'namespace',
+    loadChildren: () => import('./namespace/namespace.module').then(c => c.NamespaceModule),
   }
 ]
 

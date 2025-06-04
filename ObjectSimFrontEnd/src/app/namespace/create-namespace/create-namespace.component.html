@@ -1,0 +1,4 @@
+<app-create-namespace-form [title]="'Namespace'" (nsSubmit)="onSubmit($event)"></app-create-namespace-form>
+
+<div *ngIf="status?.loading">Creating...</div>
+<div *ngIf="status?.error" class="text-danger">{{ status?.error }}</div>
