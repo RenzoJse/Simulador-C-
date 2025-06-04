@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NamespaceService } from '../../../backend/services/namespace/namespace.service';
-import CreateNamespaceModel from '../../../backend/services/namespace/model/create-namespace.model';
+import NamespaceDto from '../../../backend/services/namespace/model/namespace-dto.model';
 
 @Component({
   selector: 'app-get-all-namespaces',
@@ -11,7 +11,7 @@ import CreateNamespaceModel from '../../../backend/services/namespace/model/crea
 })
 export class GetAllNamespacesComponent implements OnInit {
   private readonly _namespaceService = inject(NamespaceService);
-  namespaces: CreateNamespaceModel[] = [];
+  namespaces: NamespaceDto[] = [];
   status: { loading?: boolean; error?: string } | null = null;
 
   ngOnInit(): void {

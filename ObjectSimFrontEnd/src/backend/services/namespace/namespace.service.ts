@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import CreateNamespaceModel from './model/create-namespace.model';
+import NamespaceDto from './model/namespace-dto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class NamespaceService {
     return this.http.post<void>(this.apiUrl, dto);
   }
 
-  getAllNamespaces(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
-  }
+  getAllNamespaces(): Observable<NamespaceDto[]> {
+  return this.http.get<NamespaceDto[]>(this.apiUrl);
+}
 }
