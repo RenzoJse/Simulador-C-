@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { ClassService } from '../../../backend/services/class/class.service';
 import ClassListItem from '../../../backend/services/class/models/class-list-item'; 
 
+
 @Component({
   selector: 'app-class-dropdown',
   standalone: true,
