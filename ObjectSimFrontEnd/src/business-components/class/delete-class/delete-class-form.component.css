@@ -1,0 +1,11 @@
+:host ::ng-deep app-form-input input,
+
+:host ::ng-deep app-form-input input:focus,
+:host ::ng-deep app-form-input select:focus {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.08) !important;
+  outline: none !important;
+}
+
+:host ::ng-deep app-form-input label {
+  font-weight: 600 !important;
+}

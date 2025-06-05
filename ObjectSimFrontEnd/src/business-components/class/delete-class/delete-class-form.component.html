@@ -1,0 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label for="classSelect" class="form-label">Select Method</label>
+    <select id="classSelect" formControlName="classId" class="form-select enhanced-input">
+      <option value="" disabled>- Choose one -</option>
+      <option *ngFor="let c of classes" [value]="c.id">
+        {{ c.name }}
+      </option>
+    </select>
+    <div *ngIf="form.get('classId')?.touched && form.get('classId')?.invalid" class="text-danger">
+      You must select a class.
+    </div>
+  </div>
+
+  <div *ngIf="loading">Deleting...</div>
+  <div *ngIf="error" class="text-danger">{{ error }}</div>
+
+  <button class="btn btn-danger" [disabled]="loading">Delete Class</button>
+</form>
