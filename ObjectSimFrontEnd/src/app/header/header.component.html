@@ -75,10 +75,24 @@
           </a>
           <ul class="dropdown-menu text-center">
             <li><a class="dropdown-item" routerLink="/class/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Create Class</a></li>
-            <li><a class="dropdown-item" routerLink="/class/delete" routerLinkActive="active">Eliminar Clase</a></li>
+            <li><a class="dropdown-item" routerLink="/class/delete" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Eliminar Clase</a></li>
             <li><a class="dropdown-item" routerLink="/class/edit" routerLinkActive="active">Actualizar Clase</a></li>
           </ul>
         </li>
+          <li class="nav-item dropdown">
+              <a
+                      class="nav-link dropdown-toggle"
+                      href="#"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+              >
+                  Simulator
+              </a>
+              <ul class="dropdown-menu text-center">
+                  <li><a class="dropdown-item" routerLink="/simulator" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Simulate Methods</a></li>
+              </ul>
+          </li>
       </ul>
     </div>
   </div>

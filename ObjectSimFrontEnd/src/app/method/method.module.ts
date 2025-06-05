@@ -7,6 +7,7 @@ import { MethodRoutingModule } from './method-routing.module';
 
 import { CreateMethodFormComponent } from '../../business-components/method/create-method-form/create-method-form.component';
 import { ButtonComponent } from '../../components/button/button.component';
+import { MethodDropdownComponent } from '../../business-components/method/dropdown/method-dropdown.component';
 
 import { DeleteMethodComponent } from './delete-method/delete-method.component';
 import { DeleteMethodFormComponent } from '../../business-components/method/delete-method/delete-method-form.component';
@@ -21,9 +22,9 @@ import { DeleteMethodFormComponent } from '../../business-components/method/dele
     ReactiveFormsModule,
     MethodRoutingModule,
     CreateMethodFormComponent,
+    MethodDropdownComponent,
     DeleteMethodFormComponent,
     ButtonComponent,
-    DeleteMethodComponent,
   ]
 })
 export class MethodModule { }
