@@ -21,6 +21,10 @@ const routes: Routes = [
       {
     path: 'namespace',
     loadChildren: () => import('./namespace/namespace.module').then(c => c.NamespaceModule),
+  },
+  {
+    path: 'simulator',
+    loadChildren: () => import('./simulator/simulator.module').then(m => m.SimulatorModule),
   }
 ]
 
