@@ -32,11 +32,18 @@ export class SimulatorFormComponent {
 
     constructor(private fb: FormBuilder) {
         this.simulatorForm = this.fb.group({
+            ReferenceId: [''],
+            InstanceId: ['']
         });
     }
 
     public onSubmit() {
-        console.log('Form values:', this.simulatorForm.value);
+        const { classId1, classId2 } = this.simulatorForm.value;
+
+        console.log('Clase 1:', classId1);
+        console.log('Clase 2:', classId2);
+
+        this.atSubmit.emit(this.simulatorForm.value as CreateSimulatedExecutionModel);
     }
 
     private markAsTouched() {

@@ -3,11 +3,15 @@
 
     <app-form [form]="simulatorForm" (atSubmit)="onSubmit()">
 
-        <app-class-dropdown> </app-class-dropdown>
+        <app-class-dropdown
+                [form]="simulatorForm"
+                controlName="ReferenceId">
+        </app-class-dropdown>
 
-        <app-class-dropdown> </app-class-dropdown>
-
-        <app-method-dropdown> </app-method-dropdown>
+        <app-class-dropdown
+                [form]="simulatorForm"
+                controlName="InstanceId">
+        </app-class-dropdown>
 
         <div *ngIf="simulatorFormStatus?.loading; else notLoading">
             Loading...
