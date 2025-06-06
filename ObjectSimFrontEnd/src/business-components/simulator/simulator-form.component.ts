@@ -1,5 +1,5 @@
-﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+﻿import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { NgIf } from '@angular/common';
 
 import { FormInputComponent } from '../../components/form/form-input/form-input.component';
@@ -21,6 +21,7 @@ import CreateSimulatedExecutionModel from '../../backend/services/simulator/mode
 
 export class SimulatorFormComponent {
     @Input() title: string = '';
+    @Input() methods: { id: string; name: string }[] = [];
     @Output() atSubmit = new EventEmitter<CreateSimulatedExecutionModel>();
 
     simulatorForm: FormGroup;
@@ -30,18 +31,22 @@ export class SimulatorFormComponent {
         error?: string;
     } | null = null;
 
-    constructor(private fb: FormBuilder) {
+    ReferenceId: string | undefined;
+
+    constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
         this.simulatorForm = this.fb.group({
-            ReferenceId: [''],
-            InstanceId: ['']
+            ReferenceId: ['', Validators.required],
+            InstanceId: ['', Validators.required],
+            methodId: ['', Validators.required]
         });
     }
 
     public onSubmit() {
-        const { classId1, classId2 } = this.simulatorForm.value;
+        const { classId1, classId2, methodId } = this.simulatorForm.value;
 
         console.log('Clase 1:', classId1);
         console.log('Clase 2:', classId2);
+        console.log('Metodo:', methodId);
 
         this.atSubmit.emit(this.simulatorForm.value as CreateSimulatedExecutionModel);
     }
@@ -51,4 +56,11 @@ export class SimulatorFormComponent {
             control.markAsTouched();
         });
     }
+
+    updateClassId(event: { classId: string | undefined; }) {
+        this.ReferenceId = event.classId;
+        console.log('Clase 1:',  this.ReferenceId);
+        this.cdr.detectChanges();
+    }
+
 }
