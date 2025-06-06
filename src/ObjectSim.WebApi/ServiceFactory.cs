@@ -41,6 +41,7 @@ public static class ServiceFactory
         services.AddScoped<IBuilderStrategy, AbstractBuilderStrategy>();
         services.AddScoped<IClassService, ClassService>();
         services.AddScoped<IMethodSimulatorService, MethodSimulatorService>();
+        services.AddScoped<INamespaceService, NamespaceService>();
 
         services.AddScoped<ISecurityService, SecurityService>();
         services.AddScoped<IValidationStrategy, KeyStrategy>();
@@ -53,5 +54,7 @@ public static class ServiceFactory
         services.AddScoped<IRepository<Attribute>, Repository<Attribute>>();
         services.AddScoped<IRepository<DataType>, Repository<DataType>>();
         services.AddScoped<IRepository<Key>, Repository<Key>>();
+        services.AddScoped<INamespaceRepository, NamespaceRepository>();
+
     }
 }
