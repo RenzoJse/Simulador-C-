@@ -3,6 +3,12 @@
 
     <app-form [form]="simulatorForm" (atSubmit)="onSubmit()">
 
+        <app-class-dropdown> </app-class-dropdown>
+
+        <app-class-dropdown> </app-class-dropdown>
+
+        <app-method-dropdown> </app-method-dropdown>
+
         <div *ngIf="simulatorFormStatus?.loading; else notLoading">
             Loading...
         </div>
