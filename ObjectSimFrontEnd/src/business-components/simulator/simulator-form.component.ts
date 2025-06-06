@@ -42,13 +42,18 @@ export class SimulatorFormComponent {
     }
 
     public onSubmit() {
-        const { classId1, classId2, methodId } = this.simulatorForm.value;
+        if (this.simulatorForm.valid) {
+            const {ReferenceId, InstanceId, methodId} = this.simulatorForm.value;
 
-        console.log('Clase 1:', classId1);
-        console.log('Clase 2:', classId2);
-        console.log('Metodo:', methodId);
+            console.log('Reference ID:', ReferenceId);
+            console.log('Instance ID:', InstanceId);
+            console.log('Método:', methodId);
 
-        this.atSubmit.emit(this.simulatorForm.value as CreateSimulatedExecutionModel);
+            this.atSubmit.emit(this.simulatorForm.value as CreateSimulatedExecutionModel);
+        } else {
+            this.markAsTouched();
+            console.log('Formulario inválido:', this.simulatorForm.errors);
+        }
     }
 
     private markAsTouched() {
@@ -59,7 +64,8 @@ export class SimulatorFormComponent {
 
     updateClassId(event: { classId: string | undefined; }) {
         this.ReferenceId = event.classId;
-        console.log('Clase 1:',  this.ReferenceId);
+        this.simulatorForm.patchValue({ ReferenceId: event.classId });
+        console.log('Clase 1:', this.ReferenceId);
         this.cdr.detectChanges();
     }
 
