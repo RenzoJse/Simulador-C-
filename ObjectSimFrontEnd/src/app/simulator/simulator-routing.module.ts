@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SimulatorComponent } from './simulator/simulator.component';
 
 const routes: Routes = [
-    { path: 'simulator', component: SimulatorComponent },
+    { path: 'execute', component: SimulatorComponent },
 ];
 
 @NgModule({

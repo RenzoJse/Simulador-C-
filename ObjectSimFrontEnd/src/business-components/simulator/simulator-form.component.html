@@ -1,0 +1,19 @@
+﻿<div class="container mt-4">
+    <h2 class="mb-4">Simulator:</h2>
+
+    <app-form [form]="simulatorForm" (atSubmit)="onSubmit()">
+
+        <div *ngIf="simulatorFormStatus?.loading; else notLoading">
+            Loading...
+        </div>
+
+        <ng-template #notLoading>
+            <div *ngIf="simulatorFormStatus?.error">
+                {{ simulatorFormStatus!.error }}
+            </div>
+
+            <app-form-button title="Simulate"></app-form-button>
+        </ng-template>
+
+    </app-form>
+</div>

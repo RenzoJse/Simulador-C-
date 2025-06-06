@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { SimulatorService } from "../../../backend/services/simulator/simulator.service";
-import MethodCreateModel from "../../../backend/services/method/models/method-dto.model";
+import CreateSimulatedExecutionModel from "../../../backend/services/simulator/models/create-simulated-execution.model"
 
 @Component({
     selector: 'app-simulator',
@@ -21,6 +21,4 @@ export class SimulatorComponent {
         console.log('SimulatorComponent inicializado');
     }
 
-    protected atSubmit(method: MethodCreateModel) {
-    }
 }
