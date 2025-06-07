@@ -6,9 +6,9 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class NamespaceService(IRepository<Namespace> repository) : INamespaceService
+public class NamespaceService(INamespaceRepository repository) : INamespaceService
 {
-    private readonly IRepository<Namespace> _repository = repository;
+    private readonly INamespaceRepository _repository = repository;
 
     public Namespace Create(CreateNamespaceArgs args)
     {
@@ -26,6 +26,13 @@ public class NamespaceService(IRepository<Namespace> repository) : INamespaceSer
 
     public List<Namespace> GetAll()
     {
-        return _repository.GetAll(_ => true);
+        return _repository.GetAll();
+    }
+    public IEnumerable<Namespace> GetAllDescendants(Guid id)
+    {
+        var root = _repository.GetByIdWithChildren(id)
+                   ?? throw new ArgumentException("Namespace not found");
+
+        return root.GetAllDescendants();
     }
 }
