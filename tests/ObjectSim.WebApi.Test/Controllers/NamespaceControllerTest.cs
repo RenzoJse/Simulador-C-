@@ -63,6 +63,32 @@ public class NamespaceControllerTest
         Assert.AreEqual(200, okResult.StatusCode);
     }
 
+    [TestMethod]
+    public void GetAllDescendants_WithValidNamespaceId_ReturnsDescendantDtos()
+    {
+        var parentId = Guid.NewGuid();
+        var descendants = new List<Namespace>
+    {
+        new Namespace { Id = Guid.NewGuid(), Name = "Child1", ParentId = parentId },
+        new Namespace { Id = Guid.NewGuid(), Name = "Child2", ParentId = parentId }
+    };
+
+        _namespaceServiceMock
+            .Setup(s => s.GetAllDescendants(parentId))
+            .Returns(descendants);
+
+        var result = _controller.GetAllDescendants(parentId);
+
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        Assert.AreEqual(200, okResult.StatusCode);
+
+        var returnedDtos = okResult.Value as List<NamespaceInformationDtoOut>;
+        Assert.IsNotNull(returnedDtos);
+        Assert.AreEqual(descendants.Count, returnedDtos.Count);
+        Assert.IsTrue(returnedDtos.Any(dto => dto.Name == "Child1"));
+        Assert.IsTrue(returnedDtos.Any(dto => dto.Name == "Child2"));
+    }
 
 
 

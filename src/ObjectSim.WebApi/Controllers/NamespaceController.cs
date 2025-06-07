@@ -25,5 +25,14 @@ public class NamespaceController(INamespaceService service) : ControllerBase
         _service.Create(dto.ToArgs());
         return Ok();
     }
+    [HttpGet("{namespaceId:guid}/descendants")]
+    public IActionResult GetAllDescendants([FromRoute] Guid namespaceId)
+    {
+        var descendants = _service.GetAllDescendants(namespaceId)
+            .Select(NamespaceInformationDtoOut.FromEntity)
+            .ToList();
+
+        return Ok(descendants);
+    }
 
 }
