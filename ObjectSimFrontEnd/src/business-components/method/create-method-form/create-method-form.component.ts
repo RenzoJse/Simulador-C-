@@ -26,6 +26,12 @@ export class CreateMethodFormComponent {
         error?: string;
     } | null = null;
 
+    AccessibilityOptions: { value: string; tag: string }[] = [
+        { value: 'Public', tag: 'Public' },
+        { value: 'Private', tag: 'Private' },
+        { value: 'Protected', tag: 'Protected' }
+    ];
+
     Modificadores: { value: string; tag: string }[] = [
         { value: 'Abstract', tag: 'Abstract' },
         { value: 'Sealed', tag: 'Sealed' },

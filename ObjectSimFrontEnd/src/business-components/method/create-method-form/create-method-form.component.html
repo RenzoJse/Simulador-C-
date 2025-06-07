@@ -23,6 +23,18 @@
       [type]="'text'">
     </app-form-input>
 
+
+    <app-form-input
+      [form]="createMethodForm"
+      controlName="accessibility"
+      [reserve]="'Accessibility'"
+      [name]="'Accessibility'"
+      [tag]="'Accessibility'"
+      [errorMessages]="{ required: 'Accessibility is required.' }"
+      [type]="'option'"
+      [options]="AccessibilityOptions">
+    </app-form-input>
+
     <app-form-input
       [form]="createMethodForm"
       controlName="Modificadores"
