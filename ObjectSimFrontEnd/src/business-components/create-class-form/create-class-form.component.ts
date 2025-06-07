@@ -15,7 +15,8 @@ import { CreateAttributeFormComponent } from '../attribute/create-attribute-form
     imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent,
         NgIf, FormComponent, CreateMethodFormComponent,
         CreateAttributeFormComponent, CommonModule],
-    templateUrl: './create-class-form.component.html'
+    templateUrl: './create-class-form.component.html',
+    styleUrls: ['./create-class-form.component.css']
 })
 
 export class CreateClassFormComponent {
