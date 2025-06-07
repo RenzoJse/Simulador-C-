@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from "rxjs";
 
@@ -25,23 +24,21 @@ export class ClassDropdownComponent implements OnInit, OnDestroy{
     error: '',
   };
 
-  private _usuariosEstadoTodos: Subscription | null = null;
+  private _everyoneStatus: Subscription | null = null;
 
-  constructor(private readonly _classService: ClassService,
-              private readonly _ruta: ActivatedRoute) {}
+  constructor(private readonly _classService: ClassService) {}
   ngOnDestroy(): void {
-    this._usuariosEstadoTodos?.unsubscribe();
+    this._everyoneStatus?.unsubscribe();
   }
 
   ngOnInit(): void {
-    const idHogar = this._ruta.snapshot.paramMap.get('idHogar');
-
     this._classService.getAllClasses()
         .subscribe({
           next: (systemClasses) => {
+            console.log('Classes from backend:', systemClasses);
             this.status = {
               systemClasses: systemClasses.map((classObj) => ({
-                value: classObj.id,
+                value: classObj.classInfo.id,
                 tag: classObj.name,
               })),
             };
@@ -54,6 +51,8 @@ export class ClassDropdownComponent implements OnInit, OnDestroy{
 
   onSelectClass(classId: string) {
     const classObj = this.status.systemClasses.find(c => c.value === classId);
+    console.log('Clase 1:', classObj);
+    console.log('Clase 2:', this.status.systemClasses);
     if (classObj) {
       this.selectClass.emit({
         classId: classObj.value,

@@ -1,4 +1,4 @@
-<div *ngIf="status.loading">Cargando...</div>
+<div *ngIf="status.loading">Loading...</div>
 
 <div *ngIf="!status.loading && status.error">
     <p>{{ status.error }}</p>
@@ -7,9 +7,9 @@
 <app-dropdown
         *ngIf="!status.loading && !status.error"
         [options]="status.systemClasses"
-        tag="Dispositivo del hogar"
+        tag="System Class"
         [value]="value"
-        reserve="Seleccione un dispositivo del hogar"
-        emptyMessage="No hay dispositivos del hogar"
+        reserve="Select a Class"
+        emptyMessage="There are no classes available"
         (changeValue)="onSelectClass($event)">
 </app-dropdown>
