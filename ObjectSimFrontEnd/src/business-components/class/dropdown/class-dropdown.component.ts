@@ -35,7 +35,6 @@ export class ClassDropdownComponent implements OnInit, OnDestroy{
     this._classService.getAllClasses()
         .subscribe({
           next: (systemClasses) => {
-            console.log('Classes from backend:', systemClasses);
             this.status = {
               systemClasses: systemClasses.map((classObj) => ({
                 value: classObj.classInfo.id,
@@ -51,8 +50,6 @@ export class ClassDropdownComponent implements OnInit, OnDestroy{
 
   onSelectClass(classId: string) {
     const classObj = this.status.systemClasses.find(c => c.value === classId);
-    console.log('Clase 1:', classObj);
-    console.log('Clase 2:', this.status.systemClasses);
     if (classObj) {
       this.selectClass.emit({
         classId: classObj.value,

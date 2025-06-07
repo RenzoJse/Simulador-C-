@@ -32,16 +32,18 @@ export class SimulatorFormComponent {
     } | null = null;
 
     ReferenceId: string | undefined;
+    InstanceId: string | undefined;
 
     constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
         this.simulatorForm = this.fb.group({
-            ReferenceId: ['', Validators.required],
-            InstanceId: ['', Validators.required],
-            methodId: ['', Validators.required]
+            ReferenceId: [''],
+            InstanceId: [''],
+            methodId: ['']
         });
     }
 
     public onSubmit() {
+        console.log('Formulario enviado:', this.simulatorForm.value);
         if (this.simulatorForm.valid) {
             const {ReferenceId, InstanceId, methodId} = this.simulatorForm.value;
 
@@ -62,10 +64,17 @@ export class SimulatorFormComponent {
         });
     }
 
-    updateClassId(event: { classId: string | undefined; }) {
+    updateClassReferenceId(event: { classId: string | undefined; }) {
         this.ReferenceId = event.classId;
         this.simulatorForm.patchValue({ ReferenceId: event.classId });
-        console.log('Clase 1:', this.ReferenceId);
+        console.log('ReferenceID: ', this.ReferenceId);
+        this.cdr.detectChanges();
+    }
+
+    updateClassInstanceId(event: { classId: string | undefined; }) {
+        this.InstanceId = event.classId;
+        this.simulatorForm.patchValue({ InstanceId: event.classId });
+        console.log('InstanceId: ', this.InstanceId);
         this.cdr.detectChanges();
     }
 
