@@ -34,15 +34,10 @@
       [options]="Modificadores">
     </app-form-input>
 
-    <app-form-input
-      [form]="createMethodForm"
-      controlName="ClassID"
-      [reserve]="'Class ID'"
-      [name]="'ClassID'"
-      [tag]="'Class ID'"
-      [errorMessages]="{ required: 'Class ID is required.' }"
-      [type]="'text'">
-    </app-form-input>
+    <app-class-dropdown
+      [label]="'Select Class'"
+      (selectionChange)="onClassSelected($event)">
+    </app-class-dropdown>
 
     <div *ngIf="createMethodStatus?.loading; else notLoading">
       Loading...
