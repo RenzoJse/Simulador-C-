@@ -7,7 +7,7 @@
   </div>
 
     <select formControlName="methodId" class="form-control">
-    <option value="" disabled>- Choose one -</option>
+    <option value="" disabled>- Choose method -</option>
 
     <option *ngFor="let m of methods" [value]="m.id">
       {{ m.name }}

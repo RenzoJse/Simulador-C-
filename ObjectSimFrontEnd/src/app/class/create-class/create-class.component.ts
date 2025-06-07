@@ -1,7 +1,6 @@
 ﻿import { Component, Inject } from '@angular/core';
 import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-
 import { ClassService } from "../../../backend/services/class/class.service";
 import CreateClassModel from "../../../backend/services/class/models/create-class.model";
 
