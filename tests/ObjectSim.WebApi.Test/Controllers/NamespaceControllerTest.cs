@@ -89,7 +89,25 @@ public class NamespaceControllerTest
         Assert.IsTrue(returnedDtos.Any(dto => dto.Name == "Child1"));
         Assert.IsTrue(returnedDtos.Any(dto => dto.Name == "Child2"));
     }
+    [TestMethod]
+    public void GetAllDescendants_WhenNoneFound_ReturnsEmptyList()
+    {
+        var parentId = Guid.NewGuid();
 
+        _namespaceServiceMock
+            .Setup(s => s.GetAllDescendants(parentId))
+            .Returns([]);
+
+        var result = _controller.GetAllDescendants(parentId);
+
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        Assert.AreEqual(200, okResult.StatusCode);
+
+        var returnedDtos = okResult.Value as List<NamespaceInformationDtoOut>;
+        Assert.IsNotNull(returnedDtos);
+        Assert.AreEqual(0, returnedDtos.Count);
+    }
 
 
 }
