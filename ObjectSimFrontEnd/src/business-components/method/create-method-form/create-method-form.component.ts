@@ -1,23 +1,23 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
-
 import { FormInputComponent } from '../../../components/form/form-input/form-input.component';
 import { FormButtonComponent } from '../../../components/form/form-button/form-button.component';
 import { FormComponent } from '../../../components/form/form/form.component';
+import { ClassDropdownComponent } from '../../class/dropdown/class-dropdown.component';
 
 import MethodCreateModel from '../../../backend/services/method/models/method-dto.model';
 
 @Component({
   selector: 'app-create-method-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent],
+  imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent, ClassDropdownComponent],
   templateUrl: './create-method-form.component.html',
   styleUrls: ['./create-method-form.component.css']
 })
 export class CreateMethodFormComponent {
     @Input() title: string = '';
-
+    @Input() classOptions: { id: string, name: string }[] = [];
     createMethodForm: FormGroup;
     @Output() atSubmit = new EventEmitter<MethodCreateModel>();
 
@@ -32,6 +32,8 @@ export class CreateMethodFormComponent {
         { value: 'Override', tag: 'Override' },
         { value: 'Virtual', tag: 'Virtual' }
     ];
+    
+    selectedClassId: string = '';
 
     constructor(private fb: FormBuilder) {
         this.createMethodForm = this.fb.group({
@@ -69,7 +71,7 @@ export class CreateMethodFormComponent {
             isSealed: selectedModifier === 'Sealed',
             isOverride: selectedModifier === 'Override',
             isVirtual: selectedModifier === 'Virtual',
-            classId: formValue.ClassID ?? '',
+            classId: this.selectedClassId,
             localVariables: [],
             parameters: []
         };
@@ -81,5 +83,9 @@ export class CreateMethodFormComponent {
         Object.values(this.createMethodForm.controls).forEach(control => {
             control.markAsTouched();
         });
+    }
+
+    onClassSelected(classId: string) {
+        this.selectedClassId = classId;
     }
 }
