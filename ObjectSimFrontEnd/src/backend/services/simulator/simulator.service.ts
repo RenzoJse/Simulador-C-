@@ -8,17 +8,6 @@ import CreateSimulatedExecutionModel from './models/create-simulated-execution.m
     providedIn: 'root'
 })
 export class SimulatorService {
-    private readonly apiUrl = 'http://localhost:5018/api/simulator';
-
-    protected get headers(){
-        return {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                Authorization: localStorage.getItem('key') ?? '',
-            })
-        };
-    }
     
     constructor(private http: HttpClient) {}
 
