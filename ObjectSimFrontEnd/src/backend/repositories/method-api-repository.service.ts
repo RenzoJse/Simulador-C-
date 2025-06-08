@@ -10,7 +10,7 @@ import { MethodListItem } from '../../backend/services/method/models/method-list
 @Injectable({
     providedIn: 'root',
 })
-export class AttributeApiRepositoryService extends ApiRepository {
+export class MethodApiRepositoryService extends ApiRepository {
 
     constructor(http: HttpClient) {
         super(enviroments.objectsim, 'api/methods', http);
