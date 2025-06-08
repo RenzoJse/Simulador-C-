@@ -1,6 +1,7 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf, CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 import { FormInputComponent } from '../../components/form/form-input/form-input.component';
 import { FormButtonComponent } from '../../components/form/form-button/form-button.component';
@@ -15,41 +16,47 @@ import { FormComponent } from '../../components/form/form/form.component';
 })
 
 export class InsertKeyFormComponent {
+    
     @Input() title: string = '';
     @Output() atSubmit = new EventEmitter<any>();
 
     insertKeyForm: FormGroup;
+    showManualForm = false;
+    successMessage: string | null = null;
     
     insertKeyStatus: {
         loading?: true;
         error?: string;
     } | null = null;
     
-    constructor(private fb: FormBuilder) {
+    constructor(private router: Router, private fb: FormBuilder) {
         this.insertKeyForm = this.fb.group({
-            Name: ['', [
-                Validators.required,
-                Validators.maxLength(20),
-                Validators.minLength(3)
-            ]],
-            ClassType: ['', [Validators.required]],
-            ParentClassID: ['', []],
+            Key: ['', [Validators.required]],
         });
     }
 
     showAttributeForm = false;
     showMethodForm = false;
-    methods: any[] = [];
-    attributes: any[] = [];
-
-    addMethod(method: any) {
-        this.methods.push(method);
-        console.log('Form values:', this.insertKeyForm.value);
-        console.log('Metodos guardados:', this.methods);
-        this.showMethodForm = false;
-    }
 
     public onSubmit() {
+        if (this.insertKeyForm.valid) {
+            this.insertKeyStatus = { loading: true };
+            localStorage.setItem('key', this.insertKeyForm.value.Key);
+            this.successMessage = 'Key added successfully!';
+            this.insertKeyStatus = null;
+            setTimeout(() => {
+                this.router.navigate(['/']);
+            }, 1000);
+        } else {
+            this.markAsTouched();
+            this.insertKeyStatus = { error: 'Please fill in all required fields.' };
+        }
+    }
+
+    generateAutomaticKey() {
+        const guid = self.crypto.randomUUID();
+        this.insertKeyForm.patchValue({ Key: guid });
+        this.onSubmit();
     }
 
     private markAsTouched() {

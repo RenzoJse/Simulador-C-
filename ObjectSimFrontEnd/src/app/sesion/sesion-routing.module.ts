@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { KeyComponent } from './insertKey/key.component';
 
 const routes: Routes = [
-    { path: 'insertKey', component: KeyComponent },
+    { path: 'key', component: KeyComponent },
 ];
 
 @NgModule({

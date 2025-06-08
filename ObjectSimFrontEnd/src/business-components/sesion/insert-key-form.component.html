@@ -1,29 +1,42 @@
-﻿<div class ="container mt-4">
+﻿<div class="container mt-4">
     <h2 class="mb-4">Insert Key</h2>
 
-    <app-form [form]="insertKeyForm" (atSubmit)="onSubmit()">
+    <ng-container *ngIf="!showManualForm; else manualForm">
+        <button class="btn btn-primary me-2" (click)="generateAutomaticKey()">Generate Automatic Key</button>
+        <button class="btn btn-secondary" (click)="showManualForm = true">Insert Manual Key</button>
+    </ng-container>
 
-        <app-form-input
-                [form]="insertKeyForm"
-                controlName="Key"
-                [reserve]="'Guid Key'"
-                [name]="'Key'"
-                [tag]="'Key'"
-                [errorMessages]="{ required: 'The Key is required.' }"
-                [type]="'text'">
-        </app-form-input>
-
-        <app-form-button title="Add Key"></app-form-button>
-
-        <div *ngIf="insertKeyStatus?.loading; else notLoading">
-            Loading...
-        </div>
-
-        <ng-template #notLoading>
-            <div *ngIf="insertKeyStatus?.error">
-                {{ insertKeyStatus!.error }}
+    <ng-template #manualForm>
+        
+        <app-form [form]="insertKeyForm" (atSubmit)="onSubmit()">
+            
+            <app-form-input
+                    [form]="insertKeyForm"
+                    controlName="Key"
+                    [reserve]="'Guid Key'"
+                    [name]="'Key'"
+                    [tag]="'Key'"
+                    [errorMessages]="{ required: 'The Key is required.' }"
+                    [type]="'text'">
+            </app-form-input>
+            
+            <app-form-button title="Add Key"></app-form-button>
+            
+            <div *ngIf="insertKeyStatus?.loading; else notLoading">
+                Loading...
             </div>
-        </ng-template>
+            
+            <ng-template #notLoading>
+                <div *ngIf="insertKeyStatus?.error">
+                    {{ insertKeyStatus!.error }}
+                </div>
+            </ng-template>
+            
+        </app-form>
+    </ng-template>
 
-    </app-form>
+    <div *ngIf="successMessage" class="alert alert-success mt-3">
+        {{ successMessage }}
+    </div>
+    
 </div>

@@ -2,12 +2,11 @@
 import { CanActivateFn, Router } from '@angular/router';
 
 export const authenticationGuard: CanActivateFn = (route, state) => {
-    const isNotAuthenticated = !localStorage.getItem('key') === null;
-    console.log(isNotAuthenticated, "isNotAuthenticated guard executed");
+    const isNotAuthenticated = localStorage.getItem('key') === null;
+
     if(isNotAuthenticated){
         const router = inject(Router);
-        
-        return router.parseUrl('/insterKey');
+        return router.parseUrl('/sesion/key');
     }
     
     return true;
