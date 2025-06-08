@@ -1,0 +1,20 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Delete Class</h2>
+
+  <app-class-dropdown
+    [label]="'Select Class to Delete'"
+    (selectionChange)="onSelectionChange($event)">
+  </app-class-dropdown>
+
+  <div *ngIf="error" class="text-danger my-2">
+    {{ error }}
+  </div>
+
+  <button
+    class="btn btn-danger"
+    [disabled]="loading"
+    (click)="onDeleteClicked()"
+  >
+    {{ loading ? 'Deleting…' : 'Delete Class' }}
+  </button>
+</div>
