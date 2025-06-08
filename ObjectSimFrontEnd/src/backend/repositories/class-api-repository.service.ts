@@ -1,13 +1,33 @@
-﻿
+﻿import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import enviroments from '../../environments/index';
+import ApiRepository from './api-repository';
+import CreateClassModel from '../../backend/services/class/models/create-class.model';
+import ClassListItem from '../../backend/services/class/models/class-list-item';
+
 @Injectable({
     providedIn: 'root',
 })
 export class ClassApiRepository extends ApiRepository {
 
-    constructor(http: HttpClient){
-        super(a.objectsim, 'api/class', http);
+    constructor(http: HttpClient) {
+        super(enviroments.objectsim, 'api/class', http);
     }
-    s
-    getClassById(classId: string): Observable<Class> {
-        return this.get<Class>(classId);
+
+    createClass(classObj: CreateClassModel): Observable<CreateClassModel> {
+        return this.post<CreateClassModel>(classObj);
+    }
+
+    getAllClasses(): Observable<ClassListItem[]> {
+        return this.get<ClassListItem[]>();
+    }
+
+    deleteClass(id: string): Observable<any> {
+        const url = `/${id}`;
+        return this.delete(url);
+    }
+}
+    
         
