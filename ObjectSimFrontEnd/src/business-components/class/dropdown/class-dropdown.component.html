@@ -10,7 +10,7 @@
   </div>
 
   <select formControlName="classId" class="form-control">
-    <option value="" disabled>-- Choose one --</option>
+    <option value="" disabled>-- Choose class --</option>
 
     <option *ngFor="let c of classes" [value]="c.id">
       {{ c.name }}
