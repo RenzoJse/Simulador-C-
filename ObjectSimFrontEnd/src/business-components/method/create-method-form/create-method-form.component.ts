@@ -11,7 +11,8 @@ import MethodCreateModel from '../../../backend/services/method/models/method-dt
 @Component({
   selector: 'app-create-method-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent, ClassDropdownComponent],
+  imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent,
+      NgIf, FormComponent, ClassDropdownComponent],
   templateUrl: './create-method-form.component.html',
   styleUrls: ['./create-method-form.component.css']
 })
@@ -91,7 +92,7 @@ export class CreateMethodFormComponent {
         });
     }
 
-    onClassSelected(classId: string) {
-        this.selectedClassId = classId;
+    onClassSelected(event: { classId: string | undefined; }) {
+        this.selectedClassId = event.classId || '';
     }
 }

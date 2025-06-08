@@ -46,9 +46,8 @@
       [options]="Modificadores">
     </app-form-input>
 
-    <app-class-dropdown
-      [label]="'Select Class'"
-      (selectionChange)="onClassSelected($event)">
+    <app-class-dropdown 
+            (selectClass)="onClassSelected($event)">
     </app-class-dropdown>
 
     <div *ngIf="createMethodStatus?.loading; else notLoading">
