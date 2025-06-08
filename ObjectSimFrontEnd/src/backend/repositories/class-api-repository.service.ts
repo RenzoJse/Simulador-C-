@@ -13,7 +13,7 @@ import ClassListItem from '../../backend/services/class/models/class-list-item';
 export class ClassApiRepository extends ApiRepository {
 
     constructor(http: HttpClient) {
-        super(enviroments.objectsim, 'api/class', http);
+        super(enviroments.objectsim, 'api/classes', http);
     }
 
     createClass(classObj: CreateClassModel): Observable<CreateClassModel> {
