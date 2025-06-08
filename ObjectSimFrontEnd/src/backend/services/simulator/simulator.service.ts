@@ -1,7 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { SimulatorApiRepository } from '../../repositories/simulator-api-repository.service';
 import CreateSimulatedExecutionModel from './models/create-simulated-execution.model';
 
 @Injectable({
@@ -9,10 +9,10 @@ import CreateSimulatedExecutionModel from './models/create-simulated-execution.m
 })
 export class SimulatorService {
     
-    constructor(private http: HttpClient) {}
+    constructor(private readonly _simulatorRepository: SimulatorApiRepository) {}
 
-    simulateExecution(simulateExecution: CreateSimulatedExecutionModel): Observable<any> {
-        return this.http.post(this.apiUrl, simulateExecution, this.headers);
+    public simulateExecution(simulateExecution: CreateSimulatedExecutionModel): Observable<any> {
+        return this._simulatorRepository.simulateExecution(simulateExecution);
     }
 
 }
