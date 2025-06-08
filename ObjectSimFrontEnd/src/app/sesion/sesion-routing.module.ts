@@ -1,8 +1,9 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { KeyComponent } from './insertKey/key.component';
 
 const routes: Routes = [
-    { path: 'insertKey', component: InsertKeyComponent },
+    { path: 'insertKey', component: KeyComponent },
 ];
 
 @NgModule({
