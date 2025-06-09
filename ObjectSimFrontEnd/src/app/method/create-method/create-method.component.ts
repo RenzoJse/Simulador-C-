@@ -35,12 +35,9 @@ export class CreateMethodComponent {
                 this.status = null;
                 this._router.navigate([""]);
             },
-            error: (error:any) => {
-                if (error.status === 400 && error.Message) {
-                    this.status = { error: error.Message };
-                } else {
-                    this.status = { error: error.message || 'Error creating method.' };
-                }
+            error: (error: any) => {
+                console.error('Error al crear el método:', error);
+                this.status = { error: error.error?.message || error.message || 'Error creating method.' };
             },
         });
     }

@@ -1,26 +1,15 @@
-<div class="form-group" [formGroup]="form">
-  <label class="form-label">{{ label }}</label>
+<div *ngIf="status.loading">Loading...</div>
 
-  <div *ngIf="loading" class="text-muted mb-2">
-    Loading classes...
-  </div>
-
-  <div *ngIf="error" class="text-danger mb-2">
-    {{ error }}
-  </div>
-
-  <select formControlName="classId" class="form-control">
-    <option value="" disabled>-- Choose one --</option>
-
-    <option *ngFor="let c of classes" [value]="c.id">
-      {{ c.name }}
-    </option>
-  </select>
-
-  <div
-    *ngIf="form.get('classId')?.touched && form.get('classId')?.invalid"
-    class="text-danger mt-1"
-  >
-    You must select a class.
-  </div>
+<div *ngIf="!status.loading && status.error">
+    <p>{{ status.error }}</p>
 </div>
+
+<app-dropdown
+        *ngIf="!status.loading && !status.error"
+        [options]="status.systemClasses"
+        tag="System Class"
+        [value]="value"
+        reserve="Select a Class"
+        emptyMessage="There are no classes available"
+        (changeValue)="onSelectClass($event)">
+</app-dropdown>

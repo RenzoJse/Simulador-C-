@@ -13,10 +13,14 @@ export class ClassService {
     constructor(private http: HttpClient) {}
 
     createClass(classObj: CreateClassModel): Observable<any> {
-        return this.http.post(this.apiUrl, classObj);
+      return this.http.post(this.apiUrl, classObj);
     }
 
-      getAllClasses(): Observable<ClassListItem[]> {
-        return this.http.get<ClassListItem[]>(this.apiUrl);
-      }
+    getAllClasses(): Observable<ClassListItem[]> {
+      return this.http.get<ClassListItem[]>(this.apiUrl);
+    }
+
+    deleteClass(id: string): Observable<any> {
+      return this.http.delete(`${this.apiUrl}/${id}`);
+    }
 }

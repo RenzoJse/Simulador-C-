@@ -5,8 +5,9 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { CreateMethodComponent } from './create-method/create-method.component';
 import { MethodRoutingModule } from './method-routing.module';
 
-import { CreateMethodFormComponent } from '../../business-components/method/create-method-form/create-method-form.component'; 
+import { CreateMethodFormComponent } from '../../business-components/method/create-method-form/create-method-form.component';
 import { ButtonComponent } from '../../components/button/button.component';
+import { MethodDropdownComponent } from '../../business-components/method/dropdown/method-dropdown.component';
 
 import { DeleteMethodComponent } from './delete-method/delete-method.component';
 import { DeleteMethodFormComponent } from '../../business-components/method/delete-method/delete-method-form.component';
@@ -14,15 +15,16 @@ import { DeleteMethodFormComponent } from '../../business-components/method/dele
 @NgModule({
   declarations: [
     CreateMethodComponent,
+    DeleteMethodComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     MethodRoutingModule,
     CreateMethodFormComponent,
+    MethodDropdownComponent,
     DeleteMethodFormComponent,
     ButtonComponent,
-    DeleteMethodComponent,
   ]
 })
 export class MethodModule { }
