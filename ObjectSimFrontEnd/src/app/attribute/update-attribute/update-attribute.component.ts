@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { AttributeService } from '../../../backend/services/attribute/attribute.service';
-import CreateAttributeModel from '../../../backend/services/class/models/create-attribute.model';
+import CreateAttributeModel from '../../../backend/services/attribute/models/create-attribute.model';
 import { UpdateAttributeFormComponent } from "../../../business-components/attribute/update-attribute-form/update-attribute-form.component";
 
 @Component({

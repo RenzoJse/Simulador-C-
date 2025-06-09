@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { MethodApiRepositoryService } from '../../repositories/method-api-repository.service';
 import MethodDTO from './models/method-dto.model';
 import { MethodListItem } from './models/method-list-item.model';
 
@@ -8,19 +8,27 @@ import { MethodListItem } from './models/method-list-item.model';
   providedIn: 'root'
 })
 export class MethodService {
-  private readonly apiUrl = 'http://localhost:5018/api/methods';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly _methodRepository: MethodApiRepositoryService) {}
 
-  createMethod(method: MethodDTO): Observable<any> {
-    return this.http.post(this.apiUrl, method);
+  public createMethod(method: MethodDTO): Observable<MethodDTO> {
+    return this._methodRepository.createMethod(method);
   }
 
-  deleteMethod(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+  public deleteMethod(id: string): Observable<any> {
+    return this._methodRepository.deleteMethod(id);
   }
 
-  getMethods(): Observable<MethodListItem[]> {
-    return this.http.get<MethodListItem[]>(this.apiUrl);
+  public getAllMethods(): Observable<MethodListItem[]> {
+    return this._methodRepository.getAllMethods();
+  }
+
+  public getMethodById(methodId: string): Observable<any> {
+    var answer = this.getMethodById(methodId);
+    return answer;
+  }
+  
+  public addInvokeMethods(){
+    //TODO
   }
 }

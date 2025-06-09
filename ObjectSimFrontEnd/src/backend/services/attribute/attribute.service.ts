@@ -1,38 +1,37 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import AttributeDto from './model/attribute-dto.model';
-import CreateAttributeModel from '../class/models/create-attribute.model';
+import { AttributeApiRepository } from '../../repositories/attribute-api-repository.service';
+import CreateAttributeModel from './models/create-attribute.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AttributeService {
-  private readonly apiUrl = 'http://localhost:5018/api/attributes';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly _attributeRepository: AttributeApiRepository) {}
 
-  createAttribute(dto: CreateAttributeModel): Observable<AttributeDto> {
-    return this.http.post<AttributeDto>(this.apiUrl, dto);
+  public createAttribute(attribute: CreateAttributeModel): Observable<CreateAttributeModel> {
+    return this._attributeRepository.createAttribute(attribute);
   }
 
-  getAttributes(): Observable<AttributeDto[]> {
-    return this.http.get<AttributeDto[]>(this.apiUrl);
+  public getAllAttributes(): Observable<CreateAttributeModel[]> {
+    return this._attributeRepository.getAllAttributes();
   }
 
-  getAttributeById(id: string): Observable<AttributeDto> {
-    return this.http.get<AttributeDto>(`${this.apiUrl}/${id}`);
+  public deleteAttribute(id: string): Observable<boolean> {
+    return this._attributeRepository.deleteAttribute(id);
   }
 
-  getAttributesByClassId(classId: string): Observable<AttributeDto[]> {
-    return this.http.get<AttributeDto[]>(`${this.apiUrl}/by-class/${classId}`);
+  public getAttributeById(id: string): Observable<CreateAttributeModel> {
+    return this._attributeRepository.getAttributeById(id);
   }
 
-updateAttribute(id: string, dto: CreateAttributeModel): Observable<AttributeDto> {
-  return this.http.put<AttributeDto>(`${this.apiUrl}/${id}`, dto);
-}
-
-  deleteAttribute(id: string): Observable<boolean> {
-    return this.http.delete<boolean>(`${this.apiUrl}/${id}`);
+  public getAttributesByClassId(classId: string): Observable<CreateAttributeModel[]> {
+    return this._attributeRepository.getAttributesByClassId(classId);
   }
+
+  public updateAttribute(id: string, dto: CreateAttributeModel): Observable<CreateAttributeModel> {
+    return this._attributeRepository.updateAttribute(id, dto);
+  }
+
 }

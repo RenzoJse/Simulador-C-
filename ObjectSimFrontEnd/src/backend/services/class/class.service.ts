@@ -1,6 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
+import { ClassApiRepository } from '../../repositories/class-api-repository.service';
 import CreateClassModel from './models/create-class.model';
 import ClassListItem from './models/class-list-item';
 
@@ -8,19 +9,18 @@ import ClassListItem from './models/class-list-item';
     providedIn: 'root'
 })
 export class ClassService {
-    private readonly apiUrl = 'http://localhost:5018/api/classes';
+    
+    constructor(private readonly  _classRepository: ClassApiRepository) {}
 
-    constructor(private http: HttpClient) {}
-
-    createClass(classObj: CreateClassModel): Observable<any> {
-      return this.http.post(this.apiUrl, classObj);
+    public createClass(classObj: CreateClassModel): Observable<CreateClassModel> {
+      return this._classRepository.createClass(classObj);
     }
 
     getAllClasses(): Observable<ClassListItem[]> {
-      return this.http.get<ClassListItem[]>(this.apiUrl);
+        return this._classRepository.getAllClasses();
     }
 
     deleteClass(id: string): Observable<any> {
-      return this.http.delete(`${this.apiUrl}/${id}`);
+        return this._classRepository.deleteClass(id);
     }
 }

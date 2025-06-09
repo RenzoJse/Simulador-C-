@@ -75,4 +75,9 @@ export class SimulatorFormComponent {
         this.cdr.detectChanges();
     }
 
+    updateSelectedMethodId(id: string) {
+        this.simulatorForm.patchValue({ methodId: id });
+        this.cdr.detectChanges();
+    }
+
 }

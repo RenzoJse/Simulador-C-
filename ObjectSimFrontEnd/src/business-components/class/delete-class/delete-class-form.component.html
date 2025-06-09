@@ -1,19 +1,22 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="mb-3">
-    <label for="classSelect" class="form-label">Select Method</label>
-    <select id="classSelect" formControlName="classId" class="form-select enhanced-input">
-      <option value="" disabled>- Choose one -</option>
-      <option *ngFor="let c of classes" [value]="c.id">
-        {{ c.name }}
-      </option>
-    </select>
-    <div *ngIf="form.get('classId')?.touched && form.get('classId')?.invalid" class="text-danger">
-      You must select a class.
-    </div>
-  </div>
+<div class="container mt-4">
+    <h2 class="mb-4">Delete Class:</h2>
 
-  <div *ngIf="loading">Deleting...</div>
-  <div *ngIf="error" class="text-danger">{{ error }}</div>
+    <app-form [form]="deleteClassform" (atSubmit)="onSubmit()">
 
-  <button class="btn btn-danger" [disabled]="loading">Delete Class</button>
-</form>
+        <app-class-dropdown (selectClass)="updateClassId($event)">
+        </app-class-dropdown>
+
+        <app-form-button title="Delete"></app-form-button>
+
+        <div *ngIf="deleteFormStatus?.loading; else notLoading">
+            Loading...
+        </div>
+
+        <ng-template #notLoading>
+            <div *ngIf="deleteFormStatus?.error">
+                {{ deleteFormStatus!.error }}
+            </div>
+        </ng-template>
+
+    </app-form>
+</div>
