@@ -18,5 +18,10 @@ export class NamespaceService {
 
   getAllNamespaces(): Observable<NamespaceDto[]> {
   return this.http.get<NamespaceDto[]>(this.apiUrl);
-}
+  }
+  getDescendants(namespaceId: string): Observable<NamespaceDto[]> {
+  return this.http.get<NamespaceDto[]>(`${this.apiUrl}/${namespaceId}/descendants`);
+  }
+
+  
 }

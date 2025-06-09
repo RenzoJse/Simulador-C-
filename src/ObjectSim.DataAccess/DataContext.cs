@@ -161,10 +161,10 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 .OnDelete(DeleteBehavior.Cascade);
         });
         modelBuilder.Entity<Namespace>()
-            .HasOne<Namespace>()
-            .WithMany()
-            .HasForeignKey(n => n.ParentId)
-            .OnDelete(DeleteBehavior.Restrict);
+    .HasMany(n => n.Children)
+    .WithOne()
+    .HasForeignKey(n => n.ParentId)
+    .OnDelete(DeleteBehavior.Restrict);
 
 
 
