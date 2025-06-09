@@ -1,9 +1,9 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CreateClassComponent } from './create-class/create-class.component';
+import { SimulatorComponent } from './simulator/simulator.component';
 
 const routes: Routes = [
-    { path: 'create', component: CreateClassComponent },
+    { path: 'execute', component: SimulatorComponent },
 ];
 
 @NgModule({
@@ -11,4 +11,4 @@ const routes: Routes = [
     exports: [RouterModule]
 })
 
-export class ClassRoutingModule { }
+export class SimulatorRoutingModule { }

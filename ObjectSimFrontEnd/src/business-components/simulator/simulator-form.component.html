@@ -1,0 +1,28 @@
+﻿<div class="container mt-4">
+    <h2 class="mb-4">Simulator:</h2>
+
+    <app-form [form]="simulatorForm" (atSubmit)="onSubmit()">
+
+        <app-class-dropdown (selectClass)="updateClassReferenceId($event)">
+        </app-class-dropdown>
+
+        <app-class-dropdown (selectClass)="updateClassInstanceId($event)">
+        </app-class-dropdown>
+
+        <app-method-dropdown>
+            </app-method-dropdown>
+
+        <app-form-button title="Simulate"></app-form-button>
+
+        <div *ngIf="simulatorFormStatus?.loading; else notLoading">
+            Loading...
+        </div>
+
+        <ng-template #notLoading>
+            <div *ngIf="simulatorFormStatus?.error">
+                {{ simulatorFormStatus!.error }}
+            </div>
+        </ng-template>
+
+    </app-form>
+</div>

@@ -1,62 +1,59 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { CommonModule, NgIf, NgForOf } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Subscription } from "rxjs";
+
 import { ClassService } from '../../../backend/services/class/class.service';
-import ClassListItem from '../../../backend/services/class/models/class-list-item'; 
+import { DropdownComponent } from '../../../components/dropdown/dropdown.component';
+
+import SystemClassesStatus from './models/SystemClassesStatus';
 
 @Component({
   selector: 'app-class-dropdown',
   standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule, NgIf, NgForOf ],
-  templateUrl: './class-dropdown.component.html'
+  imports: [DropdownComponent, CommonModule],
+  templateUrl: './class-dropdown.component.html',
 })
-export class ClassDropdownComponent implements OnInit {
-  @Input() label: string = 'Select Class';
 
-  @Input() initialValue: string = '';
+export class ClassDropdownComponent implements OnInit, OnDestroy{
+  @Input() value: string | null = null;
+  @Output() selectClass = new EventEmitter<{ classId: string | undefined; }>();
 
-  @Output() selectionChange = new EventEmitter<string>();
+  status: SystemClassesStatus = {
+    loading: true,
+    systemClasses: [],
+    error: '',
+  };
 
-  classes: ClassListItem[] = [];
+  private _everyoneStatus: Subscription | null = null;
 
-  form: FormGroup;
-
-  loading = false;
-  error: string | null = null;
-
-  constructor(
-    private fb: FormBuilder,
-    private classService: ClassService
-  ) {
-    this.form = this.fb.group({
-      classId: [ this.initialValue, Validators.required ]
-    });
+  constructor(private readonly _classService: ClassService) {}
+  ngOnDestroy(): void {
+    this._everyoneStatus?.unsubscribe();
   }
 
-  ngOnInit() {
-    this.loadClasses();
-
-    this.form.get('classId')!.valueChanges.subscribe((val: string) => {
-      this.selectionChange.emit(val);
-    });
+  ngOnInit(): void {
+    this._classService.getAllClasses()
+        .subscribe({
+          next: (systemClasses) => {
+            this.status = {
+              systemClasses: systemClasses.map((classObj) => ({
+                value: classObj.classInfo.id,
+                tag: classObj.name,
+              })),
+            };
+          },
+          error: (error) => {
+            this.status = { systemClasses: [], error: 'No available classes.' };
+          }
+        });
   }
 
-  private loadClasses() {
-    this.loading = true;
-    this.error = null;
-
-    this.classService.getAllClasses().subscribe({
-      next: (list: ClassListItem[]) => {
-        this.classes = list;
-        this.loading = false;
-        if (this.initialValue) {
-          this.form.get('classId')!.setValue(this.initialValue);
-        }
-      },
-      error: err => {
-        this.loading = false;
-        this.error = err.message || 'Could not load classes.';
-      }
-    });
+  onSelectClass(classId: string) {
+    const classObj = this.status.systemClasses.find(c => c.value === classId);
+    if (classObj) {
+      this.selectClass.emit({
+        classId: classObj.value,
+      });
+    }
   }
 }

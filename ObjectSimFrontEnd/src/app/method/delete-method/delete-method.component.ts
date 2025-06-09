@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { MethodDropdownComponent } from '../../../business-components/method/dropdown/method-dropdown.component';
 import { MethodService } from '../../../backend/services/method/method.service';
 
 @Component({
   selector: 'app-delete-method',
-  standalone: true,
-  imports: [ CommonModule, MethodDropdownComponent ],
   templateUrl: './delete-method.component.html'
 })
 export class DeleteMethodComponent implements OnInit {

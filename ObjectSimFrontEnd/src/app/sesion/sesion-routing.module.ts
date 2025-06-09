@@ -1,9 +1,9 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CreateClassComponent } from './create-class/create-class.component';
+import { KeyComponent } from './insertKey/key.component';
 
 const routes: Routes = [
-    { path: 'create', component: CreateClassComponent },
+    { path: 'key', component: KeyComponent },
 ];
 
 @NgModule({
@@ -11,4 +11,4 @@ const routes: Routes = [
     exports: [RouterModule]
 })
 
-export class ClassRoutingModule { }
+export class SesionRoutingModule { }
