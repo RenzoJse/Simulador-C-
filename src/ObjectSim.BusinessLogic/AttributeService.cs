@@ -29,8 +29,8 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         {
             Id = args.Id,
             Name = args.Name,
-            DataType = dataType,
-            ClassId = args.ClassId,
+            DataTypeId = args.DataTypeIdId,
+            ClassId = dataType.Id,
             Visibility = visibility
         };
     }
@@ -174,7 +174,8 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
         attribute.Name = args.Name;
         attribute.ClassId = args.ClassId;
         attribute.Visibility = ParseVisibility(args.Visibility);
-        attribute.DataType = dataTypeService.GetById(args.DataTypeIdId);
+        var dataType = dataTypeService.GetById(args.DataTypeIdId);
+        attribute.DataTypeId = dataType.Id;
     }
 
     #endregion
