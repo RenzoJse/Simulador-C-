@@ -25,19 +25,18 @@ export class MethodApiRepositoryService extends ApiRepository {
     }
 
     deleteMethod(id: string): Observable<any> {
-        const url = `/${id}`;
+        const url = `${id}`;
         return this.delete(url);
     }
-    
+
     getMethodById(methodId: string): Observable<MethodDtoModel> {
         var answer = this.get<MethodDtoModel>(methodId);
         return answer;
     }
-    
+
     addInvokeMethods(){
         //TODO
     }
-    
+
 }
-    
-        
+

@@ -25,9 +25,8 @@ export class ClassApiRepository extends ApiRepository {
     }
 
     deleteClass(id: string): Observable<any> {
-        const url = `/${id}`;
+        const url = `${id}`;
         return this.delete(url);
     }
 }
-    
-        
+

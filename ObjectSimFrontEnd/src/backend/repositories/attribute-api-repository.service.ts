@@ -25,7 +25,7 @@ export class AttributeApiRepository extends ApiRepository {
     }
 
     deleteAttribute(id: string): Observable<any> {
-        const url = `/${id}`;
+        const url = `${id}`;
         return this.delete(url);
     }
 
