@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ClassApiRepository } from '../../repositories/class-api-repository.service';
 import CreateClassModel from './models/create-class.model';
 import ClassListItem from './models/class-list-item';
+import UpdateClassModel from './models/update-class-model';
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +29,7 @@ export class ClassService {
         return this._classRepository.deleteClass(id);
     }
 
-    updateClass(id: string): Observable<any> {
-        return this._classRepository.updateClass(id);
+    updateClass(id: string, updateModel: UpdateClassModel): Observable<any> {
+        return this._classRepository.updateClass(id, updateModel);
     }
 }
