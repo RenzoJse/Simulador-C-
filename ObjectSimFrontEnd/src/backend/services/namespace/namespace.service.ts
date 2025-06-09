@@ -18,4 +18,8 @@ export class NamespaceService {
   return this._namespaceRepository.getAllNamespaces();
   }
 
+  /*public getDescendants(namespaceId: string): Observable<NamespaceDto[]> {
+    return this._namespaceRepository.get<NamespaceDto[]>(`${this.apiUrl}/${namespaceId}/descendants`);
+  }*/ //FIX THIS
+
 }
