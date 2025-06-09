@@ -13,7 +13,6 @@ import { FormComponent } from '../../../components/form/form/form.component';
   templateUrl: './delete-class-form.component.html'
 })
 export class DeleteClassFormComponent {
-  @Input() classes: { id: string; name: string }[] = [];
   @Input() loading = false;
   @Input() error: string | null = null;
   @Output() atSubmit = new EventEmitter<string>();
@@ -28,14 +27,13 @@ export class DeleteClassFormComponent {
 
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
     this.deleteClassform = this.fb.group({
-      classId: ['', Validators.required]
+      classId: ['']
     });
   }
 
   public onSubmit() {
     if (this.deleteClassform.valid) {
-      const {ReferenceId, InstanceId, methodId} = this.deleteClassform.value;
-      this.atSubmit.emit(this.deleteClassform.value as string);
+      this.atSubmit.emit(this.classID);
     } else {
       this.markAsTouched();
       console.log('Invalid form:', this.deleteClassform.errors);
@@ -50,7 +48,7 @@ export class DeleteClassFormComponent {
 
   updateClassId(event: { classId: string | undefined; }) {
     this.classID = event.classId;
-    this.deleteClassform.patchValue({ ReferenceId: event.classId });
+    this.deleteClassform.patchValue({ classID: event.classId });
     this.cdr.detectChanges();
   }
 }

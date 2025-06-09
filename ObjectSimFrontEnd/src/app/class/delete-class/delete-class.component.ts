@@ -16,11 +16,12 @@ export class DeleteClassComponent {
     constructor(
         @Inject(ClassService) private readonly _classService : ClassService
     ) {
+        console.log('DeleteClass inicializado');
     }
 
-    protected atDelete(classId: string) {
+    protected atSubmit(classId: string) {
         this.status = { loading: true };
-
+        console.log("Tying to delete class with ID:", classId);
         this._classService.deleteClass(classId).subscribe({
             next: (response) => {
                 this.status = null;
