@@ -12,8 +12,8 @@ using ObjectSim.DataAccess;
 namespace ObjectSim.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250609180130_ChangeAttributeReference")]
-    partial class ChangeAttributeReference
+    [Migration("20250609204404_AttributeDataTypeReference")]
+    partial class AttributeDataTypeReference
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -344,15 +344,10 @@ namespace ObjectSim.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("NamespaceId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NamespaceId");
 
                     b.HasIndex("ParentId");
 
@@ -469,11 +464,13 @@ namespace ObjectSim.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ObjectSim.Domain.DataType", null)
+                    b.HasOne("ObjectSim.Domain.DataType", "DataType")
                         .WithMany()
                         .HasForeignKey("DataTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("DataType");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Class", b =>
@@ -524,10 +521,6 @@ namespace ObjectSim.DataAccess.Migrations
                 {
                     b.HasOne("ObjectSim.Domain.Namespace", null)
                         .WithMany("Children")
-                        .HasForeignKey("NamespaceId");
-
-                    b.HasOne("ObjectSim.Domain.Namespace", null)
-                        .WithMany()
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

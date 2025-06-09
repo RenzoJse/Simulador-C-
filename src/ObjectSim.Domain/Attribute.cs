@@ -13,6 +13,7 @@ public class Attribute
     }
 
     public Guid DataTypeId { get; set; }
+    public DataType DataType { get; set; } = null!;
     public AttributeVisibility Visibility { get; set; }
     public Guid Id { get; set; }
     public Guid ClassId { get; set; }
