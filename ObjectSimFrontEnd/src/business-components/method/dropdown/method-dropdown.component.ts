@@ -47,7 +47,7 @@ export class MethodDropdownComponent implements OnInit {
 
   private loadMethods() {
     this.loading = true;
-    this.methodService.getMethods().subscribe({
+    this.methodService.getAllMethods().subscribe({
       next: (list: MethodListItem[]) => {
         this.methods = list;
         this.loading = false;

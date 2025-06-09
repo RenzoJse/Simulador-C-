@@ -1,92 +1,66 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgIf, NgFor, NgClass } from '@angular/common';
+import { NgIf } from '@angular/common';
 
 import { FormInputComponent } from '../../../components/form/form-input/form-input.component';
 import { FormButtonComponent } from '../../../components/form/form-button/form-button.component';
 import { FormComponent } from '../../../components/form/form/form.component';
 
-import CreateAttributeModel from '../../../backend/services/class/models/create-attribute.model';
-import { ClassService } from '../../../backend/services/class/class.service';
+import CreateAttributeModel from '../../../backend/services/attribute/models/create-attribute.model';
 
 @Component({
-  selector: 'app-create-attribute-form',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    FormInputComponent,
-    FormButtonComponent,
-    NgIf,
-    NgFor,
-    FormComponent,
-    NgClass
-  ],
-  templateUrl: './create-attribute-form.component.html'
+    selector: 'app-create-attribute-form',
+    standalone: true,
+    imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent],
+    templateUrl: './create-attribute-form.component.html'
 })
+
 export class CreateAttributeFormComponent {
-  @Input() tittle: string = '';
-  @Output() atSubmit = new EventEmitter<CreateAttributeModel>();
+    @Input() tittle : string = '';
 
-  createAttributeForm: FormGroup;
-  classes: { id: string; name: string }[] = [];
+    createAttributeForm: FormGroup;
+    @Output() atSubmit = new EventEmitter<CreateAttributeModel>();
 
-  createAttributeStatus: {
-    loading?: true;
-    error?: string;
-  } | null = null;
+    createAttributeStatus: {
+        loading?: true;
+        error?: string;
+    } | null = null;
 
-  Visibilities: { value: string; tag: string }[] = [
-    { value: 'Public', tag: 'Public' },
-    { value: 'Private', tag: 'Private' },
-    { value: 'Protected', tag: 'Protected' }
-  ];
+    Visibilities: { value: string; tag: string }[] = [
+        { value: 'Public', tag: 'Public' },
+        { value: 'Private', tag: 'Private' },
+        { value: 'Protected', tag: 'Protected' }
+    ];
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private classService: ClassService
-  ) {
-    this.createAttributeForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.maxLength(10)]],
-      dataTypeId: ['', Validators.required],
-      visibility: ['', Validators.required],
-      classId: ['', Validators.required]
-    });
-
-    this.loadClasses();
-  }
-
-  private loadClasses() {
-    this.classService.getAllClasses().subscribe({
-      next: (data) => {
-        this.classes = data;
-      },
-      error: () => {
-        this.classes = [];
-      }
-    });
-  }
-
-  public onSubmit() {
-    if (this.createAttributeForm.invalid) {
-      this.markAsTouched();
-      return;
+    constructor(private formBuilder: FormBuilder) {
+        this.createAttributeForm = this.formBuilder.group({
+            name: ['', [Validators.required, Validators.maxLength(10)]],
+            dataTypeID: ['', Validators.required],
+            visibility: ['', Validators.required]
+        });
     }
 
-    const formValue = this.createAttributeForm.value;
+    public onSubmit() {
+        console.log('Form attribute submitted:', this.createAttributeForm.value);
 
-    const newAttribute: CreateAttributeModel = {
-      name: formValue.name,
-      dataTypeId: formValue.dataTypeId,
-      visibility: formValue.visibility,
-      classId: formValue.classId
-    };
+        if(this.createAttributeForm.invalid) {
+            this.markAsTouched()
+            return;
+        }
 
-    this.atSubmit.emit(newAttribute);
-  }
+        var formValue = this.createAttributeForm.value;
+        var newAttribute: CreateAttributeModel = {
+            name: formValue.name,
+            dataTypeID: formValue.dataTypeID,
+            visibility: formValue.visibility
+        };
 
-  private markAsTouched() {
-    Object.values(this.createAttributeForm.controls).forEach(control => {
-      control.markAsTouched();
-    });
-  }
+        this.atSubmit.emit(newAttribute);
+    }
+
+    private markAsTouched() {
+        Object.values(this.createAttributeForm.controls).forEach(control => {
+            control.markAsTouched();
+        });
+    }
 }
