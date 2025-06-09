@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AttributeApiRepository } from '../../repositories/attribute-api-repository.service';
-import CreateAttributeModel from './model/create-attribute.model';
+import CreateAttributeModel from './models/create-attribute.model';
 
 @Injectable({
   providedIn: 'root'

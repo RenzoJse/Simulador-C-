@@ -3,8 +3,7 @@ import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { AttributeService } from "../../../backend/services/attribute/attribute.service";
-import AttributeDto from '../../../backend/services/attribute/model/attribute-dto.model';
-import CreateAttributeModel from '../../../backend/services/class/models/create-attribute.model';
+import CreateAttributeModel from '../../../backend/services/attribute/models/create-attribute.model';
 
 @Component({
   selector: 'app-create-attribute',
@@ -43,7 +42,7 @@ export class CreateAttributeComponent {
         } else {
           this.status = { error: error.message || 'Error creating attribute.' };
         }
-      }, 
+      },
     });
   }
 }

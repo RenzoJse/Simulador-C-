@@ -6,7 +6,7 @@ import { FormInputComponent } from '../../../components/form/form-input/form-inp
 import { FormButtonComponent } from '../../../components/form/form-button/form-button.component';
 import { FormComponent } from '../../../components/form/form/form.component';
 
-import CreateAttributeModel from '../../../backend/services/class/models/create-attribute.model';
+import CreateAttributeModel from '../../../backend/services/attribute/models/create-attribute.model';
 
 @Component({
     selector: 'app-create-attribute-form',
