@@ -20,6 +20,10 @@ export class ClassService {
         return this._classRepository.getAllClasses();
     }
 
+    getById(id: string): Observable<ClassListItem[]> {
+        return this._classRepository.getById(id); //falta implemtanr
+    }
+
     deleteClass(id: string): Observable<any> {
         return this._classRepository.deleteClass(id);
     }

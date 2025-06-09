@@ -24,6 +24,11 @@ export class ClassApiRepository extends ApiRepository {
         return this.get<ClassListItem[]>();
     }
 
+    getById(id: string): Observable<ClassListItem[]> {
+        const url = `${id}`;
+        return this.get<ClassListItem[]>(); //está mal, reutilice el getAll hay que ver como implementar el getbyid
+    }
+
     deleteClass(id: string): Observable<any> {
         const url = `${id}`;
         return this.delete(url);
