@@ -1,0 +1,20 @@
+<form [formGroup]="updateForm" (ngSubmit)="submit()">
+  <div class="mb-3">
+    <label for="name" class="form-label">Class Name</label>
+    <input id="name" class="form-control" formControlName="name" />
+  </div>
+
+  <div class="mb-3">
+    <label for="classType" class="form-label">Class Type</label>
+    <select id="classType" class="form-select" formControlName="classType">
+      <option *ngFor="let type of classTypes" [value]="type">{{ type }}</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="parent" class="form-label">Parent Class ID (optional)</label>
+    <input id="parent" class="form-control" formControlName="parent" />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Update Class</button>
+</form>
