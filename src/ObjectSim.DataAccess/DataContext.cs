@@ -120,10 +120,9 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<Attribute>(a =>
         {
             a.HasKey(a => a.Id);
-            a.Ignore(a => a.DataType);
             a.HasOne(a => a.DataType)
                 .WithMany()
-                .HasForeignKey("DataTypeIdId")
+                .HasForeignKey(a => a.DataTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 

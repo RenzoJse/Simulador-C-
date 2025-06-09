@@ -30,6 +30,9 @@ public class AttributeRepositoryTest
     {
         _context.Database.EnsureDeleted();
     }
+
+    #region GetAttribute
+
     [TestMethod]
     public void GetAttribute_WhenIdExists_ReturnsAttributeWithDataType()
     {
@@ -61,7 +64,7 @@ public class AttributeRepositoryTest
             DataType = valueType
         };
 
-        _context.Entry(attribute).Property("DataTypeIdId").CurrentValue = valueTypeId;
+        _context.Entry(attribute).Property("DataTypeId").CurrentValue = valueTypeId;
 
         _context.Set<Domain.Attribute>().Add(attribute);
         _context.SaveChanges();
@@ -73,6 +76,7 @@ public class AttributeRepositoryTest
         Assert.IsNotNull(result.DataType);
         Assert.AreEqual("intValue", result.DataType.Name);
     }
+
     [TestMethod]
     public void GetAttribute_WhenIdDoesNotExist_ShouldReturnNull()
     {
@@ -80,6 +84,7 @@ public class AttributeRepositoryTest
 
         Assert.IsNull(result);
     }
+
     [TestMethod]
     public void AddAttribute_ShouldPersistInDatabase()
     {
@@ -102,7 +107,7 @@ public class AttributeRepositoryTest
             DataType = valueType
         };
 
-        _context.Entry(attribute).Property("DataTypeIdId").CurrentValue = valueTypeId;
+        _context.Entry(attribute).Property("DataTypeId").CurrentValue = valueTypeId;
 
         _attributeRepository.Add(attribute);
 
@@ -111,7 +116,5 @@ public class AttributeRepositoryTest
         Assert.AreEqual("NewAttribute", result.Name);
     }
 
-
-
-
+    #endregion
 }

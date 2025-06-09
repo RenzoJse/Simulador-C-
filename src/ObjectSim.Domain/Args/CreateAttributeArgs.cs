@@ -6,7 +6,7 @@ public class CreateAttributeArgs(
     Guid classId,
     string name)
 {
-    public Guid DataTypeIdId { get; set; } = dataTypeId;
+    public Guid DataTypeId { get; set; } = dataTypeId;
     public string Visibility { get; set; } = visibility;
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid ClassId { get; set; } = classId;

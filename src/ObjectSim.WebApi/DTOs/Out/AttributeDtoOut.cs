@@ -4,8 +4,7 @@ public class AttributeDtoOut
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
-    public string DataTypeName { get; set; } = null!;
-    public string DataTypeKind { get; set; } = null!;
+    public Guid DataTypeId { get; set; }
     public string Visibility { get; set; } = null!;
     public Guid ClassId { get; set; }
     public static AttributeDtoOut ToInfo(Domain.Attribute attribute)
@@ -15,8 +14,7 @@ public class AttributeDtoOut
             Id = attribute.Id,
             Name = attribute.Name!,
             Visibility = attribute.Visibility.ToString(),
-            DataTypeName = attribute.DataType.Name,
-            DataTypeKind = attribute.DataType.Type,
+            DataTypeId = attribute.DataTypeId,
             ClassId = attribute.ClassId
         };
     }
