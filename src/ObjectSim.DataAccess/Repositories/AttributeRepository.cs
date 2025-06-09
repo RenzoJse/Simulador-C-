@@ -7,7 +7,7 @@ public class AttributeRepository(DbContext context) : Repository<Domain.Attribut
     public override Domain.Attribute? Get(Func<Domain.Attribute, bool> filter)
     {
         return _attributes
-            .Include(a => a.DataTypeId)
+            .Include(a => a.DataType)
             .AsEnumerable()
             .FirstOrDefault(filter);
     }

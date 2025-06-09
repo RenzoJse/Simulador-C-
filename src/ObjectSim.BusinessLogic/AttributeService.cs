@@ -30,6 +30,7 @@ public class AttributeService(IRepository<Attribute> attributeRepository, IRepos
             Id = args.Id,
             Name = args.Name,
             DataTypeId = args.DataTypeIdId,
+            DataType = dataType,
             ClassId = dataType.Id,
             Visibility = visibility
         };

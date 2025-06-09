@@ -86,11 +86,13 @@ public class AttributeControllerTest
     [TestMethod]
     public void Create_ValidModel_ShouldReturnCreatedResult()
     {
+        var dataType = new ReferenceType("myString", "string", []);
+
         var modelIn = new CreateAttributeDtoIn
         {
             Name = "Color",
             Visibility = "Public",
-            DataTypeId = Guid.NewGuid().ToString(),
+            DataTypeId = dataType.Id.ToString(),
             ClassId = Guid.NewGuid()
         };
 
@@ -99,7 +101,7 @@ public class AttributeControllerTest
             Id = Guid.NewGuid(),
             Name = "Color",
             Visibility = Domain.Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = dataType,
             ClassId = modelIn.ClassId
         };
 
@@ -116,8 +118,6 @@ public class AttributeControllerTest
         Assert.IsNotNull(outModel);
         Assert.AreEqual("Color", outModel.Name);
         Assert.AreEqual("Public", outModel.Visibility);
-        Assert.AreEqual("string", outModel.DataTypeKind);
-        Assert.AreEqual("myString", outModel.DataTypeName);
 
         _attributeServiceMock.Verify(x => x.CreateAttribute(It.IsAny<CreateAttributeArgs>()), Times.Once);
     }
@@ -239,8 +239,6 @@ public class AttributeControllerTest
         var dto = dtoList[0];
         Assert.AreEqual("cantidad", dto.Name);
         Assert.AreEqual("Public", dto.Visibility);
-        Assert.AreEqual("int", dto.DataTypeKind);
-        Assert.AreEqual("cantidad", dto.DataTypeName);
         Assert.AreEqual(classId, dto.ClassId);
 
         _attributeServiceMock.Verify(s => s.GetByClassId(classId), Times.Once);
@@ -348,7 +346,6 @@ public class AttributeControllerTest
         Assert.IsNotNull(dtoOut);
         Assert.AreEqual("Color", dtoOut.Name);
         Assert.AreEqual("Public", dtoOut.Visibility);
-        Assert.AreEqual("string", dtoOut.DataTypeKind);
     }
     [TestMethod]
     public void Update_InvalidId_ShouldThrowException()

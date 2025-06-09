@@ -23,7 +23,7 @@ public class Attribute
         ValidateId(Id);
         ValidateId(ClassId);
         ValidateName(Name);
-        ValidateDataType(DataTypeId);
+        ValidateDataType(DataType);
         ValidateVisibility(Visibility);
     }
     private static void ValidateId(Guid id)
@@ -50,7 +50,7 @@ public class Attribute
         }
 
     }
-    public static void ValidateDataType(Guid DataType)
+    public static void ValidateDataType(DataType DataType)
     {
         if(DataType == null)
         {
