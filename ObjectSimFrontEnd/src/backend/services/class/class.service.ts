@@ -23,4 +23,8 @@ export class ClassService {
     deleteClass(id: string): Observable<any> {
         return this._classRepository.deleteClass(id);
     }
+
+    updateClass(id: string): Observable<any> {
+        return this._classRepository.updateClass(id);
+    }
 }
