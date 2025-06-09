@@ -45,4 +45,16 @@ public class NamespaceRepositoryTest
         Assert.IsNotNull(fromDb);
         Assert.AreEqual("TestNamespace", fromDb!.Name);
     }
+    [TestMethod]
+    public void GetAll_ShouldReturnAllNamespaces()
+    {
+        _context.Namespaces.AddRange(
+            new Namespace { Name = "One" },
+            new Namespace { Name = "Two" });
+        _context.SaveChanges();
+
+        var result = _repository.GetAll();
+
+        Assert.AreEqual(2, result.Count);
+    }
 }
