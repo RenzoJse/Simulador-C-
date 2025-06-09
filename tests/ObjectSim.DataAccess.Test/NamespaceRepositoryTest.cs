@@ -57,4 +57,34 @@ public class NamespaceRepositoryTest
 
         Assert.AreEqual(2, result.Count);
     }
+    [TestMethod]
+    public void GetByIdWithChildren_ShouldReturnNamespaceWithNestedChildren()
+    {
+        var root = new Namespace { Name = "Root" };
+        var child1 = new Namespace { Name = "Child1", ParentId = root.Id };
+        var child2 = new Namespace { Name = "Child2", ParentId = child1.Id };
+
+        root.Children.Add(child1);
+        child1.Children.Add(child2);
+
+        _context.Namespaces.AddRange(root, child1, child2);
+        _context.SaveChanges();
+
+        var result = _repository.GetByIdWithChildren(root.Id);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Root", result!.Name);
+        Assert.AreEqual(1, result.Children.Count);
+        Assert.AreEqual("Child1", result.Children[0].Name);
+        Assert.AreEqual(1, result.Children[0].Children.Count);
+        Assert.AreEqual("Child2", result.Children[0].Children[0].Name);
+    }
+
+    [TestMethod]
+    public void GetByIdWithChildren_InvalidId_ReturnsNull()
+    {
+        var result = _repository.GetByIdWithChildren(Guid.NewGuid());
+
+        Assert.IsNull(result);
+    }
 }
