@@ -90,9 +90,9 @@ public class AttributeServiceTest
     [TestMethod]
     public void CreateAttribute_NotValidDataType_ThrowsException()
     {
-        SetupDataTypeServiceGetById(_testArgsAttribute.DataTypeIdId, null);
+        SetupDataTypeServiceGetById(_testArgsAttribute.DataTypeId, null);
         _dataTypeServiceMock
-            .Setup(x => x.GetById(_testArgsAttribute.DataTypeIdId))
+            .Setup(x => x.GetById(_testArgsAttribute.DataTypeId))
             .Throws(new ArgumentException("Invalid data type"));
 
         Action act = () => _attributeServiceTest!.CreateAttribute(_testArgsAttribute);
@@ -127,10 +127,10 @@ public class AttributeServiceTest
         _testArgsAttribute.Id = _testAttribute.Id;
         _testArgsAttribute.Name = _testAttribute.Name!;
         _testArgsAttribute.Visibility = _testAttribute.Visibility.ToString();
-        _testArgsAttribute.DataTypeIdId = Guid.NewGuid();
+        _testArgsAttribute.DataTypeId = Guid.NewGuid();
 
         SetupClassRepositoryGet(new Class { Id = _testAttribute.ClassId, Attributes = [] });
-        SetupDataTypeServiceGetById(_testArgsAttribute.DataTypeIdId, _testDataType);
+        SetupDataTypeServiceGetById(_testArgsAttribute.DataTypeId, _testDataType);
         _attributeRepositoryMock!
             .Setup(repo => repo.Add(It.IsAny<Attribute>()))
             .Returns((Attribute attr) => attr);
@@ -299,7 +299,7 @@ public class AttributeServiceTest
             .Returns((Attribute attr) => attr);
 
         SetupClassRepositoryGet(new Class { Id = args.ClassId });
-        SetupDataTypeServiceGetById(args.DataTypeIdId, updatedAttribute.DataType);
+        SetupDataTypeServiceGetById(args.DataTypeId, updatedAttribute.DataType);
 
         var result = _attributeServiceTest!.Update(updatedAttribute.Id, args);
 
