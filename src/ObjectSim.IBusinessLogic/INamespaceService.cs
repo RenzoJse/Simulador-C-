@@ -6,4 +6,5 @@ public interface INamespaceService
 {
     Namespace Create(CreateNamespaceArgs args);
     List<Namespace> GetAll();
+    IEnumerable<Namespace> GetAllDescendants(Guid id);
 }

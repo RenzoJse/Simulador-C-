@@ -8,12 +8,12 @@ namespace ObjectSim.BusinessLogic.Test;
 [TestClass]
 public class NamespaceServiceTest
 {
-    private Mock<IRepository<Namespace>> _namespaceRepositoryMock = null!;
+    private Mock<INamespaceRepository> _namespaceRepositoryMock = null!;
     private NamespaceService _namespaceService = null!;
     [TestInitialize]
     public void Setup()
     {
-        _namespaceRepositoryMock = new Mock<IRepository<Namespace>>();
+        _namespaceRepositoryMock = new Mock<INamespaceRepository>();
         _namespaceService = new NamespaceService(_namespaceRepositoryMock.Object);
     }
     [TestMethod]
@@ -85,11 +85,40 @@ public class NamespaceServiceTest
         };
 
         _namespaceRepositoryMock
-            .Setup(r => r.GetAll(It.IsAny<Func<Namespace, bool>>()))
+            .Setup(r => r.GetAll())
             .Returns(namespaces);
 
         var result = _namespaceService.GetAll();
 
         CollectionAssert.AreEqual(namespaces, result);
+    }
+    [TestMethod]
+    public void GetAllDescendants_WithValidId_ReturnsDescendants()
+    {
+        var child = new Namespace { Id = Guid.NewGuid(), Name = "Child" };
+        var parent = new Namespace
+        {
+            Id = Guid.NewGuid(),
+            Name = "Parent",
+            Children = [child]
+        };
+
+        _namespaceRepositoryMock
+            .Setup(r => r.GetByIdWithChildren(parent.Id))
+            .Returns(parent);
+
+        var result = _namespaceService.GetAllDescendants(parent.Id);
+
+        CollectionAssert.Contains(result.ToList(), child);
+    }
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void GetAllDescendants_WithInvalidId_ThrowsArgumentException()
+    {
+        _namespaceRepositoryMock
+            .Setup(r => r.GetByIdWithChildren(It.IsAny<Guid>()))
+            .Returns((Namespace?)null);
+
+        _namespaceService.GetAllDescendants(Guid.NewGuid());
     }
 }
