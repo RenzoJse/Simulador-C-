@@ -230,15 +230,39 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     private void AddInvokeMethods(List<CreateInvokeMethodArgs> invokeMethodArgs, Method method)
     {
-        foreach(var invokeArg in invokeMethodArgs)
+        foreach (var invokeArg in invokeMethodArgs)
         {
-            var methodToInvoke = methodRepository.Get(m => m.Id == invokeArg.InvokeMethodId)
-                                 ?? throw new Exception($"Method to invoke with id {invokeArg.InvokeMethodId} not found");
-            method.CanAddInvokeMethod(methodToInvoke, GetClassById(method.ClassId), invokeArg.Reference);
-
-            invokeMethodService.CreateInvokeMethod(invokeArg, method);
+            var methodToInvoke = GetMethodToInvoke(invokeArg.InvokeMethodId);
+            ValidateCanAddInvokeMethod(method, methodToInvoke, invokeArg.Reference);
+            ValidateInvokeMethodReachable(method, invokeArg.InvokeMethodId);
+            CreateInvokeMethod(invokeArg, method);
         }
     }
+
+    private Method GetMethodToInvoke(Guid invokeMethodId)
+    {
+        return methodRepository.Get(m => m.Id == invokeMethodId)
+               ?? throw new Exception($"Method to invoke with id {invokeMethodId} not found");
+    }
+
+    private void ValidateCanAddInvokeMethod(Method method, Method methodToInvoke, string reference)
+    {
+        method.CanAddInvokeMethod(methodToInvoke, GetClassById(method.ClassId), reference);
+    }
+
+    private void ValidateInvokeMethodReachable(Method method, Guid invokeMethodId)
+    {
+        if (method.Parameters.Any(param => param.Id != invokeMethodId) ||
+            method.LocalVariables.Any(localVar => localVar.Id != invokeMethodId))
+        {
+            throw new ArgumentException("The invoked method must be reachable from the current method.");
+        }
+    }
+
+    private void CreateInvokeMethod(CreateInvokeMethodArgs invokeArg, Method method)
+    {
+        invokeMethodService.CreateInvokeMethod(invokeArg, method);
+    }g
 
     #endregion
 

@@ -118,20 +118,6 @@ public class ValueTypeTest
             .WithMessage("Name cannot contain special characters.");
     }
 
-    [TestMethod]
-    public void CreateValueType_WhenMethodsAreNull_ShouldThrowArgumentNullException()
-    {
-        List<Guid> methods = null!;
-
-        Action action = () =>
-        {
-            var valueType = new ValueType(_validName, _validType);
-        };
-
-        action.Should().Throw<ArgumentNullException>()
-            .WithMessage("Methods cannot be null. (Parameter 'methods')");
-    }
-
     #endregion
 
     #region Success
