@@ -8,12 +8,7 @@ namespace ObjectSim.BusinessLogic.Test;
 [TestClass]
 public class InvokeMethodServiceTest
 {
-    private readonly Method _testMethod = new Method
-    {
-        Id = Guid.NewGuid(),
-        Name = "TestMethod",
-        MethodsInvoke = []
-    };
+    private readonly Method _testMethod = new() { Id = Guid.NewGuid(), Name = "TestMethod", MethodsInvoke = [] };
 
     private Mock<IRepository<InvokeMethod>>? _invokeMethodRepositoryMock;
     private InvokeMethodService? _invokeMethodServiceTest;
@@ -57,7 +52,7 @@ public class InvokeMethodServiceTest
         _invokeMethodServiceTest!.CreateInvokeMethod(null!, _testMethod);
     }
 
-#endregion
+    #endregion
 
     #region Success
 
@@ -69,7 +64,7 @@ public class InvokeMethodServiceTest
         _invokeMethodRepositoryMock!.Setup(repo => repo.Add(It.IsAny<InvokeMethod>()))
             .Returns((InvokeMethod invokeMethod) => invokeMethod);
 
-        var invokeMethod = _invokeMethodServiceTest!.CreateInvokeMethod(invokeMethodArgs, _testMethod);
+        InvokeMethod invokeMethod = _invokeMethodServiceTest!.CreateInvokeMethod(invokeMethodArgs, _testMethod);
 
         Assert.IsNotNull(invokeMethod);
         Assert.AreEqual(invokeMethodArgs.InvokeMethodId, invokeMethod.InvokeMethodId);
