@@ -8,13 +8,12 @@ public class AttributeTest
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqual()
     {
-        var expectedType = new ValueType("myVariable", "int", []);
+        var expectedType = new ValueType("myVariable", "int");
         var attribute = new Attribute { DataType = expectedType };
 
         attribute.DataType.Should().Be(expectedType);
         attribute.DataType.Name.Should().Be("myVariable");
         attribute.DataType.Type.Should().Be("int");
-        attribute.DataType.MethodIds.Should().BeEmpty();
     }
 
     [TestMethod]
@@ -38,7 +37,7 @@ public class AttributeTest
     [TestMethod]
     public void ValidateDataType_ShouldPass_WhenValidValueType()
     {
-        var valid = new ValueType("myVariable", "int", []);
+        var valid = new ValueType("myVariable", "int");
 
         Attribute.ValidateDataType(valid);
     }
@@ -46,7 +45,7 @@ public class AttributeTest
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqualReference()
     {
-        var expectedType = new ReferenceType("myString", "string", []);
+        var expectedType = new ReferenceType("myString", "string");
         var attribute = new Attribute { DataType = expectedType };
 
         attribute.DataType = expectedType;
@@ -54,7 +53,6 @@ public class AttributeTest
         attribute.DataType.Should().Be(expectedType);
         attribute.DataType.Name.Should().NotBeNullOrEmpty();
         attribute.DataType.Type.Should().Be("string");
-        attribute.DataType.MethodIds.Should().BeEmpty();
         attribute.DataType.Name.Should().Be("myString");
     }
 
@@ -88,7 +86,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
-            DataType = new ValueType("myVariable", "int", []),
+            DataType = new ValueType("myVariable", "int"),
             ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public
         };
@@ -107,7 +105,7 @@ public class AttributeTest
             Name = "Age",
             ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
-            DataType = new ValueType("myVariable", "int", [])
+            DataType = new ValueType("myVariable", "int")
         };
 
         Action action = attr.Validate;
@@ -123,7 +121,7 @@ public class AttributeTest
             Name = "Age",
             ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("myString", "string", [])
+            DataType = new ReferenceType("myString", "string")
         };
 
         Action action = attr.Validate;
@@ -152,7 +150,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Name",
             ClassId = Guid.NewGuid(),
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType("myString", "string"),
             Visibility = Attribute.AttributeVisibility.Private
         };
 
@@ -169,7 +167,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Name",
             ClassId = Guid.NewGuid(),
-            DataType = new ValueType("myVariable", "int", []),
+            DataType = new ValueType("myVariable", "int"),
             Visibility = Attribute.AttributeVisibility.Private
         };
 
@@ -185,7 +183,7 @@ public class AttributeTest
         {
             Id = Guid.Empty,
             Name = "ValidAttribute",
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType("myString", "string"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -202,7 +200,7 @@ public class AttributeTest
         {
             Id = Guid.Empty,
             Name = "ValidAttribute",
-            DataType = new ValueType("myVariable", "int", []),
+            DataType = new ValueType("myVariable", "int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -220,7 +218,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = null,
             ClassId = Guid.NewGuid(),
-            DataType = new ValueType("myVariable", "int", []),
+            DataType = new ValueType("myVariable", "int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -238,7 +236,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = null,
             ClassId = Guid.NewGuid(),
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType("myString", "string"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -256,7 +254,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "   ",
             ClassId = Guid.NewGuid(),
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType("myString", "string"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -274,7 +272,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "   ",
             ClassId = Guid.NewGuid(),
-            DataType = new ValueType("myVariable", "int", []),
+            DataType = new ValueType("myVariable", "int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -292,7 +290,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = new string('a', 101),
             ClassId = Guid.NewGuid(),
-            DataType = new ValueType("myVariable", "int", []),
+            DataType = new ValueType("myVariable", "int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -310,7 +308,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "aaa",
             ClassId = Guid.NewGuid(),
-            DataType = new ValueType("myVariable", "int", []),
+            DataType = new ValueType("myVariable", "int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -327,7 +325,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Test",
             ClassId = Guid.NewGuid(),
-            DataType = new ValueType("myVariable", "int", []),
+            DataType = new ValueType("myVariable", "int"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -344,7 +342,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Test",
             ClassId = Guid.NewGuid(),
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType("myString", "string"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 
@@ -358,7 +356,7 @@ public class AttributeTest
     {
         Action act = () =>
         {
-            var valueType = new ValueType("myVariable", "false", []);
+            var valueType = new ValueType("myVariable", "false");
         };
 
         act.Should().Throw<ArgumentException>()
@@ -373,7 +371,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Test",
             ClassId = Guid.NewGuid(),
-            DataType = new ValueType("myVariable", "int", []),
+            DataType = new ValueType("myVariable", "int"),
             Visibility = (Attribute.AttributeVisibility)999
         };
 
@@ -391,7 +389,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Test",
             ClassId = Guid.NewGuid(),
-            DataType = new ValueType("myVariable", "int", []),
+            DataType = new ValueType("myVariable", "int"),
             Visibility = Attribute.AttributeVisibility.Internal
         };
 
@@ -408,7 +406,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "Test",
             ClassId = Guid.NewGuid(),
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType("myString", "string"),
             Visibility = Attribute.AttributeVisibility.Internal
         };
 
@@ -425,7 +423,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             Name = "1Test1",
             ClassId = Guid.NewGuid(),
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType("myString", "string"),
             Visibility = Attribute.AttributeVisibility.Internal
         };
         Action act = attribute.Validate;
@@ -443,7 +441,7 @@ public class AttributeTest
         {
             Id = Guid.NewGuid(),
             Name = "TestAttribute",
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType("myString", "string"),
             Visibility = Attribute.AttributeVisibility.Public,
             ClassId = classId
         };
@@ -458,7 +456,7 @@ public class AttributeTest
             Id = Guid.NewGuid(),
             ClassId = Guid.Empty,
             Name = "ValidName",
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType("myString", "string"),
             Visibility = Attribute.AttributeVisibility.Public
         };
 

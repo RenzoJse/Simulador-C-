@@ -40,7 +40,7 @@ public class ClassRepositoryTest
     public void GetClass_WhenIdExists_ReturnsClassWithMethodsAndAttributes()
     {
         var classId = Guid.NewGuid();
-        var valueType = new ValueType("myVariable", "int", []);
+        var valueType = new ValueType("myVariable", "int");
         _context.Set<ValueType>().Add(valueType);
         _context.SaveChanges();
 

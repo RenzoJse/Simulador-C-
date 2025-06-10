@@ -5,8 +5,8 @@ namespace ObjectSim.Domain.Test;
 [TestClass]
 public class MethodTest
 {
-    private readonly DataType _methodType = new ValueType("methodType", "int", []);
-    private readonly DataType _methodReferenceType = new ReferenceType("methodReferenceType", "object", []);
+    private readonly DataType _methodType = new ValueType("methodType", "int");
+    private readonly DataType _methodReferenceType = new ReferenceType("methodReferenceType", "object");
 
     private readonly Class? _testClass = new Class
     {
@@ -221,7 +221,7 @@ public class MethodTest
     public void Parameters_AddParameter_ShouldContainParameter()
     {
         var method = new Method();
-        var param = new ValueType("variable", "int", []);
+        var param = new ValueType("variable", "int");
         method.Parameters.Add(param);
         method.Parameters.Should().Contain(param);
     }
@@ -230,7 +230,7 @@ public class MethodTest
     public void LocalVariables_AddLocalVariable_ShouldContainLocalVariable()
     {
         var method = new Method();
-        var localVar = new ValueType("variable", "int", []);
+        var localVar = new ValueType("variable", "int");
         method.LocalVariables.Add(localVar);
         method.LocalVariables.Should().Contain(localVar);
     }
@@ -332,7 +332,7 @@ public class MethodTest
         var attribute = new Attribute
         {
             Id = Guid.NewGuid(),
-            DataType = new ValueType("int", "int", []),
+            DataType = new ValueType("int", "int"),
         };
         _testClass!.Attributes = [attribute];
 
@@ -360,7 +360,7 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenIsTryingToUseMethodNotInLocalVariables_ThrowsException()
     {
-        var localVariable = new ValueType("int", "int", []);
+        var localVariable = new ValueType("int", "int");
 
         OtherMethod!.LocalVariables = [localVariable];
 
@@ -373,7 +373,7 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenIsTryingToUseMethodNotInParameters_ThrowsException()
     {
-        var parameter = new ValueType("int", "int", []);
+        var parameter = new ValueType("int", "int");
 
         OtherMethod!.Parameters = [parameter];
 
@@ -406,31 +406,9 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void AddInvokeMethod_WhenMethodIsInAttributeDataType_AddsMethod()
-    {
-        var dataType = new ValueType("int", "int", [])
-        {
-            MethodIds = [OtherMethod!.Id]
-        };
-
-        var attribute = new Attribute
-        {
-            Id = Guid.NewGuid(),
-            DataType = dataType,
-            Name = "test"
-        };
-
-        _testClass!.Attributes = [attribute];
-
-        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass, "test");
-        _testMethod.MethodsInvoke.Add(_testInvokeMethod);
-        _testMethod.MethodsInvoke.Should().Contain(_testInvokeMethod);
-    }
-
-    [TestMethod]
     public void AddInvokeMethod_WhenMethodIsInLocalVariable_AddsMethod()
     {
-        var localVariable = new ValueType("test", "int", [OtherMethod!.Id]);
+        var localVariable = new ValueType("test", "int");
 
         OtherMethod!.LocalVariables = [localVariable];
 

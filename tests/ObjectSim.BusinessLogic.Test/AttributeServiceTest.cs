@@ -18,7 +18,7 @@ public class AttributeServiceTest
     private Mock<IDataTypeService> _dataTypeServiceMock = null!;
     private AttributeService? _attributeServiceTest;
 
-    private readonly DataType? _testDataType = new ValueType("myVariable", "int", []);
+    private readonly DataType? _testDataType = new ValueType("myVariable", "int");
     private static readonly Guid TestAttributeId = Guid.NewGuid();
 
     private readonly CreateAttributeArgs _testArgsAttribute = new(
@@ -32,7 +32,7 @@ public class AttributeServiceTest
     {
         Id = TestAttributeId,
         Name = "Test",
-        DataType = new ValueType("myVariable", "int", []),
+        DataType = new ValueType("myVariable", "int"),
         ClassId = Guid.NewGuid(),
         Visibility = Attribute.AttributeVisibility.Public
     };
@@ -161,7 +161,7 @@ public class AttributeServiceTest
                 Id = Guid.NewGuid(),
                 Name = "Name",
                 ClassId = Guid.NewGuid(),
-                DataType = new ValueType("myVariable", "int", []),
+                DataType = new ValueType("myVariable", "int"),
                 Visibility = Attribute.AttributeVisibility.Private
             },
             new()
@@ -169,7 +169,7 @@ public class AttributeServiceTest
                 Id = Guid.NewGuid(),
                 Name = "Name2",
                 ClassId = Guid.NewGuid(),
-                DataType = new ValueType("myVariable", "int", []),
+                DataType = new ValueType("myVariable", "int"),
                 Visibility = Attribute.AttributeVisibility.Private
             }
         };
@@ -345,7 +345,7 @@ public class AttributeServiceTest
             Name = "Attr",
             ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
-            DataType = new ValueType("Attr", "int", [])
+            DataType = new ValueType("Attr", "int")
         };
 
         var args = new CreateAttributeArgs(

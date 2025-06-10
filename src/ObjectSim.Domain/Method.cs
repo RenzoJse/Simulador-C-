@@ -127,6 +127,7 @@ public class Method
         var localVariables = method.LocalVariables;
         return localVariables.All(localVariable => localVariable.Name != reference) && localVariables.All(localVariable => !localVariable.MethodIds.Contains(method.Id));
     }
+
     private static bool MethodIsNotInAttributes(Class classObj, string reference)
     {
         return classObj.Attributes!.Any(attribute => attribute.Name != reference);

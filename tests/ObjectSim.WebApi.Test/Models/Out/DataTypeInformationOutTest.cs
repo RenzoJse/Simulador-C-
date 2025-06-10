@@ -10,7 +10,7 @@ public class DataTypeInformationDtoOutTest
     [TestMethod]
     public void DataTypeToInfo_WithArguments_MapsPropertiesCorrectly()
     {
-        var domainDataType = new ValueType("TestName", "int", []);
+        var domainDataType = new ValueType("TestName", "int");
 
         var result = DataTypeInformationDtoOut.ToInfo(domainDataType);
 

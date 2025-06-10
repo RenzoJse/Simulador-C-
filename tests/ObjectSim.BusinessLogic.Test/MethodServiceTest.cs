@@ -21,9 +21,9 @@ public class MethodServiceTest
     private static readonly Guid ClassId = Guid.NewGuid();
     private static readonly Guid MethodId = Guid.NewGuid();
 
-    private static readonly ReferenceType TestLocalVariable = new("TestLocalVariable", "string", []);
+    private static readonly ReferenceType TestLocalVariable = new("TestLocalVariable", "string");
 
-    private static readonly ValueType TestParameter = new("TestParameter", "int", []);
+    private static readonly ValueType TestParameter = new("TestParameter", "int");
 
     private readonly CreateMethodArgs _testCreateMethodArgs = new(
         "TestMethod",
@@ -111,7 +111,7 @@ public class MethodServiceTest
             .Returns(classObj);
 
         _dataTypeServiceMock!.Setup(service => service.GetById(It.IsAny<Guid>()))
-            .Returns(new ValueType("MethodType", "int", []));
+            .Returns(new ValueType("MethodType", "int"));
 
         _methodRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Method>()))
             .Returns((Method m) => m);
@@ -321,8 +321,8 @@ public class MethodServiceTest
     [TestMethod]
     public void AddParameter_WhenDuplicate_ShouldThrow()
     {
-        var existing = new ValueType("variable", "bool", []);
-        var param = new ValueType("variable", "bool", []);
+        var existing = new ValueType("variable", "bool");
+        var param = new ValueType("variable", "bool");
 
         _testMethod!.Parameters = [existing];
 
@@ -377,8 +377,8 @@ public class MethodServiceTest
     [TestMethod]
     public void AddLocalVariable_WhenDuplicateName_ShouldThrow()
     {
-        var existing = new ValueType("variable", "bool", []);
-        var newVar = new ValueType("variable", "bool", []);
+        var existing = new ValueType("variable", "bool");
+        var newVar = new ValueType("variable", "bool");
 
         _testMethod!.LocalVariables = [existing];
 

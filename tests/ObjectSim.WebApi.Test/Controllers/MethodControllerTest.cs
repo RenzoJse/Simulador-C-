@@ -16,13 +16,13 @@ public class MethodControllerTest
     private Mock<IMethodService> _methodServiceMock = null!;
     private MethodController _methodController = null!;
 
-    private static readonly DataType TestLocalVariable = new ReferenceType("TestLocalVariable", "string", []);
+    private static readonly DataType TestLocalVariable = new ReferenceType("TestLocalVariable", "string");
 
-    private static readonly DataType TestParameter = new ReferenceType("TestParameter", "string", []);
+    private static readonly DataType TestParameter = new ReferenceType("TestParameter", "string");
 
     private static readonly InvokeMethod TestInvokeMethod = new InvokeMethod(Guid.NewGuid(), Guid.NewGuid(), "this");
 
-    private static readonly ReferenceType TestReferenceType = new ReferenceType("TestReferenceType", "string", []);
+    private static readonly ReferenceType TestReferenceType = new ReferenceType("TestReferenceType", "string");
 
     private readonly Method _testMethod = new Method
     {

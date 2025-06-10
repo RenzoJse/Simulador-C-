@@ -86,7 +86,7 @@ public class AttributeControllerTest
     [TestMethod]
     public void Create_ValidModel_ShouldReturnCreatedResult()
     {
-        var dataType = new ReferenceType("myString", "string", []);
+        var dataType = new ReferenceType("myString", "string");
 
         var modelIn = new CreateAttributeDtoIn
         {
@@ -153,7 +153,7 @@ public class AttributeControllerTest
             Id = Guid.NewGuid(),
             Name = "TestAttr",
             Visibility = Domain.Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType("myString", "string"),
             ClassId = modelIn.ClassId
         };
 
@@ -178,7 +178,7 @@ public class AttributeControllerTest
             Name = "Test",
             ClassId = Guid.NewGuid(),
             Visibility = Domain.Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("myString", "string", [])
+            DataType = new ReferenceType("myString", "string")
         };
 
         _attributeServiceMock
@@ -218,7 +218,7 @@ public class AttributeControllerTest
             Name = "cantidad",
             Visibility = Domain.Attribute.AttributeVisibility.Public,
             ClassId = classId,
-            DataType = new Domain.ValueType("cantidad", "int", [])
+            DataType = new Domain.ValueType("cantidad", "int")
         };
 
         var attributes = new List<Domain.Attribute> { attribute };
@@ -328,7 +328,7 @@ public class AttributeControllerTest
             Id = id,
             Name = "Color",
             Visibility = Domain.Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType("myString", "string"),
             ClassId = dtoIn.ClassId
         };
 

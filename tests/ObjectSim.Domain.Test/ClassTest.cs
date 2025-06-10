@@ -6,7 +6,7 @@ namespace ObjectSim.Domain.Test;
 public class ClassTest
 {
     private Class? _testClass;
-    private static readonly DataType ValueType = new ValueType("int", "int", []);
+    private static readonly DataType ValueType = new ValueType("int", "int");
     private static readonly Guid TypeId = Guid.NewGuid();
     private readonly Method _existingMethod = new()
     {
@@ -453,8 +453,8 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_WithSameParamsInDifferentOrder_AddsMethod()
     {
-        var parameterOne = new ValueType("int", "int", []);
-        var parameterTwo = new ReferenceType("string", "string", []);
+        var parameterOne = new ValueType("int", "int");
+        var parameterTwo = new ReferenceType("string", "string");
 
         var method = new Method
         {
@@ -486,7 +486,7 @@ public class ClassTest
         {
             Name = "NewMethod",
             TypeId = TypeId,
-            Parameters = [new ValueType("int", "int", [])],
+            Parameters = [new ValueType("int", "int")],
             IsOverride = false
         };
 
@@ -502,7 +502,7 @@ public class ClassTest
         {
             Name = "NewMethod",
             TypeId = TypeId,
-            Parameters = [new ValueType("int", "int", []), new ReferenceType("string", "string", [])],
+            Parameters = [new ValueType("int", "int"), new ReferenceType("string", "string")],
             IsOverride = false
         };
 
@@ -512,7 +512,7 @@ public class ClassTest
         {
             Name = "NewMethod",
             TypeId = TypeId,
-            Parameters = [new ValueType("int", "int", [])],
+            Parameters = [new ValueType("int", "int")],
             IsOverride = false
         };
 

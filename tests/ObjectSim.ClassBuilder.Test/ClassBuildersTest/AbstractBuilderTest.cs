@@ -21,7 +21,7 @@ public class AbstractBuilderTest
         Name = "TestMethod",
     };
 
-    private static readonly DataType TestDataType = new ValueType("test", "int", []);
+    private static readonly DataType TestDataType = new ValueType("test", "int");
 
     private static readonly CreateAttributeArgs TestCreateAttributeArgs = new(
         Guid.NewGuid(),
