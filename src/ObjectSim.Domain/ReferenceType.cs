@@ -6,28 +6,22 @@ public class ReferenceType : DataType
         Id = Guid.NewGuid();
         Name = string.Empty;
         Type = string.Empty;
-        MethodIds = [];
     }
 
-    public ReferenceType(string? name, string type, List<Guid> methodsIds)
+    public ReferenceType(string? name, string type)
     {
-        Validate(name, methodsIds);
+        Validate(name);
 
         Id = Guid.NewGuid();
         Name = name ?? "";
         Type = type;
-        MethodIds = methodsIds;
     }
 
-    private static void Validate(string? name, List<Guid> methodIds)
+    private static void Validate(string? name)
     {
         if(string.IsNullOrWhiteSpace(name))
         {
             throw new ArgumentException("Name cannot be null or empty.");
-        }
-        if(methodIds == null)
-        {
-            throw new ArgumentNullException(nameof(methodIds), "Methods cannot be null.");
         }
     }
 }

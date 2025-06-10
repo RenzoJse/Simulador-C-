@@ -8,23 +8,20 @@ public class ValueType : DataType
     {
         Name = string.Empty;
         Type = string.Empty;
-        MethodIds = [];
     }
 
-    public ValueType(string name, string type, List<Guid> methods)
+    public ValueType(string name, string type)
     {
-        ValidateValueType(name, type, methods);
+        ValidateValueType(name, type);
         Name = name;
         Type = type;
-        MethodIds = methods;
     }
 
-    private static void ValidateValueType(string name, string type, List<Guid> methods)
+    private static void ValidateValueType(string name, string type)
     {
         ValidateNameNotNullOrEmpty(name);
         ValidateNameLength(name);
         ValidateNameCharacters(name);
-        ValidateMethodsNotNull(methods);
         ValidateTypeIsBuiltin(type);
     }
 
@@ -49,14 +46,6 @@ public class ValueType : DataType
         if(!name.All(char.IsLetter))
         {
             throw new ArgumentException("Name cannot contain special characters.");
-        }
-    }
-
-    private static void ValidateMethodsNotNull(List<Guid> methods)
-    {
-        if(methods == null)
-        {
-            throw new ArgumentNullException(nameof(methods), "Methods cannot be null.");
         }
     }
 

@@ -88,7 +88,6 @@ public class DataTypeServiceTest
         Assert.IsInstanceOfType(result, typeof(ValueType));
         Assert.AreEqual("MyInt", result.Name);
         Assert.AreEqual("int", result.Type);
-        Assert.AreEqual(0, result.MethodIds.Count);
     }
 
     [TestMethod]
@@ -128,12 +127,12 @@ public class DataTypeServiceTest
         Assert.IsInstanceOfType(result, typeof(ReferenceType));
         Assert.AreEqual("MyString", result.Name);
         Assert.AreEqual("string", result.Type);
-        Assert.AreEqual(0, result.MethodIds.Count);
     }
 
     #endregion
 
     #endregion
+
     [TestMethod]
     public void GetById_WhenValueTypeExists_ReturnsValueType()
     {
@@ -156,6 +155,7 @@ public class DataTypeServiceTest
 
         _dataTypeServiceTest.GetById(new Guid());
     }
+
     #region GetAll
 
     [TestMethod]
@@ -163,8 +163,8 @@ public class DataTypeServiceTest
     {
         var list = new List<DataType>
         {
-            new ValueType("int", "int", []),
-            new ReferenceType("str", "string", [])
+            new ValueType("int", "int"),
+            new ReferenceType("str", "string")
         };
 
         _dataTypeRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<DataType, bool>>()))

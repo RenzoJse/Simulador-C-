@@ -176,7 +176,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
         modelBuilder.Entity<ValueType>().HasData(new ValueType
         {
-            Id = voidTypeId, Name = "void", Type = "void", MethodIds = []
+            Id = voidTypeId, Name = "void", Type = "void"
         });
         var objectClassId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
@@ -194,50 +194,43 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             {
                 Id = Guid.Parse("249d6656-0276-556c-a992-bcf6bfea8578"),
                 Name = "int",
-                Type = "int",
-                MethodIds = []
+                Type = "int"
             },
             new()
             {
                 Id = Guid.Parse("729965ef-64e3-5607-939f-8e19784ef0e9"),
                 Name = "bool",
-                Type = "bool",
-                MethodIds = []
+                Type = "bool"
             },
             new()
             {
                 Id = Guid.Parse("49e4ea3e-e6d6-4eb7-a7de-01cf4dc1cf7a"),
                 Name = "char",
-                Type = "char",
-                MethodIds = []
+                Type = "char"
             },
             new()
             {
                 Id = Guid.Parse("1d9cd43c-e19b-4b24-ae0f-fb6cc43f1f27"),
                 Name = "decimal",
-                Type = "decimal",
-                MethodIds = []
+                Type = "decimal"
             },
             new()
             {
                 Id = Guid.Parse("4e82822e-e6e1-44c1-9df9-7c43f7ecda5e"),
                 Name = "byte",
-                Type = "byte",
-                MethodIds = []
+                Type = "byte"
             },
             new()
             {
                 Id = Guid.Parse("75dfd62e-8d7c-48ee-9481-183ec3629936"),
                 Name = "float",
-                Type = "float",
-                MethodIds = []
+                Type = "float"
             },
             new()
             {
                 Id = Guid.Parse("bd8e7c9e-e8d0-42f2-9479-63284c5c3fa0"),
                 Name = "double",
-                Type = "double",
-                MethodIds = []
+                Type = "double"
             }
         };
 

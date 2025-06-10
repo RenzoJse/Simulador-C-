@@ -289,7 +289,7 @@ public class AttributeServiceTest
             Name = "UpdatedName",
             ClassId = args.ClassId,
             Visibility = Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("stringName", "Reference", [])
+            DataType = new ReferenceType("stringName", "Reference")
         };
 
         SetupAttributeRepositoryGet(updatedAttribute);
