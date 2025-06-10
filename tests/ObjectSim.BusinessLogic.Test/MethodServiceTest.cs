@@ -15,6 +15,7 @@ public class MethodServiceTest
     private Mock<IRepository<Method>>? _methodRepositoryMock;
     private Mock<IRepository<Class>>? _classRepositoryMock;
     private Mock<IDataTypeService>? _dataTypeServiceMock;
+    private Mock<IInvokeMethodService>? _invokeMethodServiceMock;
     private MethodService? _methodServiceTest;
 
     private static readonly Guid ClassId = Guid.NewGuid();
@@ -57,7 +58,8 @@ public class MethodServiceTest
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
         _classRepositoryMock = new Mock<IRepository<Class>>(MockBehavior.Strict);
         _dataTypeServiceMock = new Mock<IDataTypeService>(MockBehavior.Strict);
-        _methodServiceTest = new MethodService(_methodRepositoryMock.Object, _classRepositoryMock.Object, _dataTypeServiceMock.Object);
+        _invokeMethodServiceMock = new Mock<IInvokeMethodService>(MockBehavior.Strict);
+        _methodServiceTest = new MethodService(_methodRepositoryMock.Object, _classRepositoryMock.Object, _dataTypeServiceMock.Object, _invokeMethodServiceMock.Object);
     }
 
     [TestCleanup]
@@ -505,6 +507,10 @@ public class MethodServiceTest
 
         _methodRepositoryMock.Setup(r => r.Update(It.IsAny<Method>()))
             .Returns(_testMethod);
+
+        _invokeMethodServiceMock!
+            .Setup(s => s.CreateInvokeMethod(It.IsAny<CreateInvokeMethodArgs>(), It.IsAny<Method>()))
+            .Returns((CreateInvokeMethodArgs args, Method m) => new InvokeMethod(args.InvokeMethodId, m.Id, args.Reference));
 
         var result = _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
 
