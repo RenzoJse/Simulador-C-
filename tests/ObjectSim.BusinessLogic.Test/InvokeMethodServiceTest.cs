@@ -8,7 +8,7 @@ namespace ObjectSim.BusinessLogic.Test;
 [TestClass]
 public class InvokeMethodServiceTest
 {
-    private Method _testMethod = new Method
+    private readonly Method _testMethod = new Method
     {
         Id = Guid.NewGuid(),
         Name = "TestMethod",
@@ -30,7 +30,7 @@ public class InvokeMethodServiceTest
     [TestCleanup]
     public void Cleanup()
     {
-        _invokeMethodRepository!.VerifyAll();
+        _invokeMethodRepositoryMock!.VerifyAll();
     }
 
     #endregion
@@ -54,7 +54,7 @@ public class InvokeMethodServiceTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void CreateInvokeMethod_AddNullInvokeMethod_ThrowsArgumentNullException()
     {
-        _invokeMethodServiceTest!.CreateInvokeMethod(null, _testMethod!);
+        _invokeMethodServiceTest!.CreateInvokeMethod(null!, _testMethod);
     }
 
 #endregion
@@ -69,7 +69,7 @@ public class InvokeMethodServiceTest
         _invokeMethodRepositoryMock!.Setup(repo => repo.Add(It.IsAny<InvokeMethod>()))
             .Returns((InvokeMethod invokeMethod) => invokeMethod);
 
-        var invokeMethod = _invokeMethodServiceTest!.CreateInvokeMethod(invokeMethodArgs, _testMethod!);
+        var invokeMethod = _invokeMethodServiceTest!.CreateInvokeMethod(invokeMethodArgs, _testMethod);
 
         Assert.IsNotNull(invokeMethod);
         Assert.AreEqual(invokeMethodArgs.InvokeMethodId, invokeMethod.InvokeMethodId);
