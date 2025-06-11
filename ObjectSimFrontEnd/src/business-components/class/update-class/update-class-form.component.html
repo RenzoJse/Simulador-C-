@@ -1,23 +1,21 @@
-<div class="container mt-4">
-  <h2 class="mb-4">Update class name:</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmitWithData(form.value)">
+  <app-class-dropdown (selectClass)="updateClassId($event)"></app-class-dropdown>
 
-  <app-form [form]="form" (atSubmit)="onSubmit()">
-    <app-class-dropdown (selectClass)="updateClassId($event)"></app-class-dropdown>
+  <div class="mb-3">
+    <label for="newName" class="form-label">New Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="newName"
+      formControlName="newName"
+      placeholder="Enter new class name"
+    />
+  </div>
 
-    <div class="mb-3">
-      <label for="newName" class="form-label">New Name</label>
-      <input
-        type="text"
-        id="newName"
-        class="form-control"
-        formControlName="newName"
-        placeholder="Enter new class name"
-      />
-    </div>
+  <app-form-button title="Update"></app-form-button>
 
-    <app-form-button title="Update"></app-form-button>
+  <div *ngIf="formStatus.loading">Loading...</div>
+  <div *ngIf="formStatus.error">{{ formStatus.error }}</div>
 
-    <div *ngIf="formStatus.loading">Loading...</div>
-    <div *ngIf="formStatus.error">{{ formStatus.error }}</div>
-  </app-form>
-</div>
+  <p>Debug newName: {{ form.get('newName')?.value }}</p>
+</form>

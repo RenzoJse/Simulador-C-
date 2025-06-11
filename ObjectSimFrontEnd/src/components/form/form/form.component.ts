@@ -12,9 +12,7 @@ export class FormComponent {
   @Output() atSubmit = new EventEmitter<any>();
 
   public localSend() {
-    const isValid = this.form.valid
-
-    if (isValid) {
+    if (this.form.valid) {
       this.atSubmit.emit(this.form.value);
     } else {
       this.form.markAllAsTouched();

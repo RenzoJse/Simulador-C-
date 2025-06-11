@@ -48,6 +48,17 @@ export class UpdateClassFormComponent {
     }
   }
 
+onSubmitWithData(data: any): void {
+  if (this.form.valid && this.classId) {
+    this.atSubmit.emit({
+      classId: this.classId,
+      newName: data.newName
+    });
+  } else {
+    this.markAsTouched();
+  }
+}
+
   private markAsTouched() {
     Object.values(this.form.controls).forEach(control => control.markAsTouched());
   }
