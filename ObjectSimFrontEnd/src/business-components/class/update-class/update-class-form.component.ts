@@ -1,56 +1,60 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import ClassDtoOut from '../../../backend/services/class/models/class-dto-out';
-import UpdateClassModel from '../../../backend/services/class/models/update-class-model'; 
-import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { CommonModule, NgIf } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { ClassDropdownComponent } from '../../class/dropdown/class-dropdown.component';
+import { FormButtonComponent } from '../../../components/form/form-button/form-button.component';
+import { FormComponent } from '../../../components/form/form/form.component';
 
 @Component({
-  selector: 'app-update-class-form',
+  selector: 'app-update-class-name-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgIf,
+    ClassDropdownComponent,
+    FormButtonComponent,
+    FormComponent
+  ],
   templateUrl: './update-class-form.component.html'
 })
-export class UpdateClassFormComponent implements OnInit {
-  @Input() classData!: ClassDtoOut;
-  @Output() atSubmit = new EventEmitter<UpdateClassModel>();
+export class UpdateClassFormComponent {
+  @Input() loading? = false;
+  @Input() error?: string | null = null;
+  @Output() atSubmit = new EventEmitter<{ classId: string; newName: string }>();
 
-  updateForm!: FormGroup;
+  form: FormGroup;
+  classId: string | undefined;
 
-  classTypes = ['Abstract', 'Interface', 'Sealed'];
+  formStatus: {
+    loading?: true;
+    error?: string;
+  } = {};
 
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    this.updateForm = this.fb.group({
-      name: [this.classData.name, [Validators.required, Validators.minLength(3)]],
-      classType: [
-        this.getClassType(this.classData),
-        Validators.required
-      ],
-      parent: [this.classData.parent || '']
+  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+    this.form = this.fb.group({
+      classId: [''],
+      newName: ['', [Validators.required, Validators.minLength(2)]]
     });
   }
 
-  getClassType(data: ClassDtoOut): string {
-    if (data.isAbstract) return 'Abstract';
-    if (data.isInterface) return 'Interface';
-    if (data.isSealed) return 'Sealed';
-    return '';
+  onSubmit(): void {
+    if (this.form.valid && this.classId) {
+      const newName = this.form.value.newName;
+      this.atSubmit.emit({ classId: this.classId, newName });
+    } else {
+      this.markAsTouched();
+    }
   }
 
-  submit(): void {
-    if (this.updateForm.invalid) return;
+  private markAsTouched() {
+    Object.values(this.form.controls).forEach(control => control.markAsTouched());
+  }
 
-    const formValue = this.updateForm.value;
-    const updateModel: UpdateClassModel = {
-      name: formValue.name,
-      isAbstract: formValue.classType === 'Abstract',
-      isInterface: formValue.classType === 'Interface',
-      isSealed: formValue.classType === 'Sealed',
-      isVirtual: false,
-      parent: formValue.parent || null
-    };
-
-    this.atSubmit.emit(updateModel);
+  updateClassId(event: { classId: string | undefined }): void {
+    this.classId = event.classId;
+    this.form.patchValue({ classId: event.classId });
+    this.cdr.detectChanges();
   }
 }

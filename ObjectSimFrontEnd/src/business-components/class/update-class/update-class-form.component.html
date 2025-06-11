@@ -1,20 +1,23 @@
-<form [formGroup]="updateForm" (ngSubmit)="submit()">
-  <div class="mb-3">
-    <label for="name" class="form-label">Class Name</label>
-    <input id="name" class="form-control" formControlName="name" />
-  </div>
+<div class="container mt-4">
+  <h2 class="mb-4">Update class name:</h2>
 
-  <div class="mb-3">
-    <label for="classType" class="form-label">Class Type</label>
-    <select id="classType" class="form-select" formControlName="classType">
-      <option *ngFor="let type of classTypes" [value]="type">{{ type }}</option>
-    </select>
-  </div>
+  <app-form [form]="form" (atSubmit)="onSubmit()">
+    <app-class-dropdown (selectClass)="updateClassId($event)"></app-class-dropdown>
 
-  <div class="mb-3">
-    <label for="parent" class="form-label">Parent Class ID (optional)</label>
-    <input id="parent" class="form-control" formControlName="parent" />
-  </div>
+    <div class="mb-3">
+      <label for="newName" class="form-label">New Name</label>
+      <input
+        type="text"
+        id="newName"
+        class="form-control"
+        formControlName="newName"
+        placeholder="Enter new class name"
+      />
+    </div>
 
-  <button type="submit" class="btn btn-primary">Update Class</button>
-</form>
+    <app-form-button title="Update"></app-form-button>
+
+    <div *ngIf="formStatus.loading">Loading...</div>
+    <div *ngIf="formStatus.error">{{ formStatus.error }}</div>
+  </app-form>
+</div>
