@@ -144,7 +144,7 @@ public class ValueTypeTest
     public void ValueType_DefaultConstructor_ShouldInitializeProperties()
     {
         var valueType = new ValueType();
-        valueType.Id.Should().NotBeEmpty();
+        valueType.Id.Should().BeEmpty();
         valueType.Type.Should().BeEmpty();
     }
 

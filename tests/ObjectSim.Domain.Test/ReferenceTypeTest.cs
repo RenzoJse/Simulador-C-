@@ -12,15 +12,13 @@ public class ReferenceTypeTest
     [TestMethod]
     public void CreateReferenceType_WhenTypeIsNullOrEmpty_ShouldThrowArgumentException()
     {
-        const string type = "string";
-
         Action action = () =>
         {
-            var referenceType = new ReferenceType(Guid.NewGuid(), type);
+            var referenceType = new ReferenceType(Guid.NewGuid(), null!);
         };
 
         action.Should().Throw<ArgumentException>()
-            .WithMessage("Name cannot be null or empty.");
+            .WithMessage("ClassId or type cannot be empty or null.");
     }
 
     #endregion

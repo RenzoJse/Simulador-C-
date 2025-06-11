@@ -18,10 +18,11 @@ public class CreateDataTypeDtoInTest
     [TestMethod]
     public void CreateDataTypeDtoInToArgs_WithArguments_DataTypeArgs()
     {
-        var model = new CreateDataTypeDtoIn { classId = "TestName", Type = "int" };
+        var guid = Guid.NewGuid().ToString();
+        var model = new CreateDataTypeDtoIn { classId = guid, Type = "int" };
         var args = model.ToArgs();
         args.Should().NotBeNull();
-        args.ClassId.Should().Be("TestName");
+        args.ClassId.Should().Be(guid);
         args.Type.Should().Be("int");
     }
 }

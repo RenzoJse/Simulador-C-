@@ -133,14 +133,6 @@ namespace ObjectSim.DataAccess.Migrations
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
-                    b.Property<string>("MethodIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -368,57 +360,41 @@ namespace ObjectSim.DataAccess.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000005"),
-                            MethodIds = "[]",
-                            Name = "void",
                             Type = "void"
                         },
                         new
                         {
                             Id = new Guid("249d6656-0276-556c-a992-bcf6bfea8578"),
-                            MethodIds = "[]",
-                            Name = "int",
                             Type = "int"
                         },
                         new
                         {
                             Id = new Guid("729965ef-64e3-5607-939f-8e19784ef0e9"),
-                            MethodIds = "[]",
-                            Name = "bool",
                             Type = "bool"
                         },
                         new
                         {
                             Id = new Guid("49e4ea3e-e6d6-4eb7-a7de-01cf4dc1cf7a"),
-                            MethodIds = "[]",
-                            Name = "char",
                             Type = "char"
                         },
                         new
                         {
                             Id = new Guid("1d9cd43c-e19b-4b24-ae0f-fb6cc43f1f27"),
-                            MethodIds = "[]",
-                            Name = "decimal",
                             Type = "decimal"
                         },
                         new
                         {
                             Id = new Guid("4e82822e-e6e1-44c1-9df9-7c43f7ecda5e"),
-                            MethodIds = "[]",
-                            Name = "byte",
                             Type = "byte"
                         },
                         new
                         {
                             Id = new Guid("75dfd62e-8d7c-48ee-9481-183ec3629936"),
-                            MethodIds = "[]",
-                            Name = "float",
                             Type = "float"
                         },
                         new
                         {
                             Id = new Guid("bd8e7c9e-e8d0-42f2-9479-63284c5c3fa0"),
-                            MethodIds = "[]",
-                            Name = "double",
                             Type = "double"
                         });
                 });

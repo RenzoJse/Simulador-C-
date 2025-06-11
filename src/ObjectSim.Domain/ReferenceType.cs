@@ -9,16 +9,16 @@ public class ReferenceType : DataType
 
     public ReferenceType(Guid classId, string type)
     {
-        Validate(classId);
+        Validate(classId, type);
         Id = classId;
         Type = type;
     }
 
-    private static void Validate(Guid classId)
+    private static void Validate(Guid classId, string type)
     {
-        if(string.IsNullOrWhiteSpace(classId.ToString()))
+        if(string.IsNullOrWhiteSpace(classId.ToString()) || type is null)
         {
-            throw new ArgumentException("Name cannot be null or empty.");
+            throw new ArgumentException("ClassId or type cannot be empty or null.");
         }
     }
 }

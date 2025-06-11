@@ -20,6 +20,7 @@ public class ClassServiceTest
     private Mock<IAttributeService>? _attributeServiceMock;
     private Mock<IMethodServiceCreate>? _methodServiceCreateMock;
     private Mock<IMethodService>? _methodServiceMock;
+    private Mock<IDataTypeService>? _dataTypeServiceMock;
     private Mock<IRepository<Class>>? _classRepositoryMock;
 
     private readonly Class _testInterfaceClass = new Class
@@ -75,10 +76,11 @@ public class ClassServiceTest
         _attributeServiceMock = new Mock<IAttributeService>(MockBehavior.Strict);
         _builderStrategyMock = new Mock<IBuilderStrategy>(MockBehavior.Strict);
         _classRepositoryMock = new Mock<IRepository<Class>>(MockBehavior.Strict);
+        _dataTypeServiceMock = new Mock<IDataTypeService>(MockBehavior.Strict);
 
         var strategies = new List<IBuilderStrategy> { _builderStrategyMock!.Object };
 
-        _classServiceTest = new ClassService(strategies, _classRepositoryMock.Object);
+        _classServiceTest = new ClassService(_dataTypeServiceMock.Object, strategies, _classRepositoryMock.Object);
     }
 
     [TestCleanup]
@@ -170,6 +172,10 @@ public class ClassServiceTest
         _classRepositoryMock.Setup(repo => repo.Add(It.IsAny<Class>()))
             .Returns((Class c) => { c.Parent = null; return c; });
 
+        _dataTypeServiceMock!
+            .Setup(s => s.CreateDataType(It.IsAny<CreateDataTypeArgs>()))
+            .Returns(new ReferenceType(Guid.NewGuid(), _args.Name!));
+
         _args.Parent = invalidParentClass.Id;
 
         var result = _classServiceTest!.CreateClass(_args);
@@ -187,6 +193,9 @@ public class ClassServiceTest
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(_args)).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
         _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c);
+        _dataTypeServiceMock!
+            .Setup(s => s.CreateDataType(It.IsAny<CreateDataTypeArgs>()))
+            .Returns(new ReferenceType(Guid.NewGuid(), _args.Name!));
 
         Action action = () => _classServiceTest!.CreateClass(_args);
 
@@ -202,6 +211,9 @@ public class ClassServiceTest
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
         _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c).Verifiable();
+        _dataTypeServiceMock!
+            .Setup(s => s.CreateDataType(It.IsAny<CreateDataTypeArgs>()))
+            .Returns(new ReferenceType(Guid.NewGuid(), _args.Name!));
 
         Action action = () => _classServiceTest!.CreateClass(_args);
 
@@ -224,6 +236,9 @@ public class ClassServiceTest
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
         _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c).Verifiable();
+        _dataTypeServiceMock!
+            .Setup(s => s.CreateDataType(It.IsAny<CreateDataTypeArgs>()))
+            .Returns(new ReferenceType(Guid.NewGuid(), _args.Name!));
 
         var result = _classServiceTest!.CreateClass(_args);
         result.Should().NotBeNull();
