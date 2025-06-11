@@ -37,7 +37,7 @@ export class ClassApiRepository extends ApiRepository {
 
     updateClass(id: string, updateModel: UpdateClassModel): Observable<any> {
         const url = `${id}`;
-        return this.delete(url); //cambiar
+        return this.patch(url, updateModel);
     }
 }
 
