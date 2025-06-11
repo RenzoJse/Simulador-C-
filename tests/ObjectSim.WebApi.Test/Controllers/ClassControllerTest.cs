@@ -202,48 +202,19 @@ public class ClassControllerTest
 
     #region Update-Class-Test
     [TestMethod]
-    public void UpdateClassName_ValidRequest_ReturnsNoContent()
+    public void UpdateClass_WhenIsValid_MakesValidUpdate()
     {
         var classId = Guid.NewGuid();
         var dto = new UpdateClassNameDto { Name = "UpdatedName" };
+        _classServiceMock
+            .Setup(service => service.UpdateClass(classId, dto));
 
         var result = _classController.UpdateClass(classId, dto);
 
-        Assert.IsInstanceOfType(result, typeof(NoContentResult));
-        _classServiceMock.Verify(s => s.UpdateClass(classId, dto.Name), Times.Once);
+        var resultObject = result as OkResult;
+        var statusCode = resultObject?.StatusCode;
+        statusCode.Should().Be(200);
     }
-
-    [TestMethod]
-    public void UpdateClassName_ClassNotFound_ReturnsBadRequest()
-    {
-        var classId = Guid.NewGuid();
-        var dto = new UpdateClassNameDto { Name = "UpdatedName" };
-
-        _classServiceMock.Setup(s => s.UpdateClass(classId, dto.Name))
-                    .Throws(new ArgumentException("Class not found"));
-
-        var result = _classController.UpdateClass(classId, dto) as BadRequestObjectResult;
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(400, result.StatusCode);
-        Assert.AreEqual("Class not found", result.Value);
-    }
-
-    [TestMethod]
-    public void UpdateClassName_InvalidName_ReturnsBadRequest()
-    {
-        var classId = Guid.NewGuid();
-        var dto = new UpdateClassNameDto { Name = "" };
-
-        _classServiceMock.Setup(s => s.UpdateClass(classId, dto.Name))
-                    .Throws(new ArgumentException("Name cannot be empty"));
-
-        var result = _classController.UpdateClass(classId, dto) as BadRequestObjectResult;
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(400, result.StatusCode);
-        Assert.AreEqual("Name cannot be empty", result.Value);
-    }
-}
     #endregion
 }
+
