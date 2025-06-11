@@ -40,7 +40,7 @@ public class AttributeRepositoryTest
         var classId = Guid.NewGuid();
         var valueTypeId = Guid.NewGuid();
 
-        var valueType = new Domain.ValueType("intValue", "int", [])
+        var valueType = new Domain.ValueType(Guid.NewGuid(), "int")
         {
             Id = valueTypeId
         };
@@ -74,7 +74,7 @@ public class AttributeRepositoryTest
         Assert.IsNotNull(result);
         Assert.AreEqual(attrId, result.Id);
         Assert.IsNotNull(result.DataType);
-        Assert.AreEqual("intValue", result.DataType.Name);
+        Assert.AreEqual("int", result.DataType.Type);
     }
 
     [TestMethod]
@@ -92,7 +92,7 @@ public class AttributeRepositoryTest
         var valueTypeId = Guid.NewGuid();
 
         var classEntity = new Domain.Class { Id = classId, Name = "TestClass" };
-        var valueType = new Domain.ValueType("intValue", "int", []) { Id = valueTypeId };
+        var valueType = new Domain.ValueType(Guid.NewGuid(), "int") { Id = valueTypeId };
 
         _context.Set<Domain.Class>().Add(classEntity);
         _context.Set<Domain.ValueType>().Add(valueType);

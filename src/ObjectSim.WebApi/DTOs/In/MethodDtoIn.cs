@@ -19,9 +19,9 @@ public class MethodDtoIn
     public CreateMethodArgs ToArgs()
     {
         List<CreateDataTypeArgs> localVariables = [];
-        localVariables.AddRange(LocalVariables.Select(localVariable => new CreateDataTypeArgs(localVariable.Name, localVariable.Type)));
+        localVariables.AddRange(LocalVariables.Select(localVariable => new CreateDataTypeArgs(Guid.Parse(ClassId!), localVariable.Type)));
         List<CreateDataTypeArgs> parameters = [];
-        parameters.AddRange(Parameters.Select(parameter => new CreateDataTypeArgs(parameter.Name, parameter.Type)));
+        parameters.AddRange(Parameters.Select(parameter => new CreateDataTypeArgs(Guid.Parse(ClassId!), parameter.Type)));
         return new CreateMethodArgs(Name, Guid.Parse(Type!), Accessibility,
             IsAbstract, IsSealed, IsOverride, IsVirtual, Guid.Parse(ClassId!), localVariables, parameters, InvokeMethodsId);
     }

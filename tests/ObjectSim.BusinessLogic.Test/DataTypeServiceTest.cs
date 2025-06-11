@@ -37,7 +37,7 @@ public class DataTypeServiceTest
     [ExpectedException(typeof(ArgumentException))]
     public void CreateDataType_ObjectReferenceTypeWithoutClass_ShouldThrow()
     {
-        var args = new CreateDataTypeArgs("object", "Reference");
+        var args = new CreateDataTypeArgs(Guid.NewGuid(), "Reference");
         _classRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
             .Returns([]);
 
@@ -51,7 +51,7 @@ public class DataTypeServiceTest
     [TestMethod]
     public void CreateDataType_ReferenceType_ObjectWithRegisteredClass_ShouldSucceed()
     {
-        var args = new CreateDataTypeArgs("object", "Reference");
+        var args = new CreateDataTypeArgs(Guid.NewGuid(), "Reference");
 
         _classRepositoryMock
             .Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
@@ -60,14 +60,14 @@ public class DataTypeServiceTest
         var result = _dataTypeServiceTest.CreateDataType(args);
 
         Assert.IsInstanceOfType(result, typeof(ReferenceType));
-        Assert.AreEqual("object", result.Name);
+        Assert.AreEqual(args.ClassId, result.Id);
         Assert.AreEqual("Reference", result.Type);
     }
 
     [TestMethod]
     public void CreateDataType_ObjectReferenceTypeWithClass_ShouldSucceed()
     {
-        var args = new CreateDataTypeArgs("object", "Reference");
+        var args = new CreateDataTypeArgs(Guid.NewGuid(), "Reference");
 
         _classRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
             .Returns([new Class { Name = "object" }]);
@@ -75,27 +75,26 @@ public class DataTypeServiceTest
         var result = _dataTypeServiceTest.CreateDataType(args);
 
         Assert.IsInstanceOfType(result, typeof(ReferenceType));
-        Assert.AreEqual("object", result.Name);
+        Assert.AreEqual(args.ClassId, result.Id);
     }
 
     [TestMethod]
     public void CreateDataType_WithValidIntType_ShouldCreateValueType()
     {
-        var args = new CreateDataTypeArgs("MyInt", "int");
+        var args = new CreateDataTypeArgs(Guid.NewGuid(), "int");
 
         var result = _dataTypeServiceTest.CreateDataType(args);
 
         Assert.IsInstanceOfType(result, typeof(ValueType));
-        Assert.AreEqual("MyInt", result.Name);
+        Assert.AreEqual(args.ClassId, result.Id);
         Assert.AreEqual("int", result.Type);
-        Assert.AreEqual(0, result.MethodIds.Count);
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void CreateDataType_ShouldThrow_WhenReferenceTypeNotFoundInClasses()
     {
-        var args = new CreateDataTypeArgs("InvalidRef", "UnknownClass");
+        var args = new CreateDataTypeArgs(Guid.NewGuid(), "UnknownClass");
 
         _classRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
             .Returns([]);
@@ -106,7 +105,7 @@ public class DataTypeServiceTest
     [TestMethod]
     public void CreateDataType_ShouldReturnReferenceType_WhenTypeMatchesExistingClass()
     {
-        var args = new CreateDataTypeArgs("MyClientRef", "Client");
+        var args = new CreateDataTypeArgs(Guid.NewGuid(), "Client");
 
         _classRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<Class, bool>>()))
             .Returns([new Class { Name = "Client" }]);
@@ -114,30 +113,30 @@ public class DataTypeServiceTest
         var result = _dataTypeServiceTest.CreateDataType(args);
 
         Assert.IsInstanceOfType(result, typeof(ReferenceType));
-        Assert.AreEqual("MyClientRef", result.Name);
+        Assert.AreEqual(args.ClassId, result.Id);
         Assert.AreEqual("Client", result.Type);
     }
 
     [TestMethod]
     public void CreateDataType_WithStringType_ShouldCreateReferenceType()
     {
-        var args = new CreateDataTypeArgs("MyString", "string");
+        var args = new CreateDataTypeArgs(Guid.NewGuid(), "string");
 
         var result = _dataTypeServiceTest.CreateDataType(args);
 
         Assert.IsInstanceOfType(result, typeof(ReferenceType));
-        Assert.AreEqual("MyString", result.Name);
+        Assert.AreEqual(args.ClassId, result.Id);
         Assert.AreEqual("string", result.Type);
-        Assert.AreEqual(0, result.MethodIds.Count);
     }
 
     #endregion
 
     #endregion
+
     [TestMethod]
     public void GetById_WhenValueTypeExists_ReturnsValueType()
     {
-        var vt = new ValueType { Id = _valueTypeId, Name = "int", Type = "int" };
+        var vt = new ValueType { Id = _valueTypeId, Type = "int" };
         _dataTypeRepositoryMock
             .Setup(r => r.Get(It.Is<Func<DataType, bool>>(f => f(vt))))
             .Returns(vt);
@@ -156,6 +155,7 @@ public class DataTypeServiceTest
 
         _dataTypeServiceTest.GetById(new Guid());
     }
+
     #region GetAll
 
     [TestMethod]
@@ -163,8 +163,8 @@ public class DataTypeServiceTest
     {
         var list = new List<DataType>
         {
-            new ValueType("int", "int", []),
-            new ReferenceType("str", "string", [])
+            new ValueType(Guid.NewGuid(), "int"),
+            new ReferenceType(Guid.NewGuid(), "string")
         };
 
         _dataTypeRepositoryMock.Setup(r => r.GetAll(It.IsAny<Func<DataType, bool>>()))

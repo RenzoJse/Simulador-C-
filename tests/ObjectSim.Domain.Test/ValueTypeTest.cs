@@ -41,7 +41,7 @@ public class ValueTypeTest
 
         Action action = () =>
         {
-            var valueType = new ValueType(_validName, invalidType, _emptyMethods);
+            var valueType = new ValueType(Guid.NewGuid(), invalidType);
         };
 
         action.Should().Throw<ArgumentException>()
@@ -49,13 +49,13 @@ public class ValueTypeTest
     }
 
     [TestMethod]
-    public void CreateValueType_WhenNameIsNull_ShouldThrowArgumentException()
+    public void CreateValueType_WhenTypeIsNull_ShouldThrowArgumentException()
     {
-        string name = null!;
+        _validType = null!;
 
         Action action = () =>
         {
-            var valueType = new ValueType(name, _validType, _emptyMethods);
+            var valueType = new ValueType(Guid.NewGuid(), _validType);
         };
 
         action.Should().Throw<ArgumentNullException>()
@@ -63,13 +63,13 @@ public class ValueTypeTest
     }
 
     [TestMethod]
-    public void CreateValueType_WhenNameIsTooLong_ShouldThrowArgumentException()
+    public void CreateValueType_WhenTypeIsTooLong_ShouldThrowArgumentException()
     {
-        var name = new string('a', 21);
+        var invalidType = new string('a', 21);
 
         Action action = () =>
         {
-            var valueType = new ValueType(name, _validType, _emptyMethods);
+            var valueType = new ValueType(Guid.NewGuid(), invalidType);
         };
 
         action.Should().Throw<ArgumentException>()
@@ -77,13 +77,13 @@ public class ValueTypeTest
     }
 
     [TestMethod]
-    public void CreateValueType_WhenNameHasSymbols_ShouldThrowArgumentException()
+    public void CreateValueType_WhenTypeHasSymbols_ShouldThrowArgumentException()
     {
-        const string name = "Invalid@Name";
+        const string invalidType = "Invalid@Name";
 
         Action action = () =>
         {
-            var valueType = new ValueType(name, _validType, _emptyMethods);
+            var valueType = new ValueType(Guid.NewGuid(), invalidType);
         };
 
         action.Should().Throw<ArgumentException>()
@@ -91,13 +91,13 @@ public class ValueTypeTest
     }
 
     [TestMethod]
-    public void CreateValueType_WhenNameHasNumbers_ShouldThrowArgumentException()
+    public void CreateValueType_WhenTypeHasNumbers_ShouldThrowArgumentException()
     {
-        const string name = "Invalid123Name";
+        const string invalidType = "Invalid123Name";
 
         Action action = () =>
         {
-            var valueType = new ValueType(name, _validType, _emptyMethods);
+            var valueType = new ValueType(Guid.NewGuid(), invalidType);
         };
 
         action.Should().Throw<ArgumentException>()
@@ -107,29 +107,15 @@ public class ValueTypeTest
     [TestMethod]
     public void CreateValueType_WhenNameHasSpaces_ShouldThrowArgumentException()
     {
-        const string name = "Invalid123Name";
+        const string invalidType = "Invalid123Name";
 
         Action action = () =>
         {
-            var valueType = new ValueType(name, _validType, _emptyMethods);
+            var valueType = new ValueType(Guid.NewGuid(), invalidType);
         };
 
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot contain special characters.");
-    }
-
-    [TestMethod]
-    public void CreateValueType_WhenMethodsAreNull_ShouldThrowArgumentNullException()
-    {
-        List<Guid> methods = null!;
-
-        Action action = () =>
-        {
-            var valueType = new ValueType(_validName, _validType, methods);
-        };
-
-        action.Should().Throw<ArgumentNullException>()
-            .WithMessage("Methods cannot be null. (Parameter 'methods')");
     }
 
     #endregion
@@ -139,7 +125,7 @@ public class ValueTypeTest
     [TestMethod]
     public void CreateValueType_WhenTypeIsValid_ShouldReturnValueType()
     {
-        var valueType = new ValueType(_validName, _validType, _emptyMethods);
+        var valueType = new ValueType(Guid.NewGuid(), _validType);
 
         valueType.Should().NotBeNull();
         valueType.Type.Should().Be(_validType);
@@ -148,44 +134,18 @@ public class ValueTypeTest
     [TestMethod]
     public void CreateValueType_WhenNameIsValid_ShouldReturnValueType()
     {
-        var valueType = new ValueType(_validName, _validType, _emptyMethods);
+        var valueType = new ValueType(Guid.NewGuid(), _validType);
 
         valueType.Should().NotBeNull();
-        valueType.Name.Should().Be(_validName);
-        valueType.Type.Should().Be(_validType);
-        valueType.MethodIds.Should().BeEmpty();
-    }
-
-    [TestMethod]
-    public void CreateValueTypes_WhenMethodsAreProvided_ShouldReturnValueTypeWithMethodsIds()
-    {
-        var methodIds = new List<Guid>
-        {
-            _methods[0].Id,
-            _methods[1].Id
-        };
-
-        var valueType = new ValueType(_validName, _validType, methodIds);
-
-        valueType.Should().NotBeNull();
-        valueType.MethodIds.Should().NotBeEmpty();
-        valueType.MethodIds.Should().NotBeEmpty();
-        valueType.MethodIds.Should().Contain(m => m == _methods[0].Id);
-        valueType.MethodIds.Should().Contain(m => m == _methods[1].Id);
-        valueType.Name.Should().Be(_validName);
         valueType.Type.Should().Be(_validType);
     }
-
 
     [TestMethod]
     public void ValueType_DefaultConstructor_ShouldInitializeProperties()
     {
         var valueType = new ValueType();
-        valueType.Id.Should().NotBeEmpty();
-        valueType.Name.Should().BeEmpty();
+        valueType.Id.Should().BeEmpty();
         valueType.Type.Should().BeEmpty();
-        valueType.MethodIds.Should().NotBeNull();
-        valueType.MethodIds.Should().BeEmpty();
     }
 
     #endregion

@@ -18,7 +18,7 @@ public class CreateMethodArgsTest
     [TestMethod]
     public void Type_SetAndGet_ShouldReturnExpectedValue()
     {
-        var type = new CreateDataTypeArgs("Type", "int");
+        var type = new CreateDataTypeArgs(Guid.NewGuid(), "int");
         var args = new CreateMethodArgs("Test", Guid.NewGuid(), "public", true, false, true, false, Guid.NewGuid(), [], [], []);
         var newType = Guid.NewGuid();
         args.TypeId = newType;
@@ -75,7 +75,7 @@ public class CreateMethodArgsTest
     public void LocalVariables_SetAndGet_ShouldReturnExpectedValue()
     {
         var args = new CreateMethodArgs("Test", Guid.NewGuid(), "public", true, false, true, false, Guid.NewGuid(), [], [], []);
-        var newVars = new List<CreateDataTypeArgs> { new("var", "int") };
+        var newVars = new List<CreateDataTypeArgs> { new(Guid.NewGuid(), "int") };
         args.LocalVariables = newVars;
         args.LocalVariables.Should().BeEquivalentTo(newVars);
     }
@@ -84,7 +84,7 @@ public class CreateMethodArgsTest
     public void Parameters_SetAndGet_ShouldReturnExpectedValue()
     {
         var args = new CreateMethodArgs("Test", Guid.NewGuid(), "public", true, false, true, false, Guid.NewGuid(), [], [], []);
-        var newParams = new List<CreateDataTypeArgs> { new("param", "string") };
+        var newParams = new List<CreateDataTypeArgs> { new(Guid.NewGuid(), "string") };
         args.Parameters = newParams;
         args.Parameters.Should().BeEquivalentTo(newParams);
     }

@@ -24,8 +24,8 @@ public class DataTypeControllerTest
     {
         var dataTypes = new List<DataType>
     {
-        new Domain.ValueType("int", "int", []) { Id = Guid.NewGuid() },
-        new ReferenceType("str", "string", []) { Id = Guid.NewGuid() }
+        new Domain.ValueType(Guid.NewGuid(),"int") { Id = Guid.NewGuid() },
+        new ReferenceType(Guid.NewGuid(),"string") { Id = Guid.NewGuid() }
     };
 
         var expectedDtos = dataTypes
@@ -50,7 +50,7 @@ public class DataTypeControllerTest
     public void GetById_WhenExists_ReturnsOkWithDto()
     {
         var id = Guid.NewGuid();
-        var dataType = new Domain.ValueType("int", "int", []) { Id = id, MethodIds = [Guid.NewGuid()] };
+        var dataType = new Domain.ValueType(Guid.NewGuid(), "int") { Id = id };
         var expectedDto = DataTypeInformationDtoOut.ToInfo(dataType);
 
         _dataTypeServiceMock

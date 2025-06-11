@@ -30,10 +30,10 @@ public class AttributeControllerTest
     [TestMethod]
     public void GetAll_ShouldReturnAttributes_WhenThereAreElements()
     {
-        var attributes = new List<ObjectSim.Domain.Attribute>
+        var attributes = new List<Domain.Attribute>
         {
-            new ObjectSim.Domain.Attribute { Name = "Attribute1" },
-            new ObjectSim.Domain.Attribute { Name = "Attribute2" }
+            new Domain.Attribute { Name = "Attribute1" },
+            new Domain.Attribute { Name = "Attribute2" }
         };
 
         _attributeServiceMock
@@ -86,7 +86,7 @@ public class AttributeControllerTest
     [TestMethod]
     public void Create_ValidModel_ShouldReturnCreatedResult()
     {
-        var dataType = new ReferenceType("myString", "string", []);
+        var dataType = new ReferenceType(Guid.NewGuid(), "string");
 
         var modelIn = new CreateAttributeDtoIn
         {
@@ -153,7 +153,7 @@ public class AttributeControllerTest
             Id = Guid.NewGuid(),
             Name = "TestAttr",
             Visibility = Domain.Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType(Guid.NewGuid(), "string"),
             ClassId = modelIn.ClassId
         };
 
@@ -178,7 +178,7 @@ public class AttributeControllerTest
             Name = "Test",
             ClassId = Guid.NewGuid(),
             Visibility = Domain.Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("myString", "string", [])
+            DataType = new ReferenceType(Guid.NewGuid(), "string")
         };
 
         _attributeServiceMock
@@ -218,7 +218,7 @@ public class AttributeControllerTest
             Name = "cantidad",
             Visibility = Domain.Attribute.AttributeVisibility.Public,
             ClassId = classId,
-            DataType = new Domain.ValueType("cantidad", "int", [])
+            DataType = new Domain.ValueType(Guid.NewGuid(), "int")
         };
 
         var attributes = new List<Domain.Attribute> { attribute };
@@ -328,7 +328,7 @@ public class AttributeControllerTest
             Id = id,
             Name = "Color",
             Visibility = Domain.Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType(Guid.NewGuid(), "string"),
             ClassId = dtoIn.ClassId
         };
 

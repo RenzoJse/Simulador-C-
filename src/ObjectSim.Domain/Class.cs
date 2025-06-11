@@ -240,7 +240,7 @@ public class Class
             var p1 = parameters1[i];
             var p2 = parameters2[i];
 
-            if(p1.Name != p2.Name || p1.Type != p2.Type)
+            if(p1.Type != p2.Type || p1.Type != p2.Type)
             {
                 return false;
             }
