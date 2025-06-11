@@ -1,51 +1,32 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ClassService } from "../../../backend/services/class/class.service";
-import { FormGroup } from '@angular/forms';
-import ClassDtoOut from '../../../backend/services/class/models/class-dto-out.model';
-import UpdateClassModel from '../../../backend/services/class/models/update-class.model';
+import { Component, Inject } from '@angular/core';
+import { ClassApiRepository } from '../../../backend/repositories/class-api-repository.service';
+import { UpdateClassFormComponent } from '../../../business-components/class/update-class/update-class-form.component';
 
 @Component({
-  selector: 'app-update-class',
-  templateUrl: './update-class.component.html',
-  styles: []
+  selector: 'app-update-class-name',
+  standalone: true,
+  imports: [UpdateClassFormComponent],
+  templateUrl: './update-class.component.html'
 })
-export class UpdateClassComponent implements OnInit {
-  selectedClassId: string | null = null;
-  selectedClass: ClassDtoOut | null = null;
-  status: { loading?: true; error?: string } | null = null;
+export class UpdateClassComponent {
+  status: { loading?: true; error?: string } = {};
 
   constructor(
-    @Inject(ClassService) private readonly _classService: ClassService,
-    private readonly _router: Router,
-    private readonly _route: ActivatedRoute
+    @Inject(ClassApiRepository) private readonly _classRepo: ClassApiRepository
   ) {}
 
-  ngOnInit(): void {
-    this.selectedClassId = this._route.snapshot.paramMap.get('id');
-    if (this.selectedClassId) {
-      this._classService.getById(this.selectedClassId).subscribe({
-        next: (data) => {
-          this.selectedClass = data;
-        },
-        error: (err) => {
-          this.status = { error: 'Failed to load class.' };
-        }
-      });
-    }
-  }
-
-  protected onUpdate(updatedData: UpdateClassModel) {
-    if (!this.selectedClassId) return;
+  atSubmit(data: { classId: string; newName: string }) {
     this.status = { loading: true };
 
-    this._classService.updateClass(this.selectedClassId, updatedData).subscribe({
+    this._classRepo.updateClass(data.classId, { name: data.newName }).subscribe({
       next: () => {
-        this.status = null;
-        this._router.navigate(['']);
+        this.status = {};
+        alert('Nombre actualizado con éxito');
       },
       error: (error: any) => {
-        this.status = { error: error.message || 'Error updating class.' };
+        this.status = {
+          error: error?.message || 'Error al actualizar el nombre.'
+        };
       }
     });
   }
