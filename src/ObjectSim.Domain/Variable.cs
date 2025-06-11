@@ -2,9 +2,11 @@
 
 public class Variable
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     public Guid TypeId { get; set; }
     public Guid VariableId { get; set; }
+
+    protected Variable() { }
 
     public Variable(Guid dataTypeId, string name)
     {

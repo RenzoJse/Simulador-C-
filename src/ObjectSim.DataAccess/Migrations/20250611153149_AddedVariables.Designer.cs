@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ObjectSim.DataAccess;
 
@@ -11,9 +12,11 @@ using ObjectSim.DataAccess;
 namespace ObjectSim.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250611153149_AddedVariables")]
+    partial class AddedVariables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +49,7 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.HasIndex("DataTypeId");
 
-                    b.ToTable("Attributes", (string)null);
+                    b.ToTable("Attributes");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Class", b =>
@@ -79,7 +82,7 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Classes", (string)null);
+                    b.ToTable("Classes");
 
                     b.HasData(
                         new
@@ -181,7 +184,7 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DataTypes", (string)null);
+                    b.ToTable("DataTypes");
 
                     b.HasDiscriminator().HasValue("DataType");
 
@@ -204,7 +207,7 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.HasIndex("InvokeMethodId");
 
-                    b.ToTable("InvokeMethod", (string)null);
+                    b.ToTable("InvokeMethod");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Key", b =>
@@ -215,7 +218,7 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.HasKey("AccessKey");
 
-                    b.ToTable("Keys", (string)null);
+                    b.ToTable("Keys");
 
                     b.HasData(
                         new
@@ -264,7 +267,7 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Methods", (string)null);
+                    b.ToTable("Methods");
 
                     b.HasData(
                         new
@@ -382,7 +385,7 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Namespaces", (string)null);
+                    b.ToTable("Namespaces");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Variable", b =>
@@ -406,7 +409,7 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Variables", (string)null);
+                    b.ToTable("Variables");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.ReferenceType", b =>
