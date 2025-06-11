@@ -178,51 +178,135 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             Id = voidTypeId, Type = "void"
         });
+
         var objectClassId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
-        modelBuilder.Entity<Class>().HasData(new Class
+        var objectClass = new Class
         {
             Id = objectClassId,
             Name = "Object",
             IsAbstract = false,
             IsSealed = false,
             IsInterface = false
+        };
+
+        modelBuilder.Entity<Class>().HasData(objectClass);
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+            Name = "String",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
         });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
+            Name = "Int32",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000004"),
+            Name = "Boolean",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000006"),
+            Name = "Char",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000007"),
+            Name = "Decimal",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+            Name = "Byte",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000009"),
+            Name = "float",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000010"),
+            Name = "Double",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
         var valueTypes = new List<ValueType>
         {
             new()
             {
-                Id = Guid.Parse("249d6656-0276-556c-a992-bcf6bfea8578"),
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
                 Type = "int"
             },
             new()
             {
-                Id = Guid.Parse("729965ef-64e3-5607-939f-8e19784ef0e9"),
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000004"),
                 Type = "bool"
             },
             new()
             {
-                Id = Guid.Parse("49e4ea3e-e6d6-4eb7-a7de-01cf4dc1cf7a"),
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000006"),
                 Type = "char"
             },
             new()
             {
-                Id = Guid.Parse("1d9cd43c-e19b-4b24-ae0f-fb6cc43f1f27"),
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000007"),
                 Type = "decimal"
             },
             new()
             {
-                Id = Guid.Parse("4e82822e-e6e1-44c1-9df9-7c43f7ecda5e"),
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000008"),
                 Type = "byte"
             },
             new()
             {
-                Id = Guid.Parse("75dfd62e-8d7c-48ee-9481-183ec3629936"),
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000009"),
                 Type = "float"
             },
             new()
             {
-                Id = Guid.Parse("bd8e7c9e-e8d0-42f2-9479-63284c5c3fa0"),
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000010"),
                 Type = "double"
             }
         };
