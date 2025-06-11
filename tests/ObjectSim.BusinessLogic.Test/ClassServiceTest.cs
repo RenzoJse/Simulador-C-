@@ -635,10 +635,7 @@ public class ClassServiceTest
             Name = "UsedAttribute"
         };
 
-        var localVariable = new ValueType()
-        {
-            Type = "UsedAttribute"
-        };
+        var localVariable = new Variable(Guid.NewGuid(), "UsedAttribute");
 
         var method = new Method
         {
@@ -713,8 +710,8 @@ public class ClassServiceTest
         var method = new Method
         {
             Name = "TestMethod",
-            LocalVariables = [new ValueType { Type = "DifferentName" }],
-            Parameters = [new ValueType() { Type = "DifferentParam" }]
+            LocalVariables = [new Variable(Guid.NewGuid(), "DifferentName")],
+            Parameters = [new Variable(Guid.NewGuid(), "DifferentParam")]
         };
 
         var classWithMethodsAndAttribute = new Class

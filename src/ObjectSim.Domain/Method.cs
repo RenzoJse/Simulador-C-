@@ -29,7 +29,7 @@ public class Method
 
     #endregion
 
-    #region Type
+    #region Name
 
     public Guid TypeId { get; set; }
 
@@ -67,11 +67,14 @@ public class Method
     #endregion
 
     #region Parameters
-    public List<DataType> Parameters { get; set; } = [];
+    public List<Variable> Parameters { get; set; } = [];
+
     #endregion
 
     #region LocalVariable
-    public List<DataType> LocalVariables { get; set; } = [];
+
+    public List<Variable> LocalVariables { get; set; } = [];
+
     #endregion
 
     #region MethodsInvoke

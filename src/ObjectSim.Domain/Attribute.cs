@@ -11,7 +11,6 @@ public class Attribute
         Protected,
         Internal
     }
-
     public Guid DataTypeId { get; set; }
     public DataType DataType { get; set; } = null!;
     public AttributeVisibility Visibility { get; set; }

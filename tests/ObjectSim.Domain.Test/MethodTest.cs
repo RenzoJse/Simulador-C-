@@ -221,7 +221,7 @@ public class MethodTest
     public void Parameters_AddParameter_ShouldContainParameter()
     {
         var method = new Method();
-        var param = new ValueType(Guid.NewGuid(), "int");
+        var param = new Variable(Guid.NewGuid(), "int");
         method.Parameters.Add(param);
         method.Parameters.Should().Contain(param);
     }
@@ -230,7 +230,7 @@ public class MethodTest
     public void LocalVariables_AddLocalVariable_ShouldContainLocalVariable()
     {
         var method = new Method();
-        var localVar = new ValueType(Guid.NewGuid(), "int");
+        var localVar = new Variable(Guid.NewGuid(), "int");
         method.LocalVariables.Add(localVar);
         method.LocalVariables.Should().Contain(localVar);
     }
@@ -360,7 +360,7 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenIsTryingToUseMethodNotInLocalVariables_ThrowsException()
     {
-        var localVariable = new ValueType(Guid.NewGuid(), "int");
+        var localVariable = new Variable(Guid.NewGuid(), "int");
 
         OtherMethod!.LocalVariables = [localVariable];
 
@@ -373,7 +373,7 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenIsTryingToUseMethodNotInParameters_ThrowsException()
     {
-        var parameter = new ValueType(Guid.NewGuid(), "int");
+        var parameter = new Variable(Guid.NewGuid(), "int");
 
         OtherMethod!.Parameters = [parameter];
 
@@ -408,7 +408,7 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenMethodIsInLocalVariable_AddsMethod()
     {
-        var localVariable = new ValueType(Guid.NewGuid(), "int");
+        var localVariable = new Variable(Guid.NewGuid(), "int");
 
         OtherMethod!.LocalVariables = [localVariable];
 

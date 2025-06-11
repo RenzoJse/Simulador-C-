@@ -10,11 +10,11 @@ public record MethodInformationDtoOut(Method MethodInfo)
     public bool IsAbstract { get; } = MethodInfo.Abstract;
     public bool IsSealed { get; } = MethodInfo.IsSealed;
     public bool IsOverride { get; } = MethodInfo.IsOverride;
-    public List<DataTypeInformationDtoOut> LocalVariables { get; } = MethodInfo.LocalVariables != null
-            ? MethodInfo.LocalVariables.Select(DataTypeInformationDtoOut.ToInfo).ToList()
+    public List<VariableInformatioDtoOut> LocalVariables { get; } = MethodInfo.LocalVariables != null
+            ? MethodInfo.LocalVariables.Select(VariableInformatioDtoOut.ToInfo).ToList()
             : [];
-    public List<DataTypeInformationDtoOut> Parameters { get; } = MethodInfo.Parameters != null
-            ? MethodInfo.Parameters.Select(DataTypeInformationDtoOut.ToInfo).ToList()
+    public List<VariableInformatioDtoOut> Parameters { get; } = MethodInfo.Parameters != null
+            ? MethodInfo.Parameters.Select(VariableInformatioDtoOut.ToInfo).ToList()
             : [];
     public List<string> InvokeMethodsIds { get; } = MethodInfo.MethodsInvoke != null
         ? MethodInfo.MethodsInvoke.Select(m => m.InvokeMethodId.ToString()).ToList()

@@ -6,10 +6,10 @@ public class CreateMethodArgs(
     bool? isAbstract,
     bool? isSealed,
     bool? isOverride,
-    bool? IsVirtual,
+    bool? isVirtual,
     Guid classId,
-    List<CreateDataTypeArgs> localVariables,
-    List<CreateDataTypeArgs> parameters,
+    List<CreateVariableArgs> localVariables,
+    List<CreateVariableArgs> parameters,
     List<Guid> invokeMethods)
 {
     public string? Name { get; set; } = name;
@@ -18,9 +18,9 @@ public class CreateMethodArgs(
     public bool? IsAbstract { get; set; } = isAbstract;
     public bool? IsSealed { get; set; } = isSealed;
     public bool? IsOverride { get; set; } = isOverride;
-    public bool? IsVirtual { get; set; } = IsVirtual;
+    public bool? IsVirtual { get; set; } = isVirtual;
     public Guid ClassId { get; set; } = classId;
-    public List<CreateDataTypeArgs> LocalVariables { get; set; } = localVariables;
-    public List<CreateDataTypeArgs> Parameters { get; set; } = parameters;
+    public List<CreateVariableArgs> LocalVariables { get; set; } = localVariables;
+    public List<CreateVariableArgs> Parameters { get; set; } = parameters;
     public List<Guid> InvokeMethods { get; set; } = invokeMethods;
 }

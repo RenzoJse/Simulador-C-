@@ -16,6 +16,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<ValueType> ValueTypes { get; set; }
     public DbSet<ReferenceType> ReferenceTypes { get; set; }
     public DbSet<InvokeMethod> InvokeMethod { get; set; }
+    public DbSet<Variable> Variables { get; set; }
     public DbSet<Namespace> Namespaces { get; set; }
     public DbSet<Key> Keys { get; set; }
 
@@ -77,44 +78,20 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 .OnDelete(DeleteBehavior.Cascade);
 
             m.HasMany(m => m.Parameters)
-                .WithMany()
-                .UsingEntity<DataTypeMethodParameters>(
-                    j => j
-                        .HasOne<DataType>()
-                        .WithMany()
-                        .HasForeignKey("IdDataType")
-                        .OnDelete(DeleteBehavior.Restrict),
-                    j => j
-                        .HasOne<Method>()
-                        .WithMany()
-                        .HasForeignKey("IdMethod")
-                        .OnDelete(DeleteBehavior.Restrict),
-                    j =>
-                    {
-                        j.HasKey("IdDataType", "IdMethod");
-                    });
+                .WithOne()
+                .HasForeignKey(m => m.VariableId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             m.HasMany(m => m.LocalVariables)
-                .WithMany()
-                .UsingEntity<DataTypeMethodLocalVariables>(
-                    j => j
-                        .HasOne<DataType>()
-                        .WithMany()
-                        .HasForeignKey("IdDataType")
-                        .OnDelete(DeleteBehavior.Restrict),
-                    j => j
-                        .HasOne<Method>()
-                        .WithMany()
-                        .HasForeignKey("IdMethod")
-                        .OnDelete(DeleteBehavior.Restrict),
-                    j =>
-                    {
-                        j.HasKey("IdDataType", "IdMethod");
-                    });
+                .WithOne()
+                .HasForeignKey(m => m.VariableId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             m.HasMany(m => m.MethodsInvoke)
                 .WithOne()
+                .HasForeignKey(m => m.MethodId)
                 .OnDelete(DeleteBehavior.Restrict);
+
         });
 
         modelBuilder.Entity<Attribute>(a =>
@@ -148,23 +125,23 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<InvokeMethod>(im =>
         {
             im.HasKey(im => new { im.MethodId, im.InvokeMethodId });
-
-            im.HasOne<Method>()
-                .WithMany()
-                .HasForeignKey(im => im.MethodId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            im.HasOne<Method>()
-                .WithMany(m => m.MethodsInvoke)
-                .HasForeignKey(im => im.InvokeMethodId)
-                .OnDelete(DeleteBehavior.Cascade);
         });
+
         modelBuilder.Entity<Namespace>()
             .HasMany(n => n.Children)
             .WithOne()
             .HasForeignKey(n => n.ParentId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Variable>(v =>
+        {
+            v.HasKey(v => v.VariableId);
+
+            v.HasOne<DataType>()
+                .WithMany()
+                .HasForeignKey(v => v.TypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
         base.OnModelCreating(modelBuilder);
         ModelSeedData(modelBuilder);
@@ -409,17 +386,4 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         );
     }
 
-    [ExcludeFromCodeCoverage]
-    public sealed record DataTypeMethodParameters
-    {
-        public Guid IdDataType { get; set; }
-        public Guid IdMethod { get; set; }
-    }
-
-    [ExcludeFromCodeCoverage]
-    public sealed record DataTypeMethodLocalVariables
-    {
-        public Guid IdDataType { get; set; }
-        public Guid IdMethod { get; set; }
-    }
 }

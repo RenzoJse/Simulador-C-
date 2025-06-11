@@ -228,7 +228,7 @@ public class Class
         }
     }
 
-    private static bool AreParametersEqual(List<DataType> parameters1, List<DataType> parameters2)
+    private static bool AreParametersEqual(List<Variable> parameters1, List<Variable> parameters2)
     {
         if(parameters1.Count != parameters2.Count)
         {
@@ -240,7 +240,7 @@ public class Class
             var p1 = parameters1[i];
             var p2 = parameters2[i];
 
-            if(p1.Type != p2.Type || p1.Type != p2.Type)
+            if(p1.TypeId != p2.TypeId || p1.Name != p2.Name)
             {
                 return false;
             }

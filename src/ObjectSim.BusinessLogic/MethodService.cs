@@ -26,7 +26,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     {
         if(typeId == Guid.Empty)
         {
-            throw new ArgumentException("Type ID cannot be empty.");
+            throw new ArgumentException("Name ID cannot be empty.");
         }
 
         return dataTypeService.GetById(typeId).Id;
@@ -40,10 +40,10 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         }
     }
 
-    private Method BuildMethodFromArgs(CreateMethodArgs methodArgs)
+    private static Method BuildMethodFromArgs(CreateMethodArgs methodArgs)
     {
-        var parameters = BuildDataTypes(methodArgs.Parameters);
-        var localVariables = BuildDataTypes(methodArgs.LocalVariables);
+        var parameters = BuildVariables(methodArgs.Parameters);
+        var localVariables = BuildVariables(methodArgs.LocalVariables);
 
         return new Method
         {
@@ -60,9 +60,9 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         };
     }
 
-    private List<DataType> BuildDataTypes(IEnumerable<CreateDataTypeArgs> dataTypeArgs)
+    private static List<Variable> BuildVariables(IEnumerable<CreateVariableArgs> variablesArgs)
     {
-        return dataTypeArgs.Select(dataTypeService.CreateDataType).ToList();
+        return variablesArgs.Select(variable => new Variable(variable.ClassId, variable.Name)).ToList();
     }
 
     private void AddMethodToClass(Guid classId, Method method)
@@ -170,11 +170,11 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     #region AddParameter
 
-    public DataType AddParameter(Guid methodId, DataType parameter)
+    public Variable AddParameter(Guid methodId, Variable parameter)
     {
         var method = GetMethodById(methodId);
 
-        if(method.Parameters.Any(p => p.Type == parameter.Type))
+        if(method.Parameters.Any(p => p.Name == parameter.Name))
         {
             throw new Exception("Parameter already exists in this method");
         }
@@ -189,11 +189,11 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     #region AddLocalVariable
 
-    public DataType AddLocalVariable(Guid methodId, DataType localVariable)
+    public Variable AddLocalVariable(Guid methodId, Variable localVariable)
     {
         var method = GetMethodById(methodId);
 
-        if(method.LocalVariables.Any(lv => lv.Type == localVariable.Type))
+        if(method.LocalVariables.Any(lv => lv.Name == localVariable.Name))
         {
             throw new Exception("LocalVariable already exists in this method");
         }
@@ -215,8 +215,6 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         var method = GetMethodById(methodId);
         AddInvokeMethods(invokeMethodArgs, method);
 
-        methodRepository.Update(method);
-
         return method;
     }
 
@@ -235,7 +233,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             var methodToInvoke = GetMethodToInvoke(invokeArg.InvokeMethodId);
             ValidateCanAddInvokeMethod(method, methodToInvoke, invokeArg.Reference);
             ValidateInvokeMethodReachable(method, invokeArg.InvokeMethodId);
-            CreateInvokeMethod(invokeArg, method);
+            var invokeMethod = CreateInvokeMethod(invokeArg, method);
         }
     }
 
@@ -252,16 +250,29 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     private void ValidateInvokeMethodReachable(Method method, Guid invokeMethodId)
     {
-        if (method.Parameters.Any(param => param.Id != invokeMethodId) ||
-            method.LocalVariables.Any(localVar => localVar.Id != invokeMethodId))
+        var invokeMethod = methodRepository.Get(m => m.Id == invokeMethodId);
+        var currentClass = classRepository.Get(c => c.Id == method.ClassId);
+
+        var isInSameClass = invokeMethod!.ClassId == method.ClassId;
+
+        var isMethodInClass = currentClass!.Methods?.Any(m => m.Id == invokeMethodId) ?? false;
+
+        var isAlreadyInvoked = method.MethodsInvoke?.Any(m => m.MethodId == invokeMethodId) ?? false;
+
+        var isInClassAttribute = currentClass.Attributes?.Any(a => a.ClassId == invokeMethod.ClassId) ?? false;
+
+        var matchesLocalVariable = method.LocalVariables?.Any(lv => lv.Name == invokeMethod.Name) ?? false;
+
+        if (!isInSameClass && !isMethodInClass && !isAlreadyInvoked &&
+            !isInClassAttribute && !matchesLocalVariable)
         {
-            throw new ArgumentException("The invoked method must be reachable from the current method.");
+            throw new ArgumentException($"Invoke method with id {invokeMethodId} is not reachable from method {method.Name}");
         }
     }
 
-    private void CreateInvokeMethod(CreateInvokeMethodArgs invokeArg, Method method)
+    private InvokeMethod CreateInvokeMethod(CreateInvokeMethodArgs invokeArg, Method method)
     {
-        invokeMethodService.CreateInvokeMethod(invokeArg, method);
+        return invokeMethodService.CreateInvokeMethod(invokeArg, method);
     }
 
     #endregion

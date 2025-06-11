@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ObjectSim.DataAccess;
 
@@ -11,9 +12,11 @@ using ObjectSim.DataAccess;
 namespace ObjectSim.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250611170302_AddDataTypeIdToAttribute")]
+    partial class AddDataTypeIdToAttribute
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,6 +204,8 @@ namespace ObjectSim.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("MethodId", "InvokeMethodId");
+
+                    b.HasIndex("InvokeMethodId");
 
                     b.ToTable("InvokeMethod");
                 });
@@ -498,6 +503,12 @@ namespace ObjectSim.DataAccess.Migrations
                 {
                     b.HasOne("ObjectSim.Domain.Method", null)
                         .WithMany("MethodsInvoke")
+                        .HasForeignKey("InvokeMethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ObjectSim.Domain.Method", null)
+                        .WithMany()
                         .HasForeignKey("MethodId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
