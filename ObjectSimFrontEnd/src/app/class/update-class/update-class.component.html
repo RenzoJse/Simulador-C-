@@ -1,13 +1,5 @@
-<div class="container mt-4">
-  <h2 class="mb-4">Update Class</h2>
-
-  <app-create-class-form
-    *ngIf="selectedClass"
-    [title]="'Update Class'"
-    [initialClass]="selectedClass"
-    (atSubmit)="onUpdate($event)">
-  </app-create-class-form>
-
-  <div *ngIf="status?.loading">Loading...</div>
-  <div *ngIf="status?.error">{{ status.error }}</div>
-</div>
+<app-update-class-name-form
+  [loading]="status.loading"
+  [error]="status.error"
+  (atSubmit)="atSubmit($event)">
+</app-update-class-name-form>
