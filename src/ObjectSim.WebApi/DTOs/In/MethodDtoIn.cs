@@ -12,16 +12,16 @@ public class MethodDtoIn
     public bool IsOverride { get; init; }
     public bool? IsVirtual { get; set; }
     public string? ClassId { get; set; }
-    public List<CreateDataTypeDtoIn> LocalVariables { get; init; } = [];
-    public List<CreateDataTypeDtoIn> Parameters { get; init; } = [];
+    public List<CreateVariableDtoIn> LocalVariables { get; init; } = [];
+    public List<CreateVariableDtoIn> Parameters { get; init; } = [];
     public List<Guid> InvokeMethodsId { get; init; } = [];
 
     public CreateMethodArgs ToArgs()
     {
-        List<CreateDataTypeArgs> localVariables = [];
-        localVariables.AddRange(LocalVariables.Select(localVariable => new CreateDataTypeArgs(Guid.Parse(ClassId!), localVariable.Type)));
-        List<CreateDataTypeArgs> parameters = [];
-        parameters.AddRange(Parameters.Select(parameter => new CreateDataTypeArgs(Guid.Parse(ClassId!), parameter.Type)));
+        List<CreateVariableArgs> localVariables = [];
+        localVariables.AddRange(LocalVariables.Select(localVariable => new CreateVariableArgs(Guid.Parse(ClassId!), localVariable.Name)));
+        List<CreateVariableArgs> parameters = [];
+        parameters.AddRange(Parameters.Select(parameter => new CreateVariableArgs(Guid.Parse(ClassId!), parameter.Name)));
         return new CreateMethodArgs(Name, Guid.Parse(Type!), Accessibility,
             IsAbstract, IsSealed, IsOverride, IsVirtual, Guid.Parse(ClassId!), localVariables, parameters, InvokeMethodsId);
     }

@@ -409,17 +409,4 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         );
     }
 
-    [ExcludeFromCodeCoverage]
-    public sealed record DataTypeMethodParameters
-    {
-        public Guid IdDataType { get; set; }
-        public Guid IdMethod { get; set; }
-    }
-
-    [ExcludeFromCodeCoverage]
-    public sealed record DataTypeMethodLocalVariables
-    {
-        public Guid IdDataType { get; set; }
-        public Guid IdMethod { get; set; }
-    }
 }

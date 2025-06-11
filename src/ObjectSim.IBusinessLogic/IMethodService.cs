@@ -10,8 +10,8 @@ public interface IMethodService
     bool Delete(Guid id);
     Method GetById(Guid id);
     Method Update(Guid id, Method entity);
-    DataType AddParameter(Guid methodId, DataType parameter);
-    DataType AddLocalVariable(Guid methodId, DataType localVariable);
+    Variable AddParameter(Guid methodId, Variable parameter);
+    Variable AddLocalVariable(Guid methodId, Variable localVariable);
     Method AddInvokeMethod(Guid methodId, List<CreateInvokeMethodArgs> invokeMethodArgs);
 
 }
