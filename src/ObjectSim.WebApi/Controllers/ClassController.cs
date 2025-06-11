@@ -65,4 +65,11 @@ public class ClassController(IClassService classService) : ControllerBase
         return Ok(response);
     }
 
+    [HttpPatch("{classId:guid}")]
+    public IActionResult UpdateClass([FromRoute]Guid classId, [FromBody] UpdateClassNameDto dto)
+    {
+        classService.UpdateClass(classId, dto.Name);
+        return Ok();
+    }
+
 }

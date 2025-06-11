@@ -263,4 +263,20 @@ public class ClassService(IDataTypeService dataTypeService, IEnumerable<IBuilder
 
     #endregion
 
+    #region UpdateClass
+    public void UpdateClass(Guid classId, string newName)
+    {
+        var existingClass = classRepository.Get(c => c.Id == classId)
+            ?? throw new ArgumentException("Class not found");
+
+        if(string.IsNullOrWhiteSpace(newName))
+        {
+            throw new ArgumentException("Name cannot be empty");
+        }
+
+        existingClass.Name = newName;
+        classRepository.Update(existingClass);
+    }
+    #endregion
+
 }
