@@ -8,7 +8,7 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic;
 
-public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepository<Class> classRepository) : IClassService
+public class ClassService(IDataTypeService dataTypeService, IEnumerable<IBuilderStrategy> builderStrategies, IRepository<Class> classRepository) : IClassService
 {
 
     #region CreateClass
@@ -20,8 +20,15 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
         var newClass = builder.GetResult();
         SaveClassToRepository(newClass);
+        CreateDataType(newClass);
 
         return newClass;
+    }
+
+    private void CreateDataType(Class newClass)
+    {
+        var dataTypeArgs = new CreateDataTypeArgs(newClass.Id, newClass.Name!);
+        dataTypeService.CreateDataType(dataTypeArgs);
     }
 
     private Builder SelectBuilderForArgs(CreateClassArgs args)
