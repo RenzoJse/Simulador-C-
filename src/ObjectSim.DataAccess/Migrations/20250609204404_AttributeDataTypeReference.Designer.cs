@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ObjectSim.DataAccess;
 
@@ -11,9 +12,11 @@ using ObjectSim.DataAccess;
 namespace ObjectSim.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250609204404_AttributeDataTypeReference")]
+    partial class AttributeDataTypeReference
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,78 +122,6 @@ namespace ObjectSim.DataAccess.Migrations
                             IsInterface = false,
                             IsSealed = false,
                             Name = "Object"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                            IsAbstract = false,
-                            IsInterface = false,
-                            IsSealed = true,
-                            Name = "String",
-                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
-                            IsAbstract = false,
-                            IsInterface = false,
-                            IsSealed = true,
-                            Name = "Int32",
-                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
-                            IsAbstract = false,
-                            IsInterface = false,
-                            IsSealed = true,
-                            Name = "Boolean",
-                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000006"),
-                            IsAbstract = false,
-                            IsInterface = false,
-                            IsSealed = true,
-                            Name = "Char",
-                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000007"),
-                            IsAbstract = false,
-                            IsInterface = false,
-                            IsSealed = true,
-                            Name = "Decimal",
-                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                            IsAbstract = false,
-                            IsInterface = false,
-                            IsSealed = true,
-                            Name = "Byte",
-                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000009"),
-                            IsAbstract = false,
-                            IsInterface = false,
-                            IsSealed = true,
-                            Name = "float",
-                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000010"),
-                            IsAbstract = false,
-                            IsInterface = false,
-                            IsSealed = true,
-                            Name = "Double",
-                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
                         });
                 });
 
@@ -204,6 +135,14 @@ namespace ObjectSim.DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
+
+                    b.Property<string>("MethodIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -432,41 +371,57 @@ namespace ObjectSim.DataAccess.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000005"),
+                            MethodIds = "[]",
+                            Name = "void",
                             Type = "void"
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            Id = new Guid("249d6656-0276-556c-a992-bcf6bfea8578"),
+                            MethodIds = "[]",
+                            Name = "int",
                             Type = "int"
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            Id = new Guid("729965ef-64e3-5607-939f-8e19784ef0e9"),
+                            MethodIds = "[]",
+                            Name = "bool",
                             Type = "bool"
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000006"),
+                            Id = new Guid("49e4ea3e-e6d6-4eb7-a7de-01cf4dc1cf7a"),
+                            MethodIds = "[]",
+                            Name = "char",
                             Type = "char"
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000007"),
+                            Id = new Guid("1d9cd43c-e19b-4b24-ae0f-fb6cc43f1f27"),
+                            MethodIds = "[]",
+                            Name = "decimal",
                             Type = "decimal"
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
+                            Id = new Guid("4e82822e-e6e1-44c1-9df9-7c43f7ecda5e"),
+                            MethodIds = "[]",
+                            Name = "byte",
                             Type = "byte"
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000009"),
+                            Id = new Guid("75dfd62e-8d7c-48ee-9481-183ec3629936"),
+                            MethodIds = "[]",
+                            Name = "float",
                             Type = "float"
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000010"),
+                            Id = new Guid("bd8e7c9e-e8d0-42f2-9479-63284c5c3fa0"),
+                            MethodIds = "[]",
+                            Name = "double",
                             Type = "double"
                         });
                 });

@@ -59,12 +59,12 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
         modelBuilder.Entity<ReferenceType>(rt =>
         {
-            rt.Property(r => r.Name).IsRequired();
+            rt.Property(r => r.Type).IsRequired();
         });
 
         modelBuilder.Entity<ValueType>(vt =>
         {
-            vt.Property(v => v.Name).IsRequired();
+            vt.Property(v => v.Type).IsRequired();
         });
 
         modelBuilder.Entity<Method>(m =>
@@ -120,10 +120,9 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<Attribute>(a =>
         {
             a.HasKey(a => a.Id);
-            a.Ignore(a => a.DataType);
             a.HasOne(a => a.DataType)
                 .WithMany()
-                .HasForeignKey("DataTypeIdId")
+                .HasForeignKey(a => a.DataTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
@@ -138,12 +137,12 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
         modelBuilder.Entity<ValueType>(vt =>
         {
-            vt.Property(vt => vt.Name).IsRequired();
+            vt.Property(vt => vt.Type).IsRequired();
         });
 
         modelBuilder.Entity<ReferenceType>(rt =>
         {
-            rt.Property(rt => rt.Name).IsRequired();
+            rt.Property(rt => rt.Type).IsRequired();
         });
 
         modelBuilder.Entity<InvokeMethod>(im =>
@@ -161,89 +160,156 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 .OnDelete(DeleteBehavior.Cascade);
         });
         modelBuilder.Entity<Namespace>()
-    .HasMany(n => n.Children)
-    .WithOne()
-    .HasForeignKey(n => n.ParentId)
-    .OnDelete(DeleteBehavior.Restrict);
-
+            .HasMany(n => n.Children)
+            .WithOne()
+            .HasForeignKey(n => n.ParentId)
+            .OnDelete(DeleteBehavior.Restrict);
 
 
         base.OnModelCreating(modelBuilder);
         ModelSeedData(modelBuilder);
     }
+
     private void ModelSeedData(ModelBuilder modelBuilder)
     {
         var voidTypeId = Guid.Parse("00000000-0000-0000-0000-000000000005");
 
         modelBuilder.Entity<ValueType>().HasData(new ValueType
         {
-            Id = voidTypeId,
-            Name = "void",
-            Type = "void",
-            MethodIds = []
+            Id = voidTypeId, Type = "void"
         });
+
         var objectClassId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
-        modelBuilder.Entity<Class>().HasData(new Class
+        var objectClass = new Class
         {
             Id = objectClassId,
             Name = "Object",
             IsAbstract = false,
             IsSealed = false,
             IsInterface = false
+        };
+
+        modelBuilder.Entity<Class>().HasData(objectClass);
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+            Name = "String",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
         });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
+            Name = "Int32",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000004"),
+            Name = "Boolean",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000006"),
+            Name = "Char",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000007"),
+            Name = "Decimal",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+            Name = "Byte",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000009"),
+            Name = "float",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
+        modelBuilder.Entity<Class>().HasData(new
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000010"),
+            Name = "Double",
+            ParentId = objectClass.Id,
+            IsAbstract = false,
+            IsSealed = true,
+            IsInterface = false
+        });
+
         var valueTypes = new List<ValueType>
-{
-    new ValueType
-    {
-        Id = Guid.Parse("249d6656-0276-556c-a992-bcf6bfea8578"),
-        Name = "int",
-        Type = "int",
-        MethodIds = []
-    },
-    new ValueType
-    {
-        Id = Guid.Parse("729965ef-64e3-5607-939f-8e19784ef0e9"),
-        Name = "bool",
-        Type = "bool",
-        MethodIds = []
-    },
-    new ValueType
-    {
-        Id = Guid.Parse("49e4ea3e-e6d6-4eb7-a7de-01cf4dc1cf7a"),
-        Name = "char",
-        Type = "char",
-        MethodIds = []
-    },
-    new ValueType
-    {
-        Id = Guid.Parse("1d9cd43c-e19b-4b24-ae0f-fb6cc43f1f27"),
-        Name = "decimal",
-        Type = "decimal",
-        MethodIds = []
-    },
-    new ValueType
-    {
-        Id = Guid.Parse("4e82822e-e6e1-44c1-9df9-7c43f7ecda5e"),
-        Name = "byte",
-        Type = "byte",
-        MethodIds = []
-    },
-    new ValueType
-    {
-        Id = Guid.Parse("75dfd62e-8d7c-48ee-9481-183ec3629936"),
-        Name = "float",
-        Type = "float",
-        MethodIds = []
-    },
-    new ValueType
-    {
-        Id = Guid.Parse("bd8e7c9e-e8d0-42f2-9479-63284c5c3fa0"),
-        Name = "double",
-        Type = "double",
-        MethodIds = []
-    }
-};
+        {
+            new()
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
+                Type = "int"
+            },
+            new()
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000004"),
+                Type = "bool"
+            },
+            new()
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000006"),
+                Type = "char"
+            },
+            new()
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000007"),
+                Type = "decimal"
+            },
+            new()
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                Type = "byte"
+            },
+            new()
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000009"),
+                Type = "float"
+            },
+            new()
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000010"),
+                Type = "double"
+            }
+        };
 
         modelBuilder.Entity<ValueType>().HasData(valueTypes);
 
@@ -335,7 +401,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 IsSealed = false,
                 TypeId = voidTypeId,
                 IsOverride = false
-
             }
         );
         modelBuilder.Entity<Key>().HasData(
@@ -357,5 +422,4 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         public Guid IdDataType { get; set; }
         public Guid IdMethod { get; set; }
     }
-
 }

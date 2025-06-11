@@ -70,7 +70,7 @@ public abstract class Builder()
 
     private bool ParentIsInterfaceWithUnimplementedMethods()
     {
-        return Result.Parent is not null && Result.Parent.IsInterface == true;
+        return Result.Parent is not null && Result.Parent.IsInterface == true; //TODO MEJORAR ESTO
     }
 
     public Class GetResult()

@@ -22,7 +22,7 @@ public class ClassBuilderTest
         Name = "TestMethod",
     };
 
-    private static readonly DataType TestDataType = new ValueType("test", "int", []);
+    private static readonly DataType TestDataType = new ValueType(Guid.NewGuid(), "int");
 
     private static readonly CreateAttributeArgs TestCreateAttributeArgs = new(
         Guid.NewGuid(),
@@ -134,8 +134,8 @@ public class ClassBuilderTest
         _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
             .Returns(attribute2);
 
-        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeIdId, "public", Guid.NewGuid(), "Attribute1");
-        var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeIdId, "public", Guid.NewGuid(), "Attribute2");
+        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute1");
+        var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute2");
 
         _classBuilderTest!.SetAttributes([attributeArgs1, attributeArgs2]);
 

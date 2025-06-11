@@ -30,10 +30,10 @@ public class AttributeControllerTest
     [TestMethod]
     public void GetAll_ShouldReturnAttributes_WhenThereAreElements()
     {
-        var attributes = new List<ObjectSim.Domain.Attribute>
+        var attributes = new List<Domain.Attribute>
         {
-            new ObjectSim.Domain.Attribute { Name = "Attribute1" },
-            new ObjectSim.Domain.Attribute { Name = "Attribute2" }
+            new Domain.Attribute { Name = "Attribute1" },
+            new Domain.Attribute { Name = "Attribute2" }
         };
 
         _attributeServiceMock
@@ -86,11 +86,13 @@ public class AttributeControllerTest
     [TestMethod]
     public void Create_ValidModel_ShouldReturnCreatedResult()
     {
+        var dataType = new ReferenceType(Guid.NewGuid(), "string");
+
         var modelIn = new CreateAttributeDtoIn
         {
             Name = "Color",
             Visibility = "Public",
-            DataTypeId = Guid.NewGuid().ToString(),
+            DataTypeId = dataType.Id.ToString(),
             ClassId = Guid.NewGuid()
         };
 
@@ -99,7 +101,7 @@ public class AttributeControllerTest
             Id = Guid.NewGuid(),
             Name = "Color",
             Visibility = Domain.Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = dataType,
             ClassId = modelIn.ClassId
         };
 
@@ -116,8 +118,6 @@ public class AttributeControllerTest
         Assert.IsNotNull(outModel);
         Assert.AreEqual("Color", outModel.Name);
         Assert.AreEqual("Public", outModel.Visibility);
-        Assert.AreEqual("string", outModel.DataTypeKind);
-        Assert.AreEqual("myString", outModel.DataTypeName);
 
         _attributeServiceMock.Verify(x => x.CreateAttribute(It.IsAny<CreateAttributeArgs>()), Times.Once);
     }
@@ -153,7 +153,7 @@ public class AttributeControllerTest
             Id = Guid.NewGuid(),
             Name = "TestAttr",
             Visibility = Domain.Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType(Guid.NewGuid(), "string"),
             ClassId = modelIn.ClassId
         };
 
@@ -178,7 +178,7 @@ public class AttributeControllerTest
             Name = "Test",
             ClassId = Guid.NewGuid(),
             Visibility = Domain.Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("myString", "string", [])
+            DataType = new ReferenceType(Guid.NewGuid(), "string")
         };
 
         _attributeServiceMock
@@ -218,7 +218,7 @@ public class AttributeControllerTest
             Name = "cantidad",
             Visibility = Domain.Attribute.AttributeVisibility.Public,
             ClassId = classId,
-            DataType = new Domain.ValueType("cantidad", "int", [])
+            DataType = new Domain.ValueType(Guid.NewGuid(), "int")
         };
 
         var attributes = new List<Domain.Attribute> { attribute };
@@ -239,8 +239,6 @@ public class AttributeControllerTest
         var dto = dtoList[0];
         Assert.AreEqual("cantidad", dto.Name);
         Assert.AreEqual("Public", dto.Visibility);
-        Assert.AreEqual("int", dto.DataTypeKind);
-        Assert.AreEqual("cantidad", dto.DataTypeName);
         Assert.AreEqual(classId, dto.ClassId);
 
         _attributeServiceMock.Verify(s => s.GetByClassId(classId), Times.Once);
@@ -330,7 +328,7 @@ public class AttributeControllerTest
             Id = id,
             Name = "Color",
             Visibility = Domain.Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("myString", "string", []),
+            DataType = new ReferenceType(Guid.NewGuid(), "string"),
             ClassId = dtoIn.ClassId
         };
 
@@ -348,7 +346,6 @@ public class AttributeControllerTest
         Assert.IsNotNull(dtoOut);
         Assert.AreEqual("Color", dtoOut.Name);
         Assert.AreEqual("Public", dtoOut.Visibility);
-        Assert.AreEqual("string", dtoOut.DataTypeKind);
     }
     [TestMethod]
     public void Update_InvalidId_ShouldThrowException()

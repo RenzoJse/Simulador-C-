@@ -54,28 +54,40 @@ public class DataTypeService(IRepository<Class> classRepository, IRepository<Dat
 
     private static Domain.ValueType CreateBuiltinValueType(CreateDataTypeArgs args)
     {
-        return new Domain.ValueType(args.Name, args.Type, []);
+        return new Domain.ValueType(args.ClassId, args.Type);
     }
 
     private static ReferenceType CreateStringReferenceType(CreateDataTypeArgs args)
     {
-        return new ReferenceType(args.Name, args.Type, []);
+        return new ReferenceType(args.ClassId, args.Type);
     }
 
-    private static ReferenceType CreateReferenceType(CreateDataTypeArgs args)
+    private ReferenceType CreateReferenceType(CreateDataTypeArgs args)
     {
-        return new ReferenceType(args.Name, args.Type, []);
+        var referenceType = new ReferenceType(args.ClassId, args.Type);
+        dataTypeRepository.Add(referenceType);
+        return referenceType;
     }
+
+    #endregion
+
+    #region GetById
+
     public DataType GetById(Guid id)
     {
         var dt = dataTypeRepository.Get(c => c.Id == id);
-        return dt is null ? throw new KeyNotFoundException("DataType not found") : dt;
+        return dt ?? throw new KeyNotFoundException("DataType not found");
     }
+
+    #endregion
+
+    #region GetAll
 
     public List<DataType> GetAll()
     {
         return dataTypeRepository.GetAll(_ => true);
     }
+
     #endregion
 
 }

@@ -4,7 +4,8 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodService(IRepository<Method> methodRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService) : IMethodService, IMethodServiceCreate
+public class MethodService(IRepository<Method> methodRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService,
+    IInvokeMethodService invokeMethodService) : IMethodService, IMethodServiceCreate
 {
     #region CreateMethod
 
@@ -173,7 +174,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     {
         var method = GetMethodById(methodId);
 
-        if(method.Parameters.Any(p => p.Name == parameter.Name))
+        if(method.Parameters.Any(p => p.Type == parameter.Type))
         {
             throw new Exception("Parameter already exists in this method");
         }
@@ -192,7 +193,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     {
         var method = GetMethodById(methodId);
 
-        if(method.LocalVariables.Any(lv => lv.Name == localVariable.Name))
+        if(method.LocalVariables.Any(lv => lv.Type == localVariable.Type))
         {
             throw new Exception("LocalVariable already exists in this method");
         }
@@ -212,9 +213,8 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         ValidateInvokeMethodArgs(invokeMethodArgs);
 
         var method = GetMethodById(methodId);
-        var invokeMethods = BuildInvokeMethods(invokeMethodArgs, method);
+        AddInvokeMethods(invokeMethodArgs, method);
 
-        method.MethodsInvoke.AddRange(invokeMethods);
         methodRepository.Update(method);
 
         return method;
@@ -228,20 +228,40 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         }
     }
 
-    private List<InvokeMethod> BuildInvokeMethods(List<CreateInvokeMethodArgs> invokeMethodArgs, Method method)
+    private void AddInvokeMethods(List<CreateInvokeMethodArgs> invokeMethodArgs, Method method)
     {
-        var invokeMethods = new List<InvokeMethod>();
-        foreach(var invokeArg in invokeMethodArgs)
+        foreach (var invokeArg in invokeMethodArgs)
         {
-            var methodToInvoke = methodRepository.Get(m => m.Id == invokeArg.InvokeMethodId)
-                                 ?? throw new Exception($"Method to invoke with id {invokeArg.InvokeMethodId} not found");
-
-            method.CanAddInvokeMethod(methodToInvoke, GetClassById(method.ClassId), invokeArg.Reference);
-
-            var newInvokeMethod = new InvokeMethod(method.Id, invokeArg.InvokeMethodId, invokeArg.Reference);
-            invokeMethods.Add(newInvokeMethod);
+            var methodToInvoke = GetMethodToInvoke(invokeArg.InvokeMethodId);
+            ValidateCanAddInvokeMethod(method, methodToInvoke, invokeArg.Reference);
+            ValidateInvokeMethodReachable(method, invokeArg.InvokeMethodId);
+            CreateInvokeMethod(invokeArg, method);
         }
-        return invokeMethods;
+    }
+
+    private Method GetMethodToInvoke(Guid invokeMethodId)
+    {
+        return methodRepository.Get(m => m.Id == invokeMethodId)
+               ?? throw new Exception($"Method to invoke with id {invokeMethodId} not found");
+    }
+
+    private void ValidateCanAddInvokeMethod(Method method, Method methodToInvoke, string reference)
+    {
+        method.CanAddInvokeMethod(methodToInvoke, GetClassById(method.ClassId), reference);
+    }
+
+    private void ValidateInvokeMethodReachable(Method method, Guid invokeMethodId)
+    {
+        if (method.Parameters.Any(param => param.Id != invokeMethodId) ||
+            method.LocalVariables.Any(localVar => localVar.Id != invokeMethodId))
+        {
+            throw new ArgumentException("The invoked method must be reachable from the current method.");
+        }
+    }
+
+    private void CreateInvokeMethod(CreateInvokeMethodArgs invokeArg, Method method)
+    {
+        invokeMethodService.CreateInvokeMethod(invokeArg, method);
     }
 
     #endregion

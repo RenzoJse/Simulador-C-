@@ -9,19 +9,17 @@ public class CreateDataTypeArgsTest
     [TestMethod]
     public void Properties_SetAndGet_ShouldReturnExpectedValues()
     {
-        const string name = "TestType";
+        Guid classId = Guid.NewGuid();
         const string type = "int";
-        var args = new CreateDataTypeArgs(name, type);
+        var args = new CreateDataTypeArgs(classId, type);
 
-        args.Name.Should().Be(name);
         args.Type.Should().Be(type);
-
-        const string newName = "OtherType";
         const string newType = "float";
-        args.Name = newName;
+
+        args.ClassId = classId;
         args.Type = newType;
 
-        args.Name.Should().Be(newName);
+        args.ClassId.Should().Be(classId);
         args.Type.Should().Be(newType);
     }
 }

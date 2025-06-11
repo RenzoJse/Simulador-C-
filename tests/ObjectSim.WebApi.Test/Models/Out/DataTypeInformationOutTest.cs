@@ -10,21 +10,23 @@ public class DataTypeInformationDtoOutTest
     [TestMethod]
     public void DataTypeToInfo_WithArguments_MapsPropertiesCorrectly()
     {
-        var domainDataType = new ValueType("TestName", "int", []);
+        var id = Guid.NewGuid();
+        var domainDataType = new ValueType(id, "int");
 
         var result = DataTypeInformationDtoOut.ToInfo(domainDataType);
 
         result.Should().NotBeNull();
-        result.Name.Should().Be("TestName");
+        result.Id.Should().Be(id);
         result.Type.Should().Be("int");
     }
 
     [TestMethod]
     public void DataTypeToInfo_Properties_AreInitializedCorrectly()
     {
-        var dto = new DataTypeInformationDtoOut { Name = "TestName", Type = "string" };
+        var id = Guid.NewGuid();
+        var dto = new DataTypeInformationDtoOut { Id = id, Type = "string" };
 
-        dto.Name.Should().Be("TestName");
+        dto.Id.Should().Be(id);
         dto.Type.Should().Be("string");
     }
 }

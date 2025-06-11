@@ -30,6 +30,9 @@ public class AttributeRepositoryTest
     {
         _context.Database.EnsureDeleted();
     }
+
+    #region GetAttribute
+
     [TestMethod]
     public void GetAttribute_WhenIdExists_ReturnsAttributeWithDataType()
     {
@@ -37,7 +40,7 @@ public class AttributeRepositoryTest
         var classId = Guid.NewGuid();
         var valueTypeId = Guid.NewGuid();
 
-        var valueType = new Domain.ValueType("intValue", "int", [])
+        var valueType = new Domain.ValueType(Guid.NewGuid(), "int")
         {
             Id = valueTypeId
         };
@@ -61,7 +64,7 @@ public class AttributeRepositoryTest
             DataType = valueType
         };
 
-        _context.Entry(attribute).Property("DataTypeIdId").CurrentValue = valueTypeId;
+        _context.Entry(attribute).Property("DataTypeId").CurrentValue = valueTypeId;
 
         _context.Set<Domain.Attribute>().Add(attribute);
         _context.SaveChanges();
@@ -71,8 +74,9 @@ public class AttributeRepositoryTest
         Assert.IsNotNull(result);
         Assert.AreEqual(attrId, result.Id);
         Assert.IsNotNull(result.DataType);
-        Assert.AreEqual("intValue", result.DataType.Name);
+        Assert.AreEqual("int", result.DataType.Type);
     }
+
     [TestMethod]
     public void GetAttribute_WhenIdDoesNotExist_ShouldReturnNull()
     {
@@ -80,6 +84,7 @@ public class AttributeRepositoryTest
 
         Assert.IsNull(result);
     }
+
     [TestMethod]
     public void AddAttribute_ShouldPersistInDatabase()
     {
@@ -87,7 +92,7 @@ public class AttributeRepositoryTest
         var valueTypeId = Guid.NewGuid();
 
         var classEntity = new Domain.Class { Id = classId, Name = "TestClass" };
-        var valueType = new Domain.ValueType("intValue", "int", []) { Id = valueTypeId };
+        var valueType = new Domain.ValueType(Guid.NewGuid(), "int") { Id = valueTypeId };
 
         _context.Set<Domain.Class>().Add(classEntity);
         _context.Set<Domain.ValueType>().Add(valueType);
@@ -102,7 +107,7 @@ public class AttributeRepositoryTest
             DataType = valueType
         };
 
-        _context.Entry(attribute).Property("DataTypeIdId").CurrentValue = valueTypeId;
+        _context.Entry(attribute).Property("DataTypeId").CurrentValue = valueTypeId;
 
         _attributeRepository.Add(attribute);
 
@@ -111,7 +116,5 @@ public class AttributeRepositoryTest
         Assert.AreEqual("NewAttribute", result.Name);
     }
 
-
-
-
+    #endregion
 }

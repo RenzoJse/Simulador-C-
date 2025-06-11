@@ -45,6 +45,7 @@ public static class ServiceFactory
 
         services.AddScoped<ISecurityService, SecurityService>();
         services.AddScoped<IValidationStrategy, KeyStrategy>();
+        services.AddScoped<IInvokeMethodService, InvokeMethodService>();
     }
 
     public static void AddDataAccess(IServiceCollection services)
@@ -55,6 +56,6 @@ public static class ServiceFactory
         services.AddScoped<IRepository<DataType>, Repository<DataType>>();
         services.AddScoped<IRepository<Key>, Repository<Key>>();
         services.AddScoped<INamespaceRepository, NamespaceRepository>();
-
+        services.AddScoped<IRepository<InvokeMethod>, Repository<InvokeMethod>>();
     }
 }
