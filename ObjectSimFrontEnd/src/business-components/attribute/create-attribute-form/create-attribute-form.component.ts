@@ -49,13 +49,13 @@ export class CreateAttributeFormComponent {
         }
 
         var formValue = this.createAttributeForm.value;
-        var newAttribute: CreateAttributeModel = {
+        /*var newAttribute: CreateAttributeModel = {
             name: formValue.name,
             dataTypeID: formValue.dataTypeID,
             visibility: formValue.visibility
-        };
+        };*/
 
-        this.atSubmit.emit(newAttribute);
+        //this.atSubmit.emit(newAttribute);
     }
 
     private markAsTouched() {
