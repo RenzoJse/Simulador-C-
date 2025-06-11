@@ -193,7 +193,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     {
         var method = GetMethodById(methodId);
 
-        if(method.LocalVariables.Any(lv => lv.TypeId == localVariable.TypeId))
+        if(method.LocalVariables.Any(lv => lv.Name == localVariable.Name))
         {
             throw new Exception("LocalVariable already exists in this method");
         }
@@ -250,7 +250,24 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     private void ValidateInvokeMethodReachable(Method method, Guid invokeMethodId)
     {
-        // TODO hay que validar que el metodo a invocar sea alcanzable desde el metodo actual, trayendo la clase de los parametros o local variables.
+        var invokeMethod = methodRepository.Get(m => m.Id == invokeMethodId);
+        var currentClass = classRepository.Get(c => c.Id == method.ClassId);
+
+        var isInSameClass = invokeMethod!.ClassId == method.ClassId;
+
+        var isMethodInClass = currentClass!.Methods?.Any(m => m.Id == invokeMethodId) ?? false;
+
+        var isAlreadyInvoked = method.MethodsInvoke?.Any(m => m.MethodId == invokeMethodId) ?? false;
+
+        var isInClassAttribute = currentClass.Attributes?.Any(a => a.ClassId == invokeMethod.ClassId) ?? false;
+
+        var matchesLocalVariable = method.LocalVariables?.Any(lv => lv.Name == invokeMethod.Name) ?? false;
+
+        if (!isInSameClass && !isMethodInClass && !isAlreadyInvoked &&
+            !isInClassAttribute && !matchesLocalVariable)
+        {
+            throw new ArgumentException($"Invoke method with id {invokeMethodId} is not reachable from method {method.Name}");
+        }
     }
 
     private InvokeMethod CreateInvokeMethod(CreateInvokeMethodArgs invokeArg, Method method)

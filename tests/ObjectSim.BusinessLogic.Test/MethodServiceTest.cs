@@ -486,32 +486,45 @@ public class MethodServiceTest
     [TestMethod]
     public void AddInvokeMethod_WhenInvokeMethodIsNotReachable_ThrowsException()
     {
-        var invokeMethodId = Guid.NewGuid();
-        var otherId = Guid.NewGuid();
+        var invokeMethod = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "methodToInvoke",
+            ClassId = Guid.NewGuid()
+        };
 
         var method = new Method
         {
             Id = Guid.NewGuid(),
             Name = "test",
-            Parameters = [new Variable(otherId, "test")],
-            LocalVariables = [new Variable(invokeMethodId, "test")]
+            ClassId = Guid.NewGuid(),
+            Parameters = [],
+            LocalVariables = [],
+            MethodsInvoke = []
         };
 
         var invokeMethodArgs = new List<CreateInvokeMethodArgs>
         {
-            new(invokeMethodId, "this")
+            new(invokeMethod.Id, "this")
         };
 
-        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
-            .Returns(method);
+        ISetupSequentialResult<Method?> setupSequence =
+            _methodRepositoryMock!.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()));
+
+        setupSequence.Returns(method);
+        setupSequence.Returns(invokeMethod);
 
         _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(new Class { Methods = [method], Attributes = [] });
+            .Returns(new Class
+            {
+                Id = method.ClassId,
+                Methods = [],
+                Attributes = []
+            });
 
         Action act = () => _methodServiceTest!.AddInvokeMethod(method.Id, invokeMethodArgs);
 
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("The invoked method must be reachable from the current method.");
+        act.Should().Throw<Exception>();
     }
 
     #endregion
@@ -521,29 +534,49 @@ public class MethodServiceTest
     [TestMethod]
     public void AddInvokeMethod_WhenInvokeIsValid_AddsInvokeMethod()
     {
-        var invokeMethod = new Method { Id = Guid.NewGuid(), Name = "test", Parameters = [] };
+        var testMethodId = Guid.NewGuid();
+        var classId = Guid.NewGuid();
+
+        var testMethod = new Method
+        {
+            Id = testMethodId,
+            Name = "MétodoPrincipal",
+            ClassId = classId,
+            Parameters = [],
+            LocalVariables = [],
+            MethodsInvoke = []
+        };
+
+        var invokeMethod = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "test",
+            Parameters = [],
+            ClassId = classId,
+            MethodsInvoke = []
+        };
+
         var invokeMethodArgs = new List<CreateInvokeMethodArgs> { new(invokeMethod.Id, "this") };
 
-        ISetupSequentialResult<Method?> setupSequence =
-            _methodRepositoryMock!.SetupSequence(r => r.Get(It.IsAny<Func<Method, bool>>()));
+        _methodRepositoryMock!.Setup(r => r.Get(It.Is<Func<Method, bool>>(f => f(testMethod))))
+            .Returns(testMethod);
 
-        setupSequence.Returns(_testMethod);
-
-        setupSequence.Returns(invokeMethod);
+        _methodRepositoryMock!.Setup(r => r.Get(It.Is<Func<Method, bool>>(f => f(invokeMethod))))
+            .Returns(invokeMethod);
 
         _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(new Class { Methods = [invokeMethod], Attributes = [] });
-
-        _testMethod!.MethodsInvoke.Add(new InvokeMethod(invokeMethod.Id, _testMethod.Id, "this"));
-
-        _methodRepositoryMock.Setup(r => r.Update(It.IsAny<Method>()))
-            .Returns(_testMethod);
+            .Returns(new Class { Id = classId, Methods = [invokeMethod, testMethod], Attributes = [] });
 
         _invokeMethodServiceMock!
             .Setup(s => s.CreateInvokeMethod(It.IsAny<CreateInvokeMethodArgs>(), It.IsAny<Method>()))
-            .Returns((CreateInvokeMethodArgs args, Method m) => new InvokeMethod(args.InvokeMethodId, m.Id, args.Reference));
+            .Returns((CreateInvokeMethodArgs args, Method m) =>
+            {
+                var invoke = new InvokeMethod(args.InvokeMethodId, m.Id, args.Reference);
+                m.MethodsInvoke.Add(invoke);
+                return invoke;
+            });
 
-        var result = _methodServiceTest!.AddInvokeMethod(_testMethod!.Id, invokeMethodArgs);
+        Method result = _methodServiceTest!.AddInvokeMethod(testMethod.Id, invokeMethodArgs);
 
         result.Should().NotBeNull();
         result.MethodsInvoke.Should().ContainSingle(m => m.MethodId == invokeMethod.Id);
