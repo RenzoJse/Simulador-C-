@@ -784,4 +784,41 @@ public class ClassServiceTest
     }
     #endregion
     #endregion
+
+    #region UpdateClass
+    [TestMethod]
+    public void UpdateClassName_ValidName_UpdatesSuccessfully()
+    {
+        var classId = Guid.NewGuid();
+        var existing = new Class { Id = classId, Name = "OldName" };
+
+        _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>())).Returns(existing);
+        _classRepositoryMock.Setup(r => r.Update(It.IsAny<Class>())).Returns((Class c) => c);
+
+        _classServiceTest!.UpdateClass(classId, "NewName");
+
+        Assert.AreEqual("NewName", existing.Name);
+        _classRepositoryMock.Verify(r => r.Update(existing), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateClassName_ClassNotFound_ThrowsException()
+    {
+        _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>())).Returns((Class?)null);
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            _classServiceTest!.UpdateClass(Guid.NewGuid(), "NewName"));
+    }
+
+    [TestMethod]
+    public void UpdateClassName_EmptyName_ThrowsException()
+    {
+        var classId = Guid.NewGuid();
+        var existing = new Class { Id = classId, Name = "OldName" };
+        _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>())).Returns(existing);
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            _classServiceTest!.UpdateClass(classId, ""));
+    }
+    #endregion
 }

@@ -199,4 +199,25 @@ public class ClassControllerTest
         response.First().Name.Should().Be(_testClass.Name);
     }
     #endregion
+
+    #region Update-Class-Test
+    [TestMethod]
+    public void UpdateClass_WhenIsValid_MakesValidUpdate()
+    {
+        var classId = Guid.NewGuid();
+        var dto = new UpdateClassNameDto { Name = "UpdatedName" };
+
+        _classServiceMock
+            .Setup(service => service.UpdateClass(classId, dto.Name));
+
+        var result = _classController.UpdateClass(classId, dto);
+
+        var resultObject = result as OkResult;
+        var statusCode = resultObject?.StatusCode;
+        statusCode.Should().Be(200);
+
+        _classServiceMock.Verify(service => service.UpdateClass(classId, dto.Name), Times.Once);
+    }
+    #endregion
 }
+

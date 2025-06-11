@@ -6,6 +6,7 @@ import enviroments from '../../environments/index';
 import ApiRepository from './api-repository';
 import CreateClassModel from '../../backend/services/class/models/create-class.model';
 import ClassListItem from '../../backend/services/class/models/class-list-item';
+import UpdateClassModel from '../services/class/models/update-class-model';
 
 @Injectable({
     providedIn: 'root',
@@ -24,9 +25,19 @@ export class ClassApiRepository extends ApiRepository {
         return this.get<ClassListItem[]>();
     }
 
+    getById(id: string): Observable<ClassListItem[]> {
+        const url = `${id}`;
+        return this.get<ClassListItem[]>(); //está mal, reutilice el getAll hay que ver como implementar el getbyid
+    }
+
     deleteClass(id: string): Observable<any> {
         const url = `${id}`;
         return this.delete(url);
+    }
+
+    updateClass(id: string, updateModel: UpdateClassModel): Observable<any> {
+        const url = `${id}`;
+        return this.patch(url, updateModel);
     }
 }
 
