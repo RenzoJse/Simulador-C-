@@ -793,6 +793,7 @@ public class ClassServiceTest
         var existing = new Class { Id = classId, Name = "OldName" };
 
         _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>())).Returns(existing);
+        _classRepositoryMock.Setup(r => r.Update(It.IsAny<Class>())).Returns((Class c) => c);
 
         _classServiceTest!.UpdateClass(classId, "NewName");
 
