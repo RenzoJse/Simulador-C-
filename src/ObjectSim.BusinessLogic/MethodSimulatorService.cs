@@ -33,7 +33,7 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
 
     private void ValidateIsValidInstance(Class instanceType, Class referenceType)
     {
-        if(instanceType.Parent != referenceType)
+        if(instanceType.Parent != referenceType && instanceType.Id != referenceType.Id)
         {
             throw new Exception("Invalid instance type.");
         }
@@ -59,21 +59,26 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
         return method;
     }
 
-    private string SimulateInternal(Method method, int indentLevel)
+    private string SimulateInternal(Method method, int indentLevel, HashSet<Guid>? visited = null)
     {
-        var result = "";
+        visited ??= [];
+        if (!visited.Add(method.Id))
+        {
+            return "";
+        }
 
+        var result = "";
         var indent = new string(' ', indentLevel * 5);
 
-        foreach(var methodInvoke in method.MethodsInvoke)
+        foreach (var methodInvoke in method.MethodsInvoke)
         {
             var objMethodToInvoke = methodRepository.Get(m => m.Id == methodInvoke.MethodId);
 
             result += $"{indent}{methodInvoke.Reference}.{objMethodToInvoke!.Name}() -> ";
 
-            if(objMethodToInvoke.MethodsInvoke.Count > 0)
+            if (objMethodToInvoke.MethodsInvoke.Count > 0)
             {
-                result += SimulateInternal(objMethodToInvoke, indentLevel + 1);
+                result += SimulateInternal(objMethodToInvoke, indentLevel + 1, visited);
             }
         }
 

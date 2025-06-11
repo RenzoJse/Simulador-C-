@@ -89,7 +89,9 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
             m.HasMany(m => m.MethodsInvoke)
                 .WithOne()
+                .HasForeignKey(m => m.MethodId)
                 .OnDelete(DeleteBehavior.Restrict);
+
         });
 
         modelBuilder.Entity<Attribute>(a =>
@@ -123,16 +125,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<InvokeMethod>(im =>
         {
             im.HasKey(im => new { im.MethodId, im.InvokeMethodId });
-
-            im.HasOne<Method>()
-                .WithMany()
-                .HasForeignKey(im => im.MethodId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            im.HasOne<Method>()
-                .WithMany(m => m.MethodsInvoke)
-                .HasForeignKey(im => im.InvokeMethodId)
-                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Namespace>()

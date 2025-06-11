@@ -16,4 +16,15 @@ public class ClassRepository(DbContext context) : Repository<Class>(context)
             .AsEnumerable()
             .FirstOrDefault(filter);
     }
+
+    public override List<Class> GetAll(Func<Class, bool> filter)
+    {
+        return _classes
+            .Include(c => c.Attributes)
+            .Include(c => c.Methods)
+            .Include(c => c.Parent)
+            .AsEnumerable()
+            .ToList();
+    }
+
 }

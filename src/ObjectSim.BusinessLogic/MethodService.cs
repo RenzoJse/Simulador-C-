@@ -215,8 +215,6 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         var method = GetMethodById(methodId);
         AddInvokeMethods(invokeMethodArgs, method);
 
-        methodRepository.Update(method);
-
         return method;
     }
 
@@ -235,7 +233,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             var methodToInvoke = GetMethodToInvoke(invokeArg.InvokeMethodId);
             ValidateCanAddInvokeMethod(method, methodToInvoke, invokeArg.Reference);
             ValidateInvokeMethodReachable(method, invokeArg.InvokeMethodId);
-            CreateInvokeMethod(invokeArg, method);
+            var invokeMethod = CreateInvokeMethod(invokeArg, method);
         }
     }
 
@@ -255,9 +253,9 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         // TODO hay que validar que el metodo a invocar sea alcanzable desde el metodo actual, trayendo la clase de los parametros o local variables.
     }
 
-    private void CreateInvokeMethod(CreateInvokeMethodArgs invokeArg, Method method)
+    private InvokeMethod CreateInvokeMethod(CreateInvokeMethodArgs invokeArg, Method method)
     {
-        invokeMethodService.CreateInvokeMethod(invokeArg, method);
+        return invokeMethodService.CreateInvokeMethod(invokeArg, method);
     }
 
     #endregion
