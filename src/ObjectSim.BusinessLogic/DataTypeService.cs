@@ -54,17 +54,17 @@ public class DataTypeService(IRepository<Class> classRepository, IRepository<Dat
 
     private static Domain.ValueType CreateBuiltinValueType(CreateDataTypeArgs args)
     {
-        return new Domain.ValueType(args.Name, args.Type);
+        return new Domain.ValueType(args.ClassId, args.Type);
     }
 
     private static ReferenceType CreateStringReferenceType(CreateDataTypeArgs args)
     {
-        return new ReferenceType(args.Name, args.Type);
+        return new ReferenceType(args.ClassId, args.Type);
     }
 
     private static ReferenceType CreateReferenceType(CreateDataTypeArgs args)
     {
-        return new ReferenceType(args.Name, args.Type);
+        return new ReferenceType(args.ClassId, args.Type);
     }
     public DataType GetById(Guid id)
     {

@@ -18,7 +18,7 @@ public class AttributeServiceTest
     private Mock<IDataTypeService> _dataTypeServiceMock = null!;
     private AttributeService? _attributeServiceTest;
 
-    private readonly DataType? _testDataType = new ValueType("myVariable", "int");
+    private readonly DataType? _testDataType = new ValueType(Guid.NewGuid(), "int");
     private static readonly Guid TestAttributeId = Guid.NewGuid();
 
     private readonly CreateAttributeArgs _testArgsAttribute = new(
@@ -32,7 +32,7 @@ public class AttributeServiceTest
     {
         Id = TestAttributeId,
         Name = "Test",
-        DataType = new ValueType("myVariable", "int"),
+        DataType = new ValueType(Guid.NewGuid(), "int"),
         ClassId = Guid.NewGuid(),
         Visibility = Attribute.AttributeVisibility.Public
     };
@@ -161,7 +161,7 @@ public class AttributeServiceTest
                 Id = Guid.NewGuid(),
                 Name = "Name",
                 ClassId = Guid.NewGuid(),
-                DataType = new ValueType("myVariable", "int"),
+                DataType = new ValueType(Guid.NewGuid(), "int"),
                 Visibility = Attribute.AttributeVisibility.Private
             },
             new()
@@ -169,7 +169,7 @@ public class AttributeServiceTest
                 Id = Guid.NewGuid(),
                 Name = "Name2",
                 ClassId = Guid.NewGuid(),
-                DataType = new ValueType("myVariable", "int"),
+                DataType = new ValueType(Guid.NewGuid(), "int"),
                 Visibility = Attribute.AttributeVisibility.Private
             }
         };
@@ -250,7 +250,7 @@ public class AttributeServiceTest
         result.Should().NotBeNull();
         result.Should().Be(_testAttribute);
 
-        _attributeRepositoryMock.Verify(repo => repo.Get(It.IsAny<Func<Attribute, bool>>()), Times.Once);
+        _attributeRepositoryMock!.Verify(repo => repo.Get(It.IsAny<Func<Attribute, bool>>()), Times.Once);
     }
 
     [TestMethod]
@@ -289,7 +289,7 @@ public class AttributeServiceTest
             Name = "UpdatedName",
             ClassId = args.ClassId,
             Visibility = Attribute.AttributeVisibility.Public,
-            DataType = new ReferenceType("stringName", "Reference")
+            DataType = new ReferenceType(Guid.NewGuid(), "Reference")
         };
 
         SetupAttributeRepositoryGet(updatedAttribute);
@@ -345,7 +345,7 @@ public class AttributeServiceTest
             Name = "Attr",
             ClassId = Guid.NewGuid(),
             Visibility = Attribute.AttributeVisibility.Public,
-            DataType = new ValueType("Attr", "int")
+            DataType = new ValueType(Guid.NewGuid(), "int")
         };
 
         var args = new CreateAttributeArgs(

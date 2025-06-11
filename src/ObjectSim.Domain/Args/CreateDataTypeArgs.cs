@@ -1,8 +1,8 @@
 ﻿namespace ObjectSim.Domain.Args;
 
 public class CreateDataTypeArgs(
-    string name, string type)
+    Guid classId, string type)
 {
-    public string Name { get; set; } = name;
+    public Guid ClassId { get; set; } = classId;
     public string Type { get; set; } = type;
 }

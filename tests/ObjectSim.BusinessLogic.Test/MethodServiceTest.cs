@@ -21,9 +21,9 @@ public class MethodServiceTest
     private static readonly Guid ClassId = Guid.NewGuid();
     private static readonly Guid MethodId = Guid.NewGuid();
 
-    private static readonly ReferenceType TestLocalVariable = new("TestLocalVariable", "string");
+    private static readonly ReferenceType TestLocalVariable = new(Guid.NewGuid(), "string");
 
-    private static readonly ValueType TestParameter = new("TestParameter", "int");
+    private static readonly ValueType TestParameter = new(Guid.NewGuid(), "int");
 
     private readonly CreateMethodArgs _testCreateMethodArgs = new(
         "TestMethod",
@@ -111,7 +111,7 @@ public class MethodServiceTest
             .Returns(classObj);
 
         _dataTypeServiceMock!.Setup(service => service.GetById(It.IsAny<Guid>()))
-            .Returns(new ValueType("MethodType", "int"));
+            .Returns(new ValueType(Guid.NewGuid(), "int"));
 
         _methodRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Method>()))
             .Returns((Method m) => m);
@@ -321,8 +321,8 @@ public class MethodServiceTest
     [TestMethod]
     public void AddParameter_WhenDuplicate_ShouldThrow()
     {
-        var existing = new ValueType("variable", "bool");
-        var param = new ValueType("variable", "bool");
+        var existing = new ValueType(Guid.NewGuid(), "bool");
+        var param = new ValueType(Guid.NewGuid(), "bool");
 
         _testMethod!.Parameters = [existing];
 
@@ -350,8 +350,8 @@ public class MethodServiceTest
         var result = _methodServiceTest!.AddParameter(_testMethod!.Id, TestParameter);
 
         result.Should().NotBeNull();
-        result.Name.Should().Be(TestParameter.Name);
-        _testMethod.Parameters.Should().ContainSingle(p => p.Name == TestParameter.Name);
+        result.Type.Should().Be(TestParameter.Type);
+        _testMethod.Parameters.Should().ContainSingle(p => p.Type == TestParameter.Type);
     }
 
     #endregion
@@ -377,8 +377,8 @@ public class MethodServiceTest
     [TestMethod]
     public void AddLocalVariable_WhenDuplicateName_ShouldThrow()
     {
-        var existing = new ValueType("variable", "bool");
-        var newVar = new ValueType("variable", "bool");
+        var existing = new ValueType(Guid.NewGuid(), "bool");
+        var newVar = new ValueType(Guid.NewGuid(), "bool");
 
         _testMethod!.LocalVariables = [existing];
 
@@ -406,8 +406,8 @@ public class MethodServiceTest
         var result = _methodServiceTest!.AddLocalVariable(_testMethod!.Id, TestLocalVariable);
 
         result.Should().NotBeNull();
-        result.Name.Should().Be(TestLocalVariable.Name);
-        _testMethod!.LocalVariables.Should().ContainSingle(v => v.Name == TestLocalVariable.Name);
+        result.Type.Should().Be(TestLocalVariable.Type);
+        _testMethod!.LocalVariables.Should().ContainSingle(v => v.Type == TestLocalVariable.Type);
     }
 
     #endregion
@@ -481,6 +481,37 @@ public class MethodServiceTest
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("Invoke method arguments cannot be null or empty.");
+    }
+
+    [TestMethod]
+    public void AddInvokeMethod_WhenInvokeMethodIsNotReachable_ThrowsException()
+    {
+        var invokeMethodId = Guid.NewGuid();
+        var otherId = Guid.NewGuid();
+
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "test",
+            Parameters = [new ValueType { Id = otherId }],
+            LocalVariables = [new ValueType { Id = invokeMethodId }]
+        };
+
+        var invokeMethodArgs = new List<CreateInvokeMethodArgs>
+        {
+            new(invokeMethodId, "this")
+        };
+
+        _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
+            .Returns(method);
+
+        _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(new Class { Methods = [method], Attributes = [] });
+
+        Action act = () => _methodServiceTest!.AddInvokeMethod(method.Id, invokeMethodArgs);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("The invoked method must be reachable from the current method.");
     }
 
     #endregion

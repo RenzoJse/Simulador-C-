@@ -16,13 +16,13 @@ public class MethodControllerTest
     private Mock<IMethodService> _methodServiceMock = null!;
     private MethodController _methodController = null!;
 
-    private static readonly DataType TestLocalVariable = new ReferenceType("TestLocalVariable", "string");
+    private static readonly DataType TestLocalVariable = new ReferenceType(Guid.NewGuid(), "string");
 
-    private static readonly DataType TestParameter = new ReferenceType("TestParameter", "string");
+    private static readonly DataType TestParameter = new ReferenceType(Guid.NewGuid(), "string");
 
     private static readonly InvokeMethod TestInvokeMethod = new InvokeMethod(Guid.NewGuid(), Guid.NewGuid(), "this");
 
-    private static readonly ReferenceType TestReferenceType = new ReferenceType("TestReferenceType", "string");
+    private static readonly ReferenceType TestReferenceType = new ReferenceType(Guid.NewGuid(), "string");
 
     private readonly Method _testMethod = new Method
     {
@@ -83,10 +83,10 @@ public class MethodControllerTest
         answer.IsAbstract.Should().Be(_testMethod.Abstract);
         answer.IsOverride.Should().Be(_testMethod.IsOverride);
         answer.IsSealed.Should().Be(_testMethod.IsSealed);
-        answer.LocalVariables.Select(lv => lv.Name)
-            .Should().BeEquivalentTo(_testMethod.LocalVariables!.Select(lv => lv.Name));
-        answer.Parameters.Select(p => p.Name)
-            .Should().BeEquivalentTo(_testMethod.Parameters!.Select(p => p.Name));
+        answer.LocalVariables.Select(lv => lv.Type)
+            .Should().BeEquivalentTo(_testMethod.LocalVariables!.Select(lv => lv.Type));
+        answer.Parameters.Select(p => p.Type)
+            .Should().BeEquivalentTo(_testMethod.Parameters!.Select(p => p.Type));
         answer.InvokeMethodsIds.Should()
             .BeEquivalentTo(_testMethod.MethodsInvoke!.Select(m => m.InvokeMethodId.ToString()));
     }

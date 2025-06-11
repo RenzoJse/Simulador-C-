@@ -6,22 +6,22 @@ public class ValueType : DataType
 
     public ValueType()
     {
-        Name = string.Empty;
+        Id = Guid.Empty;
         Type = string.Empty;
     }
 
-    public ValueType(string name, string type)
+    public ValueType(Guid classId, string type)
     {
-        ValidateValueType(name, type);
-        Name = name;
+        ValidateValueType(type);
+        Id = classId;
         Type = type;
     }
 
-    private static void ValidateValueType(string name, string type)
+    private static void ValidateValueType(string type)
     {
-        ValidateNameNotNullOrEmpty(name);
-        ValidateNameLength(name);
-        ValidateNameCharacters(name);
+        ValidateNameNotNullOrEmpty(type);
+        ValidateNameLength(type);
+        ValidateNameCharacters(type);
         ValidateTypeIsBuiltin(type);
     }
 

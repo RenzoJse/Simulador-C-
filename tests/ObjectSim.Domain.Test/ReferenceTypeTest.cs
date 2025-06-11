@@ -10,14 +10,13 @@ public class ReferenceTypeTest
     #region Error
 
     [TestMethod]
-    public void CreateReferenceType_WhenNameIsNullOrEmpty_ShouldThrowArgumentException()
+    public void CreateReferenceType_WhenTypeIsNullOrEmpty_ShouldThrowArgumentException()
     {
-        string? invalidName = null;
         const string type = "string";
 
         Action action = () =>
         {
-            var referenceType = new ReferenceType(invalidName, type);
+            var referenceType = new ReferenceType(Guid.NewGuid(), type);
         };
 
         action.Should().Throw<ArgumentException>()
@@ -31,20 +30,18 @@ public class ReferenceTypeTest
     [TestMethod]
     public void CreateReferenceType_ValidInput_CreatesReferenceType()
     {
-        const string name = "myString";
         const string type = "string";
 
-        var referenceType = new ReferenceType(name, type);
+        var referenceType = new ReferenceType(Guid.NewGuid(), type);
 
         Assert.IsNotNull(referenceType);
-        Assert.AreEqual(name, referenceType.Name);
         Assert.AreEqual(type, referenceType.Type);
     }
 
     [TestMethod]
     public void PrivateConstructor_ValidInput_CreatesReferenceType()
     {
-        var constructor = typeof(ReferenceType).GetConstructor( // Reflection to access the private constructor.
+        var constructor = typeof(ReferenceType).GetConstructor(
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
             null,
             Type.EmptyTypes,
@@ -53,7 +50,6 @@ public class ReferenceTypeTest
         var referenceType = (ReferenceType)constructor!.Invoke(null);
 
         referenceType.Id.Should().NotBeEmpty();
-        referenceType.Name.Should().BeEmpty();
         referenceType.Type.Should().BeEmpty();
     }
 

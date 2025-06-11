@@ -174,7 +174,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     {
         var method = GetMethodById(methodId);
 
-        if(method.Parameters.Any(p => p.Name == parameter.Name))
+        if(method.Parameters.Any(p => p.Type == parameter.Type))
         {
             throw new Exception("Parameter already exists in this method");
         }
@@ -193,7 +193,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     {
         var method = GetMethodById(methodId);
 
-        if(method.LocalVariables.Any(lv => lv.Name == localVariable.Name))
+        if(method.LocalVariables.Any(lv => lv.Type == localVariable.Type))
         {
             throw new Exception("LocalVariable already exists in this method");
         }
@@ -262,7 +262,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     private void CreateInvokeMethod(CreateInvokeMethodArgs invokeArg, Method method)
     {
         invokeMethodService.CreateInvokeMethod(invokeArg, method);
-    }g
+    }
 
     #endregion
 

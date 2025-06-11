@@ -622,7 +622,7 @@ public class ClassServiceTest
 
         var localVariable = new ValueType()
         {
-            Name = "UsedAttribute"
+            Type = "UsedAttribute"
         };
 
         var method = new Method
@@ -698,8 +698,8 @@ public class ClassServiceTest
         var method = new Method
         {
             Name = "TestMethod",
-            LocalVariables = [new ValueType { Name = "DifferentName" }],
-            Parameters = [new ValueType() { Name = "DifferentParam" }]
+            LocalVariables = [new ValueType { Type = "DifferentName" }],
+            Parameters = [new ValueType() { Type = "DifferentParam" }]
         };
 
         var classWithMethodsAndAttribute = new Class

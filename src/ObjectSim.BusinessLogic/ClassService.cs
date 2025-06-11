@@ -247,7 +247,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
         foreach(var method in classObj.Methods)
         {
-            if(method.LocalVariables != null && method.LocalVariables.Any(lv => lv.Name == attribute.Name))
+            if(method.LocalVariables != null && method.LocalVariables.Any(lv => lv.Type == attribute.Name))
             {
                 throw new ArgumentException("Attribute is being used in method.");
             }

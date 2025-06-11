@@ -4,22 +4,19 @@ public class ReferenceType : DataType
     private ReferenceType()
     {
         Id = Guid.NewGuid();
-        Name = string.Empty;
         Type = string.Empty;
     }
 
-    public ReferenceType(string? name, string type)
+    public ReferenceType(Guid classId, string type)
     {
-        Validate(name);
-
-        Id = Guid.NewGuid();
-        Name = name ?? "";
+        Validate(classId);
+        Id = classId;
         Type = type;
     }
 
-    private static void Validate(string? name)
+    private static void Validate(Guid classId)
     {
-        if(string.IsNullOrWhiteSpace(name))
+        if(string.IsNullOrWhiteSpace(classId.ToString()))
         {
             throw new ArgumentException("Name cannot be null or empty.");
         }
