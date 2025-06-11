@@ -6,7 +6,7 @@ namespace ObjectSim.Domain.Test;
 public class ClassTest
 {
     private Class? _testClass;
-    private static readonly DataType ValueType = new ValueType(Guid.NewGuid(), "int");
+    private static readonly Variable ValueType = new Variable(Guid.NewGuid(), "int");
     private static readonly Guid TypeId = Guid.NewGuid();
     private readonly Method _existingMethod = new()
     {
@@ -393,7 +393,7 @@ public class ClassTest
         {
             Name = "TestMethod",
             TypeId = typeId,
-            Parameters = [new FakeDataType {  Type = "Int" }],
+            Parameters = [ValueType],
             IsOverride = false
         };
 
@@ -401,7 +401,7 @@ public class ClassTest
         {
             Name = "TestMethod",
             TypeId = typeId,
-            Parameters = [new FakeDataType { Type = "Int" }],
+            Parameters = [ValueType],
             IsOverride = false
         };
 
@@ -453,8 +453,8 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_WithSameParamsInDifferentOrder_AddsMethod()
     {
-        var parameterOne = new ValueType(Guid.NewGuid(), "int");
-        var parameterTwo = new ReferenceType(Guid.NewGuid(), "string");
+        var parameterOne = new Variable(Guid.NewGuid(), "int");
+        var parameterTwo = new Variable(Guid.NewGuid(), "string");
 
         var method = new Method
         {
@@ -486,7 +486,7 @@ public class ClassTest
         {
             Name = "NewMethod",
             TypeId = TypeId,
-            Parameters = [new ValueType(Guid.NewGuid(),"int")],
+            Parameters = [ValueType],
             IsOverride = false
         };
 
@@ -502,7 +502,7 @@ public class ClassTest
         {
             Name = "NewMethod",
             TypeId = TypeId,
-            Parameters = [new ValueType(Guid.NewGuid(), "int"), new ReferenceType(Guid.NewGuid(), "string")],
+            Parameters = [ValueType],
             IsOverride = false
         };
 
@@ -512,7 +512,7 @@ public class ClassTest
         {
             Name = "NewMethod",
             TypeId = TypeId,
-            Parameters = [new ValueType(Guid.NewGuid(), "int")],
+            Parameters = [ValueType, ValueType],
             IsOverride = false
         };
 
@@ -525,13 +525,12 @@ public class ClassTest
     public void CanAddMethod_TryingToAddOverridingParentMethod_AddsMethod()
     {
         var typeId = Guid.NewGuid();
-        var parameter = new FakeDataType { Type = "Int" };
 
         var parentMethod = new Method
         {
             Name = "DoWork",
             TypeId = typeId,
-            Parameters = [parameter],
+            Parameters = [ValueType],
             IsVirtual = true,
             IsOverride = false
         };
@@ -540,7 +539,7 @@ public class ClassTest
         {
             Name = "DoWork",
             TypeId = typeId,
-            Parameters = [parameter],
+            Parameters = [ValueType],
             IsOverride = true,
             IsVirtual = false
         };
@@ -678,12 +677,4 @@ public class ClassTest
     #endregion
 
     #endregion
-}
-public class FakeDataType : DataType
-{
-    public override bool IsSameType(DataType other)
-    {
-        return other is FakeDataType fake &&
-               fake.Type == Type;
-    }
 }

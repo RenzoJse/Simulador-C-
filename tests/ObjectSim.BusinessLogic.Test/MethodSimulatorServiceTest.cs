@@ -74,16 +74,24 @@ public class MethodSimulatorServiceTest
     [TestMethod]
     public void Simulate_WhenInstanceIsNotReferenceParent_ThrowsException()
     {
+        var referenceId = Guid.NewGuid();
+        var instanceId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+
+        var referenceClass = new Class { Id = referenceId, Name = "ReferenceType" };
+
+        var instanceClass = new Class { Id = instanceId, Name = "InstanceType", Parent = null };
+
+        _classRepositoryMock.SetupSequence(r => r.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns(referenceClass)
+            .Returns(instanceClass);
+
         var args = new SimulateExecutionArgs
         {
-            ReferenceId = Guid.NewGuid(),
-            InstanceId = Guid.NewGuid(),
-            MethodId = Guid.NewGuid(),
+            ReferenceId = referenceId,
+            InstanceId = instanceId,
+            MethodId = methodId,
         };
-
-        var classObj = new Class { Name = "InstanceType" };
-        _classRepositoryMock.Setup(r => r.Get(It.IsAny<Func<Class, bool>>()))
-            .Returns(classObj);
 
         Action act = () => _methodSimulatorServiceTest.Simulate(args);
 

@@ -21,9 +21,9 @@ public class MethodServiceTest
     private static readonly Guid ClassId = Guid.NewGuid();
     private static readonly Guid MethodId = Guid.NewGuid();
 
-    private static readonly ReferenceType TestLocalVariable = new(Guid.NewGuid(), "string");
+    private static readonly Variable TestLocalVariable = new(Guid.NewGuid(), "string");
 
-    private static readonly ValueType TestParameter = new(Guid.NewGuid(), "int");
+    private static readonly Variable TestParameter = new(Guid.NewGuid(), "int");
 
     private readonly CreateMethodArgs _testCreateMethodArgs = new(
         "TestMethod",
@@ -321,8 +321,8 @@ public class MethodServiceTest
     [TestMethod]
     public void AddParameter_WhenDuplicate_ShouldThrow()
     {
-        var existing = new ValueType(Guid.NewGuid(), "bool");
-        var param = new ValueType(Guid.NewGuid(), "bool");
+        var existing = new Variable(Guid.NewGuid(), "bool");
+        var param = new Variable(Guid.NewGuid(), "bool");
 
         _testMethod!.Parameters = [existing];
 
@@ -350,8 +350,8 @@ public class MethodServiceTest
         var result = _methodServiceTest!.AddParameter(_testMethod!.Id, TestParameter);
 
         result.Should().NotBeNull();
-        result.Type.Should().Be(TestParameter.Type);
-        _testMethod.Parameters.Should().ContainSingle(p => p.Type == TestParameter.Type);
+        result.Name.Should().Be(TestParameter.Name);
+        _testMethod.Parameters.Should().ContainSingle(p => p.Name == TestParameter.Name);
     }
 
     #endregion
@@ -377,8 +377,8 @@ public class MethodServiceTest
     [TestMethod]
     public void AddLocalVariable_WhenDuplicateName_ShouldThrow()
     {
-        var existing = new ValueType(Guid.NewGuid(), "bool");
-        var newVar = new ValueType(Guid.NewGuid(), "bool");
+        var existing = new Variable(Guid.NewGuid(), "bool");
+        var newVar = new Variable(Guid.NewGuid(), "bool");
 
         _testMethod!.LocalVariables = [existing];
 
@@ -406,8 +406,8 @@ public class MethodServiceTest
         var result = _methodServiceTest!.AddLocalVariable(_testMethod!.Id, TestLocalVariable);
 
         result.Should().NotBeNull();
-        result.Type.Should().Be(TestLocalVariable.Type);
-        _testMethod!.LocalVariables.Should().ContainSingle(v => v.Type == TestLocalVariable.Type);
+        result.Name.Should().Be(TestLocalVariable.Name);
+        _testMethod!.LocalVariables.Should().ContainSingle(v => v.Name == TestLocalVariable.Name);
     }
 
     #endregion
@@ -493,8 +493,8 @@ public class MethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "test",
-            Parameters = [new ValueType { Id = otherId }],
-            LocalVariables = [new ValueType { Id = invokeMethodId }]
+            Parameters = [new Variable(otherId, "test")],
+            LocalVariables = [new Variable(invokeMethodId, "test")]
         };
 
         var invokeMethodArgs = new List<CreateInvokeMethodArgs>
