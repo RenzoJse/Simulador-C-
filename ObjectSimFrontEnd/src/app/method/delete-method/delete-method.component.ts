@@ -1,47 +1,37 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Inject } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MethodService } from '../../../backend/services/method/method.service';
 
 @Component({
   selector: 'app-delete-method',
   templateUrl: './delete-method.component.html'
 })
-export class DeleteMethodComponent implements OnInit {
-  selectedMethodId: string | null = null;
-  loading = false;
-  error: string | null = null;
+
+export class DeleteMethodComponent {
+
+  status: { loading?: true; error?: string } | null = null;
 
   constructor(
-    private methodService: MethodService,
-    private router: Router
-  ) {}
-
-  ngOnInit() {
+      @Inject(MethodService) private readonly _methodService : MethodService
+  ) {
   }
 
-  onSelectionChange(id: string) {
-    this.selectedMethodId = id;
-    this.error = null;
-  }
+  protected atSubmit(methodId: string) {
+    this.status = { loading: true };
 
-  onDeleteClicked() {
-    if (!this.selectedMethodId) {
-      this.error = 'You must select a method to delete.';
-      return;
-    }
-
-    this.loading = true;
-    this.error = null;
-
-    this.methodService.deleteMethod(this.selectedMethodId).subscribe({
-      next: () => {
-        this.loading = false;
-        this.router.navigate(['/']);
+    this._methodService.deleteMethod(methodId).subscribe({
+      next: (response) => {
+        this.status = null;
       },
-      error: err => {
-        this.loading = false;
-        this.error = err.message || 'Failed to delete method.';
-      }
+      error: (error:any) => {
+        if (error.status === 400 && error.Message) {
+          this.status = { error: error.Message };
+        } else {
+          this.status = { error: error.message || 'Error in deleting method.' };
+        }
+      },
     });
+
   }
+
 }

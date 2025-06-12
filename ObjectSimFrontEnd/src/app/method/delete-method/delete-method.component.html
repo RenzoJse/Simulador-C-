@@ -1,20 +1,3 @@
-<div class="container mt-4">
-  <h2 class="mb-4">Delete Method</h2>
-
-  <app-method-dropdown
-    [label]="'Select Method to Delete'"
-    (selectionChange)="onSelectionChange($event)">
-  </app-method-dropdown>
-
-  <div *ngIf="error" class="text-danger my-2">
-    {{ error }}
-  </div>
-
-  <button
-    class="btn btn-danger"
-    [disabled]="loading"
-    (click)="onDeleteClicked()"
-  >
-    {{ loading ? 'Deleting…' : 'Delete Method' }}
-  </button>
-</div>
+<app-delete-method-form
+        (atSubmit)="atSubmit($event)">
+</app-delete-method-form>
