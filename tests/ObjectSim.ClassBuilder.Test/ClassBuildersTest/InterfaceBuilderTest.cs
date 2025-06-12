@@ -26,6 +26,7 @@ public class InterfaceBuilderTest
         false,
         false,
         false,
+        false,
         Guid.Empty,
         [],
         [],

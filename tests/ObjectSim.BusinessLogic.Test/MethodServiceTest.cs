@@ -33,6 +33,7 @@ public class MethodServiceTest
         false,
         false,
         false,
+        false,
         ClassId,
         [],
         [],
@@ -85,7 +86,7 @@ public class MethodServiceTest
     [TestMethod]
     public void CreateMethod_WithEmptyArgs_ThrowsException()
     {
-        var emptyArgs = new CreateMethodArgs("", Guid.Empty, "", null, null, null, null, Guid.Empty, [], [], []);
+        var emptyArgs = new CreateMethodArgs("", Guid.Empty, "", null, null, null, null, false, Guid.Empty, [], [], []);
 
         Action act = () => _methodServiceTest!.CreateMethod(emptyArgs);
 

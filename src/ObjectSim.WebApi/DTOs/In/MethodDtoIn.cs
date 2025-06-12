@@ -11,6 +11,7 @@ public class MethodDtoIn
     public bool IsSealed { get; init; }
     public bool IsOverride { get; init; }
     public bool? IsVirtual { get; set; }
+    public bool? IsStatic { get; set; }
     public string? ClassId { get; set; }
     public List<CreateVariableDtoIn> LocalVariables { get; init; } = [];
     public List<CreateVariableDtoIn> Parameters { get; init; } = [];
@@ -23,6 +24,6 @@ public class MethodDtoIn
         List<CreateVariableArgs> parameters = [];
         parameters.AddRange(Parameters.Select(parameter => new CreateVariableArgs(Guid.Parse(ClassId!), parameter.Name)));
         return new CreateMethodArgs(Name, Guid.Parse(Type!), Accessibility,
-            IsAbstract, IsSealed, IsOverride, IsVirtual, Guid.Parse(ClassId!), localVariables, parameters, InvokeMethodsId);
+            IsAbstract, IsSealed, IsOverride, IsVirtual, IsStatic, Guid.Parse(ClassId!), localVariables, parameters, InvokeMethodsId);
     }
 }
