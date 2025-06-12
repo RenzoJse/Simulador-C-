@@ -1,68 +1,59 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { CommonModule, NgIf, NgForOf } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Subscription } from "rxjs";
 
+import { DropdownComponent } from '../../../components/dropdown/dropdown.component';
 import { MethodService } from '../../../backend/services/method/method.service';
-
-interface MethodListItem {
-  id: string;
-  name: string;
-}
+import SystemMethodStatus from './models/SystemMethodStatus';
 
 @Component({
   selector: 'app-method-dropdown',
   standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule, NgIf, NgForOf ],
+  imports: [DropdownComponent, CommonModule],
   templateUrl: './method-dropdown.component.html'
 })
+
 export class MethodDropdownComponent implements OnInit {
-  @Input() label: string = 'Select Method';
+  @Input() value: string | null = null;
+  @Output() selectMethod = new EventEmitter<{ methodId: string | undefined; }>();
 
-  @Input() initialValue: string | null = null;
+  status: SystemMethodStatus = {
+    loading: true,
+    systemMethods: [],
+    error: '',
+  };
 
-  @Output() selectionChange = new EventEmitter<string>();
+  private _everyoneStatus: Subscription | null = null;
 
-  methods: MethodListItem[] = [];
-
-  form: FormGroup;
-
-  loading = false;
-  error: string | null = null;
-
-  constructor(
-    private fb: FormBuilder,
-    private methodService: MethodService
-  ) {
-    this.form = this.fb.group({
-      methodId: [this.initialValue, Validators.required]
-    });
+  constructor(private readonly _methodService: MethodService) {}
+  ngOnDestroy(): void {
+    this._everyoneStatus?.unsubscribe();
   }
 
-  ngOnInit() {
-    this.loadMethods();
-    this.form.get('methodId')!.valueChanges.subscribe((val: string) => {
-      this.selectionChange.emit(val);
-    });
+  ngOnInit(): void {
+    this._methodService.getAllMethods()
+        .subscribe({
+          next: (systemMethods) => {
+            this.status = {
+              systemMethods: systemMethods.map((methods) => ({
+                value: methods.id,
+                tag: methods.name,
+              })),
+            };
+          },
+          error: (error) => {
+            this.status = { systemMethods: [], error: 'No available methods.' };
+          }
+        });
   }
 
-  private loadMethods() {
-    this.loading = true;
-    this.methodService.getAllMethods().subscribe({
-      next: (list: MethodListItem[]) => {
-        this.methods = list;
-        this.loading = false;
-        if (this.initialValue) {
-          this.form.get('methodId')!.setValue(this.initialValue);
-        }
-      },
-      error: err => {
-        this.error = err.message || 'Could not load methods.';
-        this.loading = false;
-      }
-    });
+  onSelectMethod(methodId: string) {
+    const method = this.status.systemMethods.find(m => m.value === methodId);
+    if (method) {
+      this.selectMethod.emit({
+        methodId: method.value,
+      });
+    }
   }
 
-  public isValid(): boolean {
-    return this.form.valid;
-  }
 }

@@ -1,27 +1,15 @@
-<div class="form-group" [formGroup]="form">
+<div *ngIf="status.loading">Loading...</div>
 
-  <label class="form-label">{{ label }}</label>
-
-  <div *ngIf="loading" class="text-muted mb-2">
-    Loading methods...
-  </div>
-
-    <select formControlName="methodId" class="form-control">
-    <option value="" disabled>- Choose method -</option>
-
-    <option *ngFor="let m of methods" [value]="m.id">
-      {{ m.name }}
-    </option>
-  </select>
-
-  <div *ngIf="error" class="text-danger mb-2">
-    {{ error }}
-  </div>
-
-  <div
-    *ngIf="form.get('methodId')?.touched && form.get('methodId')?.invalid"
-    class="text-danger mt-1"
-  >
-    You must select a method.
-  </div>
+<div *ngIf="!status.loading && status.error">
+    <p>{{ status.error }}</p>
 </div>
+
+<app-dropdown
+        *ngIf="!status.loading && !status.error"
+        [options]="status.systemMethods"
+        tag="System Methods"
+        [value]="value"
+        reserve="Select a Method"
+        emptyMessage="There are no methods available"
+        (changeValue)="onSelectMethods($event)">
+</app-dropdown>
