@@ -39,6 +39,7 @@ public class MethodTest
             Abstract = false,
             IsSealed = false,
             IsOverride = false,
+            IsStatic = false,
             ClassId = _testClass!.Id
         };
     }
@@ -241,7 +242,7 @@ public class MethodTest
 
     #endregion
 
-    #region Flags
+    #region Bools
 
     [TestMethod]
     public void Abstract_SetAndGet_ShouldBeEqual()
@@ -254,6 +255,13 @@ public class MethodTest
     public void IsSealed_SetAndGet_ShouldBeEqual()
     {
         var method = new Method { IsSealed = true };
+        method.IsSealed.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void IsAbstract_SetAndGet_ShouldBeEqual()
+    {
+        var method = new Method { IsAbstract = true };
         method.IsSealed.Should().BeTrue();
     }
 
