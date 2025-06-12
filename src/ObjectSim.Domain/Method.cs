@@ -51,6 +51,12 @@ public class Method
     public bool IsOverride { get; set; } = false;
     #endregion
 
+    #region IsStatic
+
+    public bool IsStatic { get; set; } = false;
+
+    #endregion
+
     #region Accessibility
 
     private MethodAccessibility _accessibility;

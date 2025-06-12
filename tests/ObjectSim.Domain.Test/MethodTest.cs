@@ -259,10 +259,10 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void IsAbstract_SetAndGet_ShouldBeEqual()
+    public void IsStatic_SetAndGet_ShouldBeEqual()
     {
-        var method = new Method { IsAbstract = true };
-        method.IsSealed.Should().BeTrue();
+        var method = new Method { IsStatic = true };
+        method.IsStatic.Should().BeTrue();
     }
 
     #endregion
