@@ -1,2 +1,6 @@
 ﻿<app-simulator-form (atSubmit)="atSubmit($event)">
 </app-simulator-form>
+<div *ngIf="simulationResult">
+    <h3>Simulation result:</h3>
+    <pre>{{ simulationResult }}</pre>
+</div>

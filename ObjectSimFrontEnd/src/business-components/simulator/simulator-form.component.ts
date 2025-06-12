@@ -1,5 +1,5 @@
 ﻿import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 
 import { FormInputComponent } from '../../components/form/form-input/form-input.component';
