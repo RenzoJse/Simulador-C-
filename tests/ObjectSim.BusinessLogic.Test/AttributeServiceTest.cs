@@ -25,7 +25,8 @@ public class AttributeServiceTest
         Guid.NewGuid(),
         "public",
         TestAttributeId,
-        "Test"
+        "Test",
+        false
     );
 
     private readonly Attribute? _testAttribute = new()
@@ -107,7 +108,8 @@ public class AttributeServiceTest
             Guid.NewGuid(),
             "invalid_visibility",
             Guid.NewGuid(),
-            "TestAttribute"
+            "TestAttribute",
+            false
         );
 
         Action act = () => _attributeServiceTest!.CreateAttribute(invalidArgs);
@@ -280,7 +282,8 @@ public class AttributeServiceTest
             Guid.NewGuid(),
             "Public",
             Guid.NewGuid(),
-            "UpdatedName"
+            "UpdatedName",
+            false
         );
 
         var updatedAttribute = new Attribute
@@ -329,7 +332,8 @@ public class AttributeServiceTest
             Guid.NewGuid(),
             "Public",
             Guid.NewGuid(),
-            "Attr"
+            "Attr",
+            false
         );
 
         _attributeServiceTest!.Update(id, createArgs);
@@ -352,7 +356,8 @@ public class AttributeServiceTest
             Guid.NewGuid(),
             "Public",
             validAttribute.ClassId,
-            validAttribute.Name
+            validAttribute.Name,
+            false
         );
 
         SetupAttributeRepositoryGet(validAttribute);
