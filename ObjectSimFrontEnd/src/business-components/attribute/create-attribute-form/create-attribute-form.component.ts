@@ -1,6 +1,7 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 import { FormInputComponent } from '../../../components/form/form-input/form-input.component';
 import { FormButtonComponent } from '../../../components/form/form-button/form-button.component';
@@ -32,11 +33,26 @@ export class CreateAttributeFormComponent {
         { value: 'Protected', tag: 'Protected' }
     ];
 
-    constructor(private formBuilder: FormBuilder) {
+    Static: { value: string; tag: string }[] = [
+        { value: "true", tag: 'Static' },
+        { value: "false", tag: 'Non-Static' }
+    ];
+
+    private classId: string = '';
+
+    constructor(private formBuilder: FormBuilder, private route: ActivatedRoute) {
         this.createAttributeForm = this.formBuilder.group({
-            name: ['', [Validators.required, Validators.maxLength(10)]],
+            name: ['', [Validators.required,
+                Validators.maxLength(10),
+                Validators.minLength(1)]],
             dataTypeID: ['', Validators.required],
-            visibility: ['', Validators.required]
+            visibility: ['', Validators.required],
+            isStatic: [false, Validators.required],
+            classId: ['', Validators.required],
+        });
+
+        this.route.paramMap.subscribe(params => {
+            this.classId = params.get('classId') ?? '';
         });
     }
 
@@ -49,13 +65,16 @@ export class CreateAttributeFormComponent {
         }
 
         var formValue = this.createAttributeForm.value;
-        /*var newAttribute: CreateAttributeModel = {
+        var newAttribute: CreateAttributeModel = {
             name: formValue.name,
-            dataTypeID: formValue.dataTypeID,
-            visibility: formValue.visibility
-        };*/
+            visibility: formValue.visibility,
+            dataTypeId: formValue.dataTypeID,
+            classId: this.classId,
+            isStatic: formValue.isStatic === "true"
+        };
 
-        //this.atSubmit.emit(newAttribute);
+        this.atSubmit.emit(newAttribute);
+        console.log('try to create new attribute: ', newAttribute);
     }
 
     private markAsTouched() {

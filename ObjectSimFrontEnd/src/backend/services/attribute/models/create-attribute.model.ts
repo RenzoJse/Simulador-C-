@@ -3,4 +3,5 @@
     visibility: string;
     dataTypeId: string;
     classId: string;
+    isStatic: boolean;
 }

@@ -34,6 +34,17 @@
                 [options]="Visibilities">
         </app-form-input>
 
+        <app-form-input
+                [form]="createAttributeForm"
+                controlName="isStatic"
+                [reserve]="'Is the attribute static'"
+                [name]="'isStatic'"
+                [tag]="'isStatic'"
+                [errorMessages]="{ required: 'Is Static is required.' }"
+                [type]="'option'"
+                [options]="Static">
+        </app-form-input>
+
         <div *ngIf="createAttributeStatus?.loading; else notLoading">
             Loading...
         </div>
