@@ -1,19 +1,22 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="mb-3">
-    <label for="methodSelect" class="form-label">Select Method</label>
-    <select id="methodSelect" formControlName="methodId" class="form-select enhanced-input">
-      <option value="" disabled>- Choose one -</option>
-      <option *ngFor="let m of methods" [value]="m.id">
-        {{ m.name }}
-      </option>
-    </select>
-    <div *ngIf="form.get('methodId')?.touched && form.get('methodId')?.invalid" class="text-danger">
-      You must select a method.
-    </div>
-  </div>
+<div class="container mt-4">
+    <h2 class="mb-4">Delete Method:</h2>
 
-  <div *ngIf="loading">Deleting...</div>
-  <div *ngIf="error" class="text-danger">{{ error }}</div>
+    <app-form [form]="deleteMethodForm" (atSubmit)="onSubmit()">
 
-  <button class="btn btn-danger" [disabled]="loading">Delete Method</button>
-</form>
+        <app-method-dropdown (selectMethod)="updateMethodId($event)">
+        </app-method-dropdown>
+
+        <app-form-button title="Delete"></app-form-button>
+
+        <div *ngIf="deleteMethodFormStatus?.loading; else notLoading">
+            Loading...
+        </div>
+
+        <ng-template #notLoading>
+            <div *ngIf="deleteMethodFormStatus?.error">
+                {{ deleteMethodFormStatus!.error }}
+            </div>
+        </ng-template>
+
+    </app-form>
+</div>

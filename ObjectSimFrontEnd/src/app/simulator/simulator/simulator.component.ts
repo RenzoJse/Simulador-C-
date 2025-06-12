@@ -12,6 +12,7 @@ import CreateSimulatedExecutionModel from "../../../backend/services/simulator/m
 export class SimulatorComponent {
 
     status: { loading?: true; error?: string } | null = null;
+    simulationResult: any = null;
 
     constructor(
         @Inject(SimulatorService) private readonly _simulatorService : SimulatorService
@@ -21,10 +22,13 @@ export class SimulatorComponent {
 
     protected atSubmit(simulatedExecution: CreateSimulatedExecutionModel) {
         this.status = { loading: true };
+        this.simulationResult = null;
 
         this._simulatorService.simulateExecution(simulatedExecution).subscribe({
             next: (response) => {
                 this.status = null;
+                this.simulationResult = response;
+                console.log('Simulation result:', this.simulationResult);
             },
             error: (error:any) => {
                 if (error.status === 400 && error.Message) {
