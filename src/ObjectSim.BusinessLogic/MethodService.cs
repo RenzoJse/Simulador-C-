@@ -271,6 +271,11 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             {
                 throw new ArgumentException($"Cant invoke static method {invokeMethod.Name} from class {classOfInvokeMethod.Name} using reference {reference}");
             }
+
+            if(invokeMethod.Accessibility != Method.MethodAccessibility.Public)
+            {
+                throw new ArgumentException("Cannot invoke a non-public method from another class.");
+            }
         }
 
         if (!isInSameClass && !isMethodInClass && !isAlreadyInvoked &&
