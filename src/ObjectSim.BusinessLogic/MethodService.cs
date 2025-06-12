@@ -233,7 +233,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         {
             var methodToInvoke = GetMethodToInvoke(invokeArg.InvokeMethodId);
             ValidateCanAddInvokeMethod(method, methodToInvoke, invokeArg.Reference);
-            ValidateInvokeMethodReachable(method, invokeArg.InvokeMethodId);
+            ValidateInvokeMethodReachable(method, invokeArg.InvokeMethodId, invokeArg.Reference);
             var invokeMethod = CreateInvokeMethod(invokeArg, method);
         }
     }
@@ -249,7 +249,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         method.CanAddInvokeMethod(methodToInvoke, GetClassById(method.ClassId), reference);
     }
 
-    private void ValidateInvokeMethodReachable(Method method, Guid invokeMethodId)
+    private void ValidateInvokeMethodReachable(Method method, Guid invokeMethodId, string reference)
     {
         var invokeMethod = methodRepository.Get(m => m.Id == invokeMethodId);
         var currentClass = classRepository.Get(c => c.Id == method.ClassId);
@@ -263,6 +263,15 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         var isInClassAttribute = currentClass.Attributes?.Any(a => a.ClassId == invokeMethod.ClassId) ?? false;
 
         var matchesLocalVariable = method.LocalVariables?.Any(lv => lv.Name == invokeMethod.Name) ?? false;
+
+        if(isInSameClass == false)
+        {
+            var classOfInvokeMethod = classRepository.Get(c => c.Id == invokeMethod.ClassId);
+            if(invokeMethod.IsStatic && !string.Equals(reference, classOfInvokeMethod!.Name, StringComparison.CurrentCultureIgnoreCase))
+            {
+                throw new ArgumentException($"Cant invoke static method {invokeMethod.Name} from class {classOfInvokeMethod.Name} using reference {reference}");
+            }
+        }
 
         if (!isInSameClass && !isMethodInClass && !isAlreadyInvoked &&
             !isInClassAttribute && !matchesLocalVariable)
