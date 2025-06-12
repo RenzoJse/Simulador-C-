@@ -170,6 +170,11 @@ public class Class
             ValidateInterfaceMethodConstraints(method);
         }
 
+        if(IsAbstract == true)
+        {
+            ValidateAbstractMethodConstraints(method);
+        }
+
         if(method.IsOverride)
         {
             if(Parent == null)
@@ -200,6 +205,14 @@ public class Class
         }
     }
 
+    private static void ValidateAbstractMethodConstraints(Method method)
+    {
+        if(method.IsStatic)
+        {
+            throw new ArgumentException("Method cannot be static in an abstract class.");
+        }
+    }
+
     private static void ValidateInterfaceMethodConstraints(Method method)
     {
         if(method.IsSealed)
@@ -209,6 +222,10 @@ public class Class
         if(method.IsOverride)
         {
             throw new ArgumentException("Method cannot be override in an interface.");
+        }
+        if(method.IsStatic)
+        {
+            throw new ArgumentException("Method cannot be static in an interface.");
         }
         if(method.Accessibility == Method.MethodAccessibility.Private)
         {
