@@ -53,6 +53,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             IsSealed = methodArgs.IsSealed ?? false,
             IsOverride = methodArgs.IsOverride ?? false,
             IsVirtual = methodArgs.IsVirtual ?? false,
+            IsStatic = methodArgs.IsStatic ?? false,
             TypeId = methodArgs.TypeId,
             Parameters = parameters,
             LocalVariables = localVariables,
