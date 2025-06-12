@@ -61,6 +61,18 @@ public class CreateMethodArgsTest
         args.IsOverride.Should().BeFalse();
     }
 
+
+    [TestMethod]
+    public void IsStatic_SetAndGet_ShouldReturnExpectedValue()
+    {
+        var args = new CreateMethodArgs("Test", Guid.NewGuid(), "public", true, false, true, false, false,Guid.NewGuid(), [], [], [])
+        {
+            IsOverride = false
+        };
+        args.IsOverride.Should().BeFalse();
+    }
+
+
     [TestMethod]
     public void ClassId_SetAndGet_ShouldReturnExpectedValue()
     {
