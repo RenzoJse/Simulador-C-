@@ -18,7 +18,6 @@ export class DeleteMethodComponent {
 
   protected atSubmit(methodId: string) {
     this.status = { loading: true };
-
     this._methodService.deleteMethod(methodId).subscribe({
       next: (response) => {
         this.status = null;
@@ -31,7 +30,6 @@ export class DeleteMethodComponent {
         }
       },
     });
-
   }
 
 }

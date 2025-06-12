@@ -3,7 +3,7 @@
 
     <app-form [form]="deleteMethodForm" (atSubmit)="onSubmit()">
 
-        <app-method-dropdown (selectMethod)="updateSelectedMethodId($event)">
+        <app-method-dropdown (selectMethod)="updateMethodId($event)">
         </app-method-dropdown>
 
         <app-form-button title="Delete"></app-form-button>

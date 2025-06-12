@@ -4,6 +4,7 @@ namespace ObjectSim.WebApi.DTOs.Out;
 
 public record MethodInformationDtoOut(Method MethodInfo)
 {
+    public string Id { get; } = MethodInfo.Id.ToString();
     public string Name { get; } = MethodInfo.Name!;
     public string Type { get; } = MethodInfo.TypeId.ToString();
     public string Accessibility { get; } = MethodInfo.Accessibility.ToString();

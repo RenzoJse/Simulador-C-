@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 
 import { FormInputComponent } from '../../../components/form/form-input/form-input.component';
@@ -17,16 +17,16 @@ import { MethodDropdownComponent } from '../dropdown/method-dropdown.component';
 
 export class DeleteMethodFormComponent {
   @Input() title: string = '';
-  @Output() atDelete = new EventEmitter<string>();
+  @Input() error: string | null = null;
+  @Output() atSubmit = new EventEmitter<string>();
 
   deleteMethodForm: FormGroup;
+  MethodId: string | undefined;
 
   deleteMethodFormStatus: {
     loading?: true;
     error?: string;
   } | null = null;
-
-  MethodId: string | undefined;
 
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
     this.deleteMethodForm = this.fb.group({
@@ -36,8 +36,7 @@ export class DeleteMethodFormComponent {
 
   public onSubmit() {
     if (this.deleteMethodForm.valid) {
-      const {methodId} = this.deleteMethodForm.value;
-      this.atDelete.emit(this.deleteMethodForm.value.methodId);
+      this.atSubmit.emit(this.MethodId);
     } else {
       this.markAsTouched();
       console.log('Invalid form:', this.deleteMethodForm.errors);
@@ -50,7 +49,7 @@ export class DeleteMethodFormComponent {
     });
   }
 
-  updateSelectedMethodId(event: { methodId: string | undefined; }) {
+  updateMethodId(event: { methodId: string | undefined; }) {
     this.MethodId = event.methodId;
     this.deleteMethodForm.patchValue({ methodId: event.methodId });
     this.cdr.detectChanges();
