@@ -5,7 +5,6 @@ import { FormInputComponent } from '../../../components/form/form-input/form-inp
 import { FormButtonComponent } from '../../../components/form/form-button/form-button.component';
 import { FormComponent } from '../../../components/form/form/form.component';
 import { ClassDropdownComponent } from '../../class/dropdown/class-dropdown.component';
-
 import MethodCreateModel from '../../../backend/services/method/models/method-dto.model';
 
 @Component({
