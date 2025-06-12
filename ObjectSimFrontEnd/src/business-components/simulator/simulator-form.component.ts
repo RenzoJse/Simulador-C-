@@ -33,6 +33,7 @@ export class SimulatorFormComponent {
 
     ReferenceId: string | undefined;
     InstanceId: string | undefined;
+    MethodId: string | undefined;
 
     constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
         this.simulatorForm = this.fb.group({
@@ -75,8 +76,9 @@ export class SimulatorFormComponent {
         this.cdr.detectChanges();
     }
 
-    updateSelectedMethodId(id: string) {
-        this.simulatorForm.patchValue({ methodId: id });
+    updateSelectedMethodId(event: { methodId: string | undefined; }) {
+        this.MethodId = event.methodId;
+        this.simulatorForm.patchValue({ methodId: event.methodId });
         this.cdr.detectChanges();
     }
 
