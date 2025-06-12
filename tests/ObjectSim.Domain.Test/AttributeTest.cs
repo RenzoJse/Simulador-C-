@@ -112,6 +112,17 @@ public class AttributeTest
 
     #endregion
 
+    #region IsStatic
+
+    [TestMethod]
+    public void IsStatic_WhenSetToTrue_ReturnsTrue()
+    {
+        _attribute.IsStatic = true;
+        _attribute.IsStatic.Should().BeTrue();
+    }
+
+    #endregion
+
     #region Validate
 
     #region Error
