@@ -10,9 +10,9 @@ public class CreateMethodDtoIn
     public bool IsAbstract { get; init; }
     public bool IsSealed { get; init; }
     public bool IsOverride { get; init; }
-    public bool? IsVirtual { get; set; }
-    public bool? IsStatic { get; set; }
-    public string? ClassId { get; set; }
+    public bool? IsVirtual { get; init; }
+    public bool? IsStatic { get; init; }
+    public string? ClassId { get; init; }
     public List<CreateVariableDtoIn> LocalVariables { get; init; } = [];
     public List<CreateVariableDtoIn> Parameters { get; init; } = [];
     public List<Guid> InvokeMethodsId { get; init; } = [];
