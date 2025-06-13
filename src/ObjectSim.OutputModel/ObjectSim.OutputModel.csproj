@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ObjectSim.IBusinessLogic\ObjectSim.IBusinessLogic.csproj" />
+    </ItemGroup>
+
 </Project>
