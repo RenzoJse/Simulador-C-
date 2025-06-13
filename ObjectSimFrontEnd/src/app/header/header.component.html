@@ -24,12 +24,12 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Métodos
+            Methods
           </a>
           <ul class="dropdown-menu text-center">
-              <li><a class="dropdown-item" routerLink="/method/create" routerLinkActive="active">Crear Método</a></li>
-            <li><a class="dropdown-item" routerLink="/method/delete" routerLinkActive="active">Eliminar Método</a></li>
-            
+              <li><a class="dropdown-item" routerLink="/method/create" routerLinkActive="active">Create Method</a></li>
+            <li><a class="dropdown-item" routerLink="/method/delete" routerLinkActive="active">Delete Method</a></li>
+              <li><a class="dropdown-item" routerLink="/method/list" routerLinkActive="active">All Methods</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -40,12 +40,12 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Atributos
+            Attributes
           </a>
           <ul class="dropdown-menu text-center">
-            <li><a class="dropdown-item" routerLink="/attribute/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Crear Atributo</a></li>
-            <li><a class="dropdown-item" routerLink="/attribute/delete" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Eliminar Atributo</a></li>
-            <li><a class="dropdown-item" routerLink="/attribute/update" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Actualizar Atributo</a></li>
+            <li><a class="dropdown-item" routerLink="/attribute/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Create Attribute</a></li>
+            <li><a class="dropdown-item" routerLink="/attribute/delete" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Delete Attribute</a></li>
+            <li><a class="dropdown-item" routerLink="/attribute/update" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Update Attribute</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -59,9 +59,9 @@
             Namespace
           </a>
           <ul class="dropdown-menu text-center">
-            <li><a class="dropdown-item" routerLink="/namespace/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Crear Namespace</a></li>
-            <li><a class="dropdown-item" routerLink="/namespace/list" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Obtener Namespaces</a></li>
-            <li><a class="dropdown-item" routerLink="/namespace/children" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Obtener Hijos</a></li>
+            <li><a class="dropdown-item" routerLink="/namespace/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Create Namespace</a></li>
+            <li><a class="dropdown-item" routerLink="/namespace/list" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Get Namespaces</a></li>
+            <li><a class="dropdown-item" routerLink="/namespace/children" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Get children</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -72,12 +72,13 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Clases
+            Class
           </a>
           <ul class="dropdown-menu text-center">
             <li><a class="dropdown-item" routerLink="/class/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Create Class</a></li>
-            <li><a class="dropdown-item" routerLink="/class/delete" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Eliminar Clase</a></li>
-            <li><a class="dropdown-item" routerLink="/class/edit" routerLinkActive="active">Actualizar Clase</a></li>
+            <li><a class="dropdown-item" routerLink="/class/delete" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Delete Class</a></li>
+              <li><a class="dropdown-item" routerLink="/class/list" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">All Classes</a></li>
+            <li><a class="dropdown-item" routerLink="/class/edit" routerLinkActive="active">Update Class</a></li>
           </ul>
         </li>
           <li class="nav-item dropdown">
