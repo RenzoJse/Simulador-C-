@@ -1,11 +1,58 @@
-:host ::ng-deep app-form-input input,
-
-:host ::ng-deep app-form-input input:focus,
-:host ::ng-deep app-form-input select:focus {
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.08) !important;
-  outline: none !important;
+:host {
+  display: block;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 80, 170, 0.15);
+  font-family: 'Segoe UI', sans-serif;
 }
 
-:host ::ng-deep app-form-input label {
-  font-weight: 600 !important;
+h2 {
+  text-align: center;
+  color: #0057b7;
+  margin-bottom: 1.5rem;
+}
+
+app-form {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+app-method-dropdown {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0057b7;
+  cursor: pointer;
+}
+
+.loading,
+.error {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.loading {
+  color: #0057b7;
+}
+
+.error {
+  color: #d9534f;
 }
