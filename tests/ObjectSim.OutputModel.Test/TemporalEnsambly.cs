@@ -20,14 +20,13 @@ public class TemporalAssembly
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
 
-        // Obtener la referencia a System.Runtime usando el entorno de ejecución actual
         var systemRuntimeReference = MetadataReference.CreateFromFile(Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "System.Runtime.dll"));
 
         var references = new List<MetadataReference>
         {
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(IOutputModel).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(HtmlOutputModel).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(IOutputModelTransformer).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(Model).Assembly.Location),
             systemRuntimeReference
         };
 

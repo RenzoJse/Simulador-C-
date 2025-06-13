@@ -16,7 +16,7 @@ public class LoadAssemblersTest
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
 
-        var loadAssemblers = new LoadAssemblers<IOutputModel>(tempRoute);
+        var loadAssemblers = new LoadAssemblers<IOutputModelTransformer>(tempRoute);
 
         var implementations = loadAssemblers.GetImplementations();
 
@@ -33,7 +33,7 @@ public class LoadAssemblersTest
 
         TemporalAssembly.CreateTemporalAssembly(tempRoute, "TempAssembly");
 
-        var loadAssemblers = new LoadAssemblers<IOutputModel>(tempRoute);
+        var loadAssemblers = new LoadAssemblers<IOutputModelTransformer>(tempRoute);
 
         var implementations = loadAssemblers.GetImplementations();
 
@@ -58,7 +58,7 @@ public class LoadAssemblersTest
         var assemblyPath = Path.Combine(tempRoute, "TempAssembly.dll");
         TemporalAssembly.SaveCompilationOnDisc(compilation, assemblyPath);
 
-        var loadAssemblers = new LoadAssemblers<IOutputModel>(tempRoute);
+        var loadAssemblers = new LoadAssemblers<IOutputModelTransformer>(tempRoute);
 
         using var consoleOutput = new StringWriter();
         Console.SetOut(consoleOutput);
@@ -66,7 +66,7 @@ public class LoadAssemblersTest
         var implementations = loadAssemblers.GetImplementations();
 
         implementations.Should().BeEmpty();
-        consoleOutput.ToString().Should().Contain($"No one implements interface of: {nameof(IOutputModel)} in the assembly: {assemblyPath}");
+        consoleOutput.ToString().Should().Contain($"No one implements interface of: {nameof(IOutputModelTransformer)} in the assembly: {assemblyPath}");
     }
 
     #endregion
@@ -85,7 +85,7 @@ public class LoadAssemblersTest
 
         TemporalAssembly.CreateTemporalAssembly(temporalRoute, "TempAssembly");
 
-        var loadAssemblers = new LoadAssemblers<IOutputModel>(temporalRoute);
+        var loadAssemblers = new LoadAssemblers<IOutputModelTransformer>(temporalRoute);
 
         var act = () => loadAssemblers.GetImplementation("InvalidImplementation");
 
@@ -104,7 +104,7 @@ public class LoadAssemblersTest
 
         TemporalAssembly.CreateTemporalAssembly(temporalRoute, "TempAssembly");
 
-        var loadAssemblers = new LoadAssemblers<IOutputModel>(temporalRoute);
+        var loadAssemblers = new LoadAssemblers<IOutputModelTransformer>(temporalRoute);
 
         loadAssemblers.GetImplementations();
 
