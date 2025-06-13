@@ -9,7 +9,7 @@ const routes: Routes = [
     { path: 'create', component: CreateClassComponent },
     { path: 'delete', component: DeleteClassComponent },
     { path: 'update', component: UpdateClassComponent },
-    { path: 'class-list', component: ClassesListingComponent },
+    { path: 'list', component: ClassesListingComponent },
 ];
 
 @NgModule({

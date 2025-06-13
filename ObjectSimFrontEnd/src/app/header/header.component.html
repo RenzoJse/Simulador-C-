@@ -24,12 +24,12 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Métodos
+            Methods
           </a>
           <ul class="dropdown-menu text-center">
               <li><a class="dropdown-item" routerLink="/method/create" routerLinkActive="active">Crear Método</a></li>
             <li><a class="dropdown-item" routerLink="/method/delete" routerLinkActive="active">Eliminar Método</a></li>
-            
+
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -40,7 +40,7 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Atributos
+            Attributes
           </a>
           <ul class="dropdown-menu text-center">
             <li><a class="dropdown-item" routerLink="/attribute/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Crear Atributo</a></li>
@@ -72,11 +72,12 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Clases
+            Class
           </a>
           <ul class="dropdown-menu text-center">
             <li><a class="dropdown-item" routerLink="/class/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Create Class</a></li>
             <li><a class="dropdown-item" routerLink="/class/delete" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Eliminar Clase</a></li>
+              <li><a class="dropdown-item" routerLink="/class/list" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">All Classes</a></li>
             <li><a class="dropdown-item" routerLink="/class/edit" routerLinkActive="active">Actualizar Clase</a></li>
           </ul>
         </li>
