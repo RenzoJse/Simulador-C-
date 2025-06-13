@@ -13,4 +13,10 @@
       <ProjectReference Include="..\ObjectSim.IBusinessLogic\ObjectSim.IBusinessLogic.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="ObjectSim.Abstractions">
+        <HintPath>..\ObjectSim.OutputModel\ObjectSim.Abstractions.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

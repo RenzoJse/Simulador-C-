@@ -4,5 +4,5 @@ public interface IOutputModelValidator
 {
     public List<string> GetImplementationList();
     public void SelectImplementation(string name);
-    public bool ValidateModel(string modelValue);
+    public object Transform(object input);
 }

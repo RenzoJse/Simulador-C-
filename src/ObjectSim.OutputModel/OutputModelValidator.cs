@@ -31,14 +31,13 @@ public class OutputModelValidator() : IOutputModelValidator
         _validatorModel = loadAssemblers.GetImplementation(name);
     }
 
-    public bool ValidateModel(string modelValue)
+    public object Transform(object input)
     {
         if (_validatorModel == null)
         {
-            throw new InvalidOperationException("No validation logic has been selected.");
+            throw new InvalidOperationException("No transformer selected.");
         }
 
-        var model = new Model(modelValue);
-        return _validatorModel.ValidateModel(model.Value);
+        return _validatorModel.Transform(input);
     }
 }

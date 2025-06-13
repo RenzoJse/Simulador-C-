@@ -1,10 +1,12 @@
-﻿using ObjectSim.DataAccess.Interface;
+﻿using ObjectSim.Abstractions;
+using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodSimulatorService(IRepository<Method> methodRepository, IRepository<Class> classRepository) : IMethodSimulatorService
+public class MethodSimulatorService(IRepository<Method> methodRepository, IRepository<Class> classRepository,
+    IOutputModelValidator outputModelValidator) : IMethodSimulatorService
 {
     public string Simulate(SimulateExecutionArgs args)
     {
@@ -28,7 +30,14 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
                      + instanceType.Name + "." + method.Name + "() -> " + instanceType.Name + "." + method.Name + "()\n";
         result += SimulateInternal(method, 0);
 
-        return result;
+        SelectOutputModel("HtmlOutputModelTransformer");
+
+        return outputModelValidator.Transform(result).ToString()!;
+    }
+
+    private void SelectOutputModel(string name)
+    {
+        outputModelValidator.SelectImplementation(name);
     }
 
     private void ValidateIsValidInstance(Class instanceType, Class referenceType)
@@ -84,4 +93,5 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
 
         return result;
     }
+
 }
