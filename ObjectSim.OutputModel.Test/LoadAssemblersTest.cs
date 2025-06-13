@@ -13,9 +13,9 @@ public class LoadAssemblersTest
 
         TemporalAssembly.CreateTemporalAssembly(temporalRoute, "TempAssembly");
 
-        var loadAssemblers = new LoadAssemblers<IModeloValidador>(temporalRoute);
+        var loadAssemblers = new LoadAssemblers<IOutputModel>(temporalRoute);
 
-        var act = () => loadAssemblers.GetImplementations("InvalidImplementation");
+        var act = () => loadAssemblers.GetImplementation("InvalidImplementation");
 
         act.Should().Throw<InvalidOperationException>().WithMessage("No implementation found: InvalidImplementation");
     }
