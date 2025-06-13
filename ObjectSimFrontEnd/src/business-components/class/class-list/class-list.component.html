@@ -1,0 +1,8 @@
+﻿<h6>{{ tittle }}</h6>
+<div class="list">
+    <app-list
+            [columns]="columns"
+            [elements]="classes"
+            (selectedElement)="selectClass($event)">
+    </app-list>
+</div>
