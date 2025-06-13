@@ -64,7 +64,7 @@ input[type="text"]:focus {
 }
 
 button {
-  background-color: #007bff;
+  background-color: #ff0101;
   color: white;
   font-weight: bold;
   padding: 0.75rem 1.5rem;
@@ -76,6 +76,6 @@ button {
 }
 
 button:hover {
-  background-color: #0057b7;
+  background-color: #ff0022;
   cursor: pointer;
 }
