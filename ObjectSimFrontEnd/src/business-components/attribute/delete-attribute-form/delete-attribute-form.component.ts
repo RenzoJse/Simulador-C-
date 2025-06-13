@@ -10,7 +10,8 @@ import { FormComponent } from '../../../components/form/form/form.component';
   selector: 'app-delete-attribute-form',
   standalone: true,
   imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent],
-  templateUrl: './delete-attribute-form.component.html'
+  templateUrl: './delete-attribute-form.component.html',
+  styleUrl: './delete-attribute-form.component.css'
 })
 export class DeleteAttributeFormComponent {
   @Output() onDelete = new EventEmitter<string>();
