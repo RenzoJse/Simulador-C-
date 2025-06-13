@@ -8,11 +8,14 @@ import { ClassRoutingModule } from './class-routing.module';
 import { DeleteClassFormComponent } from '../../business-components/class/delete-class/delete-class-form.component';
 import { CreateClassFormComponent } from '../../business-components/create-class-form/create-class-form.component';
 import { ButtonComponent } from '../../components/button/button.component';
+import {ClassesListingComponent} from "./class-list/classes-listing.component";
+import { ClassListComponent } from "../../business-components/class/class-list/class-list.component";
 
 @NgModule({
     declarations: [
         CreateClassComponent,
-        DeleteClassComponent
+        DeleteClassComponent,
+        ClassesListingComponent
     ],
     imports: [
         CommonModule,
@@ -20,7 +23,8 @@ import { ButtonComponent } from '../../components/button/button.component';
         ClassRoutingModule,
         CreateClassFormComponent,
         ButtonComponent,
-        DeleteClassFormComponent
+        DeleteClassFormComponent,
+        ClassListComponent
     ]
 })
 export class ClassModule { }

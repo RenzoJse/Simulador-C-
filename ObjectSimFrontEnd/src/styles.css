@@ -1,17 +1,159 @@
-
-html, body {
-  height: 100%;
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f6f9;
   margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
-
-
-app-root {
+.app-wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
+h1, h3 {
+  color: #333;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
 
-main {
-  flex: 1;
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+button, app-button {
+  width: 100%;
+  padding: 14px;
+  background-color: #0056b3;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+button:hover, app-button:hover {
+  background-color: #15202b;
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.input-filter {
+  width: 100%;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.btn-secondary {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: #e2e6ea;
+}
+
+.center-message {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Lists */
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.list table {
+  min-width: 800px;
+  width: 100%;
+}
+
+.list th,
+.list td {
+  min-width: 120px;
+  padding: 8px;
+  text-align: left;
+}
+
+app-list {
+  width: 100%;
+  display: block;
+}
+
+/* Form Wide */
+.form-wide {
+  width: 100%;
+  max-width: 1600px;
+  min-width: 400px;
+  position: relative;
+  margin: 0 auto;
+}
+
+.list {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.list th {
+  text-transform: uppercase;
+}
+
+app-form-input {
+  margin-bottom: 20px;
+}
+
+app-form-input label {
+  margin-bottom: 5px;
+}
+
+app-form-input input {
+  margin-bottom: 10px;
+}
+
+.table th {
+  text-transform: uppercase;
+}
+
+.table-responsive table {
+  min-width: 800px;
+}
+
+.dropdown {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+
+select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
 }
