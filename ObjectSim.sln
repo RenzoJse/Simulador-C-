@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.Security.Test", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.Security", "src\ObjectSim.Security\ObjectSim.Security.csproj", "{A2DC9152-0F4C-4769-AEF1-F5884C9B2A75}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectSim.OutputModel.Test", "ObjectSim.OutputModel.Test\ObjectSim.OutputModel.Test.csproj", "{80B031EE-DE99-4799-AF66-A0B7BE5C894F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{A2DC9152-0F4C-4769-AEF1-F5884C9B2A75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2DC9152-0F4C-4769-AEF1-F5884C9B2A75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2DC9152-0F4C-4769-AEF1-F5884C9B2A75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80B031EE-DE99-4799-AF66-A0B7BE5C894F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80B031EE-DE99-4799-AF66-A0B7BE5C894F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80B031EE-DE99-4799-AF66-A0B7BE5C894F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80B031EE-DE99-4799-AF66-A0B7BE5C894F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,6 +123,7 @@ Global
 		{11C8E47A-BA66-4558-8483-463BE410AAA1} = {58ED209C-2D15-4608-A042-A27F768A98BA}
 		{3E4EE953-2301-406F-B0FB-8CF4CDDAD929} = {58ED209C-2D15-4608-A042-A27F768A98BA}
 		{A2DC9152-0F4C-4769-AEF1-F5884C9B2A75} = {71DC35C4-01E0-47C0-A566-42E0892AD9EF}
+		{80B031EE-DE99-4799-AF66-A0B7BE5C894F} = {58ED209C-2D15-4608-A042-A27F768A98BA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC05B606-312E-4F2D-B29B-42AA215262C4}
