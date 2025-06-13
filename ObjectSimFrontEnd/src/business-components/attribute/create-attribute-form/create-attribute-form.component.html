@@ -13,15 +13,24 @@
                 [type]="'text'">
         </app-form-input>
 
-        <app-form-input
-                [form]="createAttributeForm"
-                controlName="dataTypeID"
-                [reserve]="'DataTypeID of the attribute'"
-                [name]="'dataTypeID'"
-                [tag]="'DataType ID'"
-                [errorMessages]="{ required: 'DataTypeId is required' }"
-                [type]="'text'">
-        </app-form-input>
+        <div class="form-group mb-3">
+      <label for="dataTypeId">Select Data Type</label>
+      <select
+        class="form-control"
+        formControlName="dataTypeId"
+        [ngClass]="{
+          'is-invalid': createAttributeForm.get('dataTypeId')?.invalid && createAttributeForm.get('dataTypeId')?.touched
+        }"
+      >
+        <option value="" disabled>Select a data type</option>
+        <option *ngFor="let dt of availableDataTypes" [value]="dt.value">
+          {{ dt.tag }}
+        </option>
+      </select>
+      <div class="invalid-feedback" *ngIf="createAttributeForm.get('dataTypeId')?.errors?.['required']">
+        DataType is required.
+      </div>
+    </div>
 
         <app-form-input
                 [form]="createAttributeForm"
@@ -44,6 +53,25 @@
                 [type]="'option'"
                 [options]="Static">
         </app-form-input>
+
+        <div class="form-group mb-3">
+          <label for="classId">Select Class</label>
+          <select
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': createAttributeForm.get('classId')?.invalid && createAttributeForm.get('classId')?.touched
+            }"
+            formControlName="classId"
+          >
+            <option value="" disabled>Select a class</option>
+            <option *ngFor="let cls of availableClasses" [value]="cls.value">
+              {{ cls.tag }}
+            </option>
+          </select>
+          <div class="invalid-feedback" *ngIf="createAttributeForm.get('classId')?.errors?.['required']">
+            Class is required.
+          </div>
+        </div>
 
         <div *ngIf="createAttributeStatus?.loading; else notLoading">
             Loading...

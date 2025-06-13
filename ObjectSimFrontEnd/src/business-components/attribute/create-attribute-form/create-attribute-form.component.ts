@@ -1,6 +1,6 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 import { FormInputComponent } from '../../../components/form/form-input/form-input.component';
@@ -12,13 +12,14 @@ import CreateAttributeModel from '../../../backend/services/attribute/models/cre
 @Component({
     selector: 'app-create-attribute-form',
     standalone: true,
-    imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent],
+    imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent,CommonModule],
     templateUrl: './create-attribute-form.component.html'
 })
 
 export class CreateAttributeFormComponent {
     @Input() tittle : string = '';
-
+    @Input() availableClasses: { value: string; tag: string }[] = [];
+    @Input() availableDataTypes: { value: string; tag: string }[] = [];
     createAttributeForm: FormGroup;
     @Output() atSubmit = new EventEmitter<CreateAttributeModel>();
 
