@@ -13,7 +13,8 @@ import CreateAttributeModel from '../../../backend/services/attribute/models/cre
     selector: 'app-create-attribute-form',
     standalone: true,
     imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent],
-    templateUrl: './create-attribute-form.component.html'
+    templateUrl: './create-attribute-form.component.html',
+    styleUrl: './create-attribute-form.component.css'
 })
 
 export class CreateAttributeFormComponent {
