@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using ObjectSim.Abstractions;
 
 namespace ObjectSim.OutputModel.Test;
 
@@ -26,7 +27,7 @@ public class TemporalAssembly
         {
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(IOutputModel).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(Model).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(HtmlOutputModel).Assembly.Location),
             systemRuntimeReference
         };
 
