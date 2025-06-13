@@ -1,8 +1,10 @@
-﻿<h6>{{ tittle }}</h6>
-<div class="list">
-    <app-list
-            [columns]="columns"
-            [elements]="classes"
-            (selectedElement)="selectClass($event)">
-    </app-list>
+﻿<div class="form-wide card p-3 shadow-sm">
+    <h6>{{ tittle }}</h6>
+    <div class="list">
+        <app-list
+                [columns]="columns"
+                [elements]="classes"
+                (selectedElement)="selectClass($event)">
+        </app-list>
+    </div>
 </div>
