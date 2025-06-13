@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { CreateClassComponent } from './create-class/create-class.component';
 import { DeleteClassComponent } from './delete-class/delete-class.component';
 import { UpdateClassComponent } from './update-class/update-class.component';
+import { ClassesListingComponent } from './class-list/classes-listing.component';
 
 const routes: Routes = [
     { path: 'create', component: CreateClassComponent },
     { path: 'delete', component: DeleteClassComponent },
-    { path: 'update', component: UpdateClassComponent }
+    { path: 'update', component: UpdateClassComponent },
+    { path: 'class-list', component: ClassesListingComponent },
 ];
 
 @NgModule({
