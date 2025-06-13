@@ -15,7 +15,8 @@ public class InterfaceBuilderTest
         Guid.NewGuid(),
         "public",
         TestAttributeId,
-        "Test"
+        "Test",
+        false
     );
 
     private readonly CreateMethodArgs _testCreateMethodArgs = new CreateMethodArgs(

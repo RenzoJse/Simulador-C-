@@ -82,6 +82,21 @@ public class AbstractBuilderTest
     #region Success
 
     [TestMethod]
+    public void CreateClass_WithStaticValidAttributes_ReturnsEmptyAttributes()
+    {
+        var attribute1 = new Attribute { Name = "Attribute1", DataType = TestDataType, IsStatic = true};
+
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute1")))
+            .Returns(attribute1);
+
+        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute1", true);
+
+        _abstractBuilder!.SetAttributes([attributeArgs1]);
+
+        _abstractBuilder.GetResult().Attributes.Should().HaveCount(0);
+    }
+
+    [TestMethod]
     public void SetAttribute_WithSameAndDifferentAttributeNameAsParent_SetsOnlyDifferentNameAttribute()
     {
         ParentClass.Attributes = [];
