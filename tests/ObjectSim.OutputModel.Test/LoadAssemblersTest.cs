@@ -5,6 +5,8 @@ public class LoadAssemblersTest
 {
     #region GetImplementations
 
+    #region Error
+
     [TestMethod]
     public void GetImplementation_WhenInvalidName_ThrowsException()
     {
@@ -19,6 +21,8 @@ public class LoadAssemblersTest
 
         act.Should().Throw<InvalidOperationException>().WithMessage("No implementation found: InvalidImplementation");
     }
+
+    #endregion
 
     #endregion
 }
