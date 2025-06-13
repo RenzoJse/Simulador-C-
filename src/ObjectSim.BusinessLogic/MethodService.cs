@@ -53,6 +53,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             IsSealed = methodArgs.IsSealed ?? false,
             IsOverride = methodArgs.IsOverride ?? false,
             IsVirtual = methodArgs.IsVirtual ?? false,
+            IsStatic = methodArgs.IsStatic ?? false,
             TypeId = methodArgs.TypeId,
             Parameters = parameters,
             LocalVariables = localVariables,
@@ -232,7 +233,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         {
             var methodToInvoke = GetMethodToInvoke(invokeArg.InvokeMethodId);
             ValidateCanAddInvokeMethod(method, methodToInvoke, invokeArg.Reference);
-            ValidateInvokeMethodReachable(method, invokeArg.InvokeMethodId);
+            ValidateInvokeMethodReachable(method, invokeArg.InvokeMethodId, invokeArg.Reference);
             var invokeMethod = CreateInvokeMethod(invokeArg, method);
         }
     }
@@ -248,7 +249,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         method.CanAddInvokeMethod(methodToInvoke, GetClassById(method.ClassId), reference);
     }
 
-    private void ValidateInvokeMethodReachable(Method method, Guid invokeMethodId)
+    private void ValidateInvokeMethodReachable(Method method, Guid invokeMethodId, string reference)
     {
         var invokeMethod = methodRepository.Get(m => m.Id == invokeMethodId);
         var currentClass = classRepository.Get(c => c.Id == method.ClassId);
@@ -257,13 +258,46 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
         var isMethodInClass = currentClass!.Methods?.Any(m => m.Id == invokeMethodId) ?? false;
 
-        var isAlreadyInvoked = method.MethodsInvoke?.Any(m => m.MethodId == invokeMethodId) ?? false;
+        var isInClassAttribute = currentClass.Attributes?.Any(a => a.DataTypeId == invokeMethod.ClassId) ?? false;
 
-        var isInClassAttribute = currentClass.Attributes?.Any(a => a.ClassId == invokeMethod.ClassId) ?? false;
+        if(isInClassAttribute)
+        {
+            var classAttributes = currentClass.Attributes;
+            foreach(var attribute in classAttributes)
+            {
+                var attributeClassId = attribute.ClassId;
+                var attributeClass = classRepository.Get(c => c.Id == attributeClassId);
+                if(attributeClass!.Methods!.All(m => m.Id != invokeMethodId))
+                {
+                    throw new ArgumentException($"Method with id {invokeMethodId} not found");
+                }
+                else
+                {
+                    if(invokeMethod.IsStatic && !string.Equals(reference, attributeClass.Name, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        throw new ArgumentException($"Cant invoke static attribute {attribute.Name} from class {attributeClass.Name} using reference {reference}");
+                    }
+                }
+            }
+        }
 
         var matchesLocalVariable = method.LocalVariables?.Any(lv => lv.Name == invokeMethod.Name) ?? false;
 
-        if (!isInSameClass && !isMethodInClass && !isAlreadyInvoked &&
+        if(isInSameClass == false)
+        {
+            var classOfInvokeMethod = classRepository.Get(c => c.Id == invokeMethod.ClassId);
+            if(invokeMethod.IsStatic && !string.Equals(reference, classOfInvokeMethod!.Name, StringComparison.CurrentCultureIgnoreCase))
+            {
+                throw new ArgumentException($"Cant invoke static method {invokeMethod.Name} from class {classOfInvokeMethod.Name} using reference {reference}");
+            }
+
+            if(invokeMethod.Accessibility != Method.MethodAccessibility.Public)
+            {
+                throw new ArgumentException("Cannot invoke a non-public method from another class.");
+            }
+        }
+
+        if (!isInSameClass && !isMethodInClass &&
             !isInClassAttribute && !matchesLocalVariable)
         {
             throw new ArgumentException($"Invoke method with id {invokeMethodId} is not reachable from method {method.Name}");

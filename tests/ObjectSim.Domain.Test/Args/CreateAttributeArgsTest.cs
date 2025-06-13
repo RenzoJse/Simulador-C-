@@ -13,7 +13,7 @@ public class CreateAttributeArgsTest
         var dataTypeId = Guid.NewGuid();
         const string visibility = "public";
         var classId = Guid.NewGuid();
-        var args = new CreateAttributeArgs(dataTypeId, visibility, classId, name);
+        var args = new CreateAttributeArgs(dataTypeId, visibility, classId, name, false);
 
         const string newName = "OtherAttribute";
         var newDataTypeId = Guid.NewGuid();
@@ -31,12 +31,14 @@ public class CreateAttributeArgsTest
         args.Id = newId;
         args.ClassId = newClassId;
         args.Name = newName;
+        args.IsStatic = false;
 
         args.DataTypeId.Should().Be(newDataTypeId);
         args.Visibility.Should().Be(newVisibility);
         args.Id.Should().Be(newId);
         args.ClassId.Should().Be(newClassId);
         args.Name.Should().Be(newName);
+        args.IsStatic.Should().BeFalse();
     }
 
 }

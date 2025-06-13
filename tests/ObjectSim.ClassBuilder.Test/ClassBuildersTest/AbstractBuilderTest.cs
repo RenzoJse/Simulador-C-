@@ -27,7 +27,8 @@ public class AbstractBuilderTest
         Guid.NewGuid(),
         "public",
         Guid.NewGuid(),
-        "Test"
+        "Test",
+        false
     );
 
     private static readonly Class ParentClass = new Class
@@ -45,6 +46,7 @@ public class AbstractBuilderTest
         "TestMethod",
         Guid.NewGuid(),
         "public",
+        false,
         false,
         false,
         false,
@@ -80,6 +82,21 @@ public class AbstractBuilderTest
     #region Success
 
     [TestMethod]
+    public void CreateClass_WithStaticValidAttributes_ReturnsEmptyAttributes()
+    {
+        var attribute1 = new Attribute { Name = "Attribute1", DataType = TestDataType, IsStatic = true};
+
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute1")))
+            .Returns(attribute1);
+
+        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute1", true);
+
+        _abstractBuilder!.SetAttributes([attributeArgs1]);
+
+        _abstractBuilder.GetResult().Attributes.Should().HaveCount(0);
+    }
+
+    [TestMethod]
     public void SetAttribute_WithSameAndDifferentAttributeNameAsParent_SetsOnlyDifferentNameAttribute()
     {
         ParentClass.Attributes = [];
@@ -102,8 +119,8 @@ public class AbstractBuilderTest
 
         _abstractBuilder!.SetParent(ParentClass);
 
-        var invalidAttributeArgs = new CreateAttributeArgs(Guid.NewGuid(), "public", Guid.NewGuid(), "TestAttribute");
-        var validAttributeArgs = new CreateAttributeArgs(Guid.NewGuid(), "public", Guid.NewGuid(), "NewAttribute");
+        var invalidAttributeArgs = new CreateAttributeArgs(Guid.NewGuid(), "public", Guid.NewGuid(), "TestAttribute", false);
+        var validAttributeArgs = new CreateAttributeArgs(Guid.NewGuid(), "public", Guid.NewGuid(), "NewAttribute", false);
 
         _attributeServiceMock!.Setup(m => m.CreateAttribute(invalidAttributeArgs))
             .Throws(new ArgumentException());
@@ -129,8 +146,8 @@ public class AbstractBuilderTest
         _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
             .Returns(attribute2);
 
-        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute1");
-        var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute2");
+        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute1", false);
+        var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute2", false);
 
         _abstractBuilder!.SetAttributes([attributeArgs1, attributeArgs2]);
 
@@ -207,6 +224,7 @@ public class AbstractBuilderTest
             false,
             false,
             false,
+            false,
             Guid.NewGuid(),
             [],
             [],
@@ -241,6 +259,7 @@ public class AbstractBuilderTest
             "Method2",
             Guid.NewGuid(),
             "public",
+            false,
             false,
             false,
             false,

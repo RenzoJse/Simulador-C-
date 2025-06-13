@@ -37,7 +37,8 @@ export class CreateMethodFormComponent {
         { value: 'Abstract', tag: 'Abstract' },
         { value: 'Sealed', tag: 'Sealed' },
         { value: 'Override', tag: 'Override' },
-        { value: 'Virtual', tag: 'Virtual' }
+        { value: 'Virtual', tag: 'Virtual' },
+        { value: 'Static', tag: 'Static' }
     ];
     
     selectedClassId: string = '';
@@ -46,7 +47,7 @@ export class CreateMethodFormComponent {
         this.createMethodForm = this.fb.group({
             Name: ['', [
                 Validators.required,
-                Validators.maxLength(30)
+                Validators.maxLength(50)
             ]],
             typeId: ['', [
                 Validators.required
@@ -78,6 +79,7 @@ export class CreateMethodFormComponent {
             isSealed: selectedModifier === 'Sealed',
             isOverride: selectedModifier === 'Override',
             isVirtual: selectedModifier === 'Virtual',
+            isStatic: selectedModifier === 'Static',
             classId: this.selectedClassId,
             localVariables: [],
             parameters: []

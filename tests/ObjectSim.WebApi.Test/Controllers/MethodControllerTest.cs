@@ -59,7 +59,7 @@ public class MethodControllerTest
              .Setup(service => service.CreateMethod(It.IsAny<CreateMethodArgs>()))
              .Returns(_testMethod);
 
-        var result = _methodController.CreateMethod(new MethodDtoIn
+        var result = _methodController.CreateMethod(new CreateMethodDtoIn
         {
             Name = "TestClass",
             Type = Guid.NewGuid().ToString(),

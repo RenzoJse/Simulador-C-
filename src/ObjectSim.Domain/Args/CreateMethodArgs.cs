@@ -7,6 +7,7 @@ public class CreateMethodArgs(
     bool? isSealed,
     bool? isOverride,
     bool? isVirtual,
+    bool? isStatic,
     Guid classId,
     List<CreateVariableArgs> localVariables,
     List<CreateVariableArgs> parameters,
@@ -19,6 +20,7 @@ public class CreateMethodArgs(
     public bool? IsSealed { get; set; } = isSealed;
     public bool? IsOverride { get; set; } = isOverride;
     public bool? IsVirtual { get; set; } = isVirtual;
+    public bool? IsStatic { get; set; } = isStatic;
     public Guid ClassId { get; set; } = classId;
     public List<CreateVariableArgs> LocalVariables { get; set; } = localVariables;
     public List<CreateVariableArgs> Parameters { get; set; } = parameters;

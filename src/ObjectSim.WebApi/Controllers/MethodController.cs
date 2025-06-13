@@ -11,9 +11,9 @@ public class MethodController(IMethodService methodService) : ControllerBase
 {
 
     [HttpPost]
-    public IActionResult CreateMethod(MethodDtoIn createMethodDtoIn)
+    public IActionResult CreateMethod(CreateMethodDtoIn createCreateMethodDtoIn)
     {
-        var methodInfo = methodService.CreateMethod(createMethodDtoIn.ToArgs());
+        var methodInfo = methodService.CreateMethod(createCreateMethodDtoIn.ToArgs());
 
         var response = new MethodInformationDtoOut(methodInfo);
 

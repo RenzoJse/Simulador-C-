@@ -28,7 +28,8 @@ public class ClassBuilderTest
         Guid.NewGuid(),
         "public",
         Guid.NewGuid(),
-        "Test"
+        "Test",
+        false
     );
 
     private static readonly Class ParentClass = new Class
@@ -46,6 +47,7 @@ public class ClassBuilderTest
         "TestMethod",
         Guid.NewGuid(),
         "public",
+        false,
         false,
         false,
         false,
@@ -107,8 +109,8 @@ public class ClassBuilderTest
 
         _classBuilderTest!.SetParent(ParentClass);
 
-        var invalidAttributeArgs = new CreateAttributeArgs(Guid.NewGuid(), "public", Guid.NewGuid(), "TestAttribute");
-        var validAttributeArgs = new CreateAttributeArgs(Guid.NewGuid(), "public", Guid.NewGuid(), "NewAttribute");
+        var invalidAttributeArgs = new CreateAttributeArgs(Guid.NewGuid(), "public", Guid.NewGuid(), "TestAttribute", true);
+        var validAttributeArgs = new CreateAttributeArgs(Guid.NewGuid(), "public", Guid.NewGuid(), "NewAttribute", false);
 
         _attributeServiceMock!.Setup(m => m.CreateAttribute(invalidAttributeArgs))
             .Throws(new ArgumentException());
@@ -134,8 +136,8 @@ public class ClassBuilderTest
         _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
             .Returns(attribute2);
 
-        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute1");
-        var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute2");
+        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute1", false);
+        var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute2", false);
 
         _classBuilderTest!.SetAttributes([attributeArgs1, attributeArgs2]);
 
@@ -217,6 +219,7 @@ public class ClassBuilderTest
             false,
             false,
             false,
+            false,
             Guid.NewGuid(),
             [],
             [],
@@ -251,6 +254,7 @@ public class ClassBuilderTest
             "Method2",
             Guid.NewGuid(),
             "public",
+            false,
             false,
             false,
             false,
