@@ -7,12 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ObjectSim.IBusinessLogic\ObjectSim.IBusinessLogic.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Reference Include="ObjectSim.Abstractions">
-        <HintPath>ObjectSim.Abstractions.dll</HintPath>
+        <HintPath>..\ObjectSim.OutputModel\ObjectSim.Abstractions.dll</HintPath>
       </Reference>
     </ItemGroup>
 
