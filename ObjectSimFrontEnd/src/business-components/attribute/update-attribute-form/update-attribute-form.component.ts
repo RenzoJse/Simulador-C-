@@ -13,6 +13,7 @@ import CreateAttributeModel from '../../../backend/services/attribute/models/cre
   standalone: true,
   imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent,FormsModule],
   templateUrl: './update-attribute-form.component.html',
+  styleUrl: './update-attribute-form.component.css'
 })
 export class UpdateAttributeFormComponent {
   @Input() title: string = '';
