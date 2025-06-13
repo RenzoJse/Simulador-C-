@@ -258,9 +258,28 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
         var isMethodInClass = currentClass!.Methods?.Any(m => m.Id == invokeMethodId) ?? false;
 
-        var isAlreadyInvoked = method.MethodsInvoke?.Any(m => m.MethodId == invokeMethodId) ?? false;
+        var isInClassAttribute = currentClass.Attributes?.Any(a => a.DataTypeId == invokeMethod.ClassId) ?? false;
 
-        var isInClassAttribute = currentClass.Attributes?.Any(a => a.ClassId == invokeMethod.ClassId) ?? false;
+        if(isInClassAttribute)
+        {
+            var classAttributes = currentClass.Attributes;
+            foreach(var attribute in classAttributes)
+            {
+                var attributeClassId = attribute.ClassId;
+                var attributeClass = classRepository.Get(c => c.Id == attributeClassId);
+                if(attributeClass!.Methods!.All(m => m.Id != invokeMethodId))
+                {
+                    throw new ArgumentException($"Method with id {invokeMethodId} not found");
+                }
+                else
+                {
+                    if(invokeMethod.IsStatic && !string.Equals(reference, attributeClass.Name, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        throw new ArgumentException($"Cant invoke static attribute {attribute.Name} from class {attributeClass.Name} using reference {reference}");
+                    }
+                }
+            }
+        }
 
         var matchesLocalVariable = method.LocalVariables?.Any(lv => lv.Name == invokeMethod.Name) ?? false;
 
@@ -278,7 +297,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             }
         }
 
-        if (!isInSameClass && !isMethodInClass && !isAlreadyInvoked &&
+        if (!isInSameClass && !isMethodInClass &&
             !isInClassAttribute && !matchesLocalVariable)
         {
             throw new ArgumentException($"Invoke method with id {invokeMethodId} is not reachable from method {method.Name}");
