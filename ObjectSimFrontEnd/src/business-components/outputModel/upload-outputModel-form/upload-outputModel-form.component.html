@@ -1,0 +1,25 @@
+﻿<div class="container mt-4">
+    <h2 class="mb-4">Simulator:</h2>
+
+    <app-form [form]="uploadOutputModelForm" (atSubmit)="onSubmit()">
+
+        <input
+                type="file"
+                class="form-control mb-3"
+                (change)="onFileSelected($event)"
+                accept=".dll" />
+
+        <app-form-button title="Upload!"></app-form-button>
+
+        <div *ngIf="uploadOutputModelFormStatus?.loading; else notLoading">
+            Loading...
+        </div>
+
+        <ng-template #notLoading>
+            <div *ngIf="uploadOutputModelFormStatus?.error">
+                {{ uploadOutputModelFormStatus!.error }}
+            </div>
+        </ng-template>
+
+    </app-form>
+</div>
