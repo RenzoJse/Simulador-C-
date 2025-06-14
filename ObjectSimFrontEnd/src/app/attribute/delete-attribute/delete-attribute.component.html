@@ -1,20 +1,22 @@
 <div class="container mt-4">
   <h2 class="mb-3">Delete Attribute</h2>
 
-  <div class="mb-3">
-    <label for="attributeId">Attribute ID:</label>
-    <input
-      type="text"
-      id="attributeId"
-      class="form-control"
-      [(ngModel)]="attributeId"
-      placeholder="Enter attribute ID"
-    />
-  </div>
-
-  <button class="btn btn-danger" (click)="deleteAttribute()">Delete</button>
-
   <div *ngIf="status?.loading">Deleting...</div>
   <div *ngIf="status?.error" class="text-danger">{{ status?.error }}</div>
 
+  <div class="mb-3">
+    <label for="attributeId">Select Attribute:</label>
+    <select
+      id="attributeId"
+      class="form-control"
+      [(ngModel)]="attributeId"
+    >
+      <option value="" disabled selected>Select an attribute</option>
+      <option *ngFor="let attr of attributesDropdown" [value]="attr.value">
+        {{ attr.tag }}
+      </option>
+    </select>
+  </div>
+
+  <button class="btn btn-danger" (click)="deleteAttribute()" [disabled]="!attributeId">Delete</button>
 </div>
