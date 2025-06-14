@@ -102,5 +102,19 @@ public class OutputModelTransformerServiceTest
         result.Should().Be(input);
     }
 
+    [TestMethod]
+    public void TransformModel_WhenNoTransformerSelected_ShouldThrowException()
+    {
+        var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        Directory.CreateDirectory(tempRoute);
+
+        var outputModelService = new OutputModelTransformerService(tempRoute);
+
+        Action act = () => outputModelService.TransformModel("TestString");
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("No transformer selected.");
+    }
+
     #endregion
 }
