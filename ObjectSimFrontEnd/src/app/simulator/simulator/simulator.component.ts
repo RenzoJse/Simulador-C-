@@ -13,6 +13,7 @@ export class SimulatorComponent {
 
     status: { loading?: true; error?: string } | null = null;
     simulationResult: SafeHtml | string = '';
+    simulationFormat: string = '';
     showCopiedPopup = false;
     popupTimeout: any = null;
 
@@ -29,7 +30,11 @@ export class SimulatorComponent {
             next: (response: { format: string; content: string }) => {
                 console.log('Response from backend:', response);
                 this.status = null;
-                this.simulationResult = this.sanitizer.bypassSecurityTrustHtml(response.content);
+                this.simulationFormat = response.format;
+
+                this.simulationResult = response.format === 'html'
+                    ? this.sanitizer.bypassSecurityTrustHtml(response.content)
+                    : response.content;
             },
             error: (error:any) => {
                 if (error.status === 400 && error.Message) {
@@ -41,11 +46,18 @@ export class SimulatorComponent {
         });
     }
 
-
     copyResult() {
-        const result = this.sanitizer.sanitize(1, this.simulationResult) || '';
+        let result: string;
+
+        if (this.simulationFormat === 'html') {
+            result = this.sanitizer.sanitize(1, this.simulationResult) || '';
+        } else {
+            result = this.simulationResult as string;
+        }
+
         navigator.clipboard.writeText(result);
         this.showCopiedPopup = true;
+
         if (this.popupTimeout) clearTimeout(this.popupTimeout);
         this.popupTimeout = setTimeout(() => {
             this.showCopiedPopup = false;
