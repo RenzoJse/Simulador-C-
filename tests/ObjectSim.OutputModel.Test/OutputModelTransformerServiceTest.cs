@@ -117,4 +117,52 @@ public class OutputModelTransformerServiceTest
     }
 
     #endregion
+
+    #region UploadDll
+
+    [TestMethod]
+    public void UploadDll_ValidDll_SavesFile()
+    {
+        var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        Directory.CreateDirectory(tempRoute);
+        var service = new OutputModelTransformerService(tempRoute);
+
+        const string fileName = "test.dll";
+        var content = new byte[] { 1, 2, 3 };
+        using var stream = new MemoryStream(content);
+
+        service.UploadDll(stream, fileName);
+
+        var savedPath = Path.Combine(tempRoute, fileName);
+        File.Exists(savedPath).Should().BeTrue();
+        File.ReadAllBytes(savedPath).Should().BeEquivalentTo(content);
+    }
+
+    [TestMethod]
+    public void UploadDll_NullStream_ThrowsArgumentException()
+    {
+        var service = new OutputModelTransformerService("anyPath");
+        Action act = () => service.UploadDll(null!, "test.dll");
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid File Type.");
+    }
+
+    [TestMethod]
+    public void UploadDll_EmptyFileName_ThrowsArgumentException()
+    {
+        var service = new OutputModelTransformerService("anyPath");
+        using var stream = new MemoryStream();
+        Action act = () => service.UploadDll(stream, "");
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid File Type.");
+    }
+
+    [TestMethod]
+    public void UploadDll_NotDllExtension_ThrowsArgumentException()
+    {
+        var service = new OutputModelTransformerService("anyPath");
+        using var stream = new MemoryStream();
+        Action act = () => service.UploadDll(stream, "test.txt");
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid File Type.");
+    }
+
+    #endregion
 }
