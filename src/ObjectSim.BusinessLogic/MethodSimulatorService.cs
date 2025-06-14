@@ -70,7 +70,7 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
     private string SimulateInternal(Method method, int indentLevel, HashSet<Guid>? visited = null)
     {
         visited ??= [];
-        if (!visited.Add(method.Id))
+        if(!visited.Add(method.Id))
         {
             return "";
         }
@@ -78,13 +78,13 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
         var result = "";
         var indent = new string(' ', indentLevel * 5);
 
-        foreach (var methodInvoke in method.MethodsInvoke)
+        foreach(var methodInvoke in method.MethodsInvoke)
         {
             var objMethodToInvoke = methodRepository.Get(m => m.Id == methodInvoke.MethodId);
 
             result += $"{indent}{methodInvoke.Reference}.{objMethodToInvoke!.Name}() -> ";
 
-            if (objMethodToInvoke.MethodsInvoke.Count > 0)
+            if(objMethodToInvoke.MethodsInvoke.Count > 0)
             {
                 result += SimulateInternal(objMethodToInvoke, indentLevel + 1, visited);
             }

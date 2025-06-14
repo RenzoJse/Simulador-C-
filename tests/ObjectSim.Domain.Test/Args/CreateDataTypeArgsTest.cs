@@ -9,7 +9,7 @@ public class CreateDataTypeArgsTest
     [TestMethod]
     public void Properties_SetAndGet_ShouldReturnExpectedValues()
     {
-        Guid classId = Guid.NewGuid();
+        var classId = Guid.NewGuid();
         const string type = "int";
         var args = new CreateDataTypeArgs(classId, type);
 
