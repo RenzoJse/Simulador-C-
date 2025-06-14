@@ -2,4 +2,5 @@
     referenceId: string;
     instanceId: string;
     methodId: string;
+    OutputModelName: string;
 }

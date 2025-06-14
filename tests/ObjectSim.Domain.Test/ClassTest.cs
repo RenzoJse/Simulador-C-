@@ -8,17 +8,13 @@ public class ClassTest
     private Class? _testClass;
     private static readonly Variable ValueType = new Variable(Guid.NewGuid(), "int");
     private static readonly Guid TypeId = Guid.NewGuid();
+
     private readonly Method _existingMethod = new()
     {
-        Name = "ExistingMethod",
-        TypeId = TypeId,
-        Parameters = [],
-        IsOverride = false
+        Name = "ExistingMethod", TypeId = TypeId, Parameters = [], IsOverride = false
     };
-    private readonly Attribute _testAttribute = new()
-    {
-        Name = "TestAttribute"
-    };
+
+    private readonly Attribute _testAttribute = new() { Name = "TestAttribute" };
 
     [TestInitialize]
     public void Initialize()
@@ -101,13 +97,7 @@ public class ClassTest
     {
         _testClass!.IsInterface = true;
 
-        var attributes = new List<Attribute>
-        {
-            new Attribute
-            {
-                Name = "TestAttribute",
-            }
-        };
+        var attributes = new List<Attribute> { new Attribute { Name = "TestAttribute", } };
 
         _testClass.Attributes = attributes;
 
@@ -127,14 +117,7 @@ public class ClassTest
     {
         _testClass!.IsInterface = true;
 
-        var methods = new List<Method>
-        {
-            new Method
-            {
-                Name = "TestMethod",
-                Abstract = false
-            }
-        };
+        var methods = new List<Method> { new Method { Name = "TestMethod", Abstract = false } };
 
         Action action = () => _testClass.Methods = methods;
 
@@ -191,14 +174,8 @@ public class ClassTest
     {
         const string validName = "ValidName";
         var id = Guid.NewGuid();
-        var attribute = new Attribute
-        {
-            Name = "TestAttribute",
-        };
-        var method = new Method
-        {
-            Name = "TestMethod",
-        };
+        var attribute = new Attribute { Name = "TestAttribute", };
+        var method = new Method { Name = "TestMethod", };
 
         var test = new Class
         {
@@ -232,13 +209,7 @@ public class ClassTest
     {
         _testClass!.Methods = [_existingMethod];
 
-        var newMethod = new Method
-        {
-            Name = "ExistingMethod",
-            TypeId = TypeId,
-            Parameters = [],
-            IsOverride = false
-        };
+        var newMethod = new Method { Name = "ExistingMethod", TypeId = TypeId, Parameters = [], IsOverride = false };
 
         Action action = () => _testClass!.CanAddMethod(newMethod);
 
@@ -251,13 +222,7 @@ public class ClassTest
     {
         _testClass!.Methods!.Add(_existingMethod);
 
-        var newMethod = new Method
-        {
-            Name = "ExistingMethod",
-            TypeId = TypeId,
-            Parameters = [],
-            IsOverride = false
-        };
+        var newMethod = new Method { Name = "ExistingMethod", TypeId = TypeId, Parameters = [], IsOverride = false };
 
         Action action = () => _testClass!.CanAddMethod(newMethod);
 
@@ -324,10 +289,7 @@ public class ClassTest
 
         var methodToInvoke = new Method
         {
-            Id = Guid.NewGuid(),
-            Name = "MethodToInvoke",
-            TypeId = TypeId,
-            Abstract = true
+            Id = Guid.NewGuid(), Name = "MethodToInvoke", TypeId = TypeId, Abstract = true
         };
 
         _testClass.Methods = [methodToInvoke];
@@ -345,22 +307,13 @@ public class ClassTest
     [TestMethod]
     public void CanAddMethod_WithSameParameterCountAndAreSameParameters_ThrowsException()
     {
-        var method = new Method
-        {
-            Name = "NewMethod",
-            TypeId = TypeId,
-            Parameters = [ValueType],
-            IsOverride = false
-        };
+        var method = new Method { Name = "NewMethod", TypeId = TypeId, Parameters = [ValueType], IsOverride = false };
 
         _testClass!.Methods = [method];
 
         var newMethod = new Method
         {
-            Name = "NewMethod",
-            TypeId = TypeId,
-            Parameters = [ValueType],
-            IsOverride = false
+            Name = "NewMethod", TypeId = TypeId, Parameters = [ValueType], IsOverride = false
         };
 
         Action action = () => _testClass!.CanAddMethod(newMethod);
@@ -381,7 +334,7 @@ public class ClassTest
         Action act = () => childClass.CanAddMethod(method);
 
         act.Should().Throw<ArgumentException>()
-           .WithMessage("Override method must override a method from the parent class.");
+            .WithMessage("Override method must override a method from the parent class.");
     }
 
     [TestMethod]
@@ -389,34 +342,59 @@ public class ClassTest
     {
         var typeId = Guid.NewGuid();
 
-        var method1 = new Method
-        {
-            Name = "TestMethod",
-            TypeId = typeId,
-            Parameters = [ValueType],
-            IsOverride = false
-        };
+        var method1 = new Method { Name = "TestMethod", TypeId = typeId, Parameters = [ValueType], IsOverride = false };
 
-        var method2 = new Method
-        {
-            Name = "TestMethod",
-            TypeId = typeId,
-            Parameters = [ValueType],
-            IsOverride = false
-        };
+        var method2 = new Method { Name = "TestMethod", TypeId = typeId, Parameters = [ValueType], IsOverride = false };
 
-        var classObj = new Class
-        {
-            Methods = [method1]
-        };
+        var classObj = new Class { Methods = [method1] };
 
         Action act = () => classObj.CanAddMethod(method2);
 
         act.Should().Throw<ArgumentException>()
-           .WithMessage("Method already exists in class.");
+            .WithMessage("Method already exists in class.");
     }
 
-    #endregion
+    [TestMethod]
+    public void CanAddMethod_WhenMethodIsStaticAndClassIsInterface_ShouldThrow()
+    {
+        _testClass!.IsInterface = true;
+
+        var method = new Method
+        {
+            Name = "StaticMethod",
+            TypeId = TypeId,
+            Parameters = [],
+            IsOverride = false,
+            IsStatic = true
+        };
+
+        Action action = () => _testClass!.CanAddMethod(method);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Method cannot be static in an interface.");
+    }
+
+    [TestMethod]
+    public void CanAddMethod_WhenMethodIsStaticAndClassIsAbstract_ShouldThrow()
+    {
+        _testClass!.IsAbstract = true;
+
+        var method = new Method
+        {
+            Name = "StaticMethod",
+            TypeId = TypeId,
+            Parameters = [],
+            IsOverride = false,
+            IsStatic = true
+        };
+
+        Action action = () => _testClass!.CanAddMethod(method);
+
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Method cannot be static in an Abstract Class.");
+    }
+
+#endregion
 
     #region Success
 

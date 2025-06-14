@@ -2,15 +2,24 @@
   <h2 class="mb-4">Delete Attribute</h2>
 
   <app-form [form]="deleteForm" (atSubmit)="submitDelete()">
-    <app-form-input
-      [form]="deleteForm"
-      controlName="id"
-      [reserve]="'Attribute ID'"
-      [name]="'id'"
-      [tag]="'Attribute ID'"
-      [errorMessages]="{ required: 'Attribute ID is required.' }"
-      [type]="'text'">
-    </app-form-input>
+    <div class="form-group mb-3">
+      <label for="id">Select Attribute to Delete</label>
+      <select
+        class="form-control"
+        formControlName="id"
+        [ngClass]="{
+          'is-invalid': deleteForm.get('id')?.invalid && deleteForm.get('id')?.touched
+        }"
+      >
+        <option value="" disabled>Select an attribute</option>
+        <option *ngFor="let attr of attributes" [value]="attr.value">
+          {{ attr.tag }}
+        </option>
+      </select>
+      <div class="invalid-feedback" *ngIf="deleteForm.get('id')?.errors?.['required']">
+        Attribute is required.
+      </div>
+    </div>
 
     <div *ngIf="deleteStatus?.loading; else notLoading">Deleting...</div>
 

@@ -1,7 +1,29 @@
-<app-update-attribute-form
-  [title]="'Update Attribute'"
-  (atSubmit)="onUpdateSubmit($event)">
-</app-update-attribute-form>
+<div class="container mt-4">
+  <h2 class="mb-4">Update Attribute</h2>
 
-<div *ngIf="status?.loading">Updating...</div>
-<div *ngIf="status?.error" class="text-danger">{{ status?.error }}</div>
+  <div class="form-group mb-3">
+    <label for="attributeSelect">Select Attribute</label>
+    <select
+      id="attributeSelect"
+      class="form-control"
+      [(ngModel)]="selectedAttributeId"
+      (change)="loadAttribute()"
+    >
+      <option value="" disabled selected>Select an attribute</option>
+      <option *ngFor="let attr of allAttributes" [value]="attr.value">
+        {{ attr.tag }}
+      </option>
+    </select>
+  </div>
+
+  <app-update-attribute-form
+    *ngIf="attributeToEdit"
+    [title]="'Edit Attribute'"
+    [attribute]="attributeToEdit"
+    [attributeId]="selectedAttributeId!"
+    (atSubmit)="onUpdateSubmit($event)">
+  </app-update-attribute-form>
+
+  <div *ngIf="status?.loading">Updating...</div>
+  <div *ngIf="status?.error" class="text-danger">{{ status?.error }}</div>
+</div>

@@ -39,22 +39,18 @@ public class MethodTest
             Abstract = false,
             IsSealed = false,
             IsOverride = false,
+            IsStatic = false,
             ClassId = _testClass!.Id
         };
     }
+
+    #region DataType
 
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqual()
     {
         var method = new Method { TypeId = _methodType.Id };
         method.TypeId.Should().Be(_methodType.Id);
-    }
-
-    [TestMethod]
-    public void Accessibility_Property_SetAndGet_ShouldBeEqual()
-    {
-        var method = new Method { Accessibility = Method.MethodAccessibility.Public };
-        method.Accessibility.Should().Be(Method.MethodAccessibility.Public);
     }
 
     [TestMethod]
@@ -65,11 +61,34 @@ public class MethodTest
     }
 
     [TestMethod]
+    public void TypeId_SetAndGet_ShouldBeEqual()
+    {
+        var expectedTypeId = Guid.NewGuid();
+        var method = new Method { TypeId = expectedTypeId };
+        method.TypeId.Should().Be(expectedTypeId);
+    }
+
+    #endregion
+
+    #region Accessibility
+
+    [TestMethod]
+    public void Accessibility_Property_SetAndGet_ShouldBeEqual()
+    {
+        var method = new Method { Accessibility = Method.MethodAccessibility.Public };
+        method.Accessibility.Should().Be(Method.MethodAccessibility.Public);
+    }
+
+    [TestMethod]
     public void MethodAccessibility_CreateMethod_ShouldSetCorrectly()
     {
         _testMethod!.Accessibility = Method.MethodAccessibility.Public;
         Assert.AreEqual(Method.MethodAccessibility.Public, _testMethod.Accessibility);
     }
+
+    #endregion
+
+    #region Name
 
     [TestMethod]
     public void Name_Property_SetAndGet_ShouldBeEqual()
@@ -82,7 +101,6 @@ public class MethodTest
     public void Name_SetToEmpty_ShouldThrowArgumentException()
     {
         Action act = () => _testMethod!.Name = string.Empty;
-
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or whitespace.");
     }
@@ -91,9 +109,7 @@ public class MethodTest
     public void Name_SetToWhiteSpace_ShouldThrowArgumentException()
     {
         var method = new Method();
-
         Action act = () => method.Name = " ";
-
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or whitespace.");
     }
@@ -102,9 +118,7 @@ public class MethodTest
     public void Name_SetToTooLongValue_ShouldThrowArgumentException()
     {
         var method = new Method();
-
         Action act = () => method.Name = new string('t', 52);
-
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot exceed 50 characters.");
     }
@@ -113,12 +127,14 @@ public class MethodTest
     public void Name_SetToValueStartingWithNumber_ShouldThrowArgumentException()
     {
         var method = new Method();
-
         Action act = () => method.Name = "1Test";
-
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or start with a num.");
     }
+
+    #endregion
+
+    #region Validate
 
     [TestMethod]
     public void Validate_ValidMethod_ShouldNotThrow()
@@ -130,9 +146,7 @@ public class MethodTest
             TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
-
         Action act = method.ValidateFields;
-
         act.Should().NotThrow();
     }
 
@@ -146,9 +160,7 @@ public class MethodTest
             TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
-
         Action act = method.ValidateFields;
-
         act.Should().Throw<ArgumentException>()
             .WithMessage("Id must be a valid non-empty GUID.");
     }
@@ -163,9 +175,7 @@ public class MethodTest
             TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
-
         Action act = method.ValidateFields;
-
         act.Should().NotThrow();
     }
 
@@ -178,12 +188,9 @@ public class MethodTest
             Name = "test",
             TypeId = _methodReferenceType.Id
         };
-
         var accessibilityField = typeof(Method).GetField("_accessibility", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         accessibilityField!.SetValue(method, (Method.MethodAccessibility)99);
-
         Action act = method.ValidateFields;
-
         act.Should().Throw<ArgumentException>()
             .WithMessage("Invalid accesibility type.");
     }
@@ -198,11 +205,45 @@ public class MethodTest
             TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
-
         Action act = method.ValidateFields;
-
         act.Should().NotThrow();
     }
+
+    [TestMethod]
+    public void ValidateFields_WithInvalidName_ShouldThrow()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            TypeId = _methodReferenceType.Id,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+        var nameField = typeof(Method).GetField("_name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        nameField!.SetValue(method, "1Invalid");
+        Action act = method.ValidateFields;
+        act.Should().Throw<ArgumentException>().WithMessage("Name cannot be null or start with a num.");
+    }
+
+    [TestMethod]
+    public void ValidateFields_WithNullName_ShouldThrow()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            TypeId = _methodReferenceType.Id,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+        var nameField = typeof(Method).GetField("_name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        nameField!.SetValue(method, null);
+        Action act = method.ValidateFields;
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or whitespace.");
+    }
+
+    #endregion
+
+    #region Bools
+
     [TestMethod]
     public void Abstract_SetAndGet_ShouldBeEqual()
     {
@@ -216,6 +257,17 @@ public class MethodTest
         var method = new Method { IsSealed = true };
         method.IsSealed.Should().BeTrue();
     }
+
+    [TestMethod]
+    public void IsStatic_SetAndGet_ShouldBeEqual()
+    {
+        var method = new Method { IsStatic = true };
+        method.IsStatic.Should().BeTrue();
+    }
+
+    #endregion
+
+    #region ParametersAndVariables
 
     [TestMethod]
     public void Parameters_AddParameter_ShouldContainParameter()
@@ -235,6 +287,10 @@ public class MethodTest
         method.LocalVariables.Should().Contain(localVar);
     }
 
+    #endregion
+
+    #region Constructor
+
     [TestMethod]
     public void Id_DefaultValue_ShouldNotBeEmpty()
     {
@@ -243,46 +299,9 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void ValidateFields_WithInvalidName_ShouldThrow()
-    {
-        var method = new Method
-        {
-            Id = Guid.NewGuid(),
-            TypeId = _methodReferenceType.Id,
-            Accessibility = Method.MethodAccessibility.Public
-        };
-
-        var nameField = typeof(Method).GetField("_name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        nameField!.SetValue(method, "1Invalid");
-
-        Action act = method.ValidateFields;
-        act.Should().Throw<ArgumentException>().WithMessage("Name cannot be null or start with a num.");
-    }
-
-    [TestMethod]
-    public void ValidateFields_WithNullName_ShouldThrow()
-    {
-        var method = new Method
-        {
-            Id = Guid.NewGuid(),
-            TypeId = _methodReferenceType.Id,
-            Accessibility = Method.MethodAccessibility.Public
-        };
-
-        var nameField = typeof(Method).GetField("_name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        nameField!.SetValue(method, null);
-
-        Action act = method.ValidateFields;
-
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Name cannot be null or whitespace.");
-    }
-
-    [TestMethod]
     public void Constructor_ShouldInitializeParametersAndLocalVariables()
     {
         var method = new Method();
-
         method.Parameters.Should().NotBeNull();
         method.LocalVariables.Should().NotBeNull();
     }
@@ -296,14 +315,7 @@ public class MethodTest
         method.ClassId.Should().Be(classInstance.Id);
     }
 
-    [TestMethod]
-    public void TypeId_SetAndGet_ShouldBeEqual()
-    {
-        var expectedTypeId = Guid.NewGuid();
-        var method = new Method { TypeId = expectedTypeId };
-
-        method.TypeId.Should().Be(expectedTypeId);
-    }
+    #endregion
 
     #region InvokeMethod
 

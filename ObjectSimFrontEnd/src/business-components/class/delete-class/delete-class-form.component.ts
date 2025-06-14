@@ -10,7 +10,8 @@ import { FormComponent } from '../../../components/form/form/form.component';
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule, NgIf,
     ClassDropdownComponent, FormButtonComponent, FormComponent],
-  templateUrl: './delete-class-form.component.html'
+  templateUrl: './delete-class-form.component.html',
+  styleUrl: './delete-class-form.component.css'
 })
 export class DeleteClassFormComponent {
   @Input() loading = false;

@@ -10,7 +10,8 @@ import { FormButtonComponent } from '../../../components/form/form-button/form-b
   selector: 'app-create-namespace-form',
   standalone: true,
   imports: [ReactiveFormsModule, NgIf, FormComponent, FormInputComponent, FormButtonComponent],
-  templateUrl: './create-namespace-form.component.html'
+  templateUrl: './create-namespace-form.component.html',
+  styleUrl: './create-namespace-form.component.css'
 })
 export class CreateNamespaceFormComponent {
   @Output() nsSubmit = new EventEmitter<CreateNamespaceModel>();

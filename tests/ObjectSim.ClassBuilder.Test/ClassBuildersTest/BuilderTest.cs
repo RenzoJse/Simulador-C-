@@ -274,13 +274,15 @@ public class BuilderTest
             Guid.NewGuid(),
             "Public",
             Guid.NewGuid(),
-            "Attr1"
+            "Attr1",
+            false
         );
 
         var methodArgs = new CreateMethodArgs(
             "Method1",
             Guid.NewGuid(),
             "Public",
+            false,
             false,
             false,
             false,

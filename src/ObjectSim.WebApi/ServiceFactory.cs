@@ -7,6 +7,7 @@ using ObjectSim.DataAccess.Interface;
 using ObjectSim.DataAccess.Repositories;
 using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
+using ObjectSim.OutputModel;
 using ObjectSim.Security;
 using ObjectSim.Security.Strategy;
 using ObjectSim.Security.Strategy.KeyStrat;
@@ -46,6 +47,7 @@ public static class ServiceFactory
         services.AddScoped<ISecurityService, SecurityService>();
         services.AddScoped<IValidationStrategy, KeyStrategy>();
         services.AddScoped<IInvokeMethodService, InvokeMethodService>();
+        services.AddScoped<IOutputModelTransformerService, OutputModelTransformerService>();
     }
 
     public static void AddDataAccess(IServiceCollection services)

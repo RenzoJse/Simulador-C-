@@ -29,7 +29,7 @@ public class Method
 
     #endregion
 
-    #region Name
+    #region TypeId
 
     public Guid TypeId { get; set; }
 
@@ -49,6 +49,12 @@ public class Method
 
     #region IsOverride
     public bool IsOverride { get; set; } = false;
+    #endregion
+
+    #region IsStatic
+
+    public bool IsStatic { get; set; } = false;
+
     #endregion
 
     #region Accessibility
@@ -152,6 +158,7 @@ public class Method
     #endregion
 
     #region Validations
+
     public void ValidateFields()
     {
         ValidateId(Id);
@@ -190,6 +197,7 @@ public class Method
             throw new ArgumentException("Invalid accesibility type.");
         }
     }
+
     #endregion
 
 }

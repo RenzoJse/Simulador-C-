@@ -34,6 +34,9 @@ namespace ObjectSim.DataAccess.Migrations
                     b.Property<Guid>("DataTypeId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsStatic")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -247,6 +250,9 @@ namespace ObjectSim.DataAccess.Migrations
                     b.Property<bool>("IsSealed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsStatic")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsVirtual")
                         .HasColumnType("bit");
 
@@ -273,6 +279,7 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
                             IsVirtual = false,
                             Name = "Equals",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
@@ -285,6 +292,7 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
                             IsVirtual = false,
                             Name = "Equals (Object, Object)",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
@@ -297,6 +305,7 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
                             IsVirtual = false,
                             Name = "Finalize",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
@@ -309,6 +318,7 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
                             IsVirtual = false,
                             Name = "GetHashCode",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
@@ -321,6 +331,7 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
                             IsVirtual = false,
                             Name = "GetType",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
@@ -333,6 +344,7 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
                             IsVirtual = false,
                             Name = "MemberwiseClone",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
@@ -345,6 +357,7 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
                             IsVirtual = false,
                             Name = "ReferenceEquals",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
@@ -357,6 +370,7 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
                             IsVirtual = false,
                             Name = "ToString",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")

@@ -6,6 +6,7 @@ export default interface MethodDTO {
     isSealed: boolean;
     isOverride: boolean;
     isVirtual: boolean;
+    isStatic: boolean;
     classId: string;
     localVariables: any[];
     parameters: any[];
