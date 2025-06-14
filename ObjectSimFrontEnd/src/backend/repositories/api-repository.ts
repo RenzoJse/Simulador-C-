@@ -87,6 +87,13 @@ export default abstract class ApiRepository{
     }
 
     protected handleError(error: HttpErrorResponse) {
+        if (error.status === 200) {
+            return throwError(() => ({
+                status: error.status,
+                message: error.error?.message || 'Operation successful, but the backend returned an unexpected object.'
+            }));
+        }
+
         let errorMessage = 'Something wrong happened, try later.';
         if (error.error instanceof ErrorEvent) {
             console.error('An error ocurred: ', error.error.message);

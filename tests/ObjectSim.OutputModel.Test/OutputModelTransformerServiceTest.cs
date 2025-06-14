@@ -164,5 +164,24 @@ public class OutputModelTransformerServiceTest
         act.Should().Throw<ArgumentException>().WithMessage("Invalid File Type.");
     }
 
+    [TestMethod]
+    public void UploadDll_FileAlreadyExists_ThrowsInvalidOperationException()
+    {
+        var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        Directory.CreateDirectory(tempRoute);
+        var service = new OutputModelTransformerService(tempRoute);
+
+        const string fileName = "test.dll";
+        var content = new byte[] { 1, 2, 3 };
+        var savedPath = Path.Combine(tempRoute, fileName);
+
+        File.WriteAllBytes(savedPath, content);
+
+        using var stream = new MemoryStream(content);
+        Action act = () => service.UploadDll(stream, fileName);
+
+        act.Should().Throw<InvalidOperationException>().WithMessage("El archivo ya existe.");
+    }
+
     #endregion
 }

@@ -22,9 +22,16 @@ public class OutputModelTransformerService()
             throw new ArgumentException("Invalid File Type.");
         }
 
+        Directory.CreateDirectory(_route);
         var savePath = Path.Combine(_route, fileName);
-        using var fileStream = new FileStream(savePath, FileMode.Create);
-        dllStream.CopyToAsync(fileStream);
+
+        if (File.Exists(savePath))
+        {
+            throw new InvalidOperationException("El archivo ya existe.");
+        }
+
+        using var fileStream = new FileStream(savePath, FileMode.Create, FileAccess.Write);
+        dllStream.CopyTo(fileStream);
     }
 
     public List<string> GetImplementationList()
