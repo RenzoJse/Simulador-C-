@@ -48,6 +48,15 @@ body {
   letter-spacing: 0.03em;
 }
 
+pre {
+  background: #f4f4f4;
+  padding: 1em;
+  border-radius: 6px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  font-family: monospace;
+}
+
 .close-btn {
   background: #f4f6f9;
   border: none;

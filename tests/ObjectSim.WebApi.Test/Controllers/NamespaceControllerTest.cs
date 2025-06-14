@@ -15,12 +15,14 @@ public class NamespaceControllerTest
 {
     private Mock<INamespaceService> _namespaceServiceMock = null!;
     private NamespaceController _controller = null!;
+
     [TestInitialize]
     public void Setup()
     {
         _namespaceServiceMock = new Mock<INamespaceService>();
         _controller = new NamespaceController(_namespaceServiceMock.Object);
     }
+
     [TestMethod]
     public void GetAll_ShouldReturnOkWithNamespaceDtos()
     {

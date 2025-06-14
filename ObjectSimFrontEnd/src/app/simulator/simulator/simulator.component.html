@@ -2,7 +2,16 @@
 </app-simulator-form>
 <div *ngIf="simulationResult">
     <h3>Simulation result:</h3>
-    <div *ngIf="simulationResult" [innerHTML]="simulationResult"></div>
+
+    <div *ngIf="simulationResult">
+        <pre *ngIf="simulationFormat !== 'html'">{{ simulationResult }}</pre>
+        <div *ngIf="simulationFormat === 'html'" [innerHTML]="simulationResult"></div>
+    </div>
+
+    <ng-template #plainResult>
+        <pre>{{ simulationResult }}</pre>
+    </ng-template>
+
     <button (click)="copyResult()">Copy Result!</button>
     <div *ngIf="showCopiedPopup" class="copied-popup">
         <span>¡Answer was copied to clipboard!</span>

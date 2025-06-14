@@ -3,7 +3,7 @@ import { Observable, catchError, retry, throwError } from 'rxjs';
 
 export default abstract class ApiRepository{
     protected completedEndpoint: string;
-    
+
     protected get headers() {
         return {
             headers: new HttpHeaders({
@@ -11,7 +11,7 @@ export default abstract class ApiRepository{
             }),
         };
     }
-    
+
     constructor(
         protected readonly _apiOrigin: string,
         protected readonly _endpoint: string,
@@ -34,11 +34,16 @@ export default abstract class ApiRepository{
         const url = `${this.completedEndpoint}${extraResource}`;
 
         if (!headers) {
-            headers = new HttpHeaders({
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            });
+            if (!(body instanceof FormData)) {
+                headers = new HttpHeaders({
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                });
+            } else {
+                headers = undefined;
+            }
         }
+
 
         return this._http
             .post<T>(url, body, { headers })
@@ -82,6 +87,13 @@ export default abstract class ApiRepository{
     }
 
     protected handleError(error: HttpErrorResponse) {
+        if (error.status === 200) {
+            return throwError(() => ({
+                status: error.status,
+                message: error.error?.message || 'Operation successful, but the backend returned an unexpected object.'
+            }));
+        }
+
         let errorMessage = 'Something wrong happened, try later.';
         if (error.error instanceof ErrorEvent) {
             console.error('An error ocurred: ', error.error.message);

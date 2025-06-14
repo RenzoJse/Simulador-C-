@@ -12,6 +12,9 @@
         <app-method-dropdown (selectMethod)="updateSelectedMethodId($event)">
             </app-method-dropdown>
 
+        <app-outputModel-dropdown (selectModel)="updateSelectedOutputModelName($event)">
+        </app-outputModel-dropdown>
+
         <app-form-button title="Simulate"></app-form-button>
 
         <div *ngIf="simulatorFormStatus?.loading; else notLoading">

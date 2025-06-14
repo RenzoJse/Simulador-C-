@@ -15,6 +15,25 @@ public class OutputModelTransformerService()
         _route = route;
     }
 
+    public void UploadDll(Stream dllStream, string fileName)
+    {
+        if (dllStream == null || string.IsNullOrWhiteSpace(fileName) || !fileName.EndsWith(".dll"))
+        {
+            throw new ArgumentException("Invalid File Type.");
+        }
+
+        Directory.CreateDirectory(_route);
+        var savePath = Path.Combine(_route, fileName);
+
+        if (File.Exists(savePath))
+        {
+            throw new InvalidOperationException("El archivo ya existe.");
+        }
+
+        using var fileStream = new FileStream(savePath, FileMode.Create, FileAccess.Write);
+        dllStream.CopyTo(fileStream);
+    }
+
     public List<string> GetImplementationList()
     {
         var loadAssemblers = new LoadAssemblers<IOutputModelTransformer>(_route);

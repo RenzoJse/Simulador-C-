@@ -1,0 +1,15 @@
+﻿<div *ngIf="status.loading">Loading...</div>
+
+<div *ngIf="!status.loading && status.error">
+    <p>{{ status.error }}</p>
+</div>
+
+<app-dropdown
+        *ngIf="!status.loading && !status.error"
+        [options]="status.systemModels"
+        tag="System Output Models"
+        [value]="value"
+        reserve="Select an Output Model"
+        emptyMessage="There are no output models available"
+        (changeValue)="onSelectModel($event)">
+</app-dropdown>
