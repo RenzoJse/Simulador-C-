@@ -41,4 +41,20 @@ public class HtmlOutputModelTest
         Assert.AreEqual("plain", format);
         Assert.AreEqual("123", content);
     }
+
+    [TestMethod]
+    public void Transform_NullInput_ReturnsPlainEmptyString()
+    {
+        var transformer = new HtmlOutputModelTransformer();
+
+        var result = transformer.Transform(null!);
+
+        Assert.IsNotNull(result);
+        var format = result.GetType().GetProperty("format")?.GetValue(result, null);
+        var content = result.GetType().GetProperty("content")?.GetValue(result, null);
+
+        Assert.AreEqual("plain", format);
+        Assert.AreEqual(string.Empty, content);
+    }
+
 }
