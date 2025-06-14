@@ -9,11 +9,9 @@ public static class TemporalAssembly
     public static void CreateTemporalAssembly(string route, string assemblyName)
     {
         const string code = @"
-            using ObjectSim.Abstractions;
+            using ObjectSim.OutputModel;
             public class TempType : IOutputModelTransformer
             {
-                public string Name { get; set; } = ""123456"";
-
                 public object Transform(object input)
                 {
                     var test = input as string;
@@ -40,7 +38,7 @@ public static class TemporalAssembly
         {
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(IOutputModelTransformerService).Assembly.Location),
-            //MetadataReference.CreateFromFile(typeof(Model).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(IOutputModelTransformer).Assembly.Location),
             systemRuntimeReference
         };
 

@@ -68,16 +68,13 @@ public class OutputModelTransformerServiceTest
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
 
-        var pluginsPath = Path.Combine(tempRoute, "Plugins");
-        Directory.CreateDirectory(pluginsPath);
-
-        TemporalAssembly.CreateTemporalAssembly(pluginsPath, "TempAssembly");
+        TemporalAssembly.CreateTemporalAssembly(tempRoute, "TempAssembly");
 
         var outputModelService = new OutputModelTransformerService(tempRoute);
 
         outputModelService.SelectImplementation("TempType");
 
-        var fieldInfo = typeof(OutputModelTransformerService).GetField("_validatorModel", BindingFlags.NonPublic | BindingFlags.Instance);
+        var fieldInfo = typeof(OutputModelTransformerService).GetField("_transformerModel", BindingFlags.NonPublic | BindingFlags.Instance);
         var validatorModel = fieldInfo?.GetValue(outputModelService);
 
         validatorModel.Should().NotBeNull();
@@ -88,58 +85,21 @@ public class OutputModelTransformerServiceTest
     #region TransformModel
 
     [TestMethod]
-    public void ValidateModel_WhenGivenAValidModel_ShouldReturnTrue()
+    public void TransformModel_WhenGivenAValidModel_ShouldReturnTrue()
     {
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
-
-        var pluginsPath = Path.Combine(tempRoute, "Plugins");
-        Directory.CreateDirectory(pluginsPath);
 
         TemporalAssembly.CreateTemporalAssembly(tempRoute, "TempAssembly");
 
         var outputModelService = new OutputModelTransformerService(tempRoute);
-
         outputModelService.SelectImplementation("TempType");
 
-        const string model = "AAABBB";
+        const string input = "TestString";
 
-        var result = outputModelService.TransformModel(model);
-    }
+        var result = outputModelService.TransformModel(input);
 
-    [TestMethod]
-    public void ValidateModel_WhenNoModelIsSelected_ShouldThrowException()
-    {
-        var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-        Directory.CreateDirectory(tempRoute);
-
-        var outputModelService = new OutputModelTransformerService(tempRoute);
-
-        const string model = "AAABBB";
-
-        var action = () => outputModelService.TransformModel(model);
-
-        action.Should().Throw<InvalidOperationException>();
-    }
-
-    [TestMethod]
-    public void ValidateModel_WhenGivenAnInvalidModel_ShouldReturnFalse()
-    {
-        var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-        Directory.CreateDirectory(tempRoute);
-
-        var pluginsPath = Path.Combine(tempRoute, "Plugins");
-        Directory.CreateDirectory(pluginsPath);
-
-        TemporalAssembly.CreateTemporalAssembly(tempRoute, "TempAssembly");
-
-        var outputModelService = new OutputModelTransformerService(tempRoute);
-
-        outputModelService.SelectImplementation("TempType");
-
-        const string model = "N O T V A L I D";
-
-        var result = outputModelService.TransformModel(model);
+        result.Should().Be(input);
     }
 
     #endregion
