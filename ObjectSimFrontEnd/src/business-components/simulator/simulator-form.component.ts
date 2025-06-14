@@ -34,12 +34,14 @@ export class SimulatorFormComponent {
     ReferenceId: string | undefined;
     InstanceId: string | undefined;
     MethodId: string | undefined;
+    OutputModelName: string | undefined;
 
     constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
         this.simulatorForm = this.fb.group({
             ReferenceId: [''],
             InstanceId: [''],
-            methodId: ['']
+            methodId: [''],
+            OutputModelName: [''],
         });
     }
 
@@ -50,6 +52,8 @@ export class SimulatorFormComponent {
             console.log('Reference ID:', ReferenceId);
             console.log('Instance ID:', InstanceId);
             console.log('Método:', methodId);
+
+            this.simulatorForm.value.OutputModelName = "HtmlOutputModelTransformer";
 
             this.atSubmit.emit(this.simulatorForm.value as CreateSimulatedExecutionModel);
         } else {

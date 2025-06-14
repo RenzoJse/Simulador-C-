@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 
 import { FormInputComponent } from '../../../components/form/form-input/form-input.component';
 import { FormButtonComponent } from '../../../components/form/form-button/form-button.component';
@@ -9,11 +9,12 @@ import { FormComponent } from '../../../components/form/form/form.component';
 @Component({
   selector: 'app-delete-attribute-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent],
+  imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent,CommonModule],
   templateUrl: './delete-attribute-form.component.html',
   styleUrl: './delete-attribute-form.component.css'
 })
 export class DeleteAttributeFormComponent {
+  @Input() attributes: { value: string, tag: string }[] = [];
   @Output() onDelete = new EventEmitter<string>();
 
   deleteForm: FormGroup;
@@ -22,6 +23,12 @@ export class DeleteAttributeFormComponent {
   constructor(private fb: FormBuilder) {
     this.deleteForm = this.fb.group({
       id: ['', [Validators.required]]
+    });
+  }
+  
+  ngOnInit(): void {
+    this.deleteForm = this.fb.group({
+      id: ['', Validators.required]
     });
   }
 
