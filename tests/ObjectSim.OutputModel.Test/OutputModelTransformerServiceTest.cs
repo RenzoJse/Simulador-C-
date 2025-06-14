@@ -14,7 +14,7 @@ public class OutputModelTransformerServiceTest
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
 
-        var outputModelService = new OutputModelTransformerService();
+        var outputModelService = new OutputModelTransformerService(tempRoute);
 
         var implementations = outputModelService.GetImplementationList();
 
