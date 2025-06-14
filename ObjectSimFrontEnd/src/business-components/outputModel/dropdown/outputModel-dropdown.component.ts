@@ -19,7 +19,7 @@ export class OutputModelDropdownComponent implements OnInit, OnDestroy{
 
     status: SystemOutputModelsStatus = {
         loading: true,
-        systemOutputModels: [],
+        systemModels: [],
         error: '',
     };
 
@@ -35,20 +35,20 @@ export class OutputModelDropdownComponent implements OnInit, OnDestroy{
             .subscribe({
                 next: (systemModels) => {
                     this.status = {
-                        systemClasses: systemModels.map((model) => ({
+                        systemModels: systemModels.map((model) => ({
                             value: model.name,
                             tag: model.name,
                         })),
                     };
                 },
                 error: (error) => {
-                    this.status = { systemOutputModels: [], error: 'No available output models.' };
+                    this.status = { systemModels: [], error: 'No available output models.' };
                 }
             });
     }
 
     onSelectModel(modelName: string) {
-        const model = this.status.systemClasses.find(c => c.value === modelName);
+        const model = this.status.systemModels.find(c => c.value === modelName);
         if (model) {
             this.selectModel.emit({
                 name: model.value,
