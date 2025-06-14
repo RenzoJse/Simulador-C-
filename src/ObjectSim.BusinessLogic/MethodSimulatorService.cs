@@ -7,7 +7,7 @@ namespace ObjectSim.BusinessLogic;
 public class MethodSimulatorService(IRepository<Method> methodRepository, IRepository<Class> classRepository,
     IOutputModelTransformerService outputModelTransformerService) : IMethodSimulatorService
 {
-    public string Simulate(SimulateExecutionArgs args)
+    public object Simulate(SimulateExecutionArgs args)
     {
         ArgumentNullException.ThrowIfNull(args);
 
@@ -31,7 +31,7 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
 
         SelectOutputModel(args.OutputModelName!);
 
-        return outputModelTransformerService.TransformModel(result).ToString()!;
+        return outputModelTransformerService.TransformModel(result);
     }
 
     private void SelectOutputModel(string name)

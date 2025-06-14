@@ -2,5 +2,5 @@
 </app-simulator-form>
 <div *ngIf="simulationResult">
     <h3>Simulation result:</h3>
-    <pre>{{ simulationResult }}</pre>
+    <div *ngIf="simulationResult" [innerHTML]="simulationResult"></div>
 </div>

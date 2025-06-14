@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { SimulatorService } from "../../../backend/services/simulator/simulator.service";
 import CreateSimulatedExecutionModel from "../../../backend/services/simulator/models/create-simulated-execution.model"
@@ -12,23 +12,22 @@ import CreateSimulatedExecutionModel from "../../../backend/services/simulator/m
 export class SimulatorComponent {
 
     status: { loading?: true; error?: string } | null = null;
-    simulationResult: any = null;
+    simulationResult: SafeHtml | string = '';
 
     constructor(
-        @Inject(SimulatorService) private readonly _simulatorService : SimulatorService
+        @Inject(SimulatorService) private readonly _simulatorService : SimulatorService,
+        private sanitizer: DomSanitizer
     ) {
-        console.log('SimulatorComponent inicializado');
     }
 
     protected atSubmit(simulatedExecution: CreateSimulatedExecutionModel) {
         this.status = { loading: true };
-        this.simulationResult = null;
 
         this._simulatorService.simulateExecution(simulatedExecution).subscribe({
-            next: (response) => {
+            next: (response: { format: string; content: string }) => {
+                console.log('Response from backend:', response);
                 this.status = null;
-                this.simulationResult = response;
-                console.log('Simulation result:', this.simulationResult);
+                this.simulationResult = this.sanitizer.bypassSecurityTrustHtml(response.content);
             },
             error: (error:any) => {
                 if (error.status === 400 && error.Message) {
