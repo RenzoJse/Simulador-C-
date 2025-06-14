@@ -1,44 +1,42 @@
 import { Component, Inject } from '@angular/core';
-import { Router } from "@angular/router";
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-
-import { MethodService } from "../../../backend/services/method/method.service";
-import MethodCreateModel from "../../../backend/services/method/models/method-dto.model";
+import { MethodService } from '../../../backend/services/method/method.service';
+import MethodCreateModel from '../../../backend/services/method/models/method-dto.model';
+import MethodDTO from '../../../backend/services/method/models/method-dto.model';
 
 @Component({
-    selector: 'app-create-method',
-    templateUrl: './create-method.component.html',
-    styles: []
+  selector: 'app-create-method',
+  templateUrl: './create-method.component.html',
+  styleUrls: ['./create-method.component.css']
 })
-
 export class CreateMethodComponent {
-    createMethodForm: FormGroup;
-    status: { loading?: true; error?: string } | null = null;
+  status: { loading?: true; error?: string } | null = null;
+  createdMethod: MethodDTO | null = null;
 
-    constructor(
-        private readonly _router: Router,
-        @Inject(MethodService) private readonly _methodService: MethodService
-    ) {
-        this.createMethodForm = new FormGroup({
-            name: new FormControl("", [Validators.required]),
-            typeID: new FormControl("", [Validators.required]),
-        });
-        console.log('CreateMethodComponent inicializado');
-    }
+  savedClassId = '';
+  savedModifiers: string[] = [];
 
-    protected atSubmit(method: MethodCreateModel) {
-        console.log('Formulario enviado:', method);
-        this.status = { loading: true };
+  constructor(
+    @Inject(MethodService) private readonly _methodService: MethodService
+  ) {}
 
-        this._methodService.createMethod(method).subscribe({
-            next: (response) => {
-                this.status = null;
-                this._router.navigate([""]);
-            },
-            error: (error: any) => {
-                console.error('Error al crear el método:', error);
-                this.status = { error: error.error?.message || error.message || 'Error creating method.' };
-            },
-        });
-    }
+  protected atSubmit(method: MethodCreateModel) {
+    this.status = { loading: true };
+    this.savedClassId = method.classId;
+    this.savedModifiers = [];
+    if (method.isAbstract)  this.savedModifiers.push('Abstract');
+    if (method.isSealed)    this.savedModifiers.push('Sealed');
+    if (method.isOverride)  this.savedModifiers.push('Override');
+    if (method.isVirtual)   this.savedModifiers.push('Virtual');
+    if (method.isStatic)    this.savedModifiers.push('Static');
+
+    this._methodService.createMethod(method).subscribe({
+      next: (response) => {
+        this.status = null;
+        this.createdMethod = response;
+      },
+      error: (err: any) => {
+        this.status = { error: err.error?.message || err.message || 'Error creating method.' };
+      }
+    });
+  }
 }

@@ -1,4 +1,48 @@
-﻿<app-create-class-form
-        [title]="'Class'"
-        (atSubmit)="atSubmit($event)">
-</app-create-class-form>
+﻿<div class="container mt-4">
+
+  <app-create-class-form
+    [title]="'Create New Class'"
+    (atSubmit)="atSubmit($event)">
+  </app-create-class-form>
+
+  <div *ngIf="createdClass" class="class-card-small mt-4 p-3">
+    <h5>✅ Class created successfully</h5>
+
+    <p><strong>Name:</strong> {{ savedName }}</p>
+    <p><strong>Type:</strong> {{ savedClassType || '—' }}</p>
+    <p><strong>Parent ID:</strong> {{ savedParentId || '—' }}</p>
+
+    <p><strong>Attributes:</strong></p>
+    <ul *ngIf="savedAttributes.length; else noAttrs">
+      <li *ngFor="let a of savedAttributes">
+        {{ a.visibility.toLowerCase() }} {{ a.dataTypeID }} {{ a.name }}
+      </li>
+    </ul>
+    <ng-template #noAttrs>
+      <p>—</p>
+    </ng-template>
+
+    <p><strong>Methods:</strong></p>
+    <ul *ngIf="savedMethods.length; else noMethods">
+      <li *ngFor="let m of savedMethods">
+        {{ m.accessibility.toLowerCase() }}
+        <span *ngIf="m.isAbstract">abstract </span>
+        <span *ngIf="m.isVirtual && !m.isAbstract">virtual </span>
+        <span *ngIf="m.isOverride">override </span>
+        <span *ngIf="m.isSealed">sealed </span>
+        {{ m.type }} {{ m.name }}()
+      </li>
+    </ul>
+    <ng-template #noMethods>
+      <p>—</p>
+    </ng-template>
+  </div>
+
+  <div *ngIf="status?.loading" class="text-center mt-3">
+    Loading...
+  </div>
+
+  <div *ngIf="status?.error" class="alert alert-danger mt-3">
+    {{ status?.error }}
+  </div>
+</div>

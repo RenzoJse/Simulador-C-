@@ -1,0 +1,15 @@
+<div *ngIf="status.loading">Loading namespaces...</div>
+
+<div *ngIf="!status.loading && status.error">
+  <p class="text-danger">{{ status.error }}</p>
+</div>
+
+<app-dropdown
+  *ngIf="!status.loading && !status.error"
+  [options]="status.options"
+  tag="Namespace"
+  [value]="value"
+  reserve="Select a parent namespace"
+  emptyMessage="No namespaces available"
+  (changeValue)="onSelect($event)">
+</app-dropdown>

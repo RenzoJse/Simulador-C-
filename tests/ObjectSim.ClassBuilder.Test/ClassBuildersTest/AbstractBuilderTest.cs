@@ -84,7 +84,7 @@ public class AbstractBuilderTest
     [TestMethod]
     public void CreateClass_WithStaticValidAttributes_ReturnsEmptyAttributes()
     {
-        var attribute1 = new Attribute { Name = "Attribute1", DataType = TestDataType, IsStatic = true};
+        var attribute1 = new Attribute { Name = "Attribute1", DataType = TestDataType, IsStatic = true };
 
         _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute1")))
             .Returns(attribute1);

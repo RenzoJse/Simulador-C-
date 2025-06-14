@@ -33,6 +33,9 @@ public class NamespaceService(INamespaceRepository repository) : INamespaceServi
         var root = _repository.GetByIdWithChildren(id)
                    ?? throw new ArgumentException("Namespace not found");
 
+        var all = root.GetAllDescendants().ToList();
+        Console.WriteLine($"Descendants found: {all.Count}");
+
         return root.GetAllDescendants();
     }
 }

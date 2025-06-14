@@ -4,13 +4,13 @@ import { AttributeService } from '../../../backend/services/attribute/attribute.
 import CreateAttributeModel from '../../../backend/services/attribute/models/create-attribute.model';
 import { UpdateAttributeFormComponent } from "../../../business-components/attribute/update-attribute-form/update-attribute-form.component";
 import { FormsModule, NgModel } from '@angular/forms';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 @Component({
   selector: 'app-update-attribute',
   standalone: true,
   templateUrl: './update-attribute.component.html',
   styles: [],
-  imports: [NgIf,FormsModule,UpdateAttributeFormComponent]
+  imports: [NgIf,FormsModule,UpdateAttributeFormComponent,CommonModule]
 })
 export class UpdateAttributeComponent implements OnInit {
   selectedAttributeId: string | null = null;
