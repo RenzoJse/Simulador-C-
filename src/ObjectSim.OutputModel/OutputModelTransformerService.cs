@@ -1,12 +1,11 @@
-﻿using ObjectSim.Abstractions;
-using ObjectSim.IBusinessLogic;
+﻿using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.OutputModel;
 
 public class OutputModelTransformerService()
     : IOutputModelTransformerService
 {
-    private readonly string _route = Path.Combine(AppDomain.CurrentDomain.BaseDirectory);
+    private readonly string _route = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
 
     private IOutputModelTransformer? _transformerModel;
 
@@ -39,7 +38,6 @@ public class OutputModelTransformerService()
             throw new InvalidOperationException("No transformer selected.");
         }
 
-        var model = new Model(input);
-        return _transformerModel.Transform(model);
+        return _transformerModel.Transform(input);
     }
 }

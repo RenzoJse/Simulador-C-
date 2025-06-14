@@ -1,5 +1,4 @@
 using FluentAssertions;
-using ObjectSim.Abstractions;
 
 namespace ObjectSim.OutputModel.Test;
 

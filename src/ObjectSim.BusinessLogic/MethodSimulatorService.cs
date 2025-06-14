@@ -29,7 +29,9 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
                      + instanceType.Name + "." + method.Name + "() -> " + instanceType.Name + "." + method.Name + "()\n";
         result += SimulateInternal(method, 0);
 
+        outputModelTransformerService.GetImplementationList();
         SelectOutputModel("HtmlOutputModelTransformer");
+
 
         return outputModelTransformerService.TransformModel(result).ToString()!;
     }
