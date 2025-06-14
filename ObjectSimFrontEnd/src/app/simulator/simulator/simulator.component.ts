@@ -13,6 +13,8 @@ export class SimulatorComponent {
 
     status: { loading?: true; error?: string } | null = null;
     simulationResult: SafeHtml | string = '';
+    showCopiedPopup = false;
+    popupTimeout: any = null;
 
     constructor(
         @Inject(SimulatorService) private readonly _simulatorService : SimulatorService,
@@ -43,5 +45,15 @@ export class SimulatorComponent {
     copyResult() {
         const result = this.sanitizer.sanitize(1, this.simulationResult) || '';
         navigator.clipboard.writeText(result);
+        this.showCopiedPopup = true;
+        if (this.popupTimeout) clearTimeout(this.popupTimeout);
+        this.popupTimeout = setTimeout(() => {
+            this.showCopiedPopup = false;
+        }, 5000);
+    }
+
+    closePopup() {
+        this.showCopiedPopup = false;
+        if (this.popupTimeout) clearTimeout(this.popupTimeout);
     }
 }

@@ -11,6 +11,63 @@ body {
   min-height: 100vh;
 }
 
+.copied-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  color: #323232;
+  padding: 40px 60px;
+  border-radius: 18px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,86,179,0.08);
+  display: flex;
+  align-items: center;
+  z-index: 2000;
+  font-size: 1.4rem;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  gap: 32px;
+  min-width: 380px;
+  max-width: 90vw;
+  animation: popup-fade-in 0.3s cubic-bezier(.4,2,.6,1) both;
+}
+
+@keyframes popup-fade-in {
+  from { opacity: 0; transform: translate(-50%, -60%) scale(0.95);}
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+}
+
+.copied-popup span {
+  flex: 1;
+  text-align: center;
+  color: #0056b3;
+  font-size: 1.3em;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.close-btn {
+  background: #f4f6f9;
+  border: none;
+  color: #0056b3;
+  font-size: 2rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-left: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.close-btn:hover {
+  background: #e2e6ea;
+  color: #15202b;
+}
+
 h1, h3 {
   color: #333;
   text-align: center;
