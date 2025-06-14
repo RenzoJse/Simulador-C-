@@ -1,0 +1,8 @@
+.class-card-small {
+  max-width: 400px;
+  margin: 0 auto;
+  border: 1px solid #007bff;
+  border-radius: 8px;
+  background-color: #f1f8ff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}

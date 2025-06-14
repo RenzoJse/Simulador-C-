@@ -4,6 +4,7 @@
     isAbstract: boolean;
     isSealed: boolean;
     isVirtual: boolean;
+    isInterface:boolean;
     attributes: any[];
     methods: any[];
     parent: string;

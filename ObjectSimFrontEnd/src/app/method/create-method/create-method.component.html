@@ -1,4 +1,24 @@
-<app-create-method-form
-        [title]="'Method'"
-        (atSubmit)="atSubmit($event)">
-</app-create-method-form>
+<div class="create-method-page container mt-4">
+
+  <app-create-method-form
+    [title]="'Create New Method'"
+    (atSubmit)="atSubmit($event)">
+  </app-create-method-form>
+
+  <div *ngIf="createdMethod" class="method-card-small mt-4 p-3">
+    <h5>✅ Method created successfully</h5>
+    <p><strong>Name:</strong> {{ createdMethod.name }}</p>
+    <p><strong>Type:</strong> {{ createdMethod.type }}</p>
+    <p><strong>Accessibility:</strong> {{ createdMethod.accessibility }}</p>
+    <p><strong>Modifiers:</strong> {{ savedModifiers.join(', ') || '—' }}</p>
+    <p><strong>Class ID:</strong> {{ savedClassId || '—' }}</p>
+  </div>
+
+  <div *ngIf="status?.loading" class="text-center mt-3">
+    Loading...
+  </div>
+
+  <div *ngIf="status?.error" class="alert alert-danger mt-3">
+    {{ status?.error }}
+  </div>
+</div>

@@ -7,12 +7,18 @@ import CreateClassModel from "../../../backend/services/class/models/create-clas
 @Component({
     selector: 'app-create-class',
     templateUrl: './create-class.component.html',
-    styles: []
+    styleUrls: ['./create-class.component.css']
 })
 
 export class CreateClassComponent {
     createClassForm: FormGroup;
     status: { loading?: true; error?: string } | null = null;
+    createdClass: any = null;
+    savedName = '';
+    savedClassType = '';
+    savedParentId = '';
+    savedAttributes: any[] = [];
+    savedMethods: any[] = [];
 
     constructor(
         private readonly _router: Router,
@@ -27,10 +33,20 @@ export class CreateClassComponent {
         console.log('Formulario enviado:', classObj);
         this.status = { loading: true };
 
+        this.savedName       = classObj.name;
+        this.savedClassType  = classObj.isAbstract ? 'Abstract'
+                            : classObj.isSealed ? 'Sealed'
+                            : classObj.isVirtual ? 'Virtual'
+                            : classObj.isInterface ? 'Interface'
+                            : '—';
+        this.savedParentId   = classObj.parent || '';
+        this.savedAttributes = classObj.attributes || [];
+        this.savedMethods    = classObj.methods || [];
+
         this._classService.createClass(classObj).subscribe({
             next: (response) => {
                 this.status = null;
-                this._router.navigate([""]);
+                this.createdClass = response;
             },
             error: (error:any) => {
                 if (error.status === 400 && error.Message) {
