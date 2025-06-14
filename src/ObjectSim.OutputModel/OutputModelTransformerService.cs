@@ -15,6 +15,18 @@ public class OutputModelTransformerService()
         _route = route;
     }
 
+    public void UploadDll(Stream dllStream, string fileName)
+    {
+        if (dllStream == null || string.IsNullOrWhiteSpace(fileName) || !fileName.EndsWith(".dll"))
+        {
+            throw new ArgumentException("Invalid File Type.");
+        }
+
+        var savePath = Path.Combine(_route, fileName);
+        using var fileStream = new FileStream(savePath, FileMode.Create);
+        dllStream.CopyToAsync(fileStream);
+    }
+
     public List<string> GetImplementationList()
     {
         var loadAssemblers = new LoadAssemblers<IOutputModelTransformer>(_route);
