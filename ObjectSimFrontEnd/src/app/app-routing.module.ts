@@ -33,6 +33,11 @@ const routes: Routes = [
     loadChildren: () => import('./simulator/simulator.module').then(m => m.SimulatorModule),
   },
   {
+    path: 'outputModel',
+    canActivate: [authenticationGuard],
+    loadChildren: () => import('./outputModel/upload-outputModel.module').then(m => m.UploadOutputModelModule),
+  },
+  {
     path: 'sesion',
     loadChildren: () => import('./sesion/sesion.module').then(m => m.SesionModule),
   }

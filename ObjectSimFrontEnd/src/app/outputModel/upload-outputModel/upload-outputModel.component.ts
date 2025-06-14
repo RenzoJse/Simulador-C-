@@ -11,13 +11,13 @@ export class UploadOutputModelComponent {
     constructor(private readonly _outputModelService: OutputModelService) {
     }
 
-    protected atSubmit(uploadedModel: { file: File }) {
+    protected atSubmit(uploadedModel: { file: File | null }) {
         if (!uploadedModel.file) {
             console.error('No file selected for upload.');
             return;
         }
 
-        this._outputModelService.uploadDllFile(uploadedModel).subscribe({
+        this._outputModelService.uploadDllFile(uploadedModel.file).subscribe({
             next: (response) => {
                 console.log('Upload successful:', response);
             },

@@ -6,6 +6,9 @@ import { ButtonComponent } from '../../components/button/button.component';
 
 import { UploadOutputModelRoutingModule } from './upload-outputModel-routing.module';
 import { UploadOutputModelComponent } from "./upload-outputModel/upload-outputModel.component";
+import {
+    UploadOutputModelFormComponent
+} from "../../business-components/outputModel/upload-outputModel-form/upload-outputModel-form.component";
 
 @NgModule({
     declarations: [
@@ -15,7 +18,8 @@ import { UploadOutputModelComponent } from "./upload-outputModel/upload-outputMo
         CommonModule,
         ReactiveFormsModule,
         UploadOutputModelRoutingModule,
-        ButtonComponent
+        ButtonComponent,
+        UploadOutputModelFormComponent,
     ]
 })
 export class UploadOutputModelModule { }
