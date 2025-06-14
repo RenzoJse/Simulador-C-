@@ -10,7 +10,8 @@ import { FormComponent } from '../../../components/form/form/form.component';
   selector: 'app-delete-attribute-form',
   standalone: true,
   imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent,CommonModule],
-  templateUrl: './delete-attribute-form.component.html'
+  templateUrl: './delete-attribute-form.component.html',
+  styleUrl: './delete-attribute-form.component.css'
 })
 export class DeleteAttributeFormComponent {
   @Input() attributes: { value: string, tag: string }[] = [];
