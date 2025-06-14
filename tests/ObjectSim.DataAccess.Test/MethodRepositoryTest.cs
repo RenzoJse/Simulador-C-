@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using ObjectSim.DataAccess.Repositories;
-using ObjectSim.Domain;
 
 namespace ObjectSim.DataAccess.Test;
 
@@ -39,7 +38,7 @@ public class MethodRepositoryTest
     [TestMethod]
     public void GetMethod_WhenIdExists_ReturnsMethodWithParametersAndMethodsInvoke()
     {
-       // TODO
+        // TODO
     }
 
 }

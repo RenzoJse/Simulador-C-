@@ -229,12 +229,12 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
 
     private void AddInvokeMethods(List<CreateInvokeMethodArgs> invokeMethodArgs, Method method)
     {
-        foreach (var invokeArg in invokeMethodArgs)
+        foreach(var invokeArg in invokeMethodArgs)
         {
             var methodToInvoke = GetMethodToInvoke(invokeArg.InvokeMethodId);
             ValidateCanAddInvokeMethod(method, methodToInvoke, invokeArg.Reference);
             ValidateInvokeMethodReachable(method, invokeArg.InvokeMethodId, invokeArg.Reference);
-            var invokeMethod = CreateInvokeMethod(invokeArg, method);
+            _ = CreateInvokeMethod(invokeArg, method);
         }
     }
 
@@ -297,7 +297,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             }
         }
 
-        if (!isInSameClass && !isMethodInClass &&
+        if(!isInSameClass && !isMethodInClass &&
             !isInClassAttribute && !matchesLocalVariable)
         {
             throw new ArgumentException($"Invoke method with id {invokeMethodId} is not reachable from method {method.Name}");

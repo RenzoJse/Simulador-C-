@@ -28,7 +28,7 @@ public class DataTypeTest
     public void IsSameType_TypesAreDifferent_ReturnsFalse()
     {
         var type1 = new ValueType(Guid.NewGuid(), "int");
-        var type2 = new ValueType(Guid.NewGuid(),"bool");
+        var type2 = new ValueType(Guid.NewGuid(), "bool");
 
         var result = type1.IsSameType(type2);
 

@@ -153,7 +153,8 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
         modelBuilder.Entity<ValueType>().HasData(new ValueType
         {
-            Id = voidTypeId, Type = "void"
+            Id = voidTypeId,
+            Type = "void"
         });
 
         var objectClassId = Guid.Parse("00000000-0000-0000-0000-000000000001");

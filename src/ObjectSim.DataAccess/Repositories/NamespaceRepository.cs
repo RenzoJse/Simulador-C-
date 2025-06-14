@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ObjectSim.Domain;
 using ObjectSim.DataAccess.Interface;
+using ObjectSim.Domain;
 
 namespace ObjectSim.DataAccess.Repositories;
-public class NamespaceRepository(DataContext context):INamespaceRepository
+public class NamespaceRepository(DataContext context) : INamespaceRepository
 {
     private readonly DataContext _context = context;
     public Namespace Add(Namespace ns)

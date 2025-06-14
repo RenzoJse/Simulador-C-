@@ -11,7 +11,10 @@ public class ClassTest
 
     private readonly Method _existingMethod = new()
     {
-        Name = "ExistingMethod", TypeId = TypeId, Parameters = [], IsOverride = false
+        Name = "ExistingMethod",
+        TypeId = TypeId,
+        Parameters = [],
+        IsOverride = false
     };
 
     private readonly Attribute _testAttribute = new() { Name = "TestAttribute" };
@@ -289,7 +292,10 @@ public class ClassTest
 
         var methodToInvoke = new Method
         {
-            Id = Guid.NewGuid(), Name = "MethodToInvoke", TypeId = TypeId, Abstract = true
+            Id = Guid.NewGuid(),
+            Name = "MethodToInvoke",
+            TypeId = TypeId,
+            Abstract = true
         };
 
         _testClass.Methods = [methodToInvoke];
@@ -313,7 +319,10 @@ public class ClassTest
 
         var newMethod = new Method
         {
-            Name = "NewMethod", TypeId = TypeId, Parameters = [ValueType], IsOverride = false
+            Name = "NewMethod",
+            TypeId = TypeId,
+            Parameters = [ValueType],
+            IsOverride = false
         };
 
         Action action = () => _testClass!.CanAddMethod(newMethod);
@@ -394,7 +403,7 @@ public class ClassTest
             .WithMessage("Method cannot be static in an Abstract Class.");
     }
 
-#endregion
+    #endregion
 
     #region Success
 
