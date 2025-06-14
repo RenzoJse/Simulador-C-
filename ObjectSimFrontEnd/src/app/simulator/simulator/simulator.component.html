@@ -3,4 +3,5 @@
 <div *ngIf="simulationResult">
     <h3>Simulation result:</h3>
     <div *ngIf="simulationResult" [innerHTML]="simulationResult"></div>
+    <button (click)="copyResult()">Copy Result!</button>
 </div>

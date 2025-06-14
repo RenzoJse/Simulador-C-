@@ -38,4 +38,10 @@ export class SimulatorComponent {
             },
         });
     }
+
+
+    copyResult() {
+        const result = this.sanitizer.sanitize(1, this.simulationResult) || '';
+        navigator.clipboard.writeText(result);
+    }
 }
