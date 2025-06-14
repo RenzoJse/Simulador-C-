@@ -6,7 +6,7 @@
 
 <app-dropdown
         *ngIf="!status.loading && !status.error"
-        [options]="status.systemOutputModels"
+        [options]="status.systemModels"
         tag="System Output Models"
         [value]="value"
         reserve="Select an Output Model"

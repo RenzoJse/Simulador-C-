@@ -9,13 +9,14 @@ import { ClassDropdownComponent } from '../../business-components/class/dropdown
 import { MethodDropdownComponent } from '../../business-components/method/dropdown/method-dropdown.component';
 
 import CreateSimulatedExecutionModel from '../../backend/services/simulator/models/create-simulated-execution.model';
+import {OutputModelDropdownComponent} from "../outputModel/dropdown/outputModel-dropdown.component";
 
 @Component({
     selector: 'app-simulator-form',
     standalone: true,
     imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent,
         NgIf, FormComponent, ClassDropdownComponent,
-        MethodDropdownComponent],
+        MethodDropdownComponent, OutputModelDropdownComponent],
     templateUrl: './simulator-form.component.html'
 })
 
@@ -47,13 +48,12 @@ export class SimulatorFormComponent {
 
     public onSubmit() {
         if (this.simulatorForm.valid) {
-            const {ReferenceId, InstanceId, methodId} = this.simulatorForm.value;
+            const {ReferenceId, InstanceId, methodId, OutputModelName} = this.simulatorForm.value;
 
             console.log('Reference ID:', ReferenceId);
             console.log('Instance ID:', InstanceId);
             console.log('Método:', methodId);
-
-            this.simulatorForm.value.OutputModelName = "HtmlOutputModelTransformer";
+            console.log('Output Model Name:', OutputModelName);
 
             this.atSubmit.emit(this.simulatorForm.value as CreateSimulatedExecutionModel);
         } else {
@@ -83,6 +83,12 @@ export class SimulatorFormComponent {
     updateSelectedMethodId(event: { methodId: string | undefined; }) {
         this.MethodId = event.methodId;
         this.simulatorForm.patchValue({ methodId: event.methodId });
+        this.cdr.detectChanges();
+    }
+
+    updateSelectedOutputModelName(selected: { name: string | undefined; }) {
+        this.OutputModelName = selected.name;
+        this.simulatorForm.patchValue({ OutputModelName: selected.name });
         this.cdr.detectChanges();
     }
 
