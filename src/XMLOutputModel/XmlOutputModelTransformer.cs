@@ -9,11 +9,7 @@ public class XmlOutputModelTransformer : IOutputModelTransformer
         if (input is string str)
         {
             var lines = str.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
-            var xml = "<ExecutionResult>";
-            foreach (var line in lines)
-            {
-                xml += $"<Line>{System.Net.WebUtility.HtmlEncode(line)}</Line>";
-            }
+            var xml = lines.Aggregate("<ExecutionResult>", (current, line) => current + $"<Line>{System.Net.WebUtility.HtmlEncode(line)}</Line>");
             xml += "</ExecutionResult>";
 
             return new
