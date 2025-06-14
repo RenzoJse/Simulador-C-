@@ -10,90 +10,78 @@ import MethodCreateModel from '../../../backend/services/method/models/method-dt
 @Component({
   selector: 'app-create-method-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent,
-      NgIf, FormComponent, ClassDropdownComponent],
+  imports: [
+    ReactiveFormsModule,
+    NgIf,
+    FormComponent,
+    FormInputComponent,
+    FormButtonComponent,
+    ClassDropdownComponent
+  ],
   templateUrl: './create-method-form.component.html',
   styleUrls: ['./create-method-form.component.css']
 })
 export class CreateMethodFormComponent {
-    @Input() title: string = '';
-    @Input() classOptions: { id: string, name: string }[] = [];
-    createMethodForm: FormGroup;
-    @Output() atSubmit = new EventEmitter<MethodCreateModel>();
+  @Input() title = '';
+  @Output() atSubmit = new EventEmitter<MethodCreateModel>();
 
-    createMethodStatus: {
-        loading?: true;
-        error?: string;
-    } | null = null;
+  createMethodForm: FormGroup;
+  createMethodStatus: { loading?: true; error?: string } | null = null;
 
-    AccessibilityOptions: { value: string; tag: string }[] = [
-        { value: 'Public', tag: 'Public' },
-        { value: 'Private', tag: 'Private' },
-        { value: 'Protected', tag: 'Protected' }
-    ];
+  AccessibilityOptions = [
+    { value: 'Public', tag: 'Public' },
+    { value: 'Private', tag: 'Private' },
+    { value: 'Protected', tag: 'Protected' }
+  ];
 
-    Modificadores: { value: string; tag: string }[] = [
-        { value: 'Abstract', tag: 'Abstract' },
-        { value: 'Sealed', tag: 'Sealed' },
-        { value: 'Override', tag: 'Override' },
-        { value: 'Virtual', tag: 'Virtual' },
-        { value: 'Static', tag: 'Static' }
-    ];
-    
-    selectedClassId: string = '';
+  Modificadores = [
+    { value: 'Abstract', tag: 'Abstract' },
+    { value: 'Sealed', tag: 'Sealed' },
+    { value: 'Override', tag: 'Override' },
+    { value: 'Virtual', tag: 'Virtual' },
+    { value: 'Static', tag: 'Static' }
+  ];
 
-    constructor(private fb: FormBuilder) {
-        this.createMethodForm = this.fb.group({
-            Name: ['', [
-                Validators.required,
-                Validators.maxLength(50)
-            ]],
-            typeId: ['', [
-                Validators.required
-            ]],
-            ClassID: ['', [
-                Validators.required
-            ]],
-            Modificadores: ['', [Validators.required]],
-            accessibility: ['Public']
-        });
+  selectedClassId = '';
+
+  constructor(private fb: FormBuilder) {
+    this.createMethodForm = this.fb.group({
+      Name: ['', [Validators.required, Validators.maxLength(50)]],
+      typeId: ['', [Validators.required]],
+      ClassID: ['', [Validators.required]],
+      Modificadores: ['', [Validators.required]],
+      accessibility: ['Public']
+    });
+  }
+
+  onClassSelected(event: { classId?: string }) {
+    this.selectedClassId = event.classId ?? '';
+    this.createMethodForm.get('ClassID')?.setValue(this.selectedClassId);
+  }
+
+  onSubmit() {
+    console.log('Form values:', this.createMethodForm.value);
+
+    if (this.createMethodForm.invalid) {
+      this.createMethodForm.markAllAsTouched();
+      return;
     }
 
-    public onSubmit() {
-        console.log('Form values:', this.createMethodForm.value);
+    const fv = this.createMethodForm.value;
+    const newMethod: MethodCreateModel = {
+      name: fv.Name,
+      type: fv.typeId,
+      accessibility: fv.accessibility,
+      isAbstract: fv.Modificadores === 'Abstract',
+      isSealed: fv.Modificadores === 'Sealed',
+      isOverride: fv.Modificadores === 'Override',
+      isVirtual: fv.Modificadores === 'Virtual',
+      isStatic: fv.Modificadores === 'Static',
+      classId: this.selectedClassId,
+      localVariables: [],
+      parameters: []
+    };
 
-        if (this.createMethodForm.invalid) {
-            this.markAsTouched();
-            return;
-        }
-
-        const selectedModifier = this.createMethodForm.value.Modificadores;
-
-        const formValue = this.createMethodForm.value;
-        const newMethod: MethodCreateModel = {
-            name: formValue.Name,
-            type: formValue.typeId,
-            accessibility: formValue.accessibility ?? 'Public',
-            isAbstract: selectedModifier === 'Abstract',
-            isSealed: selectedModifier === 'Sealed',
-            isOverride: selectedModifier === 'Override',
-            isVirtual: selectedModifier === 'Virtual',
-            isStatic: selectedModifier === 'Static',
-            classId: this.selectedClassId,
-            localVariables: [],
-            parameters: []
-        };
-
-        this.atSubmit.emit(newMethod);
-    }
-
-    private markAsTouched() {
-        Object.values(this.createMethodForm.controls).forEach(control => {
-            control.markAsTouched();
-        });
-    }
-
-    onClassSelected(event: { classId: string | undefined; }) {
-        this.selectedClassId = event.classId || '';
-    }
+    this.atSubmit.emit(newMethod);
+  }
 }
