@@ -47,7 +47,7 @@ public static class ServiceFactory
         services.AddScoped<ISecurityService, SecurityService>();
         services.AddScoped<IValidationStrategy, KeyStrategy>();
         services.AddScoped<IInvokeMethodService, InvokeMethodService>();
-        services.AddScoped<IOutputModelValidator, OutputModelValidator>();
+        services.AddScoped<IOutputModelTransformerService, OutputModelTransformerService>();
     }
 
     public static void AddDataAccess(IServiceCollection services)

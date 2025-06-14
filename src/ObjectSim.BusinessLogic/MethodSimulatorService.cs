@@ -6,7 +6,7 @@ using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
 public class MethodSimulatorService(IRepository<Method> methodRepository, IRepository<Class> classRepository,
-    IOutputModelValidator outputModelValidator) : IMethodSimulatorService
+    IOutputModelTransformerService outputModelTransformerService) : IMethodSimulatorService
 {
     public string Simulate(SimulateExecutionArgs args)
     {
@@ -32,12 +32,12 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
 
         SelectOutputModel("HtmlOutputModelTransformer");
 
-        return outputModelValidator.Transform(result).ToString()!;
+        return outputModelTransformerService.TransformModel(result).ToString()!;
     }
 
     private void SelectOutputModel(string name)
     {
-        outputModelValidator.SelectImplementation(name);
+        outputModelTransformerService.SelectImplementation(name);
     }
 
     private void ValidateIsValidInstance(Class instanceType, Class referenceType)

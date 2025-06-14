@@ -4,7 +4,7 @@ using FluentAssertions;
 namespace ObjectSim.OutputModel.Test;
 
 [TestClass]
-public class OutputModelValidatorTest
+public class OutputModelTransformerServiceTest
 {
     #region ListImplementations
 
@@ -14,7 +14,7 @@ public class OutputModelValidatorTest
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
 
-        var outputModelService = new OutputModelValidator();
+        var outputModelService = new OutputModelTransformerService();
 
         var implementations = outputModelService.GetImplementationList();
 
@@ -27,9 +27,12 @@ public class OutputModelValidatorTest
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
 
-        TemporalAssembly.CreateTemporalAssembly(tempRoute, "TempAssembly");
+        var pluginsPath = Path.Combine(tempRoute, "Plugins");
+        Directory.CreateDirectory(pluginsPath);
 
-        var outputModelService = new OutputModelValidator(tempRoute);
+        TemporalAssembly.CreateTemporalAssembly(pluginsPath, "TempAssembly");
+
+        var outputModelService = new OutputModelTransformerService(tempRoute);
 
         var implementations = outputModelService.GetImplementationList();
 
@@ -50,7 +53,10 @@ public class OutputModelValidatorTest
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
 
-        var outputModelService = new OutputModelValidator(tempRoute);
+        var pluginsPath = Path.Combine(tempRoute, "Plugins");
+        Directory.CreateDirectory(pluginsPath);
+
+        var outputModelService = new OutputModelTransformerService(tempRoute);
 
         var action = () => outputModelService.SelectImplementation("InvalidName");
 
@@ -65,13 +71,16 @@ public class OutputModelValidatorTest
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
 
-        TemporalAssembly.CreateTemporalAssembly(tempRoute, "TempAssembly");
+        var pluginsPath = Path.Combine(tempRoute, "Plugins");
+        Directory.CreateDirectory(pluginsPath);
 
-        var outputModelService = new OutputModelValidator(tempRoute);
+        TemporalAssembly.CreateTemporalAssembly(pluginsPath, "TempAssembly");
+
+        var outputModelService = new OutputModelTransformerService(tempRoute);
 
         outputModelService.SelectImplementation("TempType");
 
-        var fieldInfo = typeof(OutputModelValidator).GetField("_validatorModel", BindingFlags.NonPublic | BindingFlags.Instance);
+        var fieldInfo = typeof(OutputModelTransformerService).GetField("_validatorModel", BindingFlags.NonPublic | BindingFlags.Instance);
         var validatorModel = fieldInfo?.GetValue(outputModelService);
 
         validatorModel.Should().NotBeNull();
@@ -79,7 +88,7 @@ public class OutputModelValidatorTest
 
     #endregion
 
-    #region ValidateModel
+    #region TransformModel
 
     [TestMethod]
     public void ValidateModel_WhenGivenAValidModel_ShouldReturnTrue()
@@ -87,17 +96,18 @@ public class OutputModelValidatorTest
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
 
+        var pluginsPath = Path.Combine(tempRoute, "Plugins");
+        Directory.CreateDirectory(pluginsPath);
+
         TemporalAssembly.CreateTemporalAssembly(tempRoute, "TempAssembly");
 
-        var outputModelService = new OutputModelValidator(tempRoute);
+        var outputModelService = new OutputModelTransformerService(tempRoute);
 
         outputModelService.SelectImplementation("TempType");
 
         const string model = "AAABBB";
 
-        var result = outputModelService.ValidateModel(model);
-
-        result.Should().BeTrue();
+        var result = outputModelService.TransformModel(model);
     }
 
     [TestMethod]
@@ -106,11 +116,11 @@ public class OutputModelValidatorTest
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
 
-        var outputModelService = new OutputModelValidator(tempRoute);
+        var outputModelService = new OutputModelTransformerService(tempRoute);
 
         const string model = "AAABBB";
 
-        var action = () => outputModelService.ValidateModel(model);
+        var action = () => outputModelService.TransformModel(model);
 
         action.Should().Throw<InvalidOperationException>();
     }
@@ -121,17 +131,18 @@ public class OutputModelValidatorTest
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
 
+        var pluginsPath = Path.Combine(tempRoute, "Plugins");
+        Directory.CreateDirectory(pluginsPath);
+
         TemporalAssembly.CreateTemporalAssembly(tempRoute, "TempAssembly");
 
-        var outputModelService = new OutputModelValidator(tempRoute);
+        var outputModelService = new OutputModelTransformerService(tempRoute);
 
         outputModelService.SelectImplementation("TempType");
 
         const string model = "N O T V A L I D";
 
-        var result = outputModelService.ValidateModel(model);
-
-        result.Should().BeFalse();
+        var result = outputModelService.TransformModel(model);
     }
 
     #endregion

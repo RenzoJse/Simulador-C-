@@ -10,12 +10,6 @@ public class LoadAssemblers<TInterface>(string route)
 
     public List<string> GetImplementations()
     {
-        var pluginsPath = Path.Combine(route, "Plugins");
-        if (!Directory.Exists(pluginsPath))
-        {
-            Directory.CreateDirectory(pluginsPath);
-        }
-
         var files = _directory
             .GetFiles("*.dll")
             .ToList();
@@ -31,9 +25,7 @@ public class LoadAssemblers<TInterface>(string route)
 
             if (loadedTypes.Count == 0)
             {
-                Console.WriteLine(
-                    $"There is no implementation of: {typeof(TInterface).Name} in the assembly: {file.FullName}");
-
+                Console.WriteLine($"No one implements interface of: {typeof(TInterface).Name} in the assembly: {file.FullName}");
                 return;
             }
 

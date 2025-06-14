@@ -1,8 +1,8 @@
 ﻿namespace ObjectSim.IBusinessLogic;
 
-public interface IOutputModelValidator
+public interface IOutputModelTransformerService
 {
     public List<string> GetImplementationList();
     public void SelectImplementation(string name);
-    public object Transform(object input);
+    public object TransformModel(string input);
 }

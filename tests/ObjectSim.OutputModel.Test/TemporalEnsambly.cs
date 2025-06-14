@@ -1,14 +1,29 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using ObjectSim.Abstractions;
+using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.OutputModel.Test;
 
-public class TemporalAssembly
+public static class TemporalAssembly
 {
     public static void CreateTemporalAssembly(string route, string assemblyName)
     {
-        const string code = "";
+        const string code = @"
+            using ObjectSim.Abstractions;
+            public class TempType : IOutputModelTransformer
+            {
+                public string Name { get; set; } = ""123456"";
+
+                public object Transform(object input)
+                {
+                    var test = input as string;
+                    return test;
+                }
+            }
+        ";
+
+        Directory.CreateDirectory(route);
 
         var compilation = CreateCompilation(code, assemblyName);
 
@@ -25,7 +40,7 @@ public class TemporalAssembly
         var references = new List<MetadataReference>
         {
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(IOutputModelTransformer).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(IOutputModelTransformerService).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(Model).Assembly.Location),
             systemRuntimeReference
         };

@@ -16,6 +16,9 @@ public class LoadAssemblersTest
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
 
+        var pluginsPath = Path.Combine(tempRoute, "Plugins");
+        Directory.CreateDirectory(pluginsPath);
+
         var loadAssemblers = new LoadAssemblers<IOutputModelTransformer>(tempRoute);
 
         var implementations = loadAssemblers.GetImplementations();
@@ -30,6 +33,9 @@ public class LoadAssemblersTest
     {
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
+
+        var pluginsPath = Path.Combine(tempRoute, "Plugins");
+        Directory.CreateDirectory(pluginsPath);
 
         TemporalAssembly.CreateTemporalAssembly(tempRoute, "TempAssembly");
 
@@ -53,6 +59,8 @@ public class LoadAssemblersTest
                               {
                               }
                               """;
+        var pluginsPath = Path.Combine(tempRoute, "Plugins");
+        Directory.CreateDirectory(pluginsPath);
 
         var compilation = TemporalAssembly.CreateCompilation(code, "TempAssembly");
         var assemblyPath = Path.Combine(tempRoute, "TempAssembly.dll");
@@ -101,6 +109,9 @@ public class LoadAssemblersTest
     {
         var temporalRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(temporalRoute);
+
+        var pluginsPath = Path.Combine(temporalRoute, "Plugins");
+        Directory.CreateDirectory(pluginsPath);
 
         TemporalAssembly.CreateTemporalAssembly(temporalRoute, "TempAssembly");
 
