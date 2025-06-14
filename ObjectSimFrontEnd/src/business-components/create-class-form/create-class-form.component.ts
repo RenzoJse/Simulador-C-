@@ -40,6 +40,12 @@ export class CreateClassFormComponent {
         { value: 'Virtual', tag: 'Virtual' }
     ];
 
+    AccessibilityOptions = [
+        { value: 'Public', tag: 'Public'},
+        { value: 'Private', tag: 'Private'},
+        { value: 'Protected', tag: 'Protected'}
+    ];
+
     constructor(private fb: FormBuilder) {
         this.createClassForm = this.fb.group({
             Name: ['', [
@@ -100,18 +106,18 @@ export class CreateClassFormComponent {
         const selectedType = this.createClassForm.value.ClassTypes;
         var formValue = this.createClassForm.value;
         var newClass = {
-            Name: formValue.Name,
-            Accesibility: '',
-            IsAbstract: selectedType === 'Abstract',
-            IsSealed: selectedType === 'Sealed',
-            IsVirtual: selectedType === 'Virtual',
-            Attributes: this.attributes,
-            Methods: this.methods,
-            Parent: '',
+            name: formValue.Name,
+            isAbstract: formValue.ClassType === 'Abstract',
+            isSealed:   formValue.ClassType === 'Sealed',
+            isVirtual:  formValue.ClassType === 'Virtual',
+            isInterface:  formValue.ClassType === 'Interface',
+            attributes: this.attributes,
+            methods:    this.methods,
+            parent: formValue.ParentClassID || ''
         };
 
         this.atSubmit.emit(newClass);
-        console.log('Nueva Clase: ', newClass);
+        console.log('New class: ', newClass);
     }
 
     private markAsTouched() {
