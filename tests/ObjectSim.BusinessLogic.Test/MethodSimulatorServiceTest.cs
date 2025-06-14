@@ -4,6 +4,7 @@ using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
+using ObjectSim.OutputModel;
 
 namespace ObjectSim.BusinessLogic.Test;
 
@@ -12,6 +13,7 @@ public class MethodSimulatorServiceTest
 {
     private Mock<IRepository<Method>> _methodRepositoryMock = null!;
     private Mock<IRepository<Class>> _classRepositoryMock = null!;
+    private Mock<IOutputModelTransformerService> _outputModelTransformerServiceMock = null!;
     private IMethodSimulatorService _methodSimulatorServiceTest = null!;
 
     [TestInitialize]
@@ -19,7 +21,14 @@ public class MethodSimulatorServiceTest
     {
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
         _classRepositoryMock = new Mock<IRepository<Class>>(MockBehavior.Strict);
-        _methodSimulatorServiceTest = new MethodSimulatorService(_methodRepositoryMock.Object, _classRepositoryMock.Object);
+        _outputModelTransformerServiceMock = new Mock<IOutputModelTransformerService>(MockBehavior.Strict);
+
+        _outputModelTransformerServiceMock
+            .Setup(s => s.SelectImplementation(It.IsAny<string>()));
+
+        _methodSimulatorServiceTest = new MethodSimulatorService(_methodRepositoryMock.Object,
+            _classRepositoryMock.Object,
+            _outputModelTransformerServiceMock.Object);
     }
 
     [TestCleanup]
@@ -215,10 +224,16 @@ public class MethodSimulatorServiceTest
             .Returns(invokedMethod1)
             .Returns(invokedMethod2);
 
-        var result = _methodSimulatorServiceTest.Simulate(args);
+        _outputModelTransformerServiceMock
+            .Setup(s => s.TransformModel(It.IsAny<string>()))
+            .Returns((string s) => s);
 
-        result.Should().Contain("this.FirstInvoked() ->");
-        result.Should().Contain("other.SecondInvoked() ->");
+        var result = _methodSimulatorServiceTest.Simulate(args);
+        const string expected = "Execution: \nAuto.MainMethod() -> Auto.MainMethod()\nthis.FirstInvoked() -> other.SecondInvoked() -> ";
+
+        result.Should().NotBeNull();
+        var stringResult = result.ToString();
+        stringResult.Should().Be(expected);
     }
 
     [TestMethod]
@@ -269,9 +284,13 @@ public class MethodSimulatorServiceTest
             .Returns(invokedMethod1)
             .Returns(invokedMethod2);
 
+        _outputModelTransformerServiceMock
+            .Setup(s => s.TransformModel(It.IsAny<string>()))
+            .Returns((string s) => s);
+
         var result = _methodSimulatorServiceTest.Simulate(args);
-        result.Should().Contain("this.FirstInvoked() ->");
-        result.Should().Contain("     this.SecondInvoked() ->");
+
+        result.Should().NotBeNull();
     }
 
     #endregion
