@@ -12,7 +12,8 @@ import { MethodDropdownComponent } from '../dropdown/method-dropdown.component';
   standalone: true,
   imports: [ReactiveFormsModule, FormInputComponent, FormButtonComponent,
     NgIf, FormComponent, MethodDropdownComponent],
-  templateUrl: './delete-method-form.component.html'
+  templateUrl: './delete-method-form.component.html',
+  styleUrl: './delete-method-form.component.css'
 })
 
 export class DeleteMethodFormComponent {

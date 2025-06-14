@@ -22,7 +22,8 @@ import CreateAttributeModel from '../../../backend/services/attribute/models/cre
     ClassDropdownComponent,
     DataTypeDropdownComponent
   ],
-  templateUrl: './create-attribute-form.component.html'
+  templateUrl: './create-attribute-form.component.html',
+  styleUrl: './create-attribute-form.component.css'
 })
 export class CreateAttributeFormComponent {
   @Input() title: string = '';
