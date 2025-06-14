@@ -1,5 +1,4 @@
-﻿using ObjectSim.Abstractions;
-using ObjectSim.DataAccess.Interface;
+﻿using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
@@ -40,7 +39,7 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
         outputModelTransformerService.SelectImplementation(name);
     }
 
-    private void ValidateIsValidInstance(Class instanceType, Class referenceType)
+    private static void ValidateIsValidInstance(Class instanceType, Class referenceType)
     {
         if(instanceType.Parent != referenceType && instanceType.Id != referenceType.Id)
         {

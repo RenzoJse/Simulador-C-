@@ -27,10 +27,7 @@ public class OutputModelTransformerServiceTest
         var tempRoute = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempRoute);
 
-        var pluginsPath = Path.Combine(tempRoute, "Plugins");
-        Directory.CreateDirectory(pluginsPath);
-
-        TemporalAssembly.CreateTemporalAssembly(pluginsPath, "TempAssembly");
+        TemporalAssembly.CreateTemporalAssembly(tempRoute, "TempAssembly");
 
         var outputModelService = new OutputModelTransformerService(tempRoute);
 

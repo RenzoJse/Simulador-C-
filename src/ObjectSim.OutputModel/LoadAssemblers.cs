@@ -5,7 +5,7 @@ namespace ObjectSim.OutputModel;
 public class LoadAssemblers<TInterface>(string route)
     where TInterface : class
 {
-    private readonly DirectoryInfo _directory = new(Path.Combine(route, "Plugins"));
+    private readonly DirectoryInfo _directory = new(route);
     private List<Type> _implementations = [];
 
     public List<string> GetImplementations()
