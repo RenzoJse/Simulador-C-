@@ -2,16 +2,26 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import CreateNamespaceModel from '../../../backend/services/namespace/model/create-namespace.model';
+
 import { FormComponent } from '../../../components/form/form/form.component';
 import { FormInputComponent } from '../../../components/form/form-input/form-input.component';
 import { FormButtonComponent } from '../../../components/form/form-button/form-button.component';
+import { NamespaceDropdownComponent } from '../namespace-dropdown/namespace-dropdown.component';
 
 @Component({
   selector: 'app-create-namespace-form',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, FormComponent, FormInputComponent, FormButtonComponent],
-  templateUrl: './create-namespace-form.component.html',
-  styleUrl: './create-namespace-form.component.css'
+
+  imports: [
+    ReactiveFormsModule,
+    NgIf,
+    FormComponent,
+    FormInputComponent,
+    FormButtonComponent,
+    NamespaceDropdownComponent
+  ],
+  templateUrl: './create-namespace-form.component.html'
+
 })
 export class CreateNamespaceFormComponent {
   @Output() nsSubmit = new EventEmitter<CreateNamespaceModel>();
@@ -32,8 +42,17 @@ export class CreateNamespaceFormComponent {
       return;
     }
 
-    const value: CreateNamespaceModel = this.form.value;
+    const raw = this.form.value;
+    const value: CreateNamespaceModel = {
+    name: raw.name,
+    parentId: raw.parentId?.trim() !== '' ? raw.parentId : null
+    };
+
     this.nsSubmit.emit(value);
+  }
+
+  onSelectNamespace(event: { namespaceId: string | undefined }) {
+    this.form.get('parentId')?.setValue(event.namespaceId || '');
   }
 
   private markAsTouched() {

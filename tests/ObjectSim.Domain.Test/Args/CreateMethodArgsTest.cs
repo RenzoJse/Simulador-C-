@@ -6,7 +6,7 @@ namespace ObjectSim.Domain.Test.Args;
 [TestClass]
 public class CreateMethodArgsTest
 {
-     private CreateMethodArgs _args = null!;
+    private CreateMethodArgs _args = null!;
 
     [TestInitialize]
     public void Setup()

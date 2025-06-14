@@ -24,7 +24,7 @@ public class Variable
 
     private static void ValidateNameNotNullOrWhitespace(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if(string.IsNullOrWhiteSpace(name))
         {
             throw new ArgumentException("Name cannot be null or whitespace.", nameof(name));
         }
@@ -32,12 +32,12 @@ public class Variable
 
     private static void ValidateNameLength(string name)
     {
-        if (name.Length < MinNameLength)
+        if(name.Length < MinNameLength)
         {
             throw new ArgumentException("Name cannot be that short.", nameof(name));
         }
 
-        if (name.Length > MaxNameLength)
+        if(name.Length > MaxNameLength)
         {
             throw new ArgumentException("Name cannot be longer than 20 characters.", nameof(name));
         }
@@ -45,7 +45,7 @@ public class Variable
 
     private static void ValidateDataTypeId(Guid dataTypeId)
     {
-        if (dataTypeId == Guid.Empty)
+        if(dataTypeId == Guid.Empty)
         {
             throw new ArgumentException("Data type ID cannot be empty.", nameof(dataTypeId));
         }

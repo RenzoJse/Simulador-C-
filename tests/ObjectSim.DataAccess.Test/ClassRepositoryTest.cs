@@ -102,15 +102,15 @@ public class ClassRepositoryTest
         {
             Id = class1Id,
             Name = "Class1",
-            Methods = [ new Method { Id = Guid.NewGuid(), Name = "M1", ClassId = class1Id, TypeId = valueType.Id } ],
-            Attributes = [ new Attribute { Id = Guid.NewGuid(), Name = "A1", ClassId = class1Id, DataType = valueType, Visibility = 0 } ]
+            Methods = [new Method { Id = Guid.NewGuid(), Name = "M1", ClassId = class1Id, TypeId = valueType.Id }],
+            Attributes = [new Attribute { Id = Guid.NewGuid(), Name = "A1", ClassId = class1Id, DataType = valueType, Visibility = 0 }]
         };
         var class2 = new Class
         {
             Id = class2Id,
             Name = "Class2",
-            Methods = [ new Method { Id = Guid.NewGuid(), Name = "M2", ClassId = class2Id, TypeId = valueType.Id } ],
-            Attributes = [ new Attribute { Id = Guid.NewGuid(), Name = "A2", ClassId = class2Id, DataType = valueType, Visibility = 0 } ]
+            Methods = [new Method { Id = Guid.NewGuid(), Name = "M2", ClassId = class2Id, TypeId = valueType.Id }],
+            Attributes = [new Attribute { Id = Guid.NewGuid(), Name = "A2", ClassId = class2Id, DataType = valueType, Visibility = 0 }]
         };
 
         _context.Set<Class>().AddRange(class1, class2);

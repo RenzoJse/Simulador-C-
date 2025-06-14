@@ -14,7 +14,7 @@ public sealed class AuthorizationFilter()
     {
         var authorizationHeader = context.HttpContext.Request.Headers[HeaderNames.Authorization];
 
-        if (string.IsNullOrEmpty(authorizationHeader))
+        if(string.IsNullOrEmpty(authorizationHeader))
         {
             context.Result = new ObjectResult(new
             {
@@ -33,7 +33,7 @@ public sealed class AuthorizationFilter()
         {
             var keyService = context.HttpContext.RequestServices.GetRequiredService<ISecurityService>();
 
-            if (!keyService.IsValidKey(apiKey))
+            if(!keyService.IsValidKey(apiKey))
             {
                 context.Result = new ObjectResult(new
                 {
@@ -45,7 +45,7 @@ public sealed class AuthorizationFilter()
                 };
             }
         }
-        catch (Exception)
+        catch(Exception)
         {
             context.Result = new ObjectResult(new
             {
