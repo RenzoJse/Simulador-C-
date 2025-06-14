@@ -13,14 +13,9 @@
       [type]="'text'">
     </app-form-input>
 
-    <app-form-input
-      [form]="form"
-      controlName="parentId"
-      [reserve]="'Parent Namespace ID (optional)'"
-      [name]="'parentId'"
-      [tag]="'Parent ID'"
-      [type]="'text'">
-    </app-form-input>
+    <app-namespace-dropdown
+      (selectNamespace)="onSelectNamespace($event)">
+    </app-namespace-dropdown>
 
     <div *ngIf="createStatus?.loading; else notLoading">
       Creating...
@@ -29,9 +24,9 @@
     <ng-template #notLoading>
       <ng-container *ngIf="createStatus as status">
         <div *ngIf="status.error" class="text-danger">
-        {{ status.error }}
+          {{ status.error }}
         </div>
-        </ng-container>
+      </ng-container>
 
       <app-form-button title="Create Namespace"></app-form-button>
     </ng-template>
