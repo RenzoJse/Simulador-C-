@@ -1,6 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
 import { OutputModelApiRepositoryService } from '../../repositories/outputModel-api-repository.service';
 import { Observable } from 'rxjs';
+import OutputModelName from "./model/outputModelName";
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +13,7 @@ export class OutputModelService {
         return this._outputModelRepository.uploadDllFile(file);
     }
 
-    public getImplementationList(): Observable<any> {
+    public getImplementationList(): Observable<OutputModelName[]> {
         return this._outputModelRepository.getImplementationList();
     }
 
