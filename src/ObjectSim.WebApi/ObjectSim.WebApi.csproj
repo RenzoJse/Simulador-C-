@@ -25,6 +25,7 @@
       <ProjectReference Include="..\ObjectSim.BusinessLogic\ObjectSim.BusinessLogic.csproj" />
       <ProjectReference Include="..\ObjectSim.DataAccess\ObjectSim.DataAccess.csproj" />
       <ProjectReference Include="..\ObjectSim.IBusinessLogic\ObjectSim.IBusinessLogic.csproj" />
+      <ProjectReference Include="..\ObjectSim.OutputModel\ObjectSim.OutputModel.csproj" />
       <ProjectReference Include="..\ObjectSim.Security\ObjectSim.Security.csproj" />
     </ItemGroup>
 
