@@ -2,5 +2,10 @@
 </app-simulator-form>
 <div *ngIf="simulationResult">
     <h3>Simulation result:</h3>
-    <pre>{{ simulationResult }}</pre>
+    <div *ngIf="simulationResult" [innerHTML]="simulationResult"></div>
+    <button (click)="copyResult()">Copy Result!</button>
+    <div *ngIf="showCopiedPopup" class="copied-popup">
+        <span>¡Answer was copied to clipboard!</span>
+        <button class="close-btn" (click)="closePopup()">&#10005;</button>
+    </div>
 </div>

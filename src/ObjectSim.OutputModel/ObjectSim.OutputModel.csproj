@@ -7,15 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ObjectSim.ClassBuilder\ObjectSim.ClassBuilder.csproj" />
-      <ProjectReference Include="..\ObjectSim.DataAccess\ObjectSim.DataAccess.csproj" />
-      <ProjectReference Include="..\ObjectSim.Domain\ObjectSim.Domain.csproj" />
       <ProjectReference Include="..\ObjectSim.IBusinessLogic\ObjectSim.IBusinessLogic.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <Reference Include="ObjectSim.Abstractions">
-        <HintPath>..\ObjectSim.OutputModel\ObjectSim.Abstractions.dll</HintPath>
+        <HintPath>ObjectSim.Abstractions.dll</HintPath>
       </Reference>
     </ItemGroup>
 

@@ -4,9 +4,10 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodSimulatorService(IRepository<Method> methodRepository, IRepository<Class> classRepository) : IMethodSimulatorService
+public class MethodSimulatorService(IRepository<Method> methodRepository, IRepository<Class> classRepository,
+    IOutputModelTransformerService outputModelTransformerService) : IMethodSimulatorService
 {
-    public string Simulate(SimulateExecutionArgs args)
+    public object Simulate(SimulateExecutionArgs args)
     {
         ArgumentNullException.ThrowIfNull(args);
 
@@ -28,10 +29,17 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
                      + instanceType.Name + "." + method.Name + "() -> " + instanceType.Name + "." + method.Name + "()\n";
         result += SimulateInternal(method, 0);
 
-        return result;
+        SelectOutputModel(args.OutputModelName!);
+
+        return outputModelTransformerService.TransformModel(result);
     }
 
-    private void ValidateIsValidInstance(Class instanceType, Class referenceType)
+    private void SelectOutputModel(string name)
+    {
+        outputModelTransformerService.SelectImplementation(name);
+    }
+
+    private static void ValidateIsValidInstance(Class instanceType, Class referenceType)
     {
         if(instanceType.Parent != referenceType && instanceType.Id != referenceType.Id)
         {
@@ -84,4 +92,5 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
 
         return result;
     }
+
 }

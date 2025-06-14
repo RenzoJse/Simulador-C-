@@ -12,7 +12,8 @@ import CreateAttributeModel from '../../../backend/services/attribute/models/cre
   selector: 'app-update-attribute-form',
   standalone: true,
   imports: [ReactiveFormsModule, FormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent],
-  templateUrl: './update-attribute-form.component.html'
+  templateUrl: './update-attribute-form.component.html',
+  styleUrl: './update-attribute-form.component.css'
 })
 export class UpdateAttributeFormComponent implements OnChanges {
   @Input() title: string = '';

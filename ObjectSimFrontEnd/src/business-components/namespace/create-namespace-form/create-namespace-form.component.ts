@@ -11,15 +11,17 @@ import { NamespaceDropdownComponent } from '../namespace-dropdown/namespace-drop
 @Component({
   selector: 'app-create-namespace-form',
   standalone: true,
+
   imports: [
     ReactiveFormsModule,
     NgIf,
     FormComponent,
     FormInputComponent,
     FormButtonComponent,
-    NamespaceDropdownComponent // 👈
+    NamespaceDropdownComponent
   ],
   templateUrl: './create-namespace-form.component.html'
+
 })
 export class CreateNamespaceFormComponent {
   @Output() nsSubmit = new EventEmitter<CreateNamespaceModel>();
