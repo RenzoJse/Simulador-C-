@@ -40,7 +40,12 @@ export class CreateNamespaceFormComponent {
       return;
     }
 
-    const value: CreateNamespaceModel = this.form.value;
+    const raw = this.form.value;
+    const value: CreateNamespaceModel = {
+    name: raw.name,
+    parentId: raw.parentId?.trim() !== '' ? raw.parentId : null
+    };
+
     this.nsSubmit.emit(value);
   }
 
