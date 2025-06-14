@@ -19,17 +19,32 @@ public class NamespaceRepository(DataContext context):INamespaceRepository
     }
     public Namespace? GetByIdWithChildren(Guid id)
     {
-        var root = _context.Namespaces
-            .Include(n => n.Children)
-            .FirstOrDefault(n => n.Id == id);
+        var allNamespaces = _context.Namespaces.AsNoTracking().ToList();
+
+        var root = allNamespaces.FirstOrDefault(n => n.Id == id);
 
         if(root != null)
         {
-            LoadChildrenRecursively(root);
+            BuildHierarchy(root, allNamespaces);
         }
 
         return root;
     }
+
+    private void BuildHierarchy(Namespace parent, List<Namespace> allNamespaces)
+    {
+        var children = allNamespaces
+            .Where(n => n.ParentId == parent.Id)
+            .ToList();
+
+        parent.Children = children;
+
+        foreach(var child in children)
+        {
+            BuildHierarchy(child, allNamespaces);
+        }
+    }
+
 
     private void LoadChildrenRecursively(Namespace parent)
     {

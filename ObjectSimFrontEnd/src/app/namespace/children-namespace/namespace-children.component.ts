@@ -28,12 +28,13 @@ export class NamespaceChildrenComponent implements OnInit {
   onSelect(): void {
     if (!this.selectedNamespaceId) return;
 
-    /*this.namespaceService.getDescendants(this.selectedNamespaceId).subscribe({
+    this.namespaceService.getDescendants(this.selectedNamespaceId).subscribe({
       next: (data) => {
+        console.log('Descendants:', data);
         this.descendants = data;
         this.error = null;
       },
       error: () => this.error = 'Error fetching descendants'
-    });*/
+    });
   }
 }

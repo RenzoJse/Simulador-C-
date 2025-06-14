@@ -24,6 +24,9 @@ export class NamespaceApiRepository extends ApiRepository {
     getAllNamespaces(): Observable<NamespaceDto[]> {
         return this.get<NamespaceDto[]>();
     }
+    getDescendants(namespaceId: string): Observable<NamespaceDto[]> {
+  return this.get<NamespaceDto[]>(`${namespaceId}/descendants`);
+}
 
 }
   
