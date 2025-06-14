@@ -1,25 +1,19 @@
-﻿<div class="container mt-4">
-    <h2 class="mb-4">Simulator:</h2>
+﻿<form [formGroup]="uploadOutputModelForm" (ngSubmit)="onSubmit()">
+    <input
+            type="file"
+            class="form-control mb-3"
+            (change)="onFileSelected($event)"
+            accept=".dll" />
 
-    <app-form [form]="uploadOutputModelForm" (atSubmit)="onSubmit()">
+    <button type="submit" class="btn btn-primary">Upload!</button>
 
-        <input
-                type="file"
-                class="form-control mb-3"
-                (change)="onFileSelected($event)"
-                accept=".dll" />
+    <div *ngIf="uploadOutputModelFormStatus?.loading; else notLoading">
+        Loading...
+    </div>
 
-        <app-form-button title="Upload!"></app-form-button>
-
-        <div *ngIf="uploadOutputModelFormStatus?.loading; else notLoading">
-            Loading...
+    <ng-template #notLoading>
+        <div *ngIf="uploadOutputModelFormStatus?.error">
+            {{ uploadOutputModelFormStatus!.error }}
         </div>
-
-        <ng-template #notLoading>
-            <div *ngIf="uploadOutputModelFormStatus?.error">
-                {{ uploadOutputModelFormStatus!.error }}
-            </div>
-        </ng-template>
-
-    </app-form>
-</div>
+    </ng-template>
+</form>

@@ -16,7 +16,9 @@ export class OutputModelApiRepositoryService extends ApiRepository {
     }
 
     uploadDllFile(file: File): Observable<any> {
-        return this.post<any>(file);
+        const formData = new FormData();
+        formData.append('dllFile', file);
+        return this.post<any>(formData);
     }
 
     getImplementationList(): Observable<any> {
