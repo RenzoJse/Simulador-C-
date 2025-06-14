@@ -25,7 +25,8 @@ export class CreateNamespaceComponent {
     this._namespaceService.createNamespace(model).subscribe({
       next: () => {
         this.status = null;
-        this._router.navigate(['']);
+        alert('Namespace creado satisfactoriamente ✅');
+        this._router.navigate(['/namespaces/create']);
       },
       error: (err) => {
         this.status = { error: err.error?.message || 'Failed to create namespace' };
