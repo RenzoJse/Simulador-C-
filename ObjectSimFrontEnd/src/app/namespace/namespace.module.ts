@@ -7,7 +7,6 @@ import { CreateNamespaceComponent } from './create-namespace/create-namespace.co
   imports: [
     CommonModule,
     NamespaceRoutingModule,
-    CreateNamespaceComponent
   ]
 })
 export class NamespaceModule {}
