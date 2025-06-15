@@ -1,24 +1,36 @@
 ﻿import { Component } from '@angular/core';
-import MethodDTO from "../../../backend/services/method/models/method-dto.model";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+
 @Component({
     selector: 'app-method-listing',
-    templateUrl: './method-listing.component.html',
+    templateUrl: './method-listing.component.html'
 })
 
 export class MethodListingComponent {
 
     selectedMethod: string | null = null;
-
-    constructor(private router: Router) {}
+    showConfirmationPopup: boolean = false;
+    constructor(private router: Router, private route: ActivatedRoute) {}
 
     onSelectedMethod(methodId: string | undefined): void {
         if (methodId) {
             this.selectedMethod = methodId;
-            this.router.navigate([methodId, 'invoke-method']);
+            this.showConfirmationPopup = true;
         } else {
             this.selectedMethod = null;
         }
+    }
+
+    confirmNavigation(methodId: string | null): void {
+        if (this.selectedMethod) {
+            this.router.navigate([methodId, 'invoke-method'], { relativeTo: this.route.parent });
+        }
+        this.closePopup();
+    }
+
+    closePopup(): void {
+        this.selectedMethod = null;
+        this.showConfirmationPopup = false;
     }
 }
 
