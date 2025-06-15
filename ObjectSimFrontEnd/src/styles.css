@@ -217,6 +217,10 @@ app-form-input input {
   text-transform: uppercase;
 }
 
+.table-responsive {
+  overflow-x: auto;
+}
+
 .table-responsive table {
   min-width: 800px;
 }
@@ -235,3 +239,13 @@ select {
   border-radius: 4px;
   background-color: white;
 }
+
+.clickable-row:hover {
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+h4 {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+

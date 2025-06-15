@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ListComponent } from '../../../components/list/list.component';
 import { MethodService } from '../../../backend/services/method/method.service';
 import CreateMethod from '../../../backend/services/method/models/method-dto.model';
+import {MethodListItem} from "../../../backend/services/method/models/method-list-item.model";
+import MethodDTO from "../../../backend/services/method/models/method-dto.model";
 
 @Component({
     selector: 'app-method-list',
@@ -14,11 +16,11 @@ import CreateMethod from '../../../backend/services/method/models/method-dto.mod
 
 export class MethodListComponent implements OnInit {
 
-    @Input() methods: CreateMethod[] = [];
-    @Input() columns: string[] = ['name', 'type', 'accessibility', 'isSealed', 'isVirtual', 'isOverride', 'isStatic'];
+    @Input() methods: MethodWithIds[] = [];
+    @Input() columns: string[] = ['name', 'type', 'accessibility', 'isSealed', 'isVirtual', 'isOverride', 'isStatic', 'id'];
     @Input() tittle: string = 'Methods';
 
-    @Output() selectedMethod = new EventEmitter<CreateMethod>();
+    @Output() selectedMethod = new EventEmitter<string | undefined>();
     actualSelectedMethod?: any;
 
     constructor(private _methodService: MethodService) {
@@ -33,8 +35,9 @@ export class MethodListComponent implements OnInit {
             (data) => {
                 this.methods = data.map((classItem: any) => ({
                     ...classItem,
-                    parameters: classItem.parameters || [],
-                    returnType: classItem.returnType || '',
+                    id: classItem.id,
+                    classId: classItem.classId ?? '',
+                    // el resto de las propiedades...
                 }));
             },
             (error) => {
@@ -43,19 +46,25 @@ export class MethodListComponent implements OnInit {
         )
     }
 
-    selectMethod(methodItem: CreateMethod): void {
-        if (methodItem) {
-            if (this.actualSelectedMethod === methodItem) {
-                this.actualSelectedMethod = undefined;
-                this.selectedMethod.emit(undefined);
-            } else {
-                this.actualSelectedMethod = methodItem;
-                this.selectedMethod.emit(methodItem);
-            }
-        } else {
+    selectMethod(methodId: string | undefined): void {
+        if (!methodId) {
             this.actualSelectedMethod = undefined;
             this.selectedMethod.emit(undefined);
+            return;
+        }
+
+        const method = this.methods.find(m => m.id === methodId);
+        if (this.actualSelectedMethod === method) {
+            this.actualSelectedMethod = undefined;
+            this.selectedMethod.emit(undefined);
+        } else {
+            this.actualSelectedMethod = method;
+            this.selectedMethod.emit(method?.id);
         }
     }
+}
 
+interface MethodWithIds extends CreateMethod {
+    id: string;
+    classId: string;
 }
