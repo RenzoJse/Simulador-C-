@@ -1,12 +1,11 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf, CommonModule } from '@angular/common';
 
 import { FormInputComponent } from '../../../components/form/form-input/form-input.component';
 import { FormButtonComponent } from '../../../components/form/form-button/form-button.component';
 import { FormComponent } from '../../../components/form/form/form.component';
 import { MethodDropdownComponent } from "../dropdown/method-dropdown.component";
-
 
 @Component({
     selector: 'app-add-invoke-method-form',
