@@ -27,7 +27,7 @@ public  class VisitorExampleFactory(IRepository<Class> classRepository, IReposit
             Name = "VisitCircle",
             Abstract = true,
             ClassId = exporterId,
-            TypeId = Guid.Empty,
+            TypeId = voidGuid,
             Accessibility = Method.MethodAccessibility.Public,
             Parameters = [new Variable(circleId, "circle")]
         };
@@ -38,7 +38,7 @@ public  class VisitorExampleFactory(IRepository<Class> classRepository, IReposit
             Name = "VisitRectangle",
             Abstract = true,
             ClassId = exporterId,
-            TypeId = Guid.Empty,
+            TypeId = voidGuid,
             Accessibility = Method.MethodAccessibility.Public,
             Parameters = [new Variable(rectangleId, "rectangle")]
         };
@@ -62,7 +62,7 @@ public  class VisitorExampleFactory(IRepository<Class> classRepository, IReposit
             Name = "Accept",
             Abstract = true,
             ClassId = shapeClassId,
-            TypeId = Guid.Empty,
+            TypeId = voidGuid,
             Accessibility = Method.MethodAccessibility.Public,
             Parameters = [new Variable(visitor.Id, "visitor")],
             MethodsInvoke = [
