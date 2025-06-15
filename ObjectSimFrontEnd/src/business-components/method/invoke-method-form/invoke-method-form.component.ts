@@ -6,6 +6,7 @@ import { FormInputComponent } from '../../../components/form/form-input/form-inp
 import { FormButtonComponent } from '../../../components/form/form-button/form-button.component';
 import { FormComponent } from '../../../components/form/form/form.component';
 import { MethodDropdownComponent } from "../dropdown/method-dropdown.component";
+import AddInvokeMethodModel from "../../../backend/services/method/models/add-invoke-method.model";
 
 @Component({
     selector: 'app-add-invoke-method-form',
@@ -17,7 +18,7 @@ import { MethodDropdownComponent } from "../dropdown/method-dropdown.component";
 
 export class InvokeMethodFormComponent {
     @Input() title: string = '';
-    @Output() atSubmit = new EventEmitter<any>();
+    @Output() atSubmit = new EventEmitter<AddInvokeMethodModel>();
 
     addInvokeMethodForm: FormGroup;
     methodId: string | undefined;
@@ -34,17 +35,19 @@ export class InvokeMethodFormComponent {
 
     constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
         this.addInvokeMethodForm = this.fb.group({
-            Reference: ['', [Validators.required]],
+            Reference: [''],
+            MethodId: [''],
         });
     }
 
     public onSubmit() {
+        console.log('Form values:', this.addInvokeMethodForm.value);
         if (this.addInvokeMethodForm.invalid) {
             this.markAsTouched();
             return;
         }
 
-        //todo
+        this.atSubmit.emit(this.addInvokeMethodForm.value);
     }
 
     private markAsTouched() {

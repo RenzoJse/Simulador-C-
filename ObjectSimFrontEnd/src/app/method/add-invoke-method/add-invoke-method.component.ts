@@ -25,6 +25,7 @@ export class AddInvokeMethodComponent {
 
     protected atSubmit(methodToAdd: AddInvokeMethodModel) {
         this.status = { loading: true };
+        methodToAdd.MethodId = this.methodId;
 
         this._methodService.addInvokeMethods(this.methodId, methodToAdd).subscribe({
             next: () => {
