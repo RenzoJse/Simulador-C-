@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 import enviroments from '../../environments/index';
 import ApiRepository from './api-repository';
 import MethodDtoModel from '../../backend/services/method/models/method-dto.model';
-import { MethodListItem } from '../../backend/services/method/models/method-list-item.model';
+import { MethodListItem } from '../services/method/models/method-list-item.model';
+import AddInvokeMethodModel from "../services/method/models/add-invoke-method.model";
 
 @Injectable({
     providedIn: 'root',
@@ -34,8 +35,9 @@ export class MethodApiRepositoryService extends ApiRepository {
         return answer;
     }
 
-    addInvokeMethods(){
-        //TODO
+    addInvokeMethods(methodId: string, invokeMethods: AddInvokeMethodModel): Observable<MethodDtoModel> {
+        const url = `${methodId}/invokeMethods`;
+        return this.patch<MethodDtoModel>(`${url}`, invokeMethods);
     }
 
 }

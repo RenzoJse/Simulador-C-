@@ -1,4 +1,4 @@
-﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
+﻿import {Component, Input, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf, CommonModule } from '@angular/common';
 
@@ -20,6 +20,7 @@ export class InvokeMethodFormComponent {
     @Output() atSubmit = new EventEmitter<any>();
 
     addInvokeMethodForm: FormGroup;
+    methodId: string | undefined;
 
     addInvokeMethodFormStatus: {
         loading?: true;
@@ -31,7 +32,7 @@ export class InvokeMethodFormComponent {
         { value: 'base', tag: 'base'},
     ];
 
-    constructor(private fb: FormBuilder) {
+    constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
         this.addInvokeMethodForm = this.fb.group({
             Reference: ['', [Validators.required]],
         });
@@ -54,4 +55,11 @@ export class InvokeMethodFormComponent {
             }
         });
     }
+
+    updateInvokeMethodId(event: { methodId: string | undefined; }) {
+        this.methodId = event.methodId;
+        this.addInvokeMethodForm.patchValue({ methodId: event.methodId });
+        this.cdr.detectChanges();
+    }
+
 }

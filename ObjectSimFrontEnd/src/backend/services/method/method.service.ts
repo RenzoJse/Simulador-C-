@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { MethodApiRepositoryService } from '../../repositories/method-api-repository.service';
 import MethodDTO from './models/method-dto.model';
 import { MethodListItem } from './models/method-list-item.model';
+import AddInvokeMethodModel from "./models/add-invoke-method.model";
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +28,8 @@ export class MethodService {
     var answer = this.getMethodById(methodId);
     return answer;
   }
-  
-  public addInvokeMethods(){
-    //TODO
+
+  public addInvokeMethods(methodId: string, invokeMethods: AddInvokeMethodModel): Observable<MethodDTO> {
+    return this._methodRepository.addInvokeMethods(methodId, invokeMethods);
   }
 }

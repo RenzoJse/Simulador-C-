@@ -2,6 +2,7 @@
 
 import { MethodService } from "../../../backend/services/method/method.service";
 import AddInvokeMethodModel from "../../../backend/services/method/models/add-invoke-method.model";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
     selector: 'app-add-invoke-method',
@@ -11,19 +12,23 @@ import AddInvokeMethodModel from "../../../backend/services/method/models/add-in
 export class AddInvokeMethodComponent {
 
     status: { loading?: true; error?: string } | null = null;
+    private methodId!: string;
 
     constructor(
-        @Inject(MethodService) private readonly _methodService : MethodService,
+        @Inject(MethodService) private readonly _methodService: MethodService,
+        private route: ActivatedRoute
     ) {
+        this.route.paramMap.subscribe(params => {
+            this.methodId = params.get('methodId')!;
+        });
     }
 
     protected atSubmit(methodToAdd: AddInvokeMethodModel) {
         this.status = { loading: true };
 
-        this._methodService.addInvokeMethods(methodToAdd).subscribe({
+        this._methodService.addInvokeMethods(this.methodId, methodToAdd).subscribe({
             next: () => {
-
-
+                this.status = null;
             },
             error: (error:any) => {
                 if (error.status === 400 && error.Message) {
