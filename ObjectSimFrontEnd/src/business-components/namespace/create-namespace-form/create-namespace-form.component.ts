@@ -20,8 +20,8 @@ import { NamespaceDropdownComponent } from '../namespace-dropdown/namespace-drop
     FormButtonComponent,
     NamespaceDropdownComponent
   ],
-  templateUrl: './create-namespace-form.component.html'
-
+  templateUrl: './create-namespace-form.component.html',
+  styleUrl: './create-namespace-form.component.css',
 })
 export class CreateNamespaceFormComponent {
   @Output() nsSubmit = new EventEmitter<CreateNamespaceModel>();
