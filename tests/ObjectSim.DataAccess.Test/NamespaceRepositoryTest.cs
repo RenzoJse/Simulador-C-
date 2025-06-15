@@ -114,6 +114,17 @@ public class NamespaceRepositoryTest
         Assert.AreEqual("Solo", result!.Name);
         Assert.AreEqual(0, result.Children.Count);
     }
+    [TestMethod]
+    public void GetByIdWithChildren_WithInvalidId_ReturnsNull()
+    {
+        var ns = new Namespace { Name = "NotTarget" };
+        _context.Namespaces.Add(ns);
+        _context.SaveChanges();
+
+        var result = _repository.GetByIdWithChildren(Guid.NewGuid());
+
+        Assert.IsNull(result);
+    }
 
     [TestMethod]
     public void GetByIdWithChildren_InvalidId_ReturnsNull()
