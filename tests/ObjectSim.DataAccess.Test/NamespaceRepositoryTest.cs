@@ -81,6 +81,41 @@ public class NamespaceRepositoryTest
     }
 
     [TestMethod]
+    public void GetByIdWithChildren_ShouldBuildNestedStructureCorrectly_FromDatabase()
+    {
+        var rootId = Guid.NewGuid();
+        var child1Id = Guid.NewGuid();
+        var child2Id = Guid.NewGuid();
+
+        var root = new Namespace { Id = rootId, Name = "Root" };
+        var child1 = new Namespace { Id = child1Id, Name = "Child1", ParentId = rootId };
+        var child2 = new Namespace { Id = child2Id, Name = "Child2", ParentId = child1Id };
+
+        _context.Namespaces.AddRange(root, child1, child2);
+        _context.SaveChanges();
+
+        var result = _repository.GetByIdWithChildren(rootId);
+
+        Assert.AreEqual("Root", result!.Name);
+        Assert.AreEqual(1, result.Children.Count);
+        Assert.AreEqual("Child1", result.Children[0].Name);
+        Assert.AreEqual(1, result.Children[0].Children.Count);
+    }
+    [TestMethod]
+    public void GetByIdWithChildren_WithNoChildren_ReturnsNodeOnly()
+    {
+        var root = new Namespace { Name = "Solo" };
+        _context.Namespaces.Add(root);
+        _context.SaveChanges();
+
+        var result = _repository.GetByIdWithChildren(root.Id);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Solo", result!.Name);
+        Assert.AreEqual(0, result.Children.Count);
+    }
+
+    [TestMethod]
     public void GetByIdWithChildren_InvalidId_ReturnsNull()
     {
         var result = _repository.GetByIdWithChildren(Guid.NewGuid());
