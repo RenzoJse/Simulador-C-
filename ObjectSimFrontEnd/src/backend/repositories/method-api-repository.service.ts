@@ -35,9 +35,10 @@ export class MethodApiRepositoryService extends ApiRepository {
         return answer;
     }
 
-    addInvokeMethods(methodId: string, invokeMethods: AddInvokeMethodModel): Observable<MethodDtoModel> {
+    addInvokeMethods(methodId: string, invokeMethods: AddInvokeMethodModel[]): Observable<MethodDtoModel> {
         const url = `${methodId}/invokeMethods`;
-        return this.patch<MethodDtoModel>(`${url}`, invokeMethods);
+        console.log(JSON.stringify(invokeMethods));
+        return this.patch<MethodDtoModel>(url, invokeMethods);
     }
 
 }

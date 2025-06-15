@@ -29,7 +29,7 @@ export class MethodService {
     return answer;
   }
 
-  public addInvokeMethods(methodId: string, invokeMethods: AddInvokeMethodModel): Observable<MethodDTO> {
-    return this._methodRepository.addInvokeMethods(methodId, invokeMethods);
+  public addInvokeMethods(methodId: string, [invokeMethods]: AddInvokeMethodModel[]): Observable<MethodDTO> {
+    return this._methodRepository.addInvokeMethods(methodId, [invokeMethods]);
   }
 }

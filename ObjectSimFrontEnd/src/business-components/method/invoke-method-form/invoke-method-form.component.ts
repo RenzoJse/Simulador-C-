@@ -21,7 +21,7 @@ export class InvokeMethodFormComponent {
     @Output() atSubmit = new EventEmitter<AddInvokeMethodModel>();
 
     addInvokeMethodForm: FormGroup;
-    methodId: string | undefined;
+    InvokeMethodId: string | undefined;
 
     addInvokeMethodFormStatus: {
         loading?: true;
@@ -36,7 +36,7 @@ export class InvokeMethodFormComponent {
     constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
         this.addInvokeMethodForm = this.fb.group({
             Reference: [''],
-            MethodId: [''],
+            InvokeMethodId: [''],
         });
     }
 
@@ -60,8 +60,8 @@ export class InvokeMethodFormComponent {
     }
 
     updateInvokeMethodId(event: { methodId: string | undefined; }) {
-        this.methodId = event.methodId;
-        this.addInvokeMethodForm.patchValue({ methodId: event.methodId });
+        this.InvokeMethodId = event.methodId;
+        this.addInvokeMethodForm.patchValue({ InvokeMethodId: event.methodId });
         this.cdr.detectChanges();
     }
 
