@@ -2,3 +2,13 @@
         [tittle]="'Select Method'"
         (selectedMethod)="onSelectedMethod($event)" >
 </app-method-list>
+
+<div *ngIf="showConfirmationPopup" class="popup-backdrop">
+    <div class="popup-box">
+        <span>Are you sure you want to edit the method <strong>{{ selectedMethod }}</strong>?</span>
+        <div class="popup-actions">
+            <button (click)="confirmNavigation(selectedMethod)">Yes, edit</button>
+            <button class="cancel" (click)="closePopup()">Cancel</button>
+        </div>
+    </div>
+</div>
