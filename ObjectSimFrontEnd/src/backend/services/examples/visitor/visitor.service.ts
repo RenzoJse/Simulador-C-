@@ -7,7 +7,7 @@ import { VisitorApiRepository } from '../../../repositories/visitor-api-reposito
 export class VisitorService {
   constructor(private readonly _visitorRepository: VisitorApiRepository) {}
 
-  public LoadExample() {
+ /* public LoadExample() {
       return this.LoadExample();
-    }
+    }*/
 }
