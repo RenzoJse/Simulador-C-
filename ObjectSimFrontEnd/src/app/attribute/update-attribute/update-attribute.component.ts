@@ -11,13 +11,15 @@ import { DropdownUpdateComponent } from '../../../business-components/attribute/
   selector: 'app-update-attribute',
   standalone: true,
   templateUrl: './update-attribute.component.html',
-  imports: [FormsModule, CommonModule, UpdateAttributeFormComponent, DropdownUpdateComponent]
+  imports: [FormsModule, CommonModule, UpdateAttributeFormComponent, DropdownUpdateComponent],
+  styleUrl: './update-attribute.component.css'
 })
 export class UpdateAttributeComponent implements OnInit {
   selectedAttributeId: string | null = null;
   attributeToEdit: AttributeUpdateModel | null = null;
   allAttributes: { id: string; name: string }[] = [];
   status: { loading?: boolean; error?: string } | null = null;
+  updatedAttribute: AttributeUpdateModel | null = null;
 
   constructor(
     private readonly router: Router,
@@ -53,10 +55,11 @@ export class UpdateAttributeComponent implements OnInit {
 
   onUpdateSubmit(attribute: AttributeUpdateModel): void {
     this.status = { loading: true };
+    this.updatedAttribute = null;
     this.attributeService.updateAttribute(attribute.id, attribute).subscribe({
       next: () => {
-        alert('Attribute updated successfully');
-        this.router.navigate(['/']);
+        this.status = null;
+        this.updatedAttribute = attribute;
       },
       error: (err) => {
         this.status = { error: err.message || 'Update failed' };
