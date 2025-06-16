@@ -20,7 +20,6 @@ export class AttributeApiRepository extends ApiRepository {
     }
 
     getAllAttributes(): Observable<any>{
-        //TODO
         return this.get<any>();
     }
 

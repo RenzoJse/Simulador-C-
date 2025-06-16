@@ -1,187 +1,236 @@
-﻿
-using ObjectSim.Domain;
-
-using ObjectSim.DataAccess.Interface;
-
+﻿using ObjectSim.IBusinessLogic;
+using ObjectSim.Domain.Args;
 namespace ObjectSim.Examples;
-public  class VisitorExampleFactory(IRepository<Class> classRepository, IRepository<Method> methodRepository):IExampleService
+public  class VisitorExampleFactory(IClassService classService, IMethodService methodService):IExampleService
 {
     public void CreateExample()
     {
-        var circleId = Guid.NewGuid();
-        var rectangleId = Guid.NewGuid();
-        var exporterId = Guid.NewGuid();
-        var visitCircleId = Guid.NewGuid();
-        var visitRectangleId = Guid.NewGuid();
-        var acceptCircleId = Guid.NewGuid();
-        var acceptRectangleId = Guid.NewGuid();
-        var shapeClassId = Guid.NewGuid();
-        var visitorId = Guid.NewGuid();
+
+        
         var voidGuid = Guid.Parse("00000000-0000-0000-0000-000000000005");
+        var visitorId = classService.GetIdByName("visitor").Id;
+        var circleId = classService.GetIdByName("circle").Id;
+        var rectangleId = classService.GetIdByName("rectangle").Id;
+        var shapeId = classService.GetIdByName("shape").Id;
+        var sizeVisitorId = classService.GetIdByName("sizevisitor").Id;
+        var visitRectangleOverrideId = methodService.GetIdByName("visitrectangle").Id;
+
+        var visitCircleArgs = new CreateMethodArgs(
+        name: "visitcircle",
+        typeId: voidGuid,
+        accessibility: "public",
+        isAbstract: true,
+        isSealed: false,
+        isOverride: false,
+        isVirtual: false,
+        isStatic: false,
+        classId: classService.GetIdByName("circle").Id,
+        localVariables: [],
+        parameters: [
+            new CreateVariableArgs(
+                name: "circle",
+                classId: circleId
+            )
+        ],
+        invokeMethods: []
+        );
+
+        var visitRectangleArgs = new CreateMethodArgs(
+            name: "visitrectangle",
+            typeId: voidGuid,
+            accessibility: "public",
+            isAbstract: true,
+            isSealed: null,
+            isOverride: null,
+            isVirtual: null,
+            isStatic: null,
+            classId: rectangleId,
+            localVariables: [],
+            parameters: [
+                new CreateVariableArgs(
+                            name: "rectangle",
+                            classId: rectangleId
+                        )
+            ],
+            invokeMethods: []
+            );
+
+
+        var visitorClassArgs = new CreateClassArgs(
+            name: "visitor",
+            isAbstract: true,
+            isSealed: false,
+            isInterface: true,
+            attributes: [],
+            methods:
+            [
+                visitCircleArgs,
+                visitRectangleArgs
+            ],
+            parent: null
+        );
+
+
+        var acceptArgs = new CreateMethodArgs(
+            name: "accept",
+            typeId: voidGuid,
+            accessibility: "public",
+            isAbstract: true,
+            isSealed: false,
+            isOverride: false,
+            isVirtual: false,
+            isStatic: false,
+            classId: shapeId,
+            localVariables: [],
+            parameters: [
+                new CreateVariableArgs(
+                                    name: "visitor",
+                                    classId: visitorId)
+            ],
+            invokeMethods: []
+            );
+
+
+        var shapeClassArgs = new CreateClassArgs(
+            name: "shape",
+            isAbstract: true,
+            isSealed: false,
+            isInterface: true,
+            attributes: [],
+            methods:
+            [
+                acceptArgs
+            ],
+            parent: null
+        );
+
+        var circleClassArgs = new CreateClassArgs(
+            name: "circle",
+            isAbstract: false,
+            isSealed: false,
+            isInterface: false,
+            attributes: [],
+            methods:
+            [
+            ],
+            parent: shapeId
+        );
+
+        var acceptCircleArgs = new CreateMethodArgs(
+            name: "accept",
+            typeId: voidGuid,
+            accessibility: "public",
+            isAbstract: true,
+            isSealed: false,
+            isOverride: true,
+            isVirtual: false,
+            isStatic: false,
+            classId: circleId,
+            localVariables: [],
+            parameters: [
+                new CreateVariableArgs(
+                name: "visitor",
+                classId: visitorId)
+            ],
+            invokeMethods: []
+            );
+
+        var rectangleClassArgs = new CreateClassArgs(
+            name: "rectangle",
+            isAbstract: false,
+            isSealed: false,
+            isInterface: false,
+            attributes: [],
+            methods:
+            [
+            ],
+            parent: shapeId
+        );
+
+        var aux = new CreateInvokeMethodArgs(visitRectangleOverrideId, "visitor");
+        var acceptRectangleArgs = new CreateMethodArgs(
+            name: "Accept",
+            typeId: voidGuid,
+            accessibility: "public",
+            isAbstract: true,
+            isSealed: false,
+            isOverride: true,
+            isVirtual: false,
+            isStatic: false,
+            classId: rectangleId,
+            localVariables: [],
+            parameters: [
+                new CreateVariableArgs(
+                                    name: "visitor",
+                                    classId: visitorId)
+            ],
+            invokeMethods: [aux.InvokeMethodId]
+            );
+
+        var visitCircleOverrideArgs = new CreateMethodArgs(
+            name: "visitCircle",
+            typeId: voidGuid,
+            accessibility: "public",
+            isAbstract: true,
+            isSealed: false,
+            isOverride: true,
+            isVirtual: false,
+            isStatic: false,
+            classId: sizeVisitorId,
+            localVariables: [],
+            parameters: [
+                new CreateVariableArgs(
+                name: "visitor",
+                classId: visitorId)
+            ],
+            invokeMethods: []
+            );
+
+        var visitRectangleOverrideArgs = new CreateMethodArgs(
+            name: "Visitrectangle",
+            typeId: voidGuid,
+            accessibility: "public",
+            isAbstract: true,
+            isSealed: false,
+            isOverride: true,
+            isVirtual: false,
+            isStatic: false,
+            classId: sizeVisitorId,
+            localVariables: [],
+            parameters: [
+                new CreateVariableArgs(
+                name: "visitor",
+                classId: visitorId)
+            ],
+            invokeMethods: []
+            );
+
+        var sizeVisitorsArgs = new CreateClassArgs(
+            name: "sizevisitor",
+            isAbstract: false,
+            isSealed: false,
+            isInterface: false,
+            attributes: [],
+            methods:
+            [visitCircleOverrideArgs, visitRectangleOverrideArgs
+            ],
+            parent: visitorId
+        );
 
 
 
-        var visitCircle = new Method
-        {
-            Id = visitCircleId,
-            Name = "VisitCircle",
-            Abstract = true,
-            ClassId = exporterId,
-            TypeId = voidGuid,
-            Accessibility = Method.MethodAccessibility.Public,
-            Parameters = [new Variable(circleId, "circle")]
-        };
+        methodService.CreateMethod(visitCircleArgs);
+        methodService.CreateMethod(visitRectangleArgs);
+        methodService.CreateMethod(acceptArgs);
+        methodService.CreateMethod(acceptCircleArgs);
+        methodService.CreateMethod(acceptRectangleArgs);
+        methodService.CreateMethod(visitCircleOverrideArgs);
+        methodService.CreateMethod(visitRectangleOverrideArgs);
 
-        var visitRectangle = new Method
-        {
-            Id = visitRectangleId,
-            Name = "VisitRectangle",
-            Abstract = true,
-            ClassId = exporterId,
-            TypeId = voidGuid,
-            Accessibility = Method.MethodAccessibility.Public,
-            Parameters = [new Variable(rectangleId, "rectangle")]
-        };
-
-
-        var visitor=new Class
-         {
-             Id = visitorId,
-             Name = "Visitor",
-             IsAbstract = true,
-             IsInterface = true,
-             IsSealed = false,
-             Attributes = [],
-             Methods = [visitCircle,visitRectangle]
-         };
-
-
-        var accept=new Method
-        {
-            Id = Guid.NewGuid(),
-            Name = "Accept",
-            Abstract = true,
-            ClassId = shapeClassId,
-            TypeId = voidGuid,
-            Accessibility = Method.MethodAccessibility.Public,
-            Parameters = [new Variable(visitor.Id, "visitor")],
-            MethodsInvoke = [
-            ]
-        };
-
-        var shape = new Class
-        {
-            Id = shapeClassId,
-            Name = "Shape",
-            IsAbstract = true,
-            IsInterface = true,
-            IsSealed = false,
-            Attributes = [],
-            Methods = [accept]
-        };
-
-
-        var circle = new Class
-        {
-            Id = circleId,
-            Parent = shape,
-            Name = "Circle",
-            IsAbstract = false,
-            IsInterface = false,
-            IsSealed = false,
-            Attributes = [],
-            Methods = []
-        };
-        var acceptCircle = new Method
-        {
-            Id = acceptCircleId,
-            Name = "Accept",
-            IsOverride = true,
-            Abstract = true,
-            ClassId = circleId,
-            TypeId = voidGuid,
-            Accessibility = Method.MethodAccessibility.Public,
-            Parameters = [new Variable(visitorId, "visitor")],
-            MethodsInvoke = [new InvokeMethod(acceptCircleId, visitCircleId, "visitor")]
-        };
-
-        var rectangle = new Class
-        {
-            Id = rectangleId,
-            Parent = shape,
-            Name = "Rectangle",
-            IsAbstract = false,
-            IsInterface = false,
-            IsSealed = false,
-            Attributes = [],
-            Methods = []
-        };
-
-
-
-        var acceptRectangle = new Method
-        {
-            Id = acceptRectangleId,
-            Name = "Accept",
-            IsOverride = true,
-            Abstract = true,
-            ClassId = rectangleId,
-            TypeId = voidGuid,
-            Accessibility = Method.MethodAccessibility.Public,
-            Parameters = [new Variable(visitorId, "visitor")],
-            MethodsInvoke = [
-                new InvokeMethod(acceptRectangleId, visitRectangleId, "visitor")
-            ]
-        };
-
-        var visitCircleOverride = new Method
-        {
-            Id = visitCircleId,
-            Name = "VisitCircle",
-            ClassId = exporterId,
-            TypeId = voidGuid,
-            Abstract = true,
-            Accessibility = Method.MethodAccessibility.Public,
-            Parameters = [new Variable(circleId, "circle")],
-            IsOverride = true
-        };
-        var visitRectangleOverride = new Method
-        {
-            Id = visitRectangleId,
-            Name = "VisitRectangle",
-            ClassId = exporterId,
-            Abstract=true,
-            TypeId = voidGuid,
-            Accessibility = Method.MethodAccessibility.Public,
-            Parameters = [new Variable(rectangleId, "rectangle")],
-            IsOverride = true
-        };
-
-        var sizeVisitor = new Class
-        {
-            Id = exporterId,
-            Name = "SizeVisitor",
-            Parent = visitor,
-            IsAbstract = false,
-            IsInterface = false,
-            IsSealed = false,
-            Attributes = [],
-            Methods = [visitCircleOverride, visitRectangleOverride]
-        };
-
-        classRepository.Add(circle);
-        classRepository.Add(rectangle);
-        classRepository.Add(shape);
-        classRepository.Add(visitor);
-        classRepository.Add(sizeVisitor);
-
-        methodRepository.Add(visitCircle);
-        methodRepository.Add(visitRectangle);
-        methodRepository.Add(accept);
-        methodRepository.Add(acceptCircle);
-        methodRepository.Add(acceptRectangle);
-        methodRepository.Add(visitCircleOverride);
-        methodRepository.Add(visitRectangleOverride);
-
+        classService.CreateClass(circleClassArgs);
+        classService.CreateClass(rectangleClassArgs);
+        classService.CreateClass(shapeClassArgs);
+        classService.CreateClass(visitorClassArgs);
+        classService.CreateClass(sizeVisitorsArgs);
     }
 }

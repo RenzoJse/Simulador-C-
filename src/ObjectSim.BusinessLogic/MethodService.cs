@@ -310,5 +310,20 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     }
 
     #endregion
+    #region SystemMethod
+    public Method GetIdByName(string name)
+    {
+        var methods = methodRepository.GetAll(c => c.Id != Guid.Empty)?.ToList();
+        var foundMethod = methods?.FirstOrDefault(cla => cla.Name == name);
+
+        if(foundMethod == null)
+        {
+            throw new ArgumentException("Method not found");
+        }
+
+        return foundMethod;
+    }
+
+    #endregion
 
 }
