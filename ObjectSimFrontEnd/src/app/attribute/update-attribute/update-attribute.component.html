@@ -3,24 +3,19 @@
 
   <div class="form-group mb-3">
     <label for="attributeSelect">Select Attribute</label>
-    <select
-      id="attributeSelect"
-      class="form-control"
-      [(ngModel)]="selectedAttributeId"
-      (change)="loadAttribute()"
-    >
-      <option value="" disabled selected>Select an attribute</option>
-      <option *ngFor="let attr of allAttributes" [value]="attr.value">
-        {{ attr.tag }}
-      </option>
-    </select>
+    <app-dropdown-update
+      [items]="allAttributes"
+      [bindLabel]="'name'"
+      [bindValue]="'id'"
+      [(selectedId)]="selectedAttributeId"
+      (selected)="loadAttribute($event)">
+    </app-dropdown-update>
   </div>
 
   <app-update-attribute-form
     *ngIf="attributeToEdit"
     [title]="'Edit Attribute'"
     [attribute]="attributeToEdit"
-    [attributeId]="selectedAttributeId!"
     (atSubmit)="onUpdateSubmit($event)">
   </app-update-attribute-form>
 

@@ -34,6 +34,25 @@
       [options]="visibilities">
     </app-form-input>
 
+    <app-form-input
+      [form]="updateAttributeForm"
+      controlName="classId"
+      [reserve]="'Class ID'"
+      [name]="'classId'"
+      [tag]="'Class ID'"
+      [errorMessages]="{ required: 'Class ID is required.' }"
+      [type]="'text'">
+    </app-form-input>
+
+    <app-form-input
+      [form]="updateAttributeForm"
+      controlName="isStatic"
+      [reserve]="'Is Static'"
+      [name]="'isStatic'"
+      [tag]="'Static'"
+      [type]="'option'">
+    </app-form-input>
+
     <app-form-button title="Update Attribute"></app-form-button>
 
   </app-form>
