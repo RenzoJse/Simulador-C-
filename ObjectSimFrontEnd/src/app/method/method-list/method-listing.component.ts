@@ -23,7 +23,7 @@ export class MethodListingComponent {
 
     confirmNavigation(methodId: string | null): void {
         if (this.selectedMethod) {
-            this.router.navigate([methodId, 'invoke-method'], { relativeTo: this.route.parent });
+            this.router.navigate([methodId], { relativeTo: this.route.parent });
         }
         this.closePopup();
     }
