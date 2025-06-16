@@ -69,7 +69,7 @@ public class MethodControllerTest
             IsSealed = false,
             LocalVariables = [],
             Parameters = [],
-            InvokeMethodsId = [],
+            InvokeMethods = [],
             ClassId = Guid.NewGuid().ToString()
         });
 

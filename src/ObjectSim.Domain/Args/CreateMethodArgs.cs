@@ -11,7 +11,7 @@ public class CreateMethodArgs(
     Guid classId,
     List<CreateVariableArgs> localVariables,
     List<CreateVariableArgs> parameters,
-    List<Guid> invokeMethods)
+    List<CreateInvokeMethodArgs> invokeMethods)
 {
     public string? Name { get; set; } = name;
     public Guid TypeId { get; set; } = typeId;
@@ -24,5 +24,5 @@ public class CreateMethodArgs(
     public Guid ClassId { get; set; } = classId;
     public List<CreateVariableArgs> LocalVariables { get; set; } = localVariables;
     public List<CreateVariableArgs> Parameters { get; set; } = parameters;
-    public List<Guid> InvokeMethods { get; set; } = invokeMethods;
+    public List<CreateInvokeMethodArgs> InvokeMethods { get; set; } = invokeMethods;
 }

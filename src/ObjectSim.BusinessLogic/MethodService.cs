@@ -57,7 +57,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             TypeId = methodArgs.TypeId,
             Parameters = parameters,
             LocalVariables = localVariables,
-            MethodsInvoke = []
+            MethodsInvoke = [] //TODO fix it so it adds invoke methods
         };
     }
 
@@ -310,6 +310,7 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
     }
 
     #endregion
+
     #region SystemMethod
     public Method GetIdByName(string name)
     {

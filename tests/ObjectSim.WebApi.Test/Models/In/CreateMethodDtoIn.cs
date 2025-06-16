@@ -24,7 +24,7 @@ public class CreateMethodDtoInTest
             ClassId = Guid.NewGuid().ToString(),
             LocalVariables = [],
             Parameters = [],
-            InvokeMethodsId = []
+            InvokeMethods = []
         };
     }
 
@@ -52,7 +52,7 @@ public class CreateMethodDtoInTest
             ClassId = classId.ToString(),
             LocalVariables = localVars,
             Parameters = parameters,
-            InvokeMethodsId = invokeIds
+            InvokeMethods = invokeIds
         };
 
         var args = dto.ToArgs();
