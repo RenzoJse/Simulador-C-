@@ -1,5 +1,22 @@
-<app-update-class-name-form
-  [loading]="status.loading"
-  [error]="status.error"
-  (atSubmit)="atSubmit($event)">
-</app-update-class-name-form>
+<div class="update-class-page container mt-4">
+
+  <app-update-class-name-form
+    [loading]="status.loading"
+    [error]="status.error"
+    (atSubmit)="atSubmit($event)">
+  </app-update-class-name-form>
+
+  <!-- Aquí -->
+  <div *ngIf="updatedClassName" class="delete-card-small mt-4 p-3">
+    <h5>✅ Class name updated successfuly</h5>
+    <p><strong>Nuevo nombre:</strong> {{ updatedClassName }}</p>
+  </div>
+
+  <div *ngIf="status.loading" class="text-center mt-3">
+    Loading...
+  </div>
+
+  <div *ngIf="status.error" class="alert alert-danger mt-3">
+    {{ status.error }}
+  </div>
+</div>
