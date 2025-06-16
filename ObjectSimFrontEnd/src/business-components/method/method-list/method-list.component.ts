@@ -37,7 +37,6 @@ export class MethodListComponent implements OnInit {
                     ...classItem,
                     id: classItem.id,
                     classId: classItem.classId ?? '',
-                    // el resto de las propiedades...
                 }));
             },
             (error) => {

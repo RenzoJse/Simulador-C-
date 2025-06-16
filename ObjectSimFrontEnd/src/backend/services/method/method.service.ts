@@ -25,8 +25,7 @@ export class MethodService {
   }
 
   public getMethodById(methodId: string): Observable<any> {
-    var answer = this.getMethodById(methodId);
-    return answer;
+    return this._methodRepository.getMethodById(methodId);
   }
 
   public addInvokeMethods(methodId: string, [invokeMethods]: AddInvokeMethodModel[]): Observable<MethodDTO> {
