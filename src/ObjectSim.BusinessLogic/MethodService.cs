@@ -4,7 +4,7 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class MethodService(IRepository<Method> methodRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService,
+public class MethodService(IRepository<Variable> variableRepository, IRepository<Method> methodRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService,
     IInvokeMethodService invokeMethodService) : IMethodService, IMethodServiceCreate
 {
     #region CreateMethod
@@ -16,10 +16,26 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         var method = BuildMethodFromArgs(methodArgs);
 
         AddMethodToClass(methodArgs.ClassId, method);
-
         SaveMethod(method);
 
+        SetMethodVariables(method, methodArgs);
+        if(methodArgs.InvokeMethods.Count > 0)
+        {
+            method = SetMethodInvokes(method, methodArgs);
+        }
+
         return method;
+    }
+
+    private void SetMethodVariables(Method method, CreateMethodArgs methodArgs)
+    {
+        method.LocalVariables = BuildVariables(methodArgs.LocalVariables);
+        method.Parameters = BuildVariables(methodArgs.Parameters);
+    }
+
+    private Method SetMethodInvokes(Method method, CreateMethodArgs methodArgs)
+    {
+        return AddInvokeMethod(method.Id, methodArgs.InvokeMethods);
     }
 
     private Guid ValidateTypeIdExists(Guid typeId)
@@ -40,11 +56,8 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         }
     }
 
-    private Method BuildMethodFromArgs(CreateMethodArgs methodArgs)
+    private static Method BuildMethodFromArgs(CreateMethodArgs methodArgs)
     {
-        var parameters = BuildVariables(methodArgs.Parameters);
-        var localVariables = BuildVariables(methodArgs.LocalVariables);
-
         var result = new Method
         {
             Name = methodArgs.Name,
@@ -55,22 +68,25 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             IsVirtual = methodArgs.IsVirtual ?? false,
             IsStatic = methodArgs.IsStatic ?? false,
             TypeId = methodArgs.TypeId,
-            Parameters = parameters,
-            LocalVariables = localVariables,
+            Parameters = [],
+            LocalVariables = [],
             MethodsInvoke = []
         };
-
-        if(methodArgs.InvokeMethods.Count > 0)
-        {
-            result = AddInvokeMethod(result.Id, methodArgs.InvokeMethods);
-        }
 
         return result;
     }
 
-    private static List<Variable> BuildVariables(IEnumerable<CreateVariableArgs> variablesArgs)
+    private List<Variable> BuildVariables(IEnumerable<CreateVariableArgs> variablesArgs)
     {
-        return variablesArgs.Select(variable => new Variable(variable.ClassId, variable.Name)).ToList();
+        var variables = new List<Variable>();
+        foreach(var variableArgs in variablesArgs)
+        {
+            var newVariable = new Variable(variableArgs.ClassId, variableArgs.Name);
+            variableRepository.Add(newVariable);
+            variables.Add(newVariable);
+        }
+
+        return variables;
     }
 
     private void AddMethodToClass(Guid classId, Method method)

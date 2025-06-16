@@ -61,5 +61,6 @@ public static class ServiceFactory
         services.AddScoped<IRepository<Key>, Repository<Key>>();
         services.AddScoped<INamespaceRepository, NamespaceRepository>();
         services.AddScoped<IRepository<InvokeMethod>, Repository<InvokeMethod>>();
+        services.AddScoped<IRepository<Variable>, Repository<Variable>>();
     }
 }
