@@ -16,6 +16,7 @@ import { FormComponent } from '../../../components/form/form/form.component';
 export class DeleteClassFormComponent {
   @Input() loading = false;
   @Input() error: string | null = null;
+  @Input() success = false;
   @Output() atSubmit = new EventEmitter<string>();
 
   deleteClassform: FormGroup;
