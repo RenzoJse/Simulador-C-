@@ -7,6 +7,32 @@ namespace ObjectSim.BusinessLogic;
 public class MethodService(IRepository<Variable> variableRepository, IRepository<Method> methodRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService,
     IInvokeMethodService invokeMethodService) : IMethodService, IMethodServiceCreate
 {
+    #region BuilderCreateMethod
+
+    public Method BuilderCreateMethod(CreateMethodArgs methodArgs)
+    {
+        ValidateMethodArgsNotNull(methodArgs);
+        ValidateTypeIdExists(methodArgs.TypeId);
+        var method = BuildMethodFromArgs(methodArgs);
+
+        SetMethodVariablesBuilder(method, methodArgs);
+
+        return method;
+    }
+
+    private static void SetMethodVariablesBuilder(Method method, CreateMethodArgs methodArgs)
+    {
+        method.LocalVariables = BuildVariablesBuilder(methodArgs.LocalVariables, method);
+        method.Parameters = BuildVariablesBuilder(methodArgs.Parameters, method);
+    }
+
+    private static List<Variable> BuildVariablesBuilder(IEnumerable<CreateVariableArgs> variablesArgs, Method method)
+    {
+        return variablesArgs.Select(variableArgs => new Variable(variableArgs.ClassId, variableArgs.Name, method)).ToList();
+    }
+
+    #endregion
+
     #region CreateMethod
 
     public Method CreateMethod(CreateMethodArgs methodArgs)

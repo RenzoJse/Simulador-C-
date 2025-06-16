@@ -45,7 +45,7 @@ public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeServi
             try
             {
                 method.IsAbstract = true;
-                var newMethod = methodService.CreateMethod(method);
+                var newMethod = methodService.BuilderCreateMethod(method);
                 if(Result.CanAddMethod(newMethod))
                 {
                     newMethods.Add(newMethod);

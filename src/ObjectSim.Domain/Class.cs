@@ -182,11 +182,20 @@ public class Class
                 throw new ArgumentException("Override method must override a method from the parent class.");
             }
 
-            var parentMethod = Parent.Methods?.FirstOrDefault(m => m.Name == method.Name);
-
-            if(parentMethod == null || !parentMethod.IsVirtual)
+            if(Parent.IsInterface == true)
             {
-                throw new ArgumentException("Override method must override a method from the parent class.");
+                var found = (Parent.Methods ?? Enumerable.Empty<Method>()).Any(parentMethod => parentMethod.Name == method.Name);
+                if(!found)
+                {
+                    throw new ArgumentException("Override method must override a method from the parent interface.");
+                }
+            }
+            else
+            {
+                if ((Parent.Methods ?? Enumerable.Empty<Method>()).Any(parentMethod => parentMethod.Name == method.Name && !parentMethod.IsVirtual))
+                {
+                    throw new ArgumentException("Override method must override a virtual method from the parent class.");
+                }
             }
         }
 

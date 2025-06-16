@@ -7,7 +7,7 @@ namespace ObjectSim.Examples;
 public class VisitorExampleFactory(IClassService classService, IMethodService methodService) : IExampleService
 {
     readonly Guid VOID_GUID = Guid.Parse("00000000-0000-0000-0000-000000000005");
-    readonly Guid TO_STRING_GUID = Guid.Parse("00000000-0000-0000-0000-000000000108");
+    //readonly Guid TO_STRING_GUID = Guid.Parse("00000000-0000-0000-0000-000000000108");
 
     public void CreateExample()
     {
@@ -66,12 +66,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
                     name: "square",
                     classId: squareShapeId)
             ],
-            [
-                new CreateInvokeMethodArgs(
-                    TO_STRING_GUID,
-                    "square"
-                )
-            ]
+            []
         );
     }
 
@@ -93,12 +88,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
                     name: "circle",
                     classId: circleShapeId)
             ],
-            [
-            new CreateInvokeMethodArgs(
-                TO_STRING_GUID,
-                    "circle"
-                )
-            ]
+            []
         );
     }
 
