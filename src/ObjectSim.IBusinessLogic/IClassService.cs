@@ -12,5 +12,5 @@ public interface IClassService
     public void RemoveMethod(Guid? classId, Guid? methodId);
     public void RemoveAttribute(Guid classId, Guid attributeId);
     public void UpdateClass(Guid classId, string newName);
-    public Class GetIdByName(string name);
+    public Guid GetIdByName(string name);
 }

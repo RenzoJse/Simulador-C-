@@ -97,18 +97,19 @@ public class ClassService(IDataTypeService dataTypeService, IEnumerable<IBuilder
     }
 
     #endregion
-    #region SystemMethod
-    public Class GetIdByName(string name)
-    {
-        var classes = classRepository.GetAll(c => c.Id != Guid.Empty)?.ToList();
-        var foundClass = classes?.FirstOrDefault(cla => cla.Name == name);
 
-        if(foundClass == null)
+    #region SystemMethod
+
+    public Guid GetIdByName(string name)
+    {
+        var foundClass = classRepository.Get(c => c.Id != Guid.Empty && c.Name == name);
+
+        if (foundClass == null)
         {
             throw new ArgumentException("Class not found");
         }
 
-        return foundClass;
+        return foundClass.Id;
     }
 
     #endregion

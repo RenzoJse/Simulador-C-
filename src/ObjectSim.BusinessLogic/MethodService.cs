@@ -40,12 +40,12 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
         }
     }
 
-    private static Method BuildMethodFromArgs(CreateMethodArgs methodArgs)
+    private Method BuildMethodFromArgs(CreateMethodArgs methodArgs)
     {
         var parameters = BuildVariables(methodArgs.Parameters);
         var localVariables = BuildVariables(methodArgs.LocalVariables);
 
-        return new Method
+        var result = new Method
         {
             Name = methodArgs.Name,
             ClassId = methodArgs.ClassId,
@@ -57,8 +57,15 @@ public class MethodService(IRepository<Method> methodRepository, IRepository<Cla
             TypeId = methodArgs.TypeId,
             Parameters = parameters,
             LocalVariables = localVariables,
-            MethodsInvoke = [] //TODO fix it so it adds invoke methods
+            MethodsInvoke = []
         };
+
+        if(methodArgs.InvokeMethods.Count > 0)
+        {
+            result = AddInvokeMethod(result.Id, methodArgs.InvokeMethods);
+        }
+
+        return result;
     }
 
     private static List<Variable> BuildVariables(IEnumerable<CreateVariableArgs> variablesArgs)
