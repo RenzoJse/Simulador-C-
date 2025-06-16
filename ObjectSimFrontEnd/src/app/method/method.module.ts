@@ -12,12 +12,18 @@ import { ButtonComponent } from '../../components/button/button.component';
 import { MethodDropdownComponent } from '../../business-components/method/dropdown/method-dropdown.component';
 import { MethodListComponent } from "../../business-components/method/method-list/method-list.component";
 import { DeleteMethodFormComponent } from '../../business-components/method/delete-method/delete-method-form.component';
+import { AddInvokeMethodComponent } from "./add-invoke-method/add-invoke-method.component";
+import { InvokeMethodFormComponent } from "../../business-components/method/invoke-method-form/invoke-method-form.component";
+import { MethodInfoComponent } from "./method-info/method-info.component";
+import { ShowMethodInfoComponent } from "../../business-components/method/method-info/show-method-info.component";
 
 @NgModule({
   declarations: [
     CreateMethodComponent,
     DeleteMethodComponent,
-    MethodListingComponent
+    MethodListingComponent,
+    AddInvokeMethodComponent,
+    MethodInfoComponent
   ],
   imports: [
     CommonModule,
@@ -27,7 +33,9 @@ import { DeleteMethodFormComponent } from '../../business-components/method/dele
     MethodDropdownComponent,
     DeleteMethodFormComponent,
     ButtonComponent,
-    MethodListComponent
+    MethodListComponent,
+    InvokeMethodFormComponent,
+    ShowMethodInfoComponent
   ]
 })
 export class MethodModule { }

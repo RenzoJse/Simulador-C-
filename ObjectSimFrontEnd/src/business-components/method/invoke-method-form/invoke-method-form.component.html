@@ -1,0 +1,35 @@
+﻿<div class="container mt-4">
+    <h2 class="mb-4">Add Invoke Methods:</h2>
+
+    <app-form [form]="addInvokeMethodForm" (atSubmit)="onSubmit()">
+
+        <h4>Method to invoke:</h4>
+        <app-method-dropdown (selectMethod)="updateInvokeMethodId($event)">
+        </app-method-dropdown>
+
+        <app-form-input
+                [form]="addInvokeMethodForm"
+                controlName="Reference"
+                [reserve]="'Reference Type'"
+                [name]="'Reference'"
+                [tag]="'Reference'"
+                [errorMessages]="{ required: 'The Reference is required' }"
+                [type]="'text'">
+        </app-form-input>
+
+        <div *ngIf="addInvokeMethodFormStatus?.loading; else notLoading">
+            Loading...
+        </div>
+
+        <ng-template #notLoading>
+
+            <div *ngIf="addInvokeMethodFormStatus?.error" class="text-danger mb-2">
+                {{ addInvokeMethodFormStatus?.error }}
+            </div>
+
+            <app-form-button title="Add Invoke Method"></app-form-button>
+
+        </ng-template>
+
+    </app-form>
+</div>

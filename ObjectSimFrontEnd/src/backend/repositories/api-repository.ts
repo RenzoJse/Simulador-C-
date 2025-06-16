@@ -63,7 +63,6 @@ export default abstract class ApiRepository{
             .pipe(retry(3), catchError(this.handleError));
     }
 
-
     protected putById<T>(
         id: string,
         body: any = null,
