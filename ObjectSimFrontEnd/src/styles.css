@@ -277,7 +277,7 @@ h4 {
   justify-content: center;
 }
 
-button {
+button, app-button {
   padding: 0.5rem 1rem;
   font-weight: bold;
   border: none;
