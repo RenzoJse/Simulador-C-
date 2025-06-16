@@ -28,14 +28,9 @@ export class InvokeMethodFormComponent {
         error?: string;
     } | null = null;
 
-    ReferenceTypes = [
-        { value: 'this', tag: 'this'},
-        { value: 'base', tag: 'base'},
-    ];
-
     constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
         this.addInvokeMethodForm = this.fb.group({
-            Reference: [''],
+            Reference: ['', [Validators.required, Validators.minLength(2)]],
             InvokeMethodId: [''],
         });
     }

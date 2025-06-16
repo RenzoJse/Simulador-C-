@@ -13,8 +13,7 @@
                 [name]="'Reference'"
                 [tag]="'Reference'"
                 [errorMessages]="{ required: 'The Reference is required' }"
-                [type]="'option'"
-                [options]="ReferenceTypes">
+                [type]="'text'">
         </app-form-input>
 
         <div *ngIf="addInvokeMethodFormStatus?.loading; else notLoading">
