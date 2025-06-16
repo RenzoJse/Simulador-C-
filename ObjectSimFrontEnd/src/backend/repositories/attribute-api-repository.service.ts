@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import enviroments from '../../environments/index';
 import ApiRepository from './api-repository';
 import CreateAttributeModel from '../../backend/services/attribute/models/create-attribute.model';
+import AttributeUpdateModel from '../services/attribute/models/attribute-update.model';
 
 @Injectable({
     providedIn: 'root',
@@ -19,9 +20,9 @@ export class AttributeApiRepository extends ApiRepository {
         return this.post<CreateAttributeModel>(attribute);
     }
 
-    getAllAttributes(): Observable<any>{
+    getAllAttributes(): Observable<AttributeUpdateModel[]>{
         //TODO
-        return this.get<any>();
+        return this.get<AttributeUpdateModel[]>();
     }
 
     deleteAttribute(id: string): Observable<any> {
@@ -29,15 +30,15 @@ export class AttributeApiRepository extends ApiRepository {
         return this.delete(url);
     }
 
-    getAttributeById(attributeId: string): Observable<CreateAttributeModel> {
-        return this.get<CreateAttributeModel>(attributeId);
+    getAttributeById(attributeId: string): Observable<AttributeUpdateModel> {
+        return this.get<AttributeUpdateModel>(attributeId);
     }
 
-    getAttributesByClassId(classId: string): Observable<CreateAttributeModel[]> {
-        return this.get<CreateAttributeModel[]>(`by-class/${classId}`);
+    getAttributesByClassId(classId: string): Observable<AttributeUpdateModel[]> {
+        return this.get<AttributeUpdateModel[]>(`by-class/${classId}`);
     }
 
-    updateAttribute(id: string, attribute: CreateAttributeModel): Observable<CreateAttributeModel> {
-        return this.patch<CreateAttributeModel>(`${id}`, attribute);
-    }
+      updateAttribute(id: string, attribute: AttributeUpdateModel): Observable<AttributeUpdateModel> {
+    return this.putById<AttributeUpdateModel>(id, attribute);
+  }
 }

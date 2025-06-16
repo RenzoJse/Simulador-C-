@@ -17,6 +17,8 @@
       (selectNamespace)="onSelectNamespace($event)">
     </app-namespace-dropdown>
 
+    <app-multi-select (selectedClassIds)="onClassSelect($event)"></app-multi-select>
+
     <div *ngIf="createStatus?.loading; else notLoading">
       Creating...
     </div>

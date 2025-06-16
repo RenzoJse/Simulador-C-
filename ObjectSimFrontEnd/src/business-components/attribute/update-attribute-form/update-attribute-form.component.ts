@@ -6,20 +6,27 @@ import { FormInputComponent } from '../../../components/form/form-input/form-inp
 import { FormButtonComponent } from '../../../components/form/form-button/form-button.component';
 import { FormComponent } from '../../../components/form/form/form.component';
 
-import CreateAttributeModel from '../../../backend/services/attribute/models/create-attribute.model';
+import AttributeUpdateModel from '../../../backend/services/attribute/models/attribute-update.model';
 
 @Component({
   selector: 'app-update-attribute-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, FormInputComponent, FormButtonComponent, NgIf, FormComponent],
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    FormInputComponent,
+    FormButtonComponent,
+    NgIf,
+    FormComponent
+  ],
   templateUrl: './update-attribute-form.component.html',
   styleUrl: './update-attribute-form.component.css'
 })
 export class UpdateAttributeFormComponent implements OnChanges {
   @Input() title: string = '';
-  @Input() attribute: CreateAttributeModel | null = null;
-  @Input() attributeId: string = '';
-  @Output() atSubmit = new EventEmitter<{ id: string; model: CreateAttributeModel }>();
+  @Input() attribute: AttributeUpdateModel | null = null;
+
+  @Output() atSubmit = new EventEmitter<AttributeUpdateModel>();
 
   updateAttributeForm: FormGroup;
 
@@ -33,7 +40,9 @@ export class UpdateAttributeFormComponent implements OnChanges {
     this.updateAttributeForm = this.fb.group({
       name: ['', Validators.required],
       dataTypeId: ['', Validators.required],
-      visibility: ['', Validators.required]
+      visibility: ['', Validators.required],
+      classId: ['', Validators.required],
+      isStatic: [false, Validators.required],
     });
   }
 
@@ -44,12 +53,16 @@ export class UpdateAttributeFormComponent implements OnChanges {
   }
 
   onSubmit(): void {
-    if (this.updateAttributeForm.invalid || !this.attributeId) {
+    if (this.updateAttributeForm.invalid || !this.attribute?.id) {
       this.updateAttributeForm.markAllAsTouched();
       return;
     }
 
-    const model: CreateAttributeModel = this.updateAttributeForm.value;
-    this.atSubmit.emit({ id: this.attributeId, model });
+    const updatedModel: AttributeUpdateModel = {
+      id: this.attribute.id,
+      ...this.updateAttributeForm.value
+    };
+
+    this.atSubmit.emit(updatedModel);
   }
 }

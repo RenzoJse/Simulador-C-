@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ObjectSim.Domain;
 using Attribute = ObjectSim.Domain.Attribute;
 using ValueType = ObjectSim.Domain.ValueType;
@@ -127,12 +128,23 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             im.HasKey(im => new { im.MethodId, im.InvokeMethodId });
         });
 
-        modelBuilder.Entity<Namespace>()
-            .HasMany(n => n.Children)
-            .WithOne()
-            .HasForeignKey(n => n.ParentId)
-            .OnDelete(DeleteBehavior.Restrict);
+        var guidListToStringConverter = new ValueConverter<List<Guid>, string>(
+            v => string.Join(";", v.Select(g => g.ToString())),
+            v => v.Split(';', StringSplitOptions.RemoveEmptyEntries)
+                  .Select(Guid.Parse).ToList()
+        );
 
+        modelBuilder.Entity<Namespace>(n =>
+        {
+            n.HasMany(ns => ns.Children)
+                .WithOne()
+                .HasForeignKey(ns => ns.ParentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            n.Property(ns => ns.ClassIdsSerialized)
+                .HasColumnName("ClassIdsSerialized");
+            n.Ignore(ns => ns.Classes);
+        });
         modelBuilder.Entity<Variable>(v =>
         {
             v.HasKey(v => v.VariableId);
@@ -380,11 +392,23 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 TypeId = voidTypeId,
                 IsOverride = false
             }
+
         );
         modelBuilder.Entity<Key>().HasData(
             new Key { AccessKey = Guid.Parse("9C0FF0B1-4ABD-45C6-8A4A-831748FB7A20") },
             new Key { AccessKey = Guid.Parse("515DD649-30A0-4D57-9302-62A8DB8179BD") }
         );
+        var defaultAttributeId = Guid.Parse("00000000-0000-0000-0000-000000000201");
+        modelBuilder.Entity<Attribute>().HasData(new Attribute
+        {
+            Id = defaultAttributeId,
+            Name = "default",
+            ClassId = objectClassId,
+            DataTypeId = voidTypeId,
+            Visibility = Attribute.AttributeVisibility.Public,
+            IsStatic = false
+        });
+
     }
 
 }

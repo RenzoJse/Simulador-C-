@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AttributeService } from '../../../backend/services/attribute/attribute.service';
 import CreateAttributeModel from '../../../backend/services/attribute/models/create-attribute.model';
+import AttributeUpdateModel from '../../../backend/services/attribute/models/attribute-update.model';
 
 @Component({
   selector: 'app-delete-attribute',
@@ -16,9 +17,9 @@ export class DeleteAttributeComponent implements OnInit {
 
   ngOnInit(): void {
     this.attributeService.getAllAttributes().subscribe({
-      next: (attrs: CreateAttributeModel[]) => {
+      next: (attrs: AttributeUpdateModel[]) => {
         this.attributesDropdown = attrs.map(attr => ({
-          value: attr.classId,
+          value: attr.id,
           tag: `${attr.name} (${attr.visibility})`
         }));
       },
