@@ -12,9 +12,11 @@ export class MethodInfoComponent {
     constructor(private router: Router, private route: ActivatedRoute) {}
 
     goToAddInvokeMethod() {
-        const id = this.route.snapshot.paramMap.get('id');
+        console.log('goToAddInvokeMethod');
+        const id = this.route.snapshot.paramMap.get('methodId');
+        console.log(id);
         if (id) {
-            this.router.navigate(['invokemethod'], { relativeTo: this.route });
+            this.router.navigate(['invoke-method'], { relativeTo: this.route });
         }
     }
 }
