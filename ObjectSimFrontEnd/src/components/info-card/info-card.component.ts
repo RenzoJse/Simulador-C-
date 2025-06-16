@@ -1,7 +1,9 @@
 ﻿import { Component, Input } from '@angular/core';
+import {CommonModule, NgIf} from "@angular/common";
 
 @Component({
     selector: 'app-info-card',
+    imports: [CommonModule, NgIf],
     templateUrl: './info-card.component.html',
     styleUrls: ['./info-card.component.css'],
     standalone: true

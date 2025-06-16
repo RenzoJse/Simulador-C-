@@ -1,7 +1,12 @@
-﻿<div class="form-wide card p-4 shadow border-0 rounded-4 bg-white">
-    <h4 class="fw-bold text-primary mb-4 border-bottom pb-2">{{ tittle }}</h4>
-
-    <div class="table-responsive">
-        <app-list [columns]="columns" [elements]="methods"></app-list>
-    </div>
-</div>
+﻿<app-info-card
+  *ngIf="methodInfo"
+  title="Method Info:"
+  [data]="[
+    { label: 'Name ', value: methodInfo.name },
+    { label: 'Type ', value: methodInfo.type },
+    { label: 'Accesibility ', value: methodInfo.accessibility },
+    { label: 'isVirtual ', value: methodInfo.isVirtual ? 'Yes' : 'No' },
+    { label: 'isStatic ', value: methodInfo.isStatic ? 'Yes' : 'No' }
+  ]"
+  [footerText]="methodInfo.id"
+></app-info-card>
