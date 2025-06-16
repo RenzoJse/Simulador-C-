@@ -38,7 +38,6 @@ export class DeleteAttributeComponent implements OnInit {
 
     this.attributeService.deleteAttribute(this.attributeId).subscribe({
       next: () => {
-        alert('Attribute deleted successfully');
         this.status = null;
         this.success = true;
         this.attributeId = '';
