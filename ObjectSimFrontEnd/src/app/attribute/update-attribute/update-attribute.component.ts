@@ -11,7 +11,8 @@ import { DropdownUpdateComponent } from '../../../business-components/attribute/
   selector: 'app-update-attribute',
   standalone: true,
   templateUrl: './update-attribute.component.html',
-  imports: [FormsModule, CommonModule, UpdateAttributeFormComponent, DropdownUpdateComponent]
+  imports: [FormsModule, CommonModule, UpdateAttributeFormComponent, DropdownUpdateComponent],
+  styleUrl: './update-attribute.component.css'
 })
 export class UpdateAttributeComponent implements OnInit {
   selectedAttributeId: string | null = null;
@@ -57,6 +58,7 @@ export class UpdateAttributeComponent implements OnInit {
     this.updatedAttribute = null;
     this.attributeService.updateAttribute(attribute.id, attribute).subscribe({
       next: () => {
+        this.status = null;
         this.updatedAttribute = attribute;
       },
       error: (err) => {
