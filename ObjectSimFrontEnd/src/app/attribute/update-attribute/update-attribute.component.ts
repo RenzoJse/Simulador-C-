@@ -18,6 +18,7 @@ export class UpdateAttributeComponent implements OnInit {
   attributeToEdit: AttributeUpdateModel | null = null;
   allAttributes: { id: string; name: string }[] = [];
   status: { loading?: boolean; error?: string } | null = null;
+  updatedAttribute: AttributeUpdateModel | null = null;
 
   constructor(
     private readonly router: Router,
@@ -53,10 +54,10 @@ export class UpdateAttributeComponent implements OnInit {
 
   onUpdateSubmit(attribute: AttributeUpdateModel): void {
     this.status = { loading: true };
+    this.updatedAttribute = null;
     this.attributeService.updateAttribute(attribute.id, attribute).subscribe({
       next: () => {
-        alert('Attribute updated successfully');
-        this.router.navigate(['/']);
+        this.updatedAttribute = attribute;
       },
       error: (err) => {
         this.status = { error: err.message || 'Update failed' };
