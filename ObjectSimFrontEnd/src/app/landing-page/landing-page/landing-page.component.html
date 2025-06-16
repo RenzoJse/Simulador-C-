@@ -1,4 +1,13 @@
-<main>
-    <h2>Welcome!.</h2>
-</main>
+<h2 style="text-align: center; margin-top: 20px;">Bienvenido a ObjectSim</h2>
 
+<div style="width: 600px; margin: 20px auto; text-align: center;">
+  <img
+    [src]="images[currentImageIndex]"
+    [alt]="'Imagen ' + (currentImageIndex + 1)"
+    style="width: 100%; height: auto; border: 1px solid #ccc;"
+  />
+  <div style="margin-top: 10px;">
+    <button (click)="previousImage()">Anterior</button>
+    <button (click)="nextImage()">Siguiente</button>
+  </div>
+</div>
