@@ -1,12 +1,6 @@
 ﻿<app-info-card
-  *ngIf="methodInfo"
-  title="Method Info:"
-  [data]="[
-    { label: 'Name ', value: methodInfo.name },
-    { label: 'Type ', value: methodInfo.type },
-    { label: 'Accesibility ', value: methodInfo.accessibility },
-    { label: 'isVirtual ', value: methodInfo.isVirtual ? 'Yes' : 'No' },
-    { label: 'isStatic ', value: methodInfo.isStatic ? 'Yes' : 'No' }
-  ]"
-  [footerText]="methodInfo.id"
-></app-info-card>
+        *ngIf="methodInfo"
+        title="Method Summary"
+        [data]="methodInfoData"
+        [footerText]="methodInfo.id">
+</app-info-card>
