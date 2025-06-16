@@ -19,6 +19,7 @@ import { MethodDropdownComponent } from '../dropdown/method-dropdown.component';
 export class DeleteMethodFormComponent {
   @Input() title: string = '';
   @Input() error: string | null = null;
+  @Input() success = false;
   @Output() atSubmit = new EventEmitter<string>();
 
   deleteMethodForm: FormGroup;
