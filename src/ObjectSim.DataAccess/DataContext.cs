@@ -77,16 +77,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                 .HasForeignKey(m => m.TypeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            m.HasMany(m => m.Parameters)
-                .WithOne()
-                .HasForeignKey(m => m.VariableId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            m.HasMany(m => m.LocalVariables)
-                .WithOne()
-                .HasForeignKey(m => m.VariableId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             m.HasMany(m => m.MethodsInvoke)
                 .WithOne()
                 .HasForeignKey(m => m.MethodId)
@@ -137,10 +127,10 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             v.HasKey(v => v.VariableId);
 
-            v.HasOne<DataType>()
+            v.HasOne(v => v.Method)
                 .WithMany()
-                .HasForeignKey(v => v.TypeId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(v => v.MethodId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         base.OnModelCreating(modelBuilder);
@@ -386,5 +376,4 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             new Key { AccessKey = Guid.Parse("515DD649-30A0-4D57-9302-62A8DB8179BD") }
         );
     }
-
 }

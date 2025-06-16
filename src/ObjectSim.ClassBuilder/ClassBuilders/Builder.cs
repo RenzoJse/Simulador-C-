@@ -66,6 +66,15 @@ public abstract class Builder()
         }
 
         Result.Methods = [];
+        ReturnMethodsWithClassId(methods);
+    }
+
+    private void ReturnMethodsWithClassId(List<CreateMethodArgs> methodsArgs)
+    {
+        foreach(var methodArgs in methodsArgs)
+        {
+            methodArgs.ClassId = Result.Id;
+        }
     }
 
     private bool ParentIsInterfaceWithUnimplementedMethods()

@@ -15,23 +15,17 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
         var visitorInterface = CreateVisitorInterface();
 
         var circleShapeClass = CreateCircleShapeClass(shapeInterface.Id);
+        var squareShapeClass = CreateSquareShapeClass(shapeInterface.Id);
 
         var visitCircleInterfaceMethod = CreateVisitCircleInterfaceMethod(visitorInterface.Id);
+        var visitSquareInterfaceMethod = CreateVisitSquareInterfaceMethod(visitorInterface.Id, squareShapeClass.Id);
 
         var acceptMethodInterface = CreateAcceptMethodInterface(visitorInterface.Id, shapeInterface.Id);
 
-        var circleAcceptMethodOverrideArgs = CreateAcceptMethodOverride(visitorInterface.Id, visitCircleInterfaceMethod.Id);
-
-        var squareShapeClass = CreateSquareShapeClass(shapeInterface.Id);
-
-
-        var visitSquareInterfaceMethod = CreateVisitSquareInterfaceMethod(visitorInterface.Id, squareShapeClass.Id);
-
         var visitorExportClass = CreateVisitorExportClass(visitorInterface.Id, circleShapeClass.Id, squareShapeClass.Id);
 
-        //var circleAcceptMethodOverride = CreateAcceptMethodOverride(circleShapeClass.Id, visitorInterface.Id, visitCircleInterfaceMethod.Id);
-        // hasta aca bien
-        //  falta el de square;
+        var acceptMethodOverrideCircle = CreateAcceptMethodOverrideCircle(visitorInterface.Id, visitCircleInterfaceMethod.Id);
+        var acceptMethodOverrideSquare = CreateAcceptMethodOverrideSquare(visitorInterface.Id, visitSquareInterfaceMethod.Id);
     }
 
     #region ExportVisitor
@@ -109,32 +103,6 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
     }
 
     #endregion
-
-    private Method CreateCircleAcceptOverrideMethod(Guid circleShapeId, Guid visitorId, Guid acceptMethodId)
-    {
-        var circleAcceptArgs = new CreateMethodArgs(
-            "accept",
-            VOID_GUID,
-            "public",
-            false,
-            false,
-            true,
-            false,
-            false,
-            circleShapeId,
-            [],
-            [
-                new CreateVariableArgs(
-                    name: "visitor",
-                    classId: visitorId)
-            ],
-            [
-                new CreateInvokeMethodArgs(acceptMethodId, "visitor")
-            ]
-        );
-
-        return methodService.CreateMethod(circleAcceptArgs);
-    }
 
     #region VisitorInterface
 
@@ -218,6 +186,8 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
         return classService.CreateClass(shapeInterfaceArgs);
     }
 
+    #region Square
+
     private Class CreateSquareShapeClass(Guid shapeInterfaceId)
     {
         var squareShapeArgs = new CreateClassArgs(
@@ -232,6 +202,32 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
 
         return classService.CreateClass(squareShapeArgs);
     }
+
+    private CreateMethodArgs CreateAcceptMethodOverrideSquare(Guid visitorInterfaceId, Guid visitSquareAcceptMethodId)
+    {
+        return new CreateMethodArgs(
+            "accept",
+            VOID_GUID,
+            "public",
+            false,
+            false,
+            true,
+            false,
+            false,
+            Guid.Empty,
+            [],
+            [
+                new CreateVariableArgs(
+                    name: "visitor",
+                    classId: visitorInterfaceId)
+            ],
+            [
+                new CreateInvokeMethodArgs(visitSquareAcceptMethodId, "visitor")
+            ]
+        );
+    }
+
+    #endregion
 
     #region Circle
 
@@ -250,7 +246,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
         return classService.CreateClass(circleShapeArgs);
     }
 
-    private CreateMethodArgs CreateAcceptMethodOverride(Guid visitorInterfaceId, Guid visitCircleAcceptMethodId)
+    private CreateMethodArgs CreateAcceptMethodOverrideCircle(Guid visitorInterfaceId, Guid visitCircleAcceptMethodId)
     {
         return new CreateMethodArgs(
             "accept",

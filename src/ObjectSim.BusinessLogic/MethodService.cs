@@ -29,8 +29,8 @@ public class MethodService(IRepository<Variable> variableRepository, IRepository
 
     private void SetMethodVariables(Method method, CreateMethodArgs methodArgs)
     {
-        method.LocalVariables = BuildVariables(methodArgs.LocalVariables);
-        method.Parameters = BuildVariables(methodArgs.Parameters);
+        method.LocalVariables = BuildVariables(methodArgs.LocalVariables, method);
+        method.Parameters = BuildVariables(methodArgs.Parameters, method);
     }
 
     private Method SetMethodInvokes(Method method, CreateMethodArgs methodArgs)
@@ -76,12 +76,12 @@ public class MethodService(IRepository<Variable> variableRepository, IRepository
         return result;
     }
 
-    private List<Variable> BuildVariables(IEnumerable<CreateVariableArgs> variablesArgs)
+    private List<Variable> BuildVariables(IEnumerable<CreateVariableArgs> variablesArgs, Method method)
     {
         var variables = new List<Variable>();
         foreach(var variableArgs in variablesArgs)
         {
-            var newVariable = new Variable(variableArgs.ClassId, variableArgs.Name);
+            var newVariable = new Variable(variableArgs.ClassId, variableArgs.Name, method);
             variableRepository.Add(newVariable);
             variables.Add(newVariable);
         }
