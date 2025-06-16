@@ -7,6 +7,7 @@ namespace ObjectSim.Examples;
 public class VisitorExampleFactory(IClassService classService, IMethodService methodService) : IExampleService
 {
     readonly Guid VOID_GUID = Guid.Parse("00000000-0000-0000-0000-000000000005");
+    readonly Guid TO_STRING_GUID = Guid.Parse("00000000-0000-0000-0000-000000000108");
 
     public void CreateExample()
     {
@@ -21,23 +22,19 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
         var visitCircleInterfaceMethod = CreateVisitCircleInterfaceMethod(visitorInterface.Id, circleShapeClass.Id);
         var visitSquareInterfaceMethod = CreateVisitSquareInterfaceMethod(visitorInterface.Id, squareShapeClass.Id);
 
-        var visitorExportClass = CreateVisitorExportClass(visitorInterface.Id);
+        var visitorExportClass = CreateVisitorExportClass(visitorInterface.Id, circleShapeClass.Id, squareShapeClass.Id);
 
-
+        var circleAcceptMethodOverride = CreateAcceptMethodOverride(circleShapeClass.Id, visitorInterface.Id, visitCircleInterfaceMethod.Id);
         // hasta aca bien
-
-
-
-
-
-        var circleAcceptOverrideMethod = CreateCircleAcceptOverrideMethod(circleShapeClass.Id, visitorInterface.Id, acceptMethodInterface.Id);
+        //  falta el de square;
     }
 
     #region ExportVisitor
 
-    private Class CreateVisitorExportClass(Guid visitorInterfaceId)
+    private Class CreateVisitorExportClass(Guid visitorInterfaceId, Guid circleShapeId, Guid squareShapeId)
     {
-        var visitCircleOverrideMethod = VisitCircleOverrideMethodArgs();
+        var visitCircleOverrideMethod = VisitCircleOverrideMethodArgs(circleShapeId);
+        var visitSquareOverrideMethod = VisitSquareOverrideMethodArgs(squareShapeId);
 
         var visitorExportArgs = new CreateClassArgs(
             "visitorExporter",
@@ -45,11 +42,65 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
             false,
             false,
             [],
-            [],
+            [visitCircleOverrideMethod, visitSquareOverrideMethod],
             visitorInterfaceId
         );
 
         return classService.CreateClass(visitorExportArgs);
+    }
+
+    private CreateMethodArgs VisitSquareOverrideMethodArgs(Guid squareShapeId)
+    {
+        return new CreateMethodArgs(
+            "visitSquare",
+            VOID_GUID,
+            "public",
+            false,
+            false,
+            true,
+            false,
+            false,
+            Guid.Empty,
+            [],
+            [
+                new CreateVariableArgs(
+                    name: "square",
+                    classId: squareShapeId)
+            ],
+            [
+                new CreateInvokeMethodArgs(
+                    TO_STRING_GUID,
+                    "square"
+                )
+            ]
+        );
+    }
+
+    private CreateMethodArgs VisitCircleOverrideMethodArgs(Guid circleShapeId)
+    {
+        return new CreateMethodArgs(
+            "visitCircle",
+            VOID_GUID,
+            "public",
+            false,
+            false,
+            true,
+            false,
+            false,
+            Guid.Empty,
+            [],
+            [
+                new CreateVariableArgs(
+                    name: "circle",
+                    classId: circleShapeId)
+            ],
+            [
+            new CreateInvokeMethodArgs(
+                TO_STRING_GUID,
+                    "circle"
+                )
+            ]
+        );
     }
 
     #endregion
@@ -177,6 +228,8 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
         return classService.CreateClass(squareShapeArgs);
     }
 
+    #region Circle
+
     private Class CreateCircleShapeClass(Guid shapeInterfaceId)
     {
         var circleShapeArgs = new CreateClassArgs(
@@ -191,6 +244,34 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
 
         return classService.CreateClass(circleShapeArgs);
     }
+
+    private Method CreateAcceptMethodOverride(Guid circleShapeClassId, Guid visitorInterfaceId, Guid visitCircleAcceptMethodId)
+    {
+        var acceptArgs = new CreateMethodArgs(
+            "accept",
+            VOID_GUID,
+            "public",
+            false,
+            false,
+            true,
+            false,
+            false,
+            circleShapeClassId,
+            [],
+            [
+                new CreateVariableArgs(
+                    name: "visitor",
+                    classId: visitorInterfaceId)
+            ],
+            [
+                new CreateInvokeMethodArgs(visitCircleAcceptMethodId, "visitor")
+            ]
+        );
+
+        return methodService.CreateMethod(acceptArgs);
+    }
+
+    #endregion
 
     #endregion
 
@@ -218,39 +299,4 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
         return methodService.CreateMethod(acceptArgs);
     }
 
-    private Class createShapeClassArgs()
-    {
-        var acceptArgs = new CreateMethodArgs(
-            "accept",
-            VOID_GUID,
-            "public",
-            true,
-            false,
-            false,
-            false,
-            false,
-            Guid.Empty,
-            [],
-            [
-                new CreateVariableArgs(
-                    name: "visitor",
-                    classId: visitorId)
-            ],
-            []
-        );
-
-       var shapeClassArgs = new CreateClassArgs(
-            "shape",
-            true,
-            false,
-            true,
-            [],
-            [
-                acceptArgs
-            ],
-            null
-        );
-
-        return classService.CreateClass(shapeClassArgs);
-    }
 }
