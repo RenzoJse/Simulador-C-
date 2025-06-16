@@ -4,6 +4,11 @@ import { authenticationGuard } from '../guard/authentication.guard';
 
 const routes: Routes = [
   {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'inicio'
+  },
+  {
   path: 'inicio',
   canActivate: [authenticationGuard],
   loadChildren: () => import('./landing-page/landing-page/landing-page.module').then(m => m.LandingPageModule),
