@@ -18,7 +18,7 @@ public class NamespaceServiceTest
     {
         _namespaceRepositoryMock = new Mock<INamespaceRepository>();
         _classServiceMock = new Mock<IClassService>();
-        _namespaceService = new NamespaceService(_namespaceRepositoryMock.Object, _classServiceMock.Object);
+        _namespaceService = new NamespaceService(_namespaceRepositoryMock.Object);
     }
 
     [TestMethod]

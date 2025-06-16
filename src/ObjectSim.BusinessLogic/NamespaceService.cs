@@ -6,10 +6,9 @@ using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
-public class NamespaceService(INamespaceRepository repository, IClassService classService) : INamespaceService
+public class NamespaceService(INamespaceRepository repository) : INamespaceService
 {
     private readonly INamespaceRepository _repository = repository;
-    private readonly IClassService _classService = classService;
 
     public Namespace Create(CreateNamespaceArgs args)
     {
@@ -19,24 +18,10 @@ public class NamespaceService(INamespaceRepository repository, IClassService cla
         {
             Id = args.Id,
             Name = args.Name,
-            ParentId = args.ParentId
+            ParentId = args.ParentId,
+            ClassIds = args.ClassIds
         };
-        if(args.ClassIds.Any())
-        {
-            var classes = args.ClassIds
-                .Select(id => _classService.GetById((Guid?)id))
-                .ToList();
 
-            var existingIds = ns.Classes.Select(c => c.Id).ToHashSet();
-
-            foreach(var cls in classes)
-            {
-                if(!existingIds.Contains(cls.Id))
-                {
-                    ns.Classes.Add(cls);
-                }
-            }
-        }
 
         return _repository.Add(ns);
     }
