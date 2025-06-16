@@ -1,0 +1,17 @@
+﻿<div class="info-card">
+    <div class="icon-container" *ngIf="iconUrl">
+        <img [src]="iconUrl" alt="icon">
+    </div>
+    <h2 class="title">{{ title }}</h2>
+
+    <div class="info-list">
+        <div *ngFor="let item of data" class="info-item">
+            <span class="label">{{ item.label }}:</span>
+            <span class="value">{{ item.value }}</span>
+        </div>
+    </div>
+
+    <div class="footer" *ngIf="footerText">
+        {{ footerText }}
+    </div>
+</div>

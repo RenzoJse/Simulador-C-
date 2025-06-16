@@ -8,9 +8,10 @@ import { ActivatedRoute } from "@angular/router";
 
 @Component({
     selector: 'app-show-method-info',
-    templateUrl: 'show-method-info.component.html',
+    templateUrl: './show-method-info.component.html',
     standalone: true,
     imports: [ListComponent, CommonModule],
+    styleUrls: ['./show-method-info.component.css']
 })
 
 export class ShowMethodInfoComponent implements OnInit {
@@ -37,11 +38,21 @@ export class ShowMethodInfoComponent implements OnInit {
         console.log('Load MethodInfo' + methodId);
         this._methodService.getMethodById(methodId).subscribe({
             next: (data) => {
-                this.methods = data.map((classItem: any) => ({
-                    ...classItem,
-                    id: classItem.id,
-                    classId: classItem.classId ?? '',
-                }));
+                if (Array.isArray(data)) {
+                    this.methods = data.map((classItem: any) => ({
+                        ...classItem,
+                        id: classItem.id,
+                        classId: classItem.classId ?? '',
+                    }));
+                } else if (data) {
+                    this.methods = [{
+                        ...data,
+                        id: data.id,
+                        classId: data.classId ?? '',
+                    }];
+                } else {
+                    this.methods = [];
+                }
             },
             error: (error) => {
                 console.error('Error loading methods', error);

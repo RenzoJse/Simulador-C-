@@ -1,9 +1,7 @@
-﻿<div class="form-wide card p-3 shadow-sm">
-    <h4 class="fw-bold mb-3 text-primary border-bottom pb-2">{{ tittle }}</h4>
-    <div class="list table-responsive">
-        <app-list
-                [columns]="columns"
-                [elements]="methods">
-        </app-list>
+﻿<div class="form-wide card p-4 shadow border-0 rounded-4 bg-white">
+    <h4 class="fw-bold text-primary mb-4 border-bottom pb-2">{{ tittle }}</h4>
+
+    <div class="table-responsive">
+        <app-list [columns]="columns" [elements]="methods"></app-list>
     </div>
 </div>
