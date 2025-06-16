@@ -8,11 +8,12 @@ import CreateAttributeModel from '../../../backend/services/attribute/models/cre
 @Component({
   selector: 'app-create-attribute',
   templateUrl: './create-attribute.component.html',
-  styles: []
+  styleUrl: './create-attribute.component.css'
 })
 export class CreateAttributeComponent {
- createAttributeForm: FormGroup;
+  createAttributeForm: FormGroup;
   status: { loading?: true; error?: string } | null = null;
+  createdAttribute: CreateAttributeModel | null = null;
 
   constructor(
     private readonly _router: Router,
@@ -29,12 +30,12 @@ export class CreateAttributeComponent {
 
   protected atSubmit(attribute: CreateAttributeModel) {
     this.status = { loading: true };
-    console.log("Enviando atributo:", attribute);
+    console.log("Sending attribute:", attribute);
 
     this._attributeService.createAttribute(attribute).subscribe({
-      next: () => {
+      next: (response: any) => {
         this.status = null;
-        this._router.navigate(['']);
+        this.createdAttribute = response ?? attribute;
       },
       error: (error: any) => {
         if (error.status === 400 && error.Message) {
