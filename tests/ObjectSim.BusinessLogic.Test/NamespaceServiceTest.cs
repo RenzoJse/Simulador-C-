@@ -130,4 +130,61 @@ public class NamespaceServiceTest
 
         _namespaceService.GetAllDescendants(Guid.NewGuid());
     }
+    [TestMethod]
+    public void Create_WithClassIds_SetsClassIdsCorrectly()
+    {
+        var classIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+        var args = new CreateNamespaceArgs("TestWithClasses", null, classIds);
+
+        Namespace? captured = null;
+        _namespaceRepositoryMock
+            .Setup(r => r.Add(It.IsAny<Namespace>()))
+            .Callback<Namespace>(ns => captured = ns)
+            .Returns<Namespace>(ns => ns);
+
+        _namespaceService.Create(args);
+
+        Assert.IsNotNull(captured);
+        CollectionAssert.AreEqual(classIds, captured!.ClassIds);
+    }
+    [TestMethod]
+    public void Create_ShouldPreserveProvidedId()
+    {
+        var expectedId = Guid.NewGuid();
+        var args = new CreateNamespaceArgs("WithId", null, [])
+        {
+            Id = expectedId
+        };
+
+        Namespace? captured = null;
+        _namespaceRepositoryMock
+            .Setup(r => r.Add(It.IsAny<Namespace>()))
+            .Callback<Namespace>(ns => captured = ns)
+            .Returns<Namespace>(ns => ns);
+
+        _namespaceService.Create(args);
+
+        Assert.IsNotNull(captured);
+        Assert.AreEqual(expectedId, captured!.Id);
+    }
+    [TestMethod]
+    public void GetAllDescendants_WhenNoChildren_ReturnsEmpty()
+    {
+        var parent = new Namespace
+        {
+            Id = Guid.NewGuid(),
+            Name = "Parent",
+            Children = []
+        };
+
+        _namespaceRepositoryMock
+            .Setup(r => r.GetByIdWithChildren(parent.Id))
+            .Returns(parent);
+
+        var result = _namespaceService.GetAllDescendants(parent.Id);
+
+        Assert.AreEqual(0, result.Count());
+    }
+
+
 }
