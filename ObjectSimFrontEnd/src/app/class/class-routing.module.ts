@@ -4,12 +4,14 @@ import { CreateClassComponent } from './create-class/create-class.component';
 import { DeleteClassComponent } from './delete-class/delete-class.component';
 import { UpdateClassComponent } from './update-class/update-class.component';
 import { ClassesListingComponent } from './class-list/classes-listing.component';
+import {ClassInfoComponent} from "./class-info/class-info.component";
 
 const routes: Routes = [
     { path: 'create', component: CreateClassComponent },
     { path: 'delete', component: DeleteClassComponent },
     { path: 'update', component: UpdateClassComponent },
     { path: 'list', component: ClassesListingComponent },
+    { path: ':classId', component: ClassInfoComponent },
 ];
 
 @NgModule({
