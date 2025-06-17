@@ -76,14 +76,11 @@ export class CreateClassFormComponent {
 
     addMethod(method: any) {
         this.methods.push(method);
-        console.log('Form values:', this.createMethodForm.value);
-        console.log('Metodos guardados:', this.methods);
         this.showMethodForm = false;
     }
 
     addAttribute(attribute: any) {
         this.attributes.push(attribute);
-        console.log('Atributos guardados:', this.attributes);
         this.showAttributeForm = false;
     }
 
@@ -96,14 +93,11 @@ export class CreateClassFormComponent {
     }
 
     public onSubmit() {
-        console.log('Form values:', this.createClassForm.value);
-
         if (this.createClassForm.invalid) {
             this.markAsTouched();
             return;
         }
 
-        const selectedType = this.createClassForm.value.ClassTypes;
         var formValue = this.createClassForm.value;
         var newClass = {
             name: formValue.Name,
@@ -117,7 +111,6 @@ export class CreateClassFormComponent {
         };
 
         this.atSubmit.emit(newClass);
-        console.log('New class: ', newClass);
     }
 
     private markAsTouched() {

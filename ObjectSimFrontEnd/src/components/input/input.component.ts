@@ -18,9 +18,9 @@ export class InputComponent {
     @Input() controlName!: string;
     @Input() invalid: boolean = false;
 
-    @Output() valueChange = new EventEmitter<string>(); //
-    
-    public inValueChange(event: any): void { //
-        this.valueChange.emit(event.target.value); //
+    @Output() valueChange = new EventEmitter<string>();
+
+    public inValueChange(event: any): void {
+        this.valueChange.emit(event.target.value);
     }
 }

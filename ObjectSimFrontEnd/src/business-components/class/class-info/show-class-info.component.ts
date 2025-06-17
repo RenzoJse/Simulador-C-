@@ -39,7 +39,6 @@ export class ShowClassInfoComponent implements OnInit {
 
     showOrNot() {
         if (this.classInfo) {
-            console.log('classInfo:', this.classInfo);
             this.classInfoData = [
                 { label: 'Name', value: this.classInfo.name },
                 { label: 'Parent', value: this.classInfo.parent },
@@ -58,7 +57,6 @@ export class ShowClassInfoComponent implements OnInit {
     }
 
     private loadMethodInfo(classId: string): void {
-        console.log('Load ClassInfo ' + classId);
         this._classService.getById(classId).subscribe({
             next: (data) => {
                 if (data) {

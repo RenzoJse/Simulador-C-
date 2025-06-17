@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ListComponent } from '../../../components/list/list.component';
 import { ClassService } from '../../../backend/services/class/class.service';
-import CreateClassModel from '../../../backend/services/class/models/create-class.model';
+
 import ClassDtoOut from "../../../backend/services/class/models/class-dto-out";
 
 @Component({

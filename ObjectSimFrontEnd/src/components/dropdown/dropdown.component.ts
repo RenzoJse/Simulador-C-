@@ -32,7 +32,6 @@ export class DropdownComponent implements OnInit {
     public atChange(event: any) {
         const newOption =
             event.target.value === 'null' ? null : event.target.value;
-        console.log('[DropdownComponent] Valor seleccionado:', newOption); //test
         this.changeValue.emit(newOption);
     }
 }

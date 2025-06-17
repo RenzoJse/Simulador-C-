@@ -9,9 +9,9 @@ import { NgIf, NgFor } from '@angular/common';
     styles: ``
 })
 export class ListComponent<T extends { [key: string]: any }> {
-    @Input() elements: T[] = [];  // Recieves the elements to list
-    @Input() columns: string[] = [];  // The columns that will be shown in the table
-    @Output() selectedElement = new EventEmitter<T>();  // Event to select an element
+    @Input() elements: T[] = [];
+    @Input() columns: string[] = [];
+    @Output() selectedElement = new EventEmitter<T>();
 
     actualSelectedElement?: T;
     selectElement(element: T): void {
