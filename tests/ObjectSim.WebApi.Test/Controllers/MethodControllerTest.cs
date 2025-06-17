@@ -65,7 +65,7 @@ public class MethodControllerTest
 
         var result = _methodController.CreateMethod(new CreateMethodDtoIn
         {
-            Name = "TestClass",
+            Name = "TestMethod",
             Type = Guid.NewGuid().ToString(),
             Accessibility = nameof(Method.MethodAccessibility.Public),
             IsAbstract = false,
@@ -95,6 +95,38 @@ public class MethodControllerTest
             .BeEquivalentTo(_testMethod.MethodsInvoke!.Select(m => m.InvokeMethodId.ToString()));
     }
 
+    [TestMethod]
+    public void CreateMethod_NullDto_ShouldThrowNullReferenceException()
+    {
+        Action act = () => _methodController.CreateMethod(null!);
+        act.Should().Throw<NullReferenceException>();
+    }
+
+    [TestMethod]
+    public void CreateMethod_ServiceThrowsException_ShouldPropagateException()
+    {
+        var dto = new CreateMethodDtoIn
+        {
+            Name = "TestMethod",
+            Type = Guid.NewGuid().ToString(),
+            Accessibility = nameof(Method.MethodAccessibility.Public),
+            IsAbstract = false,
+            IsOverride = false,
+            IsSealed = false,
+            LocalVariables = [],
+            Parameters = [],
+            InvokeMethods = [],
+            ClassId = Guid.NewGuid().ToString()
+        };
+
+        _methodServiceMock
+            .Setup(s => s.CreateMethod(It.IsAny<CreateMethodArgs>()))
+            .Throws(new InvalidOperationException("internal error"));
+
+        Action act = () => _methodController.CreateMethod(dto);
+        act.Should().Throw<InvalidOperationException>()
+           .WithMessage("internal error");
+    }
     #endregion
 
     #region Delete-Method-Test
@@ -128,6 +160,32 @@ public class MethodControllerTest
 
         act.Should().Throw<KeyNotFoundException>()
            .WithMessage($"Method with id {methodId} not found.");
+    }
+
+    [TestMethod]
+    public void DeleteMethod_WhenServiceReturnsFalse_ShouldStillReturnOkWithMessage()
+    {
+        var id = Guid.NewGuid();
+        _methodServiceMock
+            .Setup(s => s.Delete(id))
+            .Returns(false);
+
+        var result = _methodController.DeleteMethod(id) as OkObjectResult;
+        result.Should().NotBeNull();
+        result!.StatusCode.Should().Be(200);
+        result.Value.Should().Be($"Method with id {id} deleted successfully.");
+    }
+
+    [TestMethod]
+    public void DeleteMethod_EmptyGuid_ShouldThrowArgumentException()
+    {
+        _methodServiceMock
+            .Setup(s => s.Delete(Guid.Empty))
+            .Throws(new ArgumentException("Id cannot be empty"));
+
+        Action act = () => _methodController.DeleteMethod(Guid.Empty);
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Id cannot be empty");
     }
     #endregion
 
@@ -169,6 +227,31 @@ public class MethodControllerTest
         notFoundResult.Should().NotBeNull();
         notFoundResult!.StatusCode.Should().Be(404);
     }
+
+    [TestMethod]
+    public void GetMethodById_ServiceThrowsInvalidOperationException_ShouldPropagateException()
+    {
+        var id = Guid.NewGuid();
+        _methodServiceMock
+            .Setup(s => s.GetById(id))
+            .Throws(new InvalidOperationException("Error"));
+
+        Action act = () => _methodController.GetMethodById(id);
+        act.Should().Throw<InvalidOperationException>()
+           .WithMessage("Error");
+    }
+
+    [TestMethod]
+    public void GetMethodById_EmptyGuid_ShouldThrowArgumentException()
+    {
+        _methodServiceMock
+            .Setup(s => s.GetById(Guid.Empty))
+            .Throws(new ArgumentException("Invalid id"));
+
+        Action act = () => _methodController.GetMethodById(Guid.Empty);
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Invalid id");
+    }
     #endregion
 
     #region GetAll-InvokeMethods-Test
@@ -192,11 +275,35 @@ public class MethodControllerTest
         response!.Count.Should().Be(methods.Count);
         response.First().Name.Should().Be(_testMethod!.Name);
     }
+
+    [TestMethod]
+    public void GetAllMethods_WhenNoMethodsExist_ShouldReturnEmptyList()
+    {
+        _methodServiceMock
+            .Setup(s => s.GetAll())
+            .Returns(new List<Method>());
+
+        var ok = _methodController.GetAllMethods() as OkObjectResult;
+        ok.Should().NotBeNull();
+        ok!.StatusCode.Should().Be(200);
+        var list = ok.Value as List<MethodInformationDtoOut>;
+        list.Should().NotBeNull().And.BeEmpty();
+    }
+
+    [TestMethod]
+    public void GetAllMethods_ServiceThrowsException_ShouldPropagateException()
+    {
+        _methodServiceMock
+            .Setup(s => s.GetAll())
+            .Throws(new Exception("error get all"));
+
+        Action act = () => _methodController.GetAllMethods();
+        act.Should().Throw<Exception>()
+           .WithMessage("error get all");
+    }
     #endregion
 
     #region AddInvokeMethod-Test
-
-
     [TestMethod]
     public void AddInvokeMethod_WhenEverythingIsValid_ShouldReturnOk()
     {
@@ -221,6 +328,34 @@ public class MethodControllerTest
         var response = okResult.Value as MethodInformationDtoOut;
         response.Should().NotBeNull();
         response!.Name.Should().Be(_testMethod!.Name);
+    }
+
+    [TestMethod]
+    public void AddInvokeMethods_ServiceThrowsException_ShouldPropagateException()
+    {
+        var methodId = Guid.NewGuid();
+        _methodServiceMock
+            .Setup(s => s.AddInvokeMethod(methodId, It.IsAny<List<CreateInvokeMethodArgs>>()))
+            .Throws(new InvalidOperationException("error add invoke"));
+
+        Action act = () => _methodController.AddInvokeMethods(methodId, new List<CreateInvokeMethodDtoIn>());
+        act.Should().Throw<InvalidOperationException>()
+           .WithMessage("error add invoke");
+    }
+
+    [TestMethod]
+    public void AddInvokeMethods_WithEmptyList_ShouldReturnOkWithMapping()
+    {
+        var methodId = Guid.NewGuid();
+        _methodServiceMock
+            .Setup(s => s.AddInvokeMethod(methodId, new List<CreateInvokeMethodArgs>()))
+            .Returns(_testMethod!);
+
+        var result = _methodController.AddInvokeMethods(methodId, new List<CreateInvokeMethodDtoIn>()) as OkObjectResult;
+        result.Should().NotBeNull();
+        var dto = result!.Value as MethodInformationDtoOut;
+        dto.Should().NotBeNull();
+        dto!.InvokeMethodsIds.Should().BeEquivalentTo(_testMethod!.MethodsInvoke!.Select(x => x.InvokeMethodId.ToString()));
     }
 
     #endregion
