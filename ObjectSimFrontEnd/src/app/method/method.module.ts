@@ -16,6 +16,7 @@ import { AddInvokeMethodComponent } from "./add-invoke-method/add-invoke-method.
 import { InvokeMethodFormComponent } from "../../business-components/method/invoke-method-form/invoke-method-form.component";
 import { MethodInfoComponent } from "./method-info/method-info.component";
 import { ShowMethodInfoComponent } from "../../business-components/method/method-info/show-method-info.component";
+import {ConfirmationPopupComponent} from "../../components/confirmation-popup/confirmation-popup.component";
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ShowMethodInfoComponent } from "../../business-components/method/method
     ButtonComponent,
     MethodListComponent,
     InvokeMethodFormComponent,
-    ShowMethodInfoComponent
+    ShowMethodInfoComponent,
+    ConfirmationPopupComponent
   ]
 })
 export class MethodModule { }

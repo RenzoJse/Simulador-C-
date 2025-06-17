@@ -5,8 +5,7 @@ import { CommonModule } from '@angular/common';
     selector: 'app-confirmation-popup',
     standalone: true,
     imports: [CommonModule],
-    templateUrl: './confirmation-popup.component.html',
-    styleUrls: ['./confirmation-popup.component.css']
+    templateUrl: './confirmation-popup.component.html'
 })
 export class ConfirmationPopupComponent {
     @Input() show: boolean = false;
