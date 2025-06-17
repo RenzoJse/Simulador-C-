@@ -17,7 +17,6 @@ public class CreateVariableDtoInTest
         };
 
         var args = dto.ToArgs();
-
         args.Name.Should().Be(name);
     }
 
