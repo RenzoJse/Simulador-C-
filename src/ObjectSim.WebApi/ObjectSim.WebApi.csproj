@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\ObjectSim.Examples\ObjectSim.Examples.csproj" />
+      <ProjectReference Include="..\ObjectSim.Examples\ObjectSim.Examples.csproj" />
       <ProjectReference Include="..\ObjectSim.BusinessLogic\ObjectSim.BusinessLogic.csproj" />
       <ProjectReference Include="..\ObjectSim.DataAccess\ObjectSim.DataAccess.csproj" />
       <ProjectReference Include="..\ObjectSim.Examples\ObjectSim.Examples.csproj" />

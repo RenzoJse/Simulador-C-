@@ -6,7 +6,6 @@ namespace ObjectSim.Domain.Test;
 public class ValueTypeTest
 {
     private string _validType = null!;
-    private string _validName = null!;
     private List<Guid> _emptyMethods = null!;
     private List<Method> _methods = null!;
 
@@ -14,7 +13,6 @@ public class ValueTypeTest
     public void Initialize()
     {
         _validType = "int";
-        _validName = "ValidName";
 
         _methods =
         [

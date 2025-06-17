@@ -25,28 +25,23 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
 
         var visitorExportClass = CreateVisitorExportClass(visitorInterface.Id, circleShapeClass.Id, squareShapeClass.Id);
         var methodsList = visitorExportClass.Methods;
-        foreach(var method in methodsList)
+        foreach (var method in methodsList!)
         {
-            if(method.Name == "visitSquare")
-            {
-                var invokeMethodArgs = new CreateInvokeMethodArgs(
-                    TO_STRING_GUID,
-                    "square"
-                );
-                methodService.AddInvokeMethod(method.Id, [invokeMethodArgs]);
-            }
-            if(method.Name == "visitCircle")
-            {
-                var invokeMethodArgs = new CreateInvokeMethodArgs(
-                    TO_STRING_GUID,
-                    "circle"
-                );
-                methodService.AddInvokeMethod(method.Id, [invokeMethodArgs]);
-            }
+            AddInvokeIfMatch(method, "visitSquare", "square");
+            AddInvokeIfMatch(method, "visitCircle", "circle");
         }
 
         var acceptMethodOverrideCircle = CreateAcceptMethodOverrideCircle(visitorInterface.Id, visitCircleInterfaceMethod.Id);
         var acceptMethodOverrideSquare = CreateAcceptMethodOverrideSquare(visitorInterface.Id, visitSquareInterfaceMethod.Id);
+    }
+
+    private void AddInvokeIfMatch(Method method, string expectedName, string paramName)
+    {
+        if (method.Name == expectedName)
+        {
+            var invokeMethodArgs = new CreateInvokeMethodArgs(TO_STRING_GUID, paramName);
+            methodService.AddInvokeMethod(method.Id, [invokeMethodArgs]);
+        }
     }
 
     #region ExportVisitor

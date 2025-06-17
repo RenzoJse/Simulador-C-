@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using ObjectSim.DataAccess.Repositories;
+using ObjectSim.Domain;
 
 namespace ObjectSim.DataAccess.Test;
 
@@ -10,6 +11,7 @@ public class MethodRepositoryTest
     private SqliteConnection _connection = null!;
     private DbContext _context = null!;
     private MethodRepository _methodRepository = null!;
+    private ClassRepository _classRepository = null!;
 
     [TestInitialize]
     public void Setup()
@@ -24,6 +26,7 @@ public class MethodRepositoryTest
         _context = new DataContext(options);
         _context.Database.EnsureCreated();
 
+        _classRepository = new ClassRepository(_context);
         _methodRepository = new MethodRepository(_context);
     }
 
@@ -36,9 +39,33 @@ public class MethodRepositoryTest
     }
 
     [TestMethod]
-    public void GetMethod_WhenIdExists_ReturnsMethodWithParametersAndMethodsInvoke()
+    public void GetMethod_WhenIdExists_ReturnsMethod()
     {
-        // TODO
-    }
+        var classEntity = new Class
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestClass"
+        };
+        _context.Set<Class>().Add(classEntity);
+        _context.SaveChanges();
 
+        var voidTypeId = Guid.Parse("00000000-0000-0000-0000-000000000005");
+
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            ClassId = classEntity.Id,
+            TypeId = voidTypeId
+        };
+
+        _context.Set<Method>().Add(method);
+        _context.SaveChanges();
+
+        var result = _methodRepository.Get(m => m.Id == method.Id);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("TestMethod", result!.Name);
+    }
 }
+
