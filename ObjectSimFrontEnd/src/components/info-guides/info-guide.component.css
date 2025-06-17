@@ -41,6 +41,10 @@
     box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
 }
 
+.collapse:not(.show) {
+    display: none;
+}
+
 .card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 0.75rem;

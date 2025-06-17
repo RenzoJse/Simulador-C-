@@ -1,16 +1,12 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { InfoGuideComponent } from "../../../components/info-guides/info-guide.component";
 
 @Component({
   selector: 'app-landing-page',
-  standalone: true,
-  imports: [CommonModule, InfoGuideComponent],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.css']
 })
-export class LandingPageComponent {
 
+export class LandingPageComponent {
   images = [
     'assets/images/image1.jpg',
     'assets/images/image4.png',
@@ -18,12 +14,25 @@ export class LandingPageComponent {
   ];
 
   guideItems = [
-    { id: 'guide1',
+    {
+      id: 'guide1',
       title: 'Simulation Guide',
-      description: 'Step-by-step instructions to run your simulations efficiently.',
+      description:
+        '1. Selecciona la clase de referencia y la instancia.\n' +
+        '   El simulador requiere que elijas una clase de referencia (por ejemplo, "Vehiculo") y una instancia concreta (por ejemplo, "Auto"). La instancia debe ser válida respecto a la clase de referencia.\n' +
+        '\n' +
+        '2. Selecciona el método a ejecutar.\n' +
+        '   Elige el método que deseas simular (por ejemplo, "IniciarViaje"). El método debe estar presente en la instancia o en la clase de referencia.\n' +
+        '\n' +
+        '3. Ejecuta la simulación.\n' +
+        '   El sistema validará que la instancia y el método sean correctos. Si todo es válido, se ejecutará el método y se generará un resultado de simulación.\n' +
+        '\n' +
+        '4. Visualiza el resultado.\n' +
+        '   El resultado de la ejecución se transforma usando el modelo de salida seleccionado, permitiendo ver la información de la simulación de manera clara y personalizada.\n',
       link: ''
     },
-    { id: 'guide2',
+    {
+      id: 'guide2',
       title: 'Output Model Guide',
       description: 'You can customize how method execution results are displayed by uploading your own response transformer (.DLL).\n' +
           'Go to the "Output Models" section, upload your custom plugin, and choose it from the menu during simulation. ' +

@@ -11,7 +11,7 @@ const routes: Routes = [
   {
     path: 'landing-page',
     canActivate: [authenticationGuard],
-    loadChildren: () => import('./landing-page/landing-page/landing-page.module').then(m => m.LandingPageModule),
+    loadChildren: () => import('./landing-page/landing-page.module').then(m => m.LandingPageModule),
   },
   {
     path: 'method',
