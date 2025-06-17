@@ -1,32 +1,30 @@
 <div class="container mt-4">
-  <h2 class="text-center mb-4">Bienvenido a ObjectSim</h2>
+  <h2 class="text-center mb-4 fw-bold shimmer-text">
+  Welcome to <span class="text-primary">ObjectSim</span>
+</h2>
 
   <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-    
-    <!-- Indicadores -->
     <div class="carousel-indicators">
-      <button
-        *ngFor="let img of images; let i = index"
-        type="button"
-        data-bs-target="#carouselExampleIndicators"
-        [attr.data-bs-slide-to]="i"
-        [class.active]="i === 0"
-        [attr.aria-current]="i === 0 ? 'true' : null"
-        [attr.aria-label]="'Slide ' + (i + 1)">
+      <button *ngFor="let img of images; let i = index"
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              [attr.data-bs-slide-to]="i"
+              [class.active]="i === 0"
+              [attr.aria-current]="i === 0 ? 'true' : null"
+              [attr.aria-label]="'Slide ' + (i + 1)">
       </button>
     </div>
 
-    <!-- Slides -->
-    <div class="carousel-inner">
-      <div
-        *ngFor="let img of images; let i = index"
-        class="carousel-item"
-        [class.active]="i === 0">
-        <img [src]="img" class="d-block w-100" alt="Imagen {{ i + 1 }}">
+    <div class="carousel-inner rounded shadow">
+      <div *ngFor="let img of images; let i = index" class="carousel-item" [class.active]="i === 0">
+        <img [src]="img" class="d-block w-100 carousel-image" alt="Imagen {{ i + 1 }}">
+        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
+          <h5>Imagen {{ i + 1 }}</h5>
+          <p>Descripción opcional para esta imagen.</p>
+        </div>
       </div>
     </div>
 
-    <!-- Controles -->
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Anterior</span>
