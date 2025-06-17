@@ -61,3 +61,14 @@
     background-position: 200% center;
   }
 }
+.custom-header {
+  background: #004080;
+  color: white;
+}
+
+.custom-body {
+  background-color: #111;
+  color: white;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
