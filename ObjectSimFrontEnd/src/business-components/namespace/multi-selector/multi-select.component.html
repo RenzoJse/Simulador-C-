@@ -1,0 +1,10 @@
+<div *ngIf="classes.length === 0">No classes available.</div>
+
+<ul class="list-group">
+  <li *ngFor="let cls of classes" class="list-group-item">
+    <label>
+      <input type="checkbox" (change)="toggle(cls.classInfo.id)" />
+      {{ cls.name }}
+    </label>
+  </li>
+</ul>

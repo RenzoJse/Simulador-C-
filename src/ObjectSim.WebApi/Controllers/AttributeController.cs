@@ -22,8 +22,9 @@ public class AttributeController(IAttributeService attributeService) : Controlle
     [HttpGet]
     public IActionResult GetAll()
     {
-        List<Attribute> attributes = attributeService.GetAll();
-        return Ok(attributes);
+        var attributes = attributeService.GetAll();
+        var result = attributes.Select(AttributeDtoOut.ToInfo).ToList();
+        return Ok(result);
     }
 
     [HttpPut]

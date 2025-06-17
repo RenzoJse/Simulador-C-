@@ -7,6 +7,7 @@ public class AttributeDtoOut
     public Guid DataTypeId { get; set; }
     public string Visibility { get; set; } = null!;
     public Guid ClassId { get; set; }
+    public bool IsStatic { get; set; }
     public static AttributeDtoOut ToInfo(Domain.Attribute attribute)
     {
         return new AttributeDtoOut
@@ -15,7 +16,8 @@ public class AttributeDtoOut
             Name = attribute.Name!,
             Visibility = attribute.Visibility.ToString(),
             DataTypeId = attribute.DataTypeId,
-            ClassId = attribute.ClassId
+            ClassId = attribute.ClassId,
+            IsStatic = attribute.IsStatic
         };
     }
 }

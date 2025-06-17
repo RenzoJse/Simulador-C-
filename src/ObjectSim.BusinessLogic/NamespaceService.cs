@@ -18,8 +18,10 @@ public class NamespaceService(INamespaceRepository repository) : INamespaceServi
         {
             Id = args.Id,
             Name = args.Name,
-            ParentId = args.ParentId
+            ParentId = args.ParentId,
+            ClassIds = args.ClassIds
         };
+
 
         return _repository.Add(ns);
     }

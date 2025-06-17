@@ -1,3 +1,6 @@
 <app-delete-class-form
-        (atSubmit)="atSubmit($event)">
+  [loading]="!!status?.loading"
+  [error]="status?.error ?? null"
+  [success]="success"
+  (atSubmit)="atSubmit($event)">
 </app-delete-class-form>

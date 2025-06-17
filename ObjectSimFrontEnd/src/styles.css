@@ -1,87 +1,90 @@
 body {
   font-family: 'Roboto', sans-serif;
-  background-color: #f4f6f9;
+  background-color: #f5f7fb;
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  color: #1a1a1a;
+  transition: background 0.3s ease;
 }
+
 .app-wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
+
 .copied-popup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: #ffffff;
   color: #323232;
-  padding: 40px 60px;
-  border-radius: 18px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,86,179,0.08);
+  padding: 32px 48px;
+  border-radius: 20px;
+  box-shadow: 0 10px 50px rgba(0,0,0,0.15);
   display: flex;
   align-items: center;
   z-index: 2000;
   font-size: 1.4rem;
-  font-family: 'Roboto', sans-serif;
   font-weight: 500;
-  letter-spacing: 0.02em;
-  gap: 32px;
-  min-width: 380px;
+  gap: 24px;
+  min-width: 300px;
   max-width: 90vw;
-  animation: popup-fade-in 0.3s cubic-bezier(.4,2,.6,1) both;
+  animation: popup-fade-in 0.4s ease-out both;
 }
 
 @keyframes popup-fade-in {
-  from { opacity: 0; transform: translate(-50%, -60%) scale(0.95);}
-  to { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+  from { opacity: 0; transform: translate(-50%, -60%) scale(0.92); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
 .copied-popup span {
   flex: 1;
   text-align: center;
-  color: #0056b3;
-  font-size: 1.3em;
+  color: #0066cc;
+  font-size: 1.2em;
   font-weight: 700;
-  letter-spacing: 0.03em;
 }
 
 pre {
-  background: #f4f4f4;
+  background: #eef1f5;
   padding: 1em;
-  border-radius: 6px;
+  border-radius: 8px;
   overflow-x: auto;
   white-space: pre-wrap;
-  font-family: monospace;
+  font-family: 'Courier New', monospace;
 }
 
 .close-btn {
-  background: #f4f6f9;
+  background: #f5f7fb;
   border: none;
-  color: #0056b3;
-  font-size: 2rem;
+  color: #0066cc;
+  font-size: 1.5rem;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin-left: 0;
+  width: 36px;
+  height: 36px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
+
 .close-btn:hover {
-  background: #e2e6ea;
-  color: #15202b;
+  background: #dfe6ee;
+  color: #1a1a1a;
+  transform: scale(1.1);
 }
 
 h1, h3 {
-  color: #333;
+  color: #222;
   text-align: center;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  transition: color 0.2s ease;
 }
 
 label {
@@ -113,10 +116,16 @@ button:hover, app-button:hover {
 .filters {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-  max-width: 400px;
+  gap: 12px;
+  margin-bottom: 24px;
+  max-width: 420px;
   margin: 0 auto;
+  animation: fadeInUp 0.4s ease both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .input-filter {
@@ -143,7 +152,6 @@ button:hover, app-button:hover {
   margin-top: 20px;
 }
 
-/* Lists */
 .list {
   display: flex;
   flex-wrap: wrap;
@@ -156,13 +164,24 @@ button:hover, app-button:hover {
 .list table {
   min-width: 800px;
   width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.list th,
-.list td {
-  min-width: 120px;
-  padding: 8px;
+.list th, .list td {
+  padding: 12px;
   text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.list th {
+  background-color: #f1f3f5;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
 }
 
 app-list {
@@ -170,38 +189,36 @@ app-list {
   display: block;
 }
 
-/* Form Wide */
 .form-wide {
   width: 100%;
   max-width: 1600px;
   min-width: 400px;
-  position: relative;
   margin: 0 auto;
-}
-
-.list {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.list th {
-  text-transform: uppercase;
 }
 
 app-form-input {
   margin-bottom: 20px;
+  display: block;
 }
 
 app-form-input label {
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 app-form-input input {
   margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
 }
 
 .table th {
   text-transform: uppercase;
+}
+
+.table-responsive {
+  overflow-x: auto;
 }
 
 .table-responsive table {
@@ -210,7 +227,6 @@ app-form-input input {
 
 .dropdown {
   width: 100%;
-  max-width: 100%;
   position: relative;
 }
 
@@ -222,4 +238,55 @@ select {
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: white;
+}
+
+.clickable-row:hover {
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+h4 {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.popup-backdrop {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.popup-box {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  text-align: center;
+  max-width: 90%;
+}
+
+.popup-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+button, app-button {
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+}
+
+button.cancel {
+  background-color: #6c757d;
 }

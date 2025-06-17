@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.RegularExpressions;
 
 namespace ObjectSim.Domain;
 public class Namespace
@@ -8,8 +9,21 @@ public class Namespace
 
     public Guid? ParentId { get; set; }
     public List<Namespace> Children { get; set; } = [];
+    [NotMapped]
     public List<Class> Classes { get; set; } = [];
+    public string ClassIdsSerialized { get; set; } = string.Empty;
 
+    public List<Guid> ClassIds
+    {
+        get => string.IsNullOrWhiteSpace(ClassIdsSerialized)
+            ? []
+            : ClassIdsSerialized.Split(';', StringSplitOptions.RemoveEmptyEntries)
+                                .Select(Guid.Parse).ToList();
+
+        set => ClassIdsSerialized = value is null || value.Count == 0
+            ? string.Empty
+            : string.Join(';', value);
+    }
     public void AddChild(Namespace child)
     {
         ArgumentNullException.ThrowIfNull(child);

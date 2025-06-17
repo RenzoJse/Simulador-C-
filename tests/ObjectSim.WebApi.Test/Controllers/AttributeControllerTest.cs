@@ -31,10 +31,24 @@ public class AttributeControllerTest
     public void GetAll_ShouldReturnAttributes_WhenThereAreElements()
     {
         var attributes = new List<Domain.Attribute>
+    {
+        new Domain.Attribute
         {
-            new Domain.Attribute { Name = "Attribute1" },
-            new Domain.Attribute { Name = "Attribute2" }
-        };
+            Id = Guid.NewGuid(),
+            Name = "Attribute1",
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            ClassId = Guid.NewGuid(),
+            DataType = new Domain.ValueType(Guid.NewGuid(), "int")
+        },
+        new Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Attribute2",
+            Visibility = Domain.Attribute.AttributeVisibility.Private,
+            ClassId = Guid.NewGuid(),
+            DataType = new Domain.ValueType(Guid.NewGuid(), "bool")
+        }
+    };
 
         _attributeServiceMock
             .Setup(service => service.GetAll())
@@ -45,7 +59,7 @@ public class AttributeControllerTest
         Assert.IsNotNull(result);
         Assert.AreEqual(200, result.StatusCode);
 
-        var returnedAttributes = result.Value as List<ObjectSim.Domain.Attribute>;
+        var returnedAttributes = result.Value as List<AttributeDtoOut>;
         Assert.IsNotNull(returnedAttributes);
         Assert.AreEqual(2, returnedAttributes.Count);
         Assert.AreEqual("Attribute1", returnedAttributes[0].Name);
@@ -66,7 +80,7 @@ public class AttributeControllerTest
         Assert.IsNotNull(result);
         Assert.AreEqual(200, result.StatusCode);
 
-        var returnedAttributes = result.Value as List<ObjectSim.Domain.Attribute>;
+        var returnedAttributes = result.Value as List<AttributeDtoOut>;
         Assert.IsNotNull(returnedAttributes);
         Assert.AreEqual(0, returnedAttributes.Count);
     }

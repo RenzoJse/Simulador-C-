@@ -50,6 +50,17 @@ namespace ObjectSim.DataAccess.Migrations
                     b.HasIndex("DataTypeId");
 
                     b.ToTable("Attributes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000201"),
+                            ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            DataTypeId = new Guid("00000000-0000-0000-0000-000000000005"),
+                            IsStatic = false,
+                            Name = "default",
+                            Visibility = 0
+                        });
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Class", b =>
@@ -70,15 +81,10 @@ namespace ObjectSim.DataAccess.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("NamespaceId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NamespaceId");
 
                     b.HasIndex("ParentId");
 
@@ -383,6 +389,15 @@ namespace ObjectSim.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ClassIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClassIdsSerialized")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ClassIdsSerialized");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -505,10 +520,6 @@ namespace ObjectSim.DataAccess.Migrations
 
             modelBuilder.Entity("ObjectSim.Domain.Class", b =>
                 {
-                    b.HasOne("ObjectSim.Domain.Namespace", null)
-                        .WithMany("Classes")
-                        .HasForeignKey("NamespaceId");
-
                     b.HasOne("ObjectSim.Domain.Class", "Parent")
                         .WithMany()
                         .HasForeignKey("ParentId")
@@ -587,8 +598,6 @@ namespace ObjectSim.DataAccess.Migrations
             modelBuilder.Entity("ObjectSim.Domain.Namespace", b =>
                 {
                     b.Navigation("Children");
-
-                    b.Navigation("Classes");
                 });
 #pragma warning restore 612, 618
         }

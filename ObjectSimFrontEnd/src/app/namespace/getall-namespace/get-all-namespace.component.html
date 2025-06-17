@@ -1,18 +1,29 @@
-<div class="container mt-4">
-  <h2 class="mb-3">Namespaces</h2>
+<div class="container py-4">
+  <h2 class="mb-4 text-center">🌐 Lista de Namespaces</h2>
 
-  <div *ngIf="status?.loading">Loading...</div>
-  <div *ngIf="status?.error" class="text-danger">{{ status?.error }}</div>
+  <div *ngIf="status?.loading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
 
+  <div *ngIf="status?.error" class="alert alert-danger text-center">
+    {{ status?.error }}
+  </div>
 
-  <ul *ngIf="!status?.loading && namespaces.length > 0">
-    <li *ngFor="let ns of namespaces">
-      <strong>{{ ns.name }}</strong> - ID: {{ ns.id }}
-      <div *ngIf="ns.parentId">Parent: {{ ns.parentId }}</div>
-    </li>
-  </ul>
+  <div *ngIf="!status?.loading && namespaces.length === 0" class="alert alert-warning text-center">
+    No se encontraron namespaces.
+  </div>
 
-  <div *ngIf="!status?.loading && namespaces.length === 0">
-    No namespaces found.
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="col" *ngFor="let ns of namespaces">
+      <div class="card h-100 shadow-sm border-primary border-1">
+        <div class="card-body">
+          <h5 class="card-title text-primary fw-bold">{{ ns.name }}</h5>
+          <p class="card-text mb-1"><strong>ID:</strong> {{ ns.id }}</p>
+          <p *ngIf="ns.parentId" class="card-text"><strong>Parent:</strong> {{ ns.parentId }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

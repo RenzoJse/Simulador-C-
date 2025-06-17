@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AttributeApiRepository } from '../../repositories/attribute-api-repository.service';
 import CreateAttributeModel from './models/create-attribute.model';
+import AttributeUpdateModel from './models/attribute-update.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class AttributeService {
     return this._attributeRepository.createAttribute(attribute);
   }
 
-  public getAllAttributes(): Observable<CreateAttributeModel[]> {
+  public getAllAttributes(): Observable<AttributeUpdateModel[]> {
     return this._attributeRepository.getAllAttributes();
   }
 
@@ -22,15 +23,15 @@ export class AttributeService {
     return this._attributeRepository.deleteAttribute(id);
   }
 
-  public getAttributeById(id: string): Observable<CreateAttributeModel> {
+  public getAttributeById(id: string): Observable<AttributeUpdateModel> {
     return this._attributeRepository.getAttributeById(id);
   }
 
-  public getAttributesByClassId(classId: string): Observable<CreateAttributeModel[]> {
+  public getAttributesByClassId(classId: string): Observable<AttributeUpdateModel[]> {
     return this._attributeRepository.getAttributesByClassId(classId);
   }
 
-  public updateAttribute(id: string, dto: CreateAttributeModel): Observable<CreateAttributeModel> {
+  public updateAttribute(id: string, dto: AttributeUpdateModel): Observable<AttributeUpdateModel> {
     return this._attributeRepository.updateAttribute(id, dto);
   }
 

@@ -1,22 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AttributeService } from '../../../backend/services/attribute/attribute.service';
-import CreateAttributeModel from '../../../backend/services/attribute/models/create-attribute.model';
+import AttributeUpdateModel from '../../../backend/services/attribute/models/attribute-update.model';
 import { UpdateAttributeFormComponent } from "../../../business-components/attribute/update-attribute-form/update-attribute-form.component";
-import { FormsModule, NgModel } from '@angular/forms';
-import { CommonModule, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { DropdownUpdateComponent } from '../../../business-components/attribute/dropUpdate/dropdown-update.component';
+
 @Component({
   selector: 'app-update-attribute',
   standalone: true,
   templateUrl: './update-attribute.component.html',
-  styles: [],
-  imports: [NgIf,FormsModule,UpdateAttributeFormComponent,CommonModule]
+  imports: [FormsModule, CommonModule, UpdateAttributeFormComponent, DropdownUpdateComponent],
+  styleUrl: './update-attribute.component.css'
 })
 export class UpdateAttributeComponent implements OnInit {
   selectedAttributeId: string | null = null;
-  attributeToEdit: CreateAttributeModel | null = null;
-  allAttributes: { value: string, tag: string }[] = [];
+  attributeToEdit: AttributeUpdateModel | null = null;
+  allAttributes: { id: string; name: string }[] = [];
   status: { loading?: boolean; error?: string } | null = null;
+  updatedAttribute: AttributeUpdateModel | null = null;
 
   constructor(
     private readonly router: Router,
@@ -27,8 +30,8 @@ export class UpdateAttributeComponent implements OnInit {
     this.attributeService.getAllAttributes().subscribe({
       next: (attributes) => {
         this.allAttributes = attributes.map(attr => ({
-          value: attr.classId,
-          tag: attr.name
+          id: attr.id,
+          name: attr.name
         }));
       },
       error: () => {
@@ -37,10 +40,9 @@ export class UpdateAttributeComponent implements OnInit {
     });
   }
 
-  loadAttribute(): void {
-    if (!this.selectedAttributeId) return;
-
-    this.attributeService.getAttributeById(this.selectedAttributeId).subscribe({
+  loadAttribute(id: string): void {
+    this.selectedAttributeId = id;
+    this.attributeService.getAttributeById(id).subscribe({
       next: (attribute) => {
         this.attributeToEdit = attribute;
         this.status = null;
@@ -51,12 +53,13 @@ export class UpdateAttributeComponent implements OnInit {
     });
   }
 
-  onUpdateSubmit(event: { id: string; model: CreateAttributeModel }): void {
+  onUpdateSubmit(attribute: AttributeUpdateModel): void {
     this.status = { loading: true };
-    this.attributeService.updateAttribute(event.id, event.model).subscribe({
+    this.updatedAttribute = null;
+    this.attributeService.updateAttribute(attribute.id, attribute).subscribe({
       next: () => {
-        alert('Attribute updated successfully');
-        this.router.navigate(['/']);
+        this.status = null;
+        this.updatedAttribute = attribute;
       },
       error: (err) => {
         this.status = { error: err.message || 'Update failed' };

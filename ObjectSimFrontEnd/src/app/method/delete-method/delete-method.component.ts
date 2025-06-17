@@ -10,6 +10,7 @@ import { MethodService } from '../../../backend/services/method/method.service';
 export class DeleteMethodComponent {
 
   status: { loading?: true; error?: string } | null = null;
+  success = false;
 
   constructor(
       @Inject(MethodService) private readonly _methodService : MethodService
@@ -18,13 +19,16 @@ export class DeleteMethodComponent {
 
   protected atSubmit(methodId: string) {
     this.status = { loading: true };
+    this.success = false;
     this._methodService.deleteMethod(methodId).subscribe({
       next: (response) => {
         this.status = null;
+        this.success = true;
       },
       error: (error:any) => {
         if (error.status === 400 && error.Message) {
           this.status = { error: error.Message };
+          this.success = true;
         } else {
           this.status = { error: error.message || 'Error in deleting method.' };
         }
