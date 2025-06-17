@@ -348,7 +348,7 @@ public class MethodControllerTest
     {
         var methodId = Guid.NewGuid();
         _methodServiceMock
-            .Setup(s => s.AddInvokeMethod(methodId, []))
+            .Setup(s => s.AddInvokeMethod(methodId, It.IsAny<List<CreateInvokeMethodArgs>>()))
             .Returns(_testMethod!);
 
         var result = _methodController.AddInvokeMethods(methodId, []) as OkObjectResult;
