@@ -15,6 +15,7 @@ public class ClassService(IDataTypeService dataTypeService, IEnumerable<IBuilder
 
     public Class CreateClass(CreateClassArgs args)
     {
+        CheckForDuplicateName(args.Name!);
         var builder = SelectBuilderForArgs(args);
         ConfigureBuilderWithArgs(builder, args);
 
@@ -23,6 +24,14 @@ public class ClassService(IDataTypeService dataTypeService, IEnumerable<IBuilder
         CreateDataType(newClass);
 
         return newClass;
+    }
+
+    private void CheckForDuplicateName(string name)
+    {
+        if (classRepository.Get(c => c.Name == name) != null)
+        {
+            throw new ArgumentException("A class with that name already exists.");
+        }
     }
 
     private void CreateDataType(Class newClass)
@@ -94,6 +103,22 @@ public class ClassService(IDataTypeService dataTypeService, IEnumerable<IBuilder
         }
 
         return classes;
+    }
+
+    #endregion
+
+    #region SystemMethod
+
+    public Guid GetIdByName(string name)
+    {
+        var foundClass = classRepository.Get(c => c.Id != Guid.Empty && c.Name == name);
+
+        if (foundClass == null)
+        {
+            throw new ArgumentException("Class not found");
+        }
+
+        return foundClass.Id;
     }
 
     #endregion

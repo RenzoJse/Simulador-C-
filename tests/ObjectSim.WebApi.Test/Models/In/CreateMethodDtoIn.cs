@@ -24,7 +24,7 @@ public class CreateMethodDtoInTest
             ClassId = Guid.NewGuid().ToString(),
             LocalVariables = [],
             Parameters = [],
-            InvokeMethodsId = []
+            InvokeMethods = []
         };
     }
 
@@ -37,7 +37,7 @@ public class CreateMethodDtoInTest
         var typeId = Guid.NewGuid();
         var localVars = new List<CreateVariableDtoIn> { new() { Name = "var1" } };
         var parameters = new List<CreateVariableDtoIn> { new() { Name = "param1" } };
-        var invokeIds = new List<Guid> { Guid.NewGuid() };
+        var invokeIds = new List<CreateInvokeMethodDtoIn> { new() { InvokeMethodId = Guid.NewGuid().ToString(), Reference = "test"} };
 
         var dto = new CreateMethodDtoIn
         {
@@ -52,7 +52,7 @@ public class CreateMethodDtoInTest
             ClassId = classId.ToString(),
             LocalVariables = localVars,
             Parameters = parameters,
-            InvokeMethodsId = invokeIds
+            InvokeMethods = invokeIds
         };
 
         var args = dto.ToArgs();
@@ -68,7 +68,7 @@ public class CreateMethodDtoInTest
         args.ClassId.Should().Be(classId);
         args.LocalVariables.Should().HaveCount(1);
         args.Parameters.Should().HaveCount(1);
-        args.InvokeMethods.Should().BeEquivalentTo(invokeIds);
+        args.InvokeMethods.Select(x => x.InvokeMethodId.ToString()).Should().BeEquivalentTo(invokeIds.Select(x => x.InvokeMethodId));
     }
 
     #endregion

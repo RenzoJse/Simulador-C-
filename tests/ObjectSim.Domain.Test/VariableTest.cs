@@ -7,10 +7,12 @@ public class VariableTest
 {
     private string _validName = null!;
     private Guid _referenceId;
+    private Method? _method;
 
     [TestInitialize]
     public void Initialize()
     {
+        _method = new Method();
         _validName = "ValidVariableName";
         _referenceId = Guid.NewGuid();
     }
@@ -30,7 +32,7 @@ public class VariableTest
         const string shortName = "a";
         Action action = () =>
         {
-            var variable = new Variable(_referenceId, shortName);
+            var variable = new Variable(_referenceId, shortName, _method!);
         };
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be that short. (Parameter 'name')");
@@ -42,7 +44,7 @@ public class VariableTest
         const string longName = "ThisNameIsWayTooLongForAVariable";
         Action action = () =>
         {
-            var variable = new Variable(_referenceId, longName);
+            var variable = new Variable(_referenceId, longName, _method!);
         };
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be longer than 20 characters. (Parameter 'name')");
@@ -54,7 +56,7 @@ public class VariableTest
         string? nullName = null;
         Action action = () =>
         {
-            var variable = new Variable(_referenceId, nullName!);
+            var variable = new Variable(_referenceId, nullName!, _method!);
         };
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or whitespace. (Parameter 'name')");
@@ -66,7 +68,7 @@ public class VariableTest
         const string whitespaceName = "   ";
         Action action = () =>
         {
-            var variable = new Variable(_referenceId, whitespaceName);
+            var variable = new Variable(_referenceId, whitespaceName, _method!);
         };
         action.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or whitespace. (Parameter 'name')");
@@ -78,7 +80,7 @@ public class VariableTest
         var emptyGuid = Guid.Empty;
         Action action = () =>
         {
-            var variable = new Variable(emptyGuid, _validName);
+            var variable = new Variable(emptyGuid, _validName, _method!);
         };
         action.Should().Throw<ArgumentException>()
             .WithMessage("Data type ID cannot be empty. (Parameter 'dataTypeId')");
@@ -92,7 +94,7 @@ public class VariableTest
     public void CreateVariable_WithValidName_CreatesVariable()
     {
         const string validName = "ValidName";
-        var variable = new Variable(_referenceId, validName);
+        var variable = new Variable(_referenceId, validName, _method!);
 
         variable.Should().NotBeNull();
         variable.Name.Should().Be(validName);
@@ -104,7 +106,7 @@ public class VariableTest
     public void CreateVariable_WithNameOfLength3_CreatesVariable()
     {
         const string validName = "abc";
-        var variable = new Variable(_referenceId, validName);
+        var variable = new Variable(_referenceId, validName, _method!);
 
         variable.Name.Should().Be(validName);
     }
@@ -113,7 +115,7 @@ public class VariableTest
     public void CreateVariable_WithNameOfLength20_CreatesVariable()
     {
         const string validName = "abcdefghijklmnopqrst";
-        var variable = new Variable(_referenceId, validName);
+        var variable = new Variable(_referenceId, validName, _method!);
 
         variable.Name.Should().Be(validName);
     }

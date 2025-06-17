@@ -117,6 +117,10 @@ public class ClassBuilderTest
 
         _attributeServiceMock!.Setup(m => m.CreateAttribute(validAttributeArgs))
             .Returns(validAttribute);
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(invalidAttributeArgs))
+            .Throws(new ArgumentException());
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(validAttributeArgs))
+            .Returns(validAttribute);
 
         _classBuilderTest!.SetAttributes([invalidAttributeArgs, validAttributeArgs]);
 
@@ -132,8 +136,12 @@ public class ClassBuilderTest
 
         _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute1")))
             .Returns(attribute1);
-
         _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
+            .Returns(attribute2);
+
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute1")))
+            .Returns(attribute1);
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
             .Returns(attribute2);
 
         var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute1", false);
@@ -200,7 +208,7 @@ public class ClassBuilderTest
 
         _classBuilderTest!.SetParent(parentClass);
 
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
 
         Action action = () => _classBuilderTest!.SetMethods([TestCreateMethodArgs]);
 
@@ -231,8 +239,8 @@ public class ClassBuilderTest
             Name = "InvalidMethod",
         };
 
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(invalidMethodArgs)).Throws(new ArgumentException());
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(invalidMethodArgs)).Throws(new ArgumentException());
 
         _classBuilderTest!.SetMethods([TestCreateMethodArgs, invalidMethodArgs]);
 
@@ -267,8 +275,8 @@ public class ClassBuilderTest
 
         var method2 = new Method { Name = "Method2" };
 
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(method1);
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(methodCreateArgs2)).Returns(method2);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(TestCreateMethodArgs)).Returns(method1);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(methodCreateArgs2)).Returns(method2);
 
         _classBuilderTest!.SetMethods([TestCreateMethodArgs, methodCreateArgs2]);
 
@@ -304,7 +312,7 @@ public class ClassBuilderTest
 
         _classBuilderTest!.SetParent(parentClass);
 
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(interfaceMethod);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(TestCreateMethodArgs)).Returns(interfaceMethod);
 
         _classBuilderTest!.SetMethods([TestCreateMethodArgs]);
 

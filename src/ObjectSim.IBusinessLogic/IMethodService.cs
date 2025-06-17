@@ -13,5 +13,6 @@ public interface IMethodService
     Variable AddParameter(Guid methodId, Variable parameter);
     Variable AddLocalVariable(Guid methodId, Variable localVariable);
     Method AddInvokeMethod(Guid methodId, List<CreateInvokeMethodArgs> invokeMethodArgs);
+    Method GetIdByName(string name);
 
 }

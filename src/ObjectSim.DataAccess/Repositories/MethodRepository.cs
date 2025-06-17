@@ -11,6 +11,7 @@ public class MethodRepository(DbContext context) : Repository<Method>(context)
     {
         return _methods
             .Include(m => m.Parameters)
+            .Include(m => m.LocalVariables)
             .Include(m => m.MethodsInvoke)
             .AsEnumerable()
             .FirstOrDefault(filter);

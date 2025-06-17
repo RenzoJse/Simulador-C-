@@ -107,23 +107,11 @@ public class Method
                 throw new ArgumentException("The invoked method must be reachable from the current method.");
             }
         }
-        else
-        {
-            if(MethodIsNotInAttributes(classObj, reference))
-            {
-                throw new ArgumentException("The invoked method must be reachable from the current method.");
-            }
-        }
     }
 
     private static bool IsReservedReference(string reference)
     {
         return reference is "this" or "base";
-    }
-
-    private static bool MethodIsNotInAttributes(Class classObj, string reference)
-    {
-        return classObj.Attributes!.Any(attribute => attribute.Name != reference);
     }
 
     private static bool MethodIsNotInClass(Method methods, Class classObj)

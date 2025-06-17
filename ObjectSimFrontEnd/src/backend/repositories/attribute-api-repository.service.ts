@@ -21,7 +21,6 @@ export class AttributeApiRepository extends ApiRepository {
     }
 
     getAllAttributes(): Observable<AttributeUpdateModel[]>{
-        //TODO
         return this.get<AttributeUpdateModel[]>();
     }
 
@@ -38,7 +37,7 @@ export class AttributeApiRepository extends ApiRepository {
         return this.get<AttributeUpdateModel[]>(`by-class/${classId}`);
     }
 
-      updateAttribute(id: string, attribute: AttributeUpdateModel): Observable<AttributeUpdateModel> {
-    return this.putById<AttributeUpdateModel>(id, attribute);
-  }
+    updateAttribute(id: string, attribute: AttributeUpdateModel): Observable<AttributeUpdateModel> {
+        return this.putById<AttributeUpdateModel>(id, attribute);
+    }
 }

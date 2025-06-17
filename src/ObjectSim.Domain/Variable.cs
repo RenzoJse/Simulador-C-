@@ -8,10 +8,12 @@ public class Variable
     public string Name { get; set; } = null!;
     public Guid TypeId { get; set; }
     public Guid VariableId { get; set; }
+    public Guid MethodId { get; init; }
+    public Method Method { get; init; } = null!;
 
     protected Variable() { }
 
-    public Variable(Guid dataTypeId, string name)
+    public Variable(Guid dataTypeId, string name, Method method)
     {
         ValidateNameNotNullOrWhitespace(name);
         ValidateNameLength(name);
@@ -20,6 +22,8 @@ public class Variable
         TypeId = dataTypeId;
         Name = name;
         VariableId = Guid.NewGuid();
+        MethodId = method.Id;
+        Method = method;
     }
 
     private static void ValidateNameNotNullOrWhitespace(string name)

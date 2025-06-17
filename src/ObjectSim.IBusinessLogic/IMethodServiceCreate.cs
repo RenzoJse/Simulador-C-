@@ -5,5 +5,5 @@ namespace ObjectSim.IBusinessLogic;
 
 public interface IMethodServiceCreate
 {
-    Method CreateMethod(CreateMethodArgs methodArgs);
+    Method BuilderCreateMethod(CreateMethodArgs methodArgs);
 }

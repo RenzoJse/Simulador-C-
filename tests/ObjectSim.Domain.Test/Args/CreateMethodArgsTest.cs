@@ -148,7 +148,7 @@ public class CreateMethodArgsTest
     [TestMethod]
     public void InvokeMethods_SetAndGet_ShouldReturnExpectedValue()
     {
-        var newInvoke = new List<Guid> { Guid.NewGuid() };
+        var newInvoke = new List<CreateInvokeMethodArgs> { new CreateInvokeMethodArgs(Guid.NewGuid(), "test") };
         _args.InvokeMethods = newInvoke;
         _args.InvokeMethods.Should().BeEquivalentTo(newInvoke);
     }

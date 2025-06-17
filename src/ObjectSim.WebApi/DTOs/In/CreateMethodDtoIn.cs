@@ -15,15 +15,48 @@ public class CreateMethodDtoIn
     public string? ClassId { get; init; }
     public List<CreateVariableDtoIn> LocalVariables { get; init; } = [];
     public List<CreateVariableDtoIn> Parameters { get; init; } = [];
-    public List<Guid> InvokeMethodsId { get; init; } = [];
+    public List<CreateInvokeMethodDtoIn> InvokeMethods { get; init; } = [];
 
     public CreateMethodArgs ToArgs()
     {
-        List<CreateVariableArgs> localVariables = [];
-        localVariables.AddRange(LocalVariables.Select(localVariable => new CreateVariableArgs(Guid.Parse(ClassId!), localVariable.Name)));
-        List<CreateVariableArgs> parameters = [];
-        parameters.AddRange(Parameters.Select(parameter => new CreateVariableArgs(Guid.Parse(ClassId!), parameter.Name)));
-        return new CreateMethodArgs(Name, Guid.Parse(Type!), Accessibility,
-            IsAbstract, IsSealed, IsOverride, IsVirtual, IsStatic, Guid.Parse(ClassId!), localVariables, parameters, InvokeMethodsId);
+        var localVariables = MapLocalVariables();
+        var parameters = MapParameters();
+        var invokeMethods = MapInvokeMethods();
+
+        return new CreateMethodArgs(
+            Name,
+            Guid.Parse(Type!),
+            Accessibility,
+            IsAbstract,
+            IsSealed,
+            IsOverride,
+            IsVirtual,
+            IsStatic,
+            Guid.Parse(ClassId!),
+            localVariables,
+            parameters,
+            invokeMethods
+        );
+    }
+
+    private List<CreateVariableArgs> MapLocalVariables()
+    {
+        return LocalVariables
+            .Select(localVariable => new CreateVariableArgs(Guid.Parse(ClassId!), localVariable.Name))
+            .ToList();
+    }
+
+    private List<CreateVariableArgs> MapParameters()
+    {
+        return Parameters
+            .Select(parameter => new CreateVariableArgs(Guid.Parse(ClassId!), parameter.Name))
+            .ToList();
+    }
+
+    private List<CreateInvokeMethodArgs> MapInvokeMethods()
+    {
+        return InvokeMethods
+            .Select(invokeMethod => new CreateInvokeMethodArgs(Guid.Parse(invokeMethod.InvokeMethodId), invokeMethod.Reference))
+            .ToList();
     }
 }

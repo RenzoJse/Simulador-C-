@@ -15,33 +15,37 @@ public class MethodControllerTest
 {
     private Mock<IMethodService> _methodServiceMock = null!;
     private MethodController _methodController = null!;
-
-    private static readonly Variable TestLocalVariable = new Variable(Guid.NewGuid(), "string");
-
-    private static readonly Variable TestParameter = new Variable(Guid.NewGuid(), "string");
+    private Variable? _testLocalVariable;
+    private Variable? _testParameter;
+    private Method? _testMethod;
 
     private static readonly InvokeMethod TestInvokeMethod = new InvokeMethod(Guid.NewGuid(), Guid.NewGuid(), "this");
 
     private static readonly ReferenceType TestReferenceType = new ReferenceType(Guid.NewGuid(), "string");
-
-    private readonly Method _testMethod = new Method
-    {
-        Name = "TestMethod",
-        TypeId = TestReferenceType.Id,
-        Accessibility = Method.MethodAccessibility.Public,
-        Abstract = false,
-        IsOverride = false,
-        IsSealed = false,
-        Parameters = [TestParameter],
-        LocalVariables = [TestLocalVariable],
-        MethodsInvoke = [TestInvokeMethod]
-    };
 
     [TestInitialize]
     public void Setup()
     {
         _methodServiceMock = new Mock<IMethodService>();
         _methodController = new MethodController(_methodServiceMock.Object);
+
+        _testMethod = new Method
+        {
+            Name = "TestMethod",
+            TypeId = TestReferenceType.Id,
+            Accessibility = Method.MethodAccessibility.Public,
+            Abstract = false,
+            IsOverride = false,
+            IsSealed = false,
+            Parameters = [],
+            LocalVariables = [],
+            MethodsInvoke = [TestInvokeMethod]
+        };
+        _testLocalVariable = new Variable(Guid.NewGuid(), "string", _testMethod);
+        _testParameter = new Variable(Guid.NewGuid(), "int", _testMethod);
+
+        _testMethod.LocalVariables = [_testLocalVariable];
+        _testMethod.Parameters = [_testParameter];
     }
 
     [TestCleanup]
@@ -57,7 +61,7 @@ public class MethodControllerTest
     {
         _methodServiceMock
              .Setup(service => service.CreateMethod(It.IsAny<CreateMethodArgs>()))
-             .Returns(_testMethod);
+             .Returns(_testMethod!);
 
         var result = _methodController.CreateMethod(new CreateMethodDtoIn
         {
@@ -69,7 +73,7 @@ public class MethodControllerTest
             IsSealed = false,
             LocalVariables = [],
             Parameters = [],
-            InvokeMethodsId = [],
+            InvokeMethods = [],
             ClassId = Guid.NewGuid().ToString()
         });
 
@@ -79,12 +83,12 @@ public class MethodControllerTest
 
         var answer = resultObject?.Value as MethodInformationDtoOut;
         answer.Should().NotBeNull();
-        answer!.Name.Should().Be(_testMethod.Name);
+        answer.Name.Should().Be(_testMethod!.Name);
         answer.IsAbstract.Should().Be(_testMethod.Abstract);
         answer.IsOverride.Should().Be(_testMethod.IsOverride);
         answer.IsSealed.Should().Be(_testMethod.IsSealed);
         answer.LocalVariables.Select(lv => lv.Name)
-            .Should().BeEquivalentTo(_testMethod.LocalVariables!.Select(lv => lv.Name));
+            .Should().BeEquivalentTo(_testMethod.LocalVariables.Select(lv => lv.Name));
         answer.Parameters.Select(p => p.Name)
             .Should().BeEquivalentTo(_testMethod.Parameters!.Select(p => p.Name));
         answer.InvokeMethodsIds.Should()
@@ -136,7 +140,7 @@ public class MethodControllerTest
 
         _methodServiceMock
             .Setup(service => service.GetById(methodId))
-            .Returns(expectedMethod);
+            .Returns(expectedMethod!);
 
         var result = _methodController.GetMethodById(methodId);
 
@@ -146,7 +150,7 @@ public class MethodControllerTest
 
         var response = okResult.Value as MethodInformationDtoOut;
         response.Should().NotBeNull();
-        response!.Name.Should().Be(expectedMethod.Name);
+        response!.Name.Should().Be(expectedMethod!.Name);
     }
 
     [TestMethod]
@@ -171,7 +175,7 @@ public class MethodControllerTest
     [TestMethod]
     public void GetAllMethods_ShouldReturnAllMethods()
     {
-        var methods = new List<Method> { _testMethod };
+        var methods = new List<Method> { _testMethod! };
 
         _methodServiceMock
             .Setup(service => service.GetAll())
@@ -186,7 +190,7 @@ public class MethodControllerTest
         var response = okResult.Value as List<MethodInformationDtoOut>;
         response.Should().NotBeNull();
         response!.Count.Should().Be(methods.Count);
-        response.First().Name.Should().Be(_testMethod.Name);
+        response.First().Name.Should().Be(_testMethod!.Name);
     }
     #endregion
 
@@ -199,17 +203,10 @@ public class MethodControllerTest
         var methodId = Guid.NewGuid();
         var invokeMethodId = Guid.NewGuid();
         const string reference = "init";
-        var invokeMethodDto = new CreateInvokeMethodDtoIn()
-        {
-            InvokeMethodId = invokeMethodId.ToString(),
-            Reference = reference
-        };
-
-        var invokeMethodArgs = new CreateInvokeMethodArgs(invokeMethodId, reference);
 
         _methodServiceMock
             .Setup(service => service.AddInvokeMethod(methodId, It.IsAny<List<CreateInvokeMethodArgs>>()))
-            .Returns(_testMethod);
+            .Returns(_testMethod!);
 
         var result = _methodController.AddInvokeMethods(methodId, [new CreateInvokeMethodDtoIn
         {
@@ -223,7 +220,7 @@ public class MethodControllerTest
 
         var response = okResult.Value as MethodInformationDtoOut;
         response.Should().NotBeNull();
-        response!.Name.Should().Be(_testMethod.Name);
+        response!.Name.Should().Be(_testMethod!.Name);
     }
 
     #endregion

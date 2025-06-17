@@ -103,6 +103,7 @@ public class ClassServiceTest
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
+        _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>())).Returns((Class?)null);
 
         _args.Name = null;
         _classServiceTest!.CreateClass(_args);
@@ -112,6 +113,7 @@ public class ClassServiceTest
     public void CreateClass_WithNoMatchingStrategy_ThrowsException()
     {
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(false);
+        _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>())).Returns((Class?)null);
 
         Action action = () => _classServiceTest!.CreateClass(_args);
 
@@ -135,6 +137,7 @@ public class ClassServiceTest
         var classBuilder = GetMockedBuilder();
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
+        _classRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>())).Returns((Class?)null);
 
         Action action = () => _classServiceTest!.CreateClass(argsWithNullAttributes);
 
@@ -149,37 +152,23 @@ public class ClassServiceTest
     public void SetParent_InvalidParentID_AddsNullParent()
     {
         var invalidParentId = Guid.NewGuid();
-        var invalidParentClass = new Class()
-        {
-            Id = invalidParentId,
-            Name = "InvalidClass",
-            IsAbstract = false,
-            IsSealed = false,
-            IsInterface = false,
-            Methods = [],
-            Attributes = []
-        };
 
         var classBuilder = GetMockedBuilder();
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
 
-        _classRepositoryMock!.Setup(repo => repo.Get(It.Is<Func<Class, bool>>(f =>
-                f.Invoke(invalidParentClass))))
-            .Returns(invalidParentClass);
-
-        _classRepositoryMock.Setup(repo => repo.Add(It.IsAny<Class>()))
-            .Returns((Class c) => { c.Parent = null; return c; });
+        _classRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>()))
+            .Returns((Class?)null);
 
         _dataTypeServiceMock!
             .Setup(s => s.CreateDataType(It.IsAny<CreateDataTypeArgs>()))
             .Returns(new ReferenceType(Guid.NewGuid(), _args.Name!));
 
-        _args.Parent = invalidParentClass.Id;
+        _args.Parent = invalidParentId;
 
-        var result = _classServiceTest!.CreateClass(_args);
+        Action action = () => _classServiceTest!.CreateClass(_args);
 
-        result.Parent.Should().BeNull();
+        action.Should().Throw<ArgumentException>().WithMessage("Class not found.");
     }
 
     [TestMethod]
@@ -192,6 +181,7 @@ public class ClassServiceTest
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(_args)).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
         _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c);
+        _classRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>())).Returns((Class?)null);
         _dataTypeServiceMock!
             .Setup(s => s.CreateDataType(It.IsAny<CreateDataTypeArgs>()))
             .Returns(new ReferenceType(Guid.NewGuid(), _args.Name!));
@@ -213,6 +203,7 @@ public class ClassServiceTest
         _dataTypeServiceMock!
             .Setup(s => s.CreateDataType(It.IsAny<CreateDataTypeArgs>()))
             .Returns(new ReferenceType(Guid.NewGuid(), _args.Name!));
+        _classRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>())).Returns((Class?)null);
 
         Action action = () => _classServiceTest!.CreateClass(_args);
 
@@ -232,6 +223,7 @@ public class ClassServiceTest
 
         var classBuilder = GetMockedBuilder();
 
+        _classRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Class, bool>>())).Returns((Class?)null);
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
         _classRepositoryMock!.Setup(repo => repo.Add(It.IsAny<Class>())).Returns((Class c) => c).Verifiable();
@@ -634,13 +626,14 @@ public class ClassServiceTest
             Name = "UsedAttribute"
         };
 
-        var localVariable = new Variable(Guid.NewGuid(), "UsedAttribute");
-
         var method = new Method
         {
-            Name = "Method",
-            LocalVariables = [localVariable]
+            Name = "Method"
         };
+
+        var localVariable = new Variable(Guid.NewGuid(), "UsedAttribute", method);
+
+        method.LocalVariables = [localVariable];
 
         var classWithAttributeInUse = new Class
         {
@@ -709,9 +702,14 @@ public class ClassServiceTest
         var method = new Method
         {
             Name = "TestMethod",
-            LocalVariables = [new Variable(Guid.NewGuid(), "DifferentName")],
-            Parameters = [new Variable(Guid.NewGuid(), "DifferentParam")]
+            LocalVariables = [],
+            Parameters = []
         };
+
+        var localVariable = new Variable(Guid.NewGuid(), "DifferentName", method);
+        var parameter = new Variable(Guid.NewGuid(), "DifferentParam", method);
+        method.LocalVariables = [localVariable];
+        method.Parameters = [parameter];
 
         var classWithMethodsAndAttribute = new Class
         {
