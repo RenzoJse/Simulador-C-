@@ -10,12 +10,16 @@ import { CreateClassFormComponent } from '../../business-components/create-class
 import { ButtonComponent } from '../../components/button/button.component';
 import {ClassesListingComponent} from "./class-list/classes-listing.component";
 import { ClassListComponent } from "../../business-components/class/class-list/class-list.component";
+import {ClassInfoComponent} from "./class-info/class-info.component";
+import {ShowClassInfoComponent} from "../../business-components/class/class-info/show-class-info.component";
+import {ConfirmationPopupComponent} from "../../components/confirmation-popup/confirmation-popup.component";
 
 @NgModule({
     declarations: [
         CreateClassComponent,
         DeleteClassComponent,
-        ClassesListingComponent
+        ClassesListingComponent,
+        ClassInfoComponent
     ],
     imports: [
         CommonModule,
@@ -24,7 +28,9 @@ import { ClassListComponent } from "../../business-components/class/class-list/c
         CreateClassFormComponent,
         ButtonComponent,
         DeleteClassFormComponent,
-        ClassListComponent
+        ClassListComponent,
+        ShowClassInfoComponent,
+        ConfirmationPopupComponent
     ]
 })
 export class ClassModule { }

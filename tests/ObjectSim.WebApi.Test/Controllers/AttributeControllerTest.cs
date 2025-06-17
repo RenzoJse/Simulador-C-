@@ -7,7 +7,11 @@ using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.Controllers;
 using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
+using Attribute = ObjectSim.Domain.Attribute;
+using ValueType = ObjectSim.Domain.ValueType;
+
 namespace ObjectSim.WebApi.Test.Controllers;
+
 [TestClass]
 public class AttributeControllerTest
 {
@@ -27,28 +31,32 @@ public class AttributeControllerTest
         _attributeServiceMock.VerifyAll();
     }
 
+    #region GetAll
+
+    #region Success
+
     [TestMethod]
     public void GetAll_ShouldReturnAttributes_WhenThereAreElements()
     {
-        var attributes = new List<Domain.Attribute>
-    {
-        new Domain.Attribute
+        var attributes = new List<Attribute>
         {
-            Id = Guid.NewGuid(),
-            Name = "Attribute1",
-            Visibility = Domain.Attribute.AttributeVisibility.Public,
-            ClassId = Guid.NewGuid(),
-            DataType = new Domain.ValueType(Guid.NewGuid(), "int")
-        },
-        new Domain.Attribute
-        {
-            Id = Guid.NewGuid(),
-            Name = "Attribute2",
-            Visibility = Domain.Attribute.AttributeVisibility.Private,
-            ClassId = Guid.NewGuid(),
-            DataType = new Domain.ValueType(Guid.NewGuid(), "bool")
-        }
-    };
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Attribute1",
+                Visibility = Attribute.AttributeVisibility.Public,
+                ClassId = Guid.NewGuid(),
+                DataType = new ValueType(Guid.NewGuid(), "int")
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Attribute2",
+                Visibility = Attribute.AttributeVisibility.Private,
+                ClassId = Guid.NewGuid(),
+                DataType = new ValueType(Guid.NewGuid(), "bool")
+            }
+        };
 
         _attributeServiceMock
             .Setup(service => service.GetAll())
@@ -67,16 +75,9 @@ public class AttributeControllerTest
     }
 
     [TestMethod]
-    public void Create_NullModel_ShouldThrowNullReferenceException()
-    {
-        Action act = () => _attributeController.Create(null!);
-        act.Should().Throw<NullReferenceException>();
-    }
-
-    [TestMethod]
     public void GetAll_ShouldReturnEmptyList_WhenNoAttributesExist()
     {
-        var emptyAttributes = new List<ObjectSim.Domain.Attribute>();
+        var emptyAttributes = new List<Attribute>();
 
         _attributeServiceMock
             .Setup(service => service.GetAll())
@@ -92,6 +93,10 @@ public class AttributeControllerTest
         Assert.AreEqual(0, returnedAttributes.Count);
     }
 
+    #endregion
+
+    #region Error
+
     [TestMethod]
     public void GetAll_ShouldThrowException_WhenNoAttributesExist()
     {
@@ -102,8 +107,28 @@ public class AttributeControllerTest
         Action act = () => _attributeController.GetAll();
 
         act.Should().Throw<Exception>()
-           .WithMessage("No attributes found.");
+            .WithMessage("No attributes found.");
     }
+
+    #endregion
+
+    #endregion
+
+    #region Create
+
+    #region Error
+
+    [TestMethod]
+    public void Create_NullModel_ShouldThrowNullReferenceException()
+    {
+        Action act = () => _attributeController.Create(null!);
+        act.Should().Throw<NullReferenceException>();
+    }
+
+    #endregion
+
+    #region Success
+
     [TestMethod]
     public void Create_ValidModel_ShouldReturnCreatedResult()
     {
@@ -111,17 +136,14 @@ public class AttributeControllerTest
 
         var modelIn = new CreateAttributeDtoIn
         {
-            Name = "Color",
-            Visibility = "Public",
-            DataTypeId = dataType.Id.ToString(),
-            ClassId = Guid.NewGuid()
+            Name = "Color", Visibility = "Public", DataTypeId = dataType.Id.ToString(), ClassId = Guid.NewGuid()
         };
 
-        var domainAttribute = new Domain.Attribute
+        var domainAttribute = new Attribute
         {
             Id = Guid.NewGuid(),
             Name = "Color",
-            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            Visibility = Attribute.AttributeVisibility.Public,
             DataType = dataType,
             ClassId = modelIn.ClassId
         };
@@ -130,7 +152,7 @@ public class AttributeControllerTest
             .Setup(s => s.CreateAttribute(It.IsAny<CreateAttributeArgs>()))
             .Returns(domainAttribute);
 
-        var result = _attributeController.Create(modelIn);
+        IActionResult result = _attributeController.Create(modelIn);
 
         var created = result as CreatedAtActionResult;
         Assert.IsNotNull(created);
@@ -144,21 +166,6 @@ public class AttributeControllerTest
     }
 
     [TestMethod]
-    public void Create_NullModel_ShouldReturnBadRequest()
-    {
-        var invalidId = Guid.NewGuid();
-
-        _attributeServiceMock
-            .Setup(s => s.GetByClassId(invalidId))
-            .Throws(new ArgumentException("Invalid ClassId"));
-
-        Action act = () => _attributeController.GetByClassId(invalidId);
-
-        act.Should().Throw<ArgumentException>()
-           .WithMessage("Invalid ClassId");
-    }
-
-    [TestMethod]
     public void Create_ShouldReturnCreatedAtAction_WithCorrectActionName()
     {
         var modelIn = new CreateAttributeDtoIn
@@ -169,11 +176,11 @@ public class AttributeControllerTest
             ClassId = Guid.NewGuid()
         };
 
-        var domainAttr = new Domain.Attribute
+        var domainAttr = new Attribute
         {
             Id = Guid.NewGuid(),
             Name = "TestAttr",
-            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            Visibility = Attribute.AttributeVisibility.Public,
             DataType = new ReferenceType(Guid.NewGuid(), "string"),
             ClassId = modelIn.ClassId
         };
@@ -182,7 +189,7 @@ public class AttributeControllerTest
             .Setup(s => s.CreateAttribute(It.IsAny<CreateAttributeArgs>()))
             .Returns(domainAttr);
 
-        var result = _attributeController.Create(modelIn);
+        IActionResult result = _attributeController.Create(modelIn);
 
         var created = result as CreatedAtActionResult;
         Assert.IsNotNull(created);
@@ -201,11 +208,11 @@ public class AttributeControllerTest
             ClassId = Guid.NewGuid()
         };
 
-        var domainAttr = new Domain.Attribute
+        var domainAttr = new Attribute
         {
             Id = Guid.NewGuid(),
             Name = "TestAttr",
-            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            Visibility = Attribute.AttributeVisibility.Public,
             DataType = new ReferenceType(Guid.NewGuid(), "string"),
             ClassId = modelIn.ClassId
         };
@@ -222,16 +229,24 @@ public class AttributeControllerTest
         Assert.AreEqual(domainAttr.Id, result.RouteValues["id"]);
     }
 
+    #endregion
+
+    #endregion
+
+    #region GetById
+
+    #region Success
+
     [TestMethod]
     public void GetById_ValidId_ShouldReturnAttribute()
     {
         var id = Guid.NewGuid();
-        var attribute = new Domain.Attribute
+        var attribute = new Attribute
         {
             Id = id,
             Name = "Test",
             ClassId = Guid.NewGuid(),
-            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            Visibility = Attribute.AttributeVisibility.Public,
             DataType = new ReferenceType(Guid.NewGuid(), "string")
         };
 
@@ -239,13 +254,17 @@ public class AttributeControllerTest
             .Setup(s => s.GetById(id))
             .Returns(attribute);
 
-        var result = _attributeController.GetById(id);
+        IActionResult result = _attributeController.GetById(id);
 
         var okResult = result as OkObjectResult;
         Assert.IsNotNull(okResult);
         var dto = okResult.Value as AttributeDtoOut;
         Assert.IsNotNull(dto);
     }
+
+    #endregion
+
+    #region Error
 
     [TestMethod]
     public void GetById_ShouldThrowException_WhenServiceFails()
@@ -259,29 +278,37 @@ public class AttributeControllerTest
         Action act = () => _attributeController.GetById(id);
 
         act.Should().Throw<Exception>()
-           .WithMessage("Unexpected error.");
+            .WithMessage("Unexpected error.");
     }
+
+    #endregion
+
+    #endregion
+
+    #region GetByClassId
+
+    #region Success
 
     [TestMethod]
     public void GetByClassId_ValidId_ShouldReturnAttributes()
     {
         var classId = Guid.NewGuid();
-        var attribute = new Domain.Attribute
+        var attribute = new Attribute
         {
             Id = Guid.NewGuid(),
             Name = "cantidad",
-            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            Visibility = Attribute.AttributeVisibility.Public,
             ClassId = classId,
-            DataType = new Domain.ValueType(Guid.NewGuid(), "int")
+            DataType = new ValueType(Guid.NewGuid(), "int")
         };
 
-        var attributes = new List<Domain.Attribute> { attribute };
+        var attributes = new List<Attribute> { attribute };
 
         _attributeServiceMock
             .Setup(s => s.GetByClassId(classId))
             .Returns(attributes);
 
-        var result = _attributeController.GetByClassId(classId);
+        IActionResult result = _attributeController.GetByClassId(classId);
 
         var okResult = result as OkObjectResult;
         Assert.IsNotNull(okResult);
@@ -290,7 +317,7 @@ public class AttributeControllerTest
         Assert.IsNotNull(dtoList);
         Assert.AreEqual(1, dtoList.Count);
 
-        var dto = dtoList[0];
+        AttributeDtoOut dto = dtoList[0];
         Assert.AreEqual("cantidad", dto.Name);
         Assert.AreEqual("Public", dto.Visibility);
         Assert.AreEqual(classId, dto.ClassId);
@@ -314,10 +341,14 @@ public class AttributeControllerTest
         Assert.AreEqual(0, list.Count);
     }
 
+    #endregion
+
+    #region Error
+
     [TestMethod]
     public void GetByClassId_InvalidId_ShouldReturnBadRequest()
     {
-        var invalidId = Guid.Empty;
+        Guid invalidId = Guid.Empty;
 
         _attributeServiceMock
             .Setup(s => s.GetByClassId(invalidId))
@@ -326,10 +357,19 @@ public class AttributeControllerTest
         Action act = () => _attributeController.GetByClassId(invalidId);
 
         act.Should().Throw<ArgumentException>()
-           .WithMessage("Invalid ClassId");
+            .WithMessage("Invalid ClassId");
 
         _attributeServiceMock.Verify(s => s.GetByClassId(invalidId), Times.Once);
     }
+
+    #endregion
+
+    #endregion
+
+    #region Delete
+
+    #region Success
+
     [TestMethod]
     public void Delete_ValidId_ShouldReturnOk()
     {
@@ -347,6 +387,24 @@ public class AttributeControllerTest
 
         _attributeServiceMock.Verify(service => service.Delete(id), Times.Once);
     }
+
+    [TestMethod]
+    public void Delete_ServiceReturnsFalse_ShouldReturnOkFalse()
+    {
+        var id = Guid.NewGuid();
+        _attributeServiceMock
+            .Setup(s => s.Delete(id))
+            .Returns(false);
+
+        var ok = _attributeController.Delete(id) as OkObjectResult;
+        Assert.AreEqual(200, ok!.StatusCode);
+        Assert.AreEqual(false, ok.Value);
+    }
+
+    #endregion
+
+    #region Error
+
     [TestMethod]
     public void Delete_InvalidId_ShouldThrowException()
     {
@@ -359,7 +417,7 @@ public class AttributeControllerTest
         Action act = () => _attributeController.Delete(invalidId);
 
         act.Should().Throw<Exception>()
-           .WithMessage("Attribute not found.");
+            .WithMessage("Attribute not found.");
 
         _attributeServiceMock.Verify(service => service.Delete(invalidId), Times.Once);
     }
@@ -367,7 +425,7 @@ public class AttributeControllerTest
     [TestMethod]
     public void Delete_EmptyGuid_ShouldThrowArgumentException()
     {
-        var emptyId = Guid.Empty;
+        Guid emptyId = Guid.Empty;
 
         _attributeServiceMock
             .Setup(service => service.Delete(emptyId))
@@ -376,27 +434,33 @@ public class AttributeControllerTest
         Action act = () => _attributeController.Delete(emptyId);
 
         act.Should().Throw<ArgumentException>()
-           .WithMessage("Id must not be empty.");
+            .WithMessage("Id must not be empty.");
 
         _attributeServiceMock.Verify(service => service.Delete(emptyId), Times.Once);
     }
+
+    #endregion
+
+    #endregion
+
+    #region Update
+
+    #region Success
+
     [TestMethod]
     public void Update_ValidInput_ShouldReturnUpdatedDto()
     {
         var id = Guid.NewGuid();
         var dtoIn = new CreateAttributeDtoIn
         {
-            Name = "Color",
-            Visibility = "Public",
-            DataTypeId = Guid.NewGuid().ToString(),
-            ClassId = Guid.NewGuid()
+            Name = "Color", Visibility = "Public", DataTypeId = Guid.NewGuid().ToString(), ClassId = Guid.NewGuid()
         };
 
-        var updatedAttr = new Domain.Attribute
+        var updatedAttr = new Attribute
         {
             Id = id,
             Name = "Color",
-            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            Visibility = Attribute.AttributeVisibility.Public,
             DataType = new ReferenceType(Guid.NewGuid(), "string"),
             ClassId = dtoIn.ClassId
         };
@@ -405,7 +469,7 @@ public class AttributeControllerTest
             .Setup(s => s.Update(id, It.IsAny<CreateAttributeArgs>()))
             .Returns(updatedAttr);
 
-        var result = _attributeController.Update(id, dtoIn);
+        IActionResult result = _attributeController.Update(id, dtoIn);
         var ok = result as OkObjectResult;
 
         Assert.IsNotNull(ok);
@@ -416,16 +480,18 @@ public class AttributeControllerTest
         Assert.AreEqual("Color", dtoOut.Name);
         Assert.AreEqual("Public", dtoOut.Visibility);
     }
+
+    #endregion
+
+    #region Error
+
     [TestMethod]
     public void Update_InvalidId_ShouldThrowException()
     {
         var id = Guid.NewGuid();
         var dtoIn = new CreateAttributeDtoIn
         {
-            Name = "Color",
-            Visibility = "Public",
-            DataTypeId = Guid.NewGuid().ToString(),
-            ClassId = Guid.NewGuid()
+            Name = "Color", Visibility = "Public", DataTypeId = Guid.NewGuid().ToString(), ClassId = Guid.NewGuid()
         };
 
         _attributeServiceMock
@@ -435,8 +501,9 @@ public class AttributeControllerTest
         Action act = () => _attributeController.Update(id, dtoIn);
 
         act.Should().Throw<KeyNotFoundException>()
-           .WithMessage("Attribute not found.");
+            .WithMessage("Attribute not found.");
     }
+
     [TestMethod]
     public void Update_NullModel_ShouldThrowNullReferenceException()
     {
@@ -458,7 +525,7 @@ public class AttributeControllerTest
             ClassId = Guid.NewGuid()
         };
 
-        var emptyId = Guid.Empty;
+        Guid emptyId = Guid.Empty;
 
         _attributeServiceMock
             .Setup(s => s.Update(emptyId, It.IsAny<CreateAttributeArgs>()))
@@ -467,19 +534,10 @@ public class AttributeControllerTest
         Action act = () => _attributeController.Update(emptyId, dtoIn);
 
         act.Should().Throw<ArgumentException>()
-           .WithMessage("Id must not be empty.");
+            .WithMessage("Id must not be empty.");
     }
 
-    [TestMethod]
-    public void Delete_ServiceReturnsFalse_ShouldReturnOkFalse()
-    {
-        var id = Guid.NewGuid();
-        _attributeServiceMock
-            .Setup(s => s.Delete(id))
-            .Returns(false);
+    #endregion
 
-        var ok = _attributeController.Delete(id) as OkObjectResult;
-        Assert.AreEqual(200, ok!.StatusCode);
-        Assert.AreEqual(false, ok.Value);
-    }
+    #endregion
 }

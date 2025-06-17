@@ -1,0 +1,62 @@
+﻿.custom-header {
+    background: linear-gradient(135deg, #004080, #0066cc);
+    color: white;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+}
+
+.btn-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.btn-toggle:hover {
+    color: #cce6ff;
+}
+
+.custom-body {
+    background-color: #1f1f1f;
+    color: #e3e9f7;
+    border-bottom-left-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+    animation: fadeSlideIn 0.6s ease-in-out;
+    font-size: 1rem;
+    padding: 1.4rem 1.2rem 1rem;
+}
+
+.guide-text {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+}
+
+.collapse:not(.show) {
+    display: none;
+}
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 0.75rem;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

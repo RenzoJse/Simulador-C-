@@ -1,56 +1,15 @@
-.gradient-text {
-  background: linear-gradient(90deg, #007bff, #00d4ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-size: 2.5rem;
-}
-
-.carousel-image {
-  height: 400px;
-  object-fit: cover;
-  border-radius: 0.5rem;
-}
-
-.carousel-caption {
-  bottom: 20px;
-}
-
-.carousel-caption h5 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #ffffff;
-}
-
-.carousel-caption p {
-  font-size: 1rem;
-  color: #e0e0e0;
-}
-@keyframes fadeSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animated-title {
-  animation: fadeSlideIn 1s ease-out;
-}
 .shimmer-text {
   background: linear-gradient(
-    to right,
-    #00aaff 20%,
-    #ffffff 40%,
-    #00aaff 60%
+          to right,
+          #00aaff 20%,
+          #ffffff 40%,
+          #00aaff 60%
   );
   background-size: 200% auto;
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
-  animation: shimmer 4s linear infinite;
+  animation: shimmer 5s linear infinite;
 }
 
 @keyframes shimmer {
@@ -61,39 +20,43 @@
     background-position: 200% center;
   }
 }
-.card-body.custom-body {
-  background-color: #111;
-  color: white;
-  border-bottom-left-radius: 0.75rem;
-  border-bottom-right-radius: 0.75rem;
-  animation: fadeSlideIn 0.5s ease-in-out;
-  padding: 1.25rem;
+
+.carousel-image {
+  height: 550px;
+  object-fit: cover;
+  filter: brightness(0.8) blur(1px);
+  border-radius: 0.5rem;
+  transition: filter 0.5s ease;
 }
 
-.card-header.custom-header {
-  background: linear-gradient(135deg, #004080, #0066cc);
-  color: white;
-  padding: 1rem;
-  border-top-left-radius: 0.75rem;
-  border-top-right-radius: 0.75rem;
+.carousel-image:hover {
+  filter: brightness(1);
 }
 
-.btn-link {
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 1rem;
+  padding: 1rem 2rem;
+  backdrop-filter: blur(4px);
+  bottom: 30px;
+}
+
+.carousel-caption h5 {
+  font-size: 2rem;
   font-weight: bold;
-  font-size: 1.05rem;
+  color: #ffffff;
 }
 
-.card {
-  border: none;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.carousel-caption p {
+  font-size: 1.1rem;
+  color: #dddddd;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 123, 255, 0.2);
+.carousel-inner {
+  border-radius: 1rem;
+  overflow: hidden;
 }
 
-
-
-
-
+.carousel {
+  transition: all 0.5s ease-in-out;
+}

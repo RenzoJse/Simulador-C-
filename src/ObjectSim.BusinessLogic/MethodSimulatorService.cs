@@ -17,21 +17,39 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
         ValidateIsValidInstance(instanceType, referenceType);
 
         var method = GetMethodById(args.MethodId); // IniciarViaje
-        if(!instanceType.Methods!.Contains(method))
-        {
-            if(!referenceType.Methods!.Contains(method))
-            {
-                throw new Exception("Method not found in this classes.");
-            }
-        }
+        ValidateMethodExists(method, instanceType, referenceType);
 
-        var result = "Execution: \n"
-                     + instanceType.Name + "." + method.Name + "() -> " + instanceType.Name + "." + method.Name + "()\n";
+        var mainParameters = FormatParameters(method);
+        var localVariables = FormatLocalVariables(method);
+
+        var result = BuildExecutionHeader(instanceType, method, mainParameters);
+        if (!string.IsNullOrEmpty(localVariables))
+        {
+            result += localVariables + "\n";
+        }
         result += SimulateInternal(method, 0);
 
         SelectOutputModel(args.OutputModelName!);
 
         return outputModelTransformerService.TransformModel(result);
+    }
+
+    private static void ValidateMethodExists(Method method, Class instanceType, Class referenceType)
+    {
+        if (!instanceType.Methods!.Contains(method) && !referenceType.Methods!.Contains(method))
+        {
+            throw new Exception("Method not found in this classes.");
+        }
+    }
+
+    private static string BuildExecutionHeader(Class instanceType, Method method, string mainParameters)
+    {
+        return $"Execution: \n{instanceType.Name}.{method.Name}({mainParameters}) -> {instanceType.Name}.{method.Name}({mainParameters})\n";
+    }
+
+    private static string FormatLocalVariables(Method method)
+    {
+        return method.LocalVariables.Count == 0 ? string.Empty : string.Join(" ", method.LocalVariables.Select(v => $"{Capitalize(v.Name)} {v.Name};"));
     }
 
     private void SelectOutputModel(string name)
@@ -67,30 +85,52 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
         return method;
     }
 
-    private string SimulateInternal(Method method, int indentLevel, HashSet<Guid>? visited = null)
+    private string SimulateInternal(Method method, int indentLevel)
     {
-        visited ??= [];
-        if(!visited.Add(method.Id))
+        var result = string.Empty;
+        var indent = GetIndentation(indentLevel);
+
+        foreach (var methodInvoke in method.MethodsInvoke)
         {
-            return "";
-        }
+            var objMethodToInvoke = GetMethodById(methodInvoke.InvokeMethodId);
+            var parameters = FormatParameters(objMethodToInvoke);
+            result += $"{indent}{methodInvoke.Reference}.{objMethodToInvoke.Name}({parameters}) -> ";
 
-        var result = "";
-        var indent = new string(' ', indentLevel * 5);
-
-        foreach(var methodInvoke in method.MethodsInvoke)
-        {
-            var objMethodToInvoke = methodRepository.Get(m => m.Id == methodInvoke.MethodId);
-
-            result += $"{indent}{methodInvoke.Reference}.{objMethodToInvoke!.Name}() -> ";
-
-            if(objMethodToInvoke.MethodsInvoke.Count > 0)
+            if (objMethodToInvoke.MethodsInvoke.Count > 0)
             {
-                result += SimulateInternal(objMethodToInvoke, indentLevel + 1, visited);
+                var firstInvoke = objMethodToInvoke.MethodsInvoke[0];
+                var firstMethod = GetMethodById(firstInvoke.MethodId);
+                result += SimulateInternal(firstMethod, indentLevel + 1);
             }
         }
 
+        result = RemoveTrailingArrow(result);
         return result;
+    }
+
+    private static string RemoveTrailingArrow(string value)
+    {
+        return value.EndsWith(" -> ") ? value[..^4] : value;
+    }
+
+    private static string GetIndentation(int indentLevel)
+    {
+        return new string(' ', indentLevel * 5);
+    }
+
+    private static string FormatParameters(Method method)
+    {
+        return method.Parameters.Count == 0 ? string.Empty : string.Join(", ", method.Parameters.Select(p => $"{Capitalize(p.Name)} {p.Name}"));
+    }
+
+    private static string Capitalize(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return value;
+        }
+
+        return char.ToUpper(value[0]) + value[1..];
     }
 
 }

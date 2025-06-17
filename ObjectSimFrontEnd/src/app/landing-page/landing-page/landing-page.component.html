@@ -1,10 +1,9 @@
 <div class="container mt-4">
   <h2 class="text-center mb-4 fw-bold shimmer-text">
-    Welcome to <span class="text-primary">ObjectSim</span>
-  </h2>
+  Welcome to <span class="text-primary">ObjectSim</span>
+</h2>
 
-  <!-- Carousel -->
-  <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000" data-bs-pause="hover">
     <div class="carousel-indicators">
       <button *ngFor="let img of images; let i = index"
               type="button"
@@ -18,10 +17,10 @@
 
     <div class="carousel-inner rounded shadow">
       <div *ngFor="let img of images; let i = index" class="carousel-item" [class.active]="i === 0">
-        <img [src]="img.path" class="d-block w-100 carousel-image" [alt]="'Imagen de ' + img.author">
+        <img [src]="img" class="d-block w-100 carousel-image" alt="Imagen {{ i + 1 }}">
         <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
-          <h5>{{ img.author }}</h5>
-          
+          <h5>Imagen {{ i + 1 }}</h5>
+          <p>Descripción opcional para esta imagen.</p>
         </div>
       </div>
     </div>
@@ -35,80 +34,9 @@
       <span class="visually-hidden">Next</span>
     </button>
   </div>
-
-  <br>
-
-  <!-- Accordion de Tarjetas -->
-  <div class="accordion row g-4 justify-content-center" id="guideAccordion">
-    <!-- Tarjeta 1 -->
-    <div class="col-12 col-md-4">
-      <div class="card shadow-sm border-0">
-        <div class="card-header custom-header">
-          <h5 class="mb-0">
-            <button class="btn btn-link w-100 text-start text-white text-decoration-none"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseOne"
-                    aria-expanded="false"
-                    aria-controls="collapseOne">
-              Guide Simulation
-            </button>
-          </h5>
-        </div>
-        <div id="collapseOne" class="collapse" data-bs-parent="#guideAccordion">
-          <div class="card-body custom-body">
-            <ul class="mb-0 guide-text">
-              <li>Select the reference class and the instance.</li>
-              <li>Select the method to execute.</li>
-              <li>Run the simulation.</li>
-              <li>View the result with your chosen output model.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tarjeta 2 -->
-    <div class="col-12 col-md-4">
-      <div class="card shadow-sm border-0">
-        <div class="card-header custom-header">
-          <h5 class="mb-0">
-            <button class="btn btn-link w-100 text-start text-white text-decoration-none"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseTwo"
-                    aria-expanded="false"
-                    aria-controls="collapseTwo">
-              Guide Output Model
-            </button>
-          </h5>
-        </div>
-        <div id="collapseTwo" class="collapse" data-bs-parent="#guideAccordion">
-          <div class="card-body custom-body">
-            You can customize method execution results by uploading your own plugin (.DLL).
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tarjeta 3 -->
-    <div class="col-12 col-md-4">
-      <div class="card shadow-sm border-0">
-        <div class="card-header custom-header">
-          <h5 class="mb-0">
-            <button class="btn btn-link w-100 text-start text-white text-decoration-none"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseThree"
-                    aria-expanded="false"
-                    aria-controls="collapseThree">
-              Another Guide
-            </button>
-          </h5>
-        </div>
-        <div id="collapseThree" class="collapse" data-bs-parent="#guideAccordion">
-          <div class="card-body custom-body">
-            Custom content related to another part of the system.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<br>
+    <app-info-guide
+            [guides]="guideItems"
+            [footerText]="guideFooter">
+    </app-info-guide>
 </div>

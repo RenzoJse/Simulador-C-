@@ -5,12 +5,13 @@ import { ClassApiRepository } from '../../repositories/class-api-repository.serv
 import CreateClassModel from './models/create-class.model';
 import ClassListItem from './models/class-list-item';
 import UpdateClassModel from './models/update-class-model';
+import ClassDtoOut from "./models/class-dto-out";
 
 @Injectable({
     providedIn: 'root'
 })
 export class ClassService {
-    
+
     constructor(private readonly  _classRepository: ClassApiRepository) {}
 
     public createClass(classObj: CreateClassModel): Observable<CreateClassModel> {
@@ -21,8 +22,8 @@ export class ClassService {
         return this._classRepository.getAllClasses();
     }
 
-    getById(id: string): Observable<ClassListItem[]> {
-        return this._classRepository.getById(id); //falta implemtanr
+    getById(id: string): Observable<ClassDtoOut[]> {
+        return this._classRepository.getById(id);
     }
 
     deleteClass(id: string): Observable<any> {

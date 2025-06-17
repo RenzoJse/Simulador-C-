@@ -16,7 +16,6 @@ import AttributeUpdateModel from '../../../backend/services/attribute/models/att
     FormsModule,
     FormInputComponent,
     FormButtonComponent,
-    NgIf,
     FormComponent
   ],
   templateUrl: './update-attribute-form.component.html',

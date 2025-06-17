@@ -1,0 +1,63 @@
+﻿.card {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+h4 {
+    font-size: 1.6rem;
+    color: #0056d2;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    border-radius: 0.75rem;
+}
+
+table {
+    min-width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: center;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    border: 1px solid #dee2e6;
+}
+
+thead {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #343a40;
+}
+
+tbody tr:hover {
+    background-color: #eef6ff;
+    cursor: pointer;
+}
+
+::ng-deep app-list .table {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    color: #333;
+}
+
+::ng-deep app-list .table th {
+    background-color: #0d6efd;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+::ng-deep app-list .table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.75rem;
+}

@@ -20,23 +20,26 @@ public class VisitorExample(IClassService classService, IMethodService methodSer
 
         var visitCircleInterfaceMethod = CreateVisitCircleInterfaceMethod(visitorInterface.Id);
         var visitSquareInterfaceMethod = CreateVisitSquareInterfaceMethod(visitorInterface.Id, squareShapeClass.Id);
-        _ = CreateAcceptMethodInterface(visitorInterface.Id, shapeInterface.Id);
+
+        var acceptMethodInterface = CreateAcceptMethodInterface(visitorInterface.Id, shapeInterface.Id);
 
         var visitorExportClass = CreateVisitorExportClass(visitorInterface.Id, circleShapeClass.Id, squareShapeClass.Id);
         var methodsList = visitorExportClass.Methods;
-        foreach(var method in methodsList!)
+        foreach (var method in methodsList!)
         {
             AddInvokeIfMatch(method, "visitSquare", "square");
             AddInvokeIfMatch(method, "visitCircle", "circle");
         }
 
-        _ = CreateAcceptMethodOverrideCircle(visitorInterface.Id, visitCircleInterfaceMethod.Id);
-        _ = CreateAcceptMethodOverrideSquare(visitorInterface.Id, visitSquareInterfaceMethod.Id);
+        var acceptMethodOverrideCircle = CreateAcceptMethodOverrideCircle(circleShapeClass.Id, visitorExportClass.Id, visitCircleInterfaceMethod.Id);
+        methodService.CreateMethod(acceptMethodOverrideCircle);
+        var acceptMethodOverrideSquare = CreateAcceptMethodOverrideSquare(squareShapeClass.Id, visitorExportClass.Id, visitSquareInterfaceMethod.Id);
+        methodService.CreateMethod(acceptMethodOverrideSquare);
     }
 
     private void AddInvokeIfMatch(Method method, string expectedName, string paramName)
     {
-        if(method.Name == expectedName)
+        if (method.Name == expectedName)
         {
             var invokeMethodArgs = new CreateInvokeMethodArgs(ToStringGuid, paramName);
             methodService.AddInvokeMethod(method.Id, [invokeMethodArgs]);
@@ -181,7 +184,7 @@ public class VisitorExample(IClassService classService, IMethodService methodSer
     {
         var shapeInterfaceArgs = new CreateClassArgs(
             "shape",
-            true,
+            false,
             false,
             true,
             [],
@@ -197,9 +200,9 @@ public class VisitorExample(IClassService classService, IMethodService methodSer
     {
         var squareShapeArgs = new CreateClassArgs(
             "square",
-            true,
             false,
-            true,
+            false,
+            false,
             [new CreateAttributeArgs(Int,
                 "public",
                 Guid.Empty,
@@ -213,7 +216,7 @@ public class VisitorExample(IClassService classService, IMethodService methodSer
         return classService.CreateClass(squareShapeArgs);
     }
 
-    private CreateMethodArgs CreateAcceptMethodOverrideSquare(Guid visitorInterfaceId, Guid visitSquareAcceptMethodId)
+    private CreateMethodArgs CreateAcceptMethodOverrideSquare(Guid squareClassId, Guid visitorInterfaceId, Guid visitSquareAcceptMethodId)
     {
         return new CreateMethodArgs(
             "accept",
@@ -224,7 +227,7 @@ public class VisitorExample(IClassService classService, IMethodService methodSer
             true,
             false,
             false,
-            Guid.Empty,
+            squareClassId,
             [],
             [
                 new CreateVariableArgs(
@@ -245,9 +248,9 @@ public class VisitorExample(IClassService classService, IMethodService methodSer
     {
         var circleShapeArgs = new CreateClassArgs(
             "circle",
-            true,
             false,
-            true,
+            false,
+            false,
             [new CreateAttributeArgs(Int,
                 "public",
                 Guid.Empty,
@@ -261,7 +264,7 @@ public class VisitorExample(IClassService classService, IMethodService methodSer
         return classService.CreateClass(circleShapeArgs);
     }
 
-    private CreateMethodArgs CreateAcceptMethodOverrideCircle(Guid visitorInterfaceId, Guid visitCircleAcceptMethodId)
+    private CreateMethodArgs CreateAcceptMethodOverrideCircle(Guid circleClassId, Guid visitorInterfaceId, Guid visitCircleAcceptMethodId)
     {
         return new CreateMethodArgs(
             "accept",
@@ -272,7 +275,7 @@ public class VisitorExample(IClassService classService, IMethodService methodSer
             true,
             false,
             false,
-            Guid.Empty,
+            circleClassId,
             [],
             [
                 new CreateVariableArgs(
