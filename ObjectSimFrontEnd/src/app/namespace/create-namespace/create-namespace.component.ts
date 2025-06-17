@@ -9,10 +9,12 @@ import { CreateNamespaceFormComponent } from '../../../business-components/names
   selector: 'app-create-namespace',
   templateUrl: './create-namespace.component.html',
   standalone: true,
-  imports: [CommonModule, CreateNamespaceFormComponent]
+  imports: [CommonModule, CreateNamespaceFormComponent],
+  styleUrl: './create-namespace.component.css'
 })
 export class CreateNamespaceComponent {
   status: { loading?: boolean; error?: string } | null = null;
+   createdNamespace: CreateNamespaceModel | null = null;
 
   constructor(
     private readonly _router: Router,
@@ -21,10 +23,11 @@ export class CreateNamespaceComponent {
 
   onSubmit(model: CreateNamespaceModel) {
     this.status = { loading: true };
-
+    this.createdNamespace = null;
     this._namespaceService.createNamespace(model).subscribe({
-      next: () => {
+      next: (response: CreateNamespaceModel) => {
         this.status = null;
+        this.createdNamespace = response;
         alert('Namespace creado satisfactoriamente ✅');
         this._router.navigate(['/namespaces/create']);
       },

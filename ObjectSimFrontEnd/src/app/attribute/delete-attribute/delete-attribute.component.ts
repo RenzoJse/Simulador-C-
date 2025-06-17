@@ -6,12 +6,13 @@ import AttributeUpdateModel from '../../../backend/services/attribute/models/att
 @Component({
   selector: 'app-delete-attribute',
   templateUrl: './delete-attribute.component.html',
-  styles: []
+  styleUrl: './delete-attribute.component.css'
 })
 export class DeleteAttributeComponent implements OnInit {
   attributeId = '';
   attributesDropdown: { value: string; tag: string }[] = [];
   status: { loading?: boolean; error?: string } | null = null;
+  success = false;
 
   constructor(private attributeService: AttributeService) {}
 
@@ -33,11 +34,12 @@ export class DeleteAttributeComponent implements OnInit {
     if (!this.attributeId) return;
 
     this.status = { loading: true };
+    this.success = false;
 
     this.attributeService.deleteAttribute(this.attributeId).subscribe({
       next: () => {
-        alert('Attribute deleted successfully');
         this.status = null;
+        this.success = true;
         this.attributeId = '';
         this.ngOnInit();
       },

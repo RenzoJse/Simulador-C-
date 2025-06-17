@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<div class="delete-attribute-page container mt-4">
   <h2 class="mb-3">Delete Attribute</h2>
 
   <div *ngIf="status?.loading">Deleting...</div>
@@ -18,5 +18,15 @@
     </select>
   </div>
 
-  <button class="btn btn-danger" (click)="deleteAttribute()" [disabled]="!attributeId">Delete</button>
+  <button
+    class="btn btn-danger"
+    (click)="deleteAttribute()"
+    [disabled]="!attributeId || status?.loading">
+    Delete
+  </button>
+
+  <div *ngIf="success" class="delete-card-small mt-4 p-3">
+    <h5>✅ Attribute deleted successfully </h5>
+    <p><strong>ID deleted:</strong> {{ attributeId || '(not found)' }}</p>
+  </div>
 </div>

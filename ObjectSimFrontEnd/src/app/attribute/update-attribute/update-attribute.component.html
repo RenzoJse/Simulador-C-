@@ -19,6 +19,13 @@
     (atSubmit)="onUpdateSubmit($event)">
   </app-update-attribute-form>
 
-  <div *ngIf="status?.loading">Updating...</div>
-  <div *ngIf="status?.error" class="text-danger">{{ status?.error }}</div>
+  <div *ngIf="status?.loading" class="text-center mt-3">Updating...</div>
+  <div *ngIf="status?.error" class="text-danger mt-3">{{ status?.error }}</div>
+
+  <div *ngIf="updatedAttribute" class="attribute-update-card-small mt-4 p-3">
+    <h5>✅ Attribute updated successfully</h5>
+    <p><strong>Name:</strong> {{ updatedAttribute.name }}</p>
+    <p><strong>Visibility:</strong> {{ updatedAttribute.visibility }}</p>
+    <p><strong>Class ID:</strong> {{ updatedAttribute.classId }}</p>
+  </div>
 </div>
