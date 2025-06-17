@@ -1,0 +1,80 @@
+/* Estilo del encabezado superior */
+.container-visitor {
+  max-width: 600px;
+  margin: 30px auto 20px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 123, 255, 0.2);
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.visitor-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #0d6efd;
+  margin-bottom: 0;
+}
+
+/* Estilo de la segunda sección (botón y status) */
+.container.mt-4 {
+  max-width: 700px;
+  margin: auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+/* Título de sección */
+.container.mt-4 h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Botón estilizado */
+.btn-primary.btn-lg {
+  width: 100%;
+  padding: 14px 24px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: linear-gradient(to right, #0d6efd, #0056b3);
+  border: none;
+  border-radius: 10px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary.btn-lg:hover {
+  background: linear-gradient(to right, #0056b3, #003f8a);
+  transform: scale(1.02);
+}
+
+/* Spinner */
+.spinner-border {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* Mensajes */
+.alert {
+  max-width: 500px;
+  margin: 20px auto;
+  font-size: 1.05rem;
+  font-weight: 500;
+  border-radius: 10px;
+}
+
+.alert-success {
+  background-color: #e6f9ed;
+  color: #198754;
+  border: 1px solid #198754;
+}
+
+.alert-danger {
+  background-color: #fdeaea;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}

@@ -1,25 +1,8 @@
-
-<div class="container mt-4">
-  <h2 class="text-center mb-4 visitor-title">Load Visitor Pattern Example</h2>
-
-
-  <div class="text-center">
-    <button class="btn btn-primary btn-lg" (click)="loadExample()">
-      Load Example
-    </button>
-
-    <div class="mt-3" *ngIf="status === 'loading'">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-
-    <div class="alert alert-success mt-3" *ngIf="status === 'success'">
-      Visitor example loaded successfully!
-    </div>
-
-    <div class="alert alert-danger mt-3" *ngIf="status === 'error'">
-      Error loading visitor example.
-    </div>
-  </div>
-</div>
+<app-load-example-card
+  [title]="'Load Visitor Pattern Example'"
+  [buttonText]="'Load Visitor'"
+  [successMessage]="'Visitor example loaded successfully!'"
+  [errorMessage]="'Error loading visitor example.'"
+  [status]="status"
+  (onClick)="loadExample()">
+</app-load-example-card>

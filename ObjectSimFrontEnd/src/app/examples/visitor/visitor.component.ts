@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VisitorApiRepository } from '../../../backend/repositories/visitor-api-repository.service';
+import { LoadExampleCardComponent } from '../../../business-components/examples/load-example-card.component';
 
 @Component({
   selector: 'app-visitor',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadExampleCardComponent],
   templateUrl: './visitor.component.html',
   styleUrls: ['./visitor.component.css']
 })
