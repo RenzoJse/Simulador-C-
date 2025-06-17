@@ -44,14 +44,4 @@ public class NamespaceRepository(DataContext context) : INamespaceRepository
             BuildHierarchy(child, allNamespaces);
         }
     }
-
-
-    private void LoadChildrenRecursively(Namespace parent)
-    {
-        foreach(var child in parent.Children)
-        {
-            _context.Entry(child).Collection(c => c.Children).Load();
-            LoadChildrenRecursively(child);
-        }
-    }
 }

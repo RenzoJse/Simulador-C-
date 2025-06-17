@@ -34,11 +34,4 @@ public class MethodRepositoryTest
         _context.Dispose();
         _connection.Close();
     }
-
-    [TestMethod]
-    public void GetMethod_WhenIdExists_ReturnsMethodWithParametersAndMethodsInvoke()
-    {
-        // TODO
-    }
-
 }
