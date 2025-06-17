@@ -42,13 +42,16 @@ export class ShowClassInfoComponent implements OnInit {
             console.log('classInfo:', this.classInfo);
             this.classInfoData = [
                 { label: 'Name', value: this.classInfo.name },
-                { label: 'Accessibility', value: this.classInfo.name },
+                { label: 'Parent', value: this.classInfo.parent },
                 ...(this.classInfo.isAbstract ? [{ label: 'Is Abstract', value: 'Yes' }] : []),
                 ...(this.classInfo.isSealed ? [{ label: 'Is Sealed', value: 'Yes' }] : []),
                 ...(this.classInfo.isVirtual ? [{ label: 'Is Virtual', value: 'Yes' }] : []),
                 ...(this.classInfo.isInterface ? [{ label: 'Is Interface', value: 'Yes' }] : []),
                 ...(this.classInfo.methods?.length
                     ? [{ label: 'Methods', value: this.classInfo.methods.map(p => p.name ?? JSON.stringify(p)).join(', ') }]
+                    : []),
+                ...(this.classInfo.attributes?.length
+                    ? [{ label: 'Attributes', value: this.classInfo.attributes.map(p => p.name ?? JSON.stringify(p)).join(', ') }]
                     : []),
             ];
         }

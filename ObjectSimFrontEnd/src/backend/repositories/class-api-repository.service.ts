@@ -1,6 +1,6 @@
-﻿import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+﻿import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 import enviroments from '../../environments/index';
 import ApiRepository from './api-repository';
@@ -26,9 +26,8 @@ export class ClassApiRepository extends ApiRepository {
         return this.get<ClassListItem[]>();
     }
 
-    getById(id: string): Observable<ClassDtoOut[]> {
-        const url = `${id}`;
-        return this.get<ClassDtoOut[]>();
+    getById(classId: string): Observable<ClassDtoOut[]> {
+        return this.get<ClassDtoOut[]>(classId);
     }
 
     deleteClass(id: string): Observable<any> {
