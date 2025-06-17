@@ -11,28 +11,31 @@ public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeServi
     {
         base.SetAttributes(attributes);
 
-        List<Attribute> newAttributes = [];
-        foreach(var attr in attributes)
-        {
-            try
-            {
-                Attribute newAttribute = attributeService.BuilderCreateAttribute(attr);
-                if(newAttribute.IsStatic)
-                {
-                    throw new ArgumentException("Attributes in abstract class cannot be static");
-                }
-                if(Result.CanAddAttribute(newAttribute))
-                {
-                    newAttributes.Add(newAttribute);
-                }
-            }
-            catch
-            {
-                // ignored
-            }
-        }
+        var validAttributes = attributes.Select(CreateAttributes).OfType<Attribute>().Where(attribute => Result.CanAddAttribute(attribute)).ToList();
 
-        Result.Attributes = newAttributes;
+        Result.Attributes = validAttributes;
+    }
+
+    private Attribute? CreateAttributes(CreateAttributeArgs args)
+    {
+        try
+        {
+            var attribute = attributeService.BuilderCreateAttribute(args);
+            ValidateAttributeIsStatic(attribute);
+            return attribute;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static void ValidateAttributeIsStatic(Attribute attribute)
+    {
+        if (attribute.IsStatic)
+        {
+            throw new ArgumentException("Attributes in abstract class cannot be static");
+        }
     }
 
     public override void SetMethods(List<CreateMethodArgs> methods)

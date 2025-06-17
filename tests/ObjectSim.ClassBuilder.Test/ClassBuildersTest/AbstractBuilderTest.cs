@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Reflection;
+using FluentAssertions;
 using Moq;
 using ObjectSim.ClassConstructor.ClassBuilders.Builders;
 using ObjectSim.Domain;
@@ -75,6 +76,21 @@ public class AbstractBuilderTest
         Action action = () => _abstractBuilder!.SetAttributes(null!);
 
         action.Should().Throw<ArgumentNullException>();
+    }
+
+    [TestMethod]
+    public void ValidateAttributeIsStatic_WithStaticAttribute_ThrowsArgumentException()
+    {
+        var attribute = new Attribute { IsStatic = true };
+
+        var method = typeof(AbstractBuilder)
+            .GetMethod("ValidateAttributeIsStatic", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+
+        Action act = () => method!.Invoke(null, [attribute]);
+
+        act.Should().Throw<TargetInvocationException>()
+            .WithInnerException<ArgumentException>()
+            .WithMessage("Attributes in abstract class cannot be static");
     }
 
     #endregion
