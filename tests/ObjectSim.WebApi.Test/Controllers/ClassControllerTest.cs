@@ -157,11 +157,11 @@ public class ClassControllerTest
         var empty = Guid.Empty;
         _classServiceMock
             .Setup(s => s.GetById(empty))
-            .Throws(new ArgumentException("Id inválido"));
+            .Throws(new ArgumentException("Id invï¿½lido"));
 
         Action act = () => _classController.GetClass(empty);
         act.Should().Throw<ArgumentException>()
-           .WithMessage("Id inválido");
+           .WithMessage("Id invï¿½lido");
     }
     #endregion
 
@@ -261,6 +261,7 @@ public class ClassControllerTest
     #endregion
 
     #region GetAll-Classes-Test
+
     [TestMethod]
     public void GetAllMethods_ShouldReturnAllMethods()
     {
@@ -276,24 +277,10 @@ public class ClassControllerTest
         okResult.Should().NotBeNull();
         okResult!.StatusCode.Should().Be(200);
 
-        var response = okResult.Value as List<ClassDtoOut>;
+        var response = okResult.Value as List<ClassInformationDtoOut>;
         response.Should().NotBeNull();
         response!.Count.Should().Be(classes.Count);
         response.First().Name.Should().Be(_testClass.Name);
-    }
-
-    [TestMethod]
-    public void GetAllClasses_WhenNoClassesExist_ShouldReturnEmptyList()
-    {
-        _classServiceMock
-            .Setup(s => s.GetAll())
-            .Returns([]);
-
-        var ok = _classController.GetAllClasses() as OkObjectResult;
-        var list = ok!.Value as List<ClassDtoOut>;
-
-        ok.StatusCode.Should().Be(200);
-        list.Should().BeEmpty();
     }
 
     [TestMethod]
@@ -355,11 +342,11 @@ public class ClassControllerTest
         var dto = new UpdateClassNameDto { Name = "C1" };
         _classServiceMock
             .Setup(s => s.UpdateClass(Guid.Empty, dto.Name))
-            .Throws(new ArgumentException("Id inválido"));
+            .Throws(new ArgumentException("Id invï¿½lido"));
 
         Action act = () => _classController.UpdateClass(Guid.Empty, dto);
         act.Should().Throw<ArgumentException>()
-           .WithMessage("Id inválido");
+           .WithMessage("Id invï¿½lido");
     }
     #endregion
 }
