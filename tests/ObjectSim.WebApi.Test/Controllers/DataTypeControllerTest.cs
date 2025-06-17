@@ -76,7 +76,7 @@ public class DataTypeControllerTest
     {
         _dataTypeServiceMock
             .Setup(s => s.GetAll())
-            .Returns(new List<DataType>());
+            .Returns([]);
 
         var result = _controller.GetAll() as OkObjectResult;
         Assert.IsNotNull(result);

@@ -304,7 +304,7 @@ public class AttributeControllerTest
         var classId = Guid.NewGuid();
         _attributeServiceMock
             .Setup(s => s.GetByClassId(classId))
-            .Returns(new List<Domain.Attribute>());
+            .Returns([]);
 
         var ok = _attributeController.GetByClassId(classId) as OkObjectResult;
         var list = ok!.Value as List<AttributeDtoOut>;

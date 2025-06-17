@@ -281,7 +281,7 @@ public class MethodControllerTest
     {
         _methodServiceMock
             .Setup(s => s.GetAll())
-            .Returns(new List<Method>());
+            .Returns([]);
 
         var ok = _methodController.GetAllMethods() as OkObjectResult;
         ok.Should().NotBeNull();
@@ -338,7 +338,7 @@ public class MethodControllerTest
             .Setup(s => s.AddInvokeMethod(methodId, It.IsAny<List<CreateInvokeMethodArgs>>()))
             .Throws(new InvalidOperationException("error add invoke"));
 
-        Action act = () => _methodController.AddInvokeMethods(methodId, new List<CreateInvokeMethodDtoIn>());
+        Action act = () => _methodController.AddInvokeMethods(methodId, []);
         act.Should().Throw<InvalidOperationException>()
            .WithMessage("error add invoke");
     }
@@ -348,10 +348,10 @@ public class MethodControllerTest
     {
         var methodId = Guid.NewGuid();
         _methodServiceMock
-            .Setup(s => s.AddInvokeMethod(methodId, new List<CreateInvokeMethodArgs>()))
+            .Setup(s => s.AddInvokeMethod(methodId, []))
             .Returns(_testMethod!);
 
-        var result = _methodController.AddInvokeMethods(methodId, new List<CreateInvokeMethodDtoIn>()) as OkObjectResult;
+        var result = _methodController.AddInvokeMethods(methodId, []) as OkObjectResult;
         result.Should().NotBeNull();
         var dto = result!.Value as MethodInformationDtoOut;
         dto.Should().NotBeNull();

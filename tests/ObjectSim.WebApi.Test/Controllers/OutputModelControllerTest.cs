@@ -94,7 +94,7 @@ public class OutputModelControllerTest
     {
         _outputModelTransformerService
             .Setup(s => s.GetImplementationList())
-            .Returns(new List<string>());
+            .Returns([]);
 
         var ok = _controllerTest.GetImplementationList() as OkObjectResult;
 

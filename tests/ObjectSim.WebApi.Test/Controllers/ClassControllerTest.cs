@@ -287,7 +287,7 @@ public class ClassControllerTest
     {
         _classServiceMock
             .Setup(s => s.GetAll())
-            .Returns(new List<Class>());
+            .Returns([]);
 
         var ok = _classController.GetAllClasses() as OkObjectResult;
         var list = ok!.Value as List<ClassDtoOut>;
@@ -314,7 +314,7 @@ public class ClassControllerTest
     public void UpdateClass_WhenIsValid_MakesValidUpdate()
     {
         var classId = Guid.NewGuid();
-        var dto = new UpdateClassNameDto {Name = "UpdatedName"};
+        var dto = new UpdateClassNameDto { Name = "UpdatedName" };
 
         _classServiceMock
             .Setup(service => service.UpdateClass(classId, dto.Name));
@@ -352,7 +352,7 @@ public class ClassControllerTest
     [TestMethod]
     public void UpdateClass_EmptyGuid_ShouldThrowArgumentException()
     {
-        var dto = new UpdateClassNameDto {Name = "C1"};
+        var dto = new UpdateClassNameDto { Name = "C1" };
         _classServiceMock
             .Setup(s => s.UpdateClass(Guid.Empty, dto.Name))
             .Throws(new ArgumentException("Id inválido"));

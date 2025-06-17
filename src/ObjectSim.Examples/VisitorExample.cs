@@ -20,24 +20,23 @@ public class VisitorExample(IClassService classService, IMethodService methodSer
 
         var visitCircleInterfaceMethod = CreateVisitCircleInterfaceMethod(visitorInterface.Id);
         var visitSquareInterfaceMethod = CreateVisitSquareInterfaceMethod(visitorInterface.Id, squareShapeClass.Id);
-
-        var acceptMethodInterface = CreateAcceptMethodInterface(visitorInterface.Id, shapeInterface.Id);
+        _ = CreateAcceptMethodInterface(visitorInterface.Id, shapeInterface.Id);
 
         var visitorExportClass = CreateVisitorExportClass(visitorInterface.Id, circleShapeClass.Id, squareShapeClass.Id);
         var methodsList = visitorExportClass.Methods;
-        foreach (var method in methodsList!)
+        foreach(var method in methodsList!)
         {
             AddInvokeIfMatch(method, "visitSquare", "square");
             AddInvokeIfMatch(method, "visitCircle", "circle");
         }
 
-        var acceptMethodOverrideCircle = CreateAcceptMethodOverrideCircle(visitorInterface.Id, visitCircleInterfaceMethod.Id);
-        var acceptMethodOverrideSquare = CreateAcceptMethodOverrideSquare(visitorInterface.Id, visitSquareInterfaceMethod.Id);
+        _ = CreateAcceptMethodOverrideCircle(visitorInterface.Id, visitCircleInterfaceMethod.Id);
+        _ = CreateAcceptMethodOverrideSquare(visitorInterface.Id, visitSquareInterfaceMethod.Id);
     }
 
     private void AddInvokeIfMatch(Method method, string expectedName, string paramName)
     {
-        if (method.Name == expectedName)
+        if(method.Name == expectedName)
         {
             var invokeMethodArgs = new CreateInvokeMethodArgs(ToStringGuid, paramName);
             methodService.AddInvokeMethod(method.Id, [invokeMethodArgs]);

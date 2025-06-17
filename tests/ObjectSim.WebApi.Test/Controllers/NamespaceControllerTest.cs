@@ -50,7 +50,7 @@ public class NamespaceControllerTest
     {
         _namespaceServiceMock
             .Setup(s => s.GetAll())
-            .Returns(new List<Namespace>());
+            .Returns([]);
 
         var result = _controller.GetAll() as OkObjectResult;
         Assert.IsNotNull(result);

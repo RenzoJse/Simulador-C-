@@ -192,7 +192,7 @@ public class Class
             }
             else
             {
-                if ((Parent.Methods ?? Enumerable.Empty<Method>()).Any(parentMethod => parentMethod.Name == method.Name && !parentMethod.IsVirtual))
+                if((Parent.Methods ?? Enumerable.Empty<Method>()).Any(parentMethod => parentMethod.Name == method.Name && !parentMethod.IsVirtual))
                 {
                     throw new ArgumentException("Override method must override a virtual method from the parent class.");
                 }

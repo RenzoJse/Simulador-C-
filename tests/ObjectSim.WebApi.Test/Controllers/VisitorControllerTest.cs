@@ -35,7 +35,7 @@ public class VisitorControllerTest
 
     [TestMethod]
     public void CreateExamples_WhenServiceThrowsException_ShouldPropagateException()
-    { 
+    {
         _exampleServiceMock
             .Setup(s => s.CreateExample())
             .Throws(new InvalidOperationException("internal error"));
