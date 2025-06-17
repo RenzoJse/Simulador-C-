@@ -12,8 +12,6 @@ import { LandingPageComponent } from './landing-page/landing-page/landing-page.c
 
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
-
-
 @NgModule({
     declarations: [AppComponent],
     imports: [BrowserModule, CommonModule, FormsModule, ReactiveFormsModule, AppRoutingModule,

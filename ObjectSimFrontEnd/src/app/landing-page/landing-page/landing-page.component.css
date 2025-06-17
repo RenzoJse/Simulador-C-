@@ -5,26 +5,6 @@
   font-size: 2.5rem;
 }
 
-.carousel-image {
-  height: 400px;
-  object-fit: cover;
-  border-radius: 0.5rem;
-}
-
-.carousel-caption {
-  bottom: 20px;
-}
-
-.carousel-caption h5 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #ffffff;
-}
-
-.carousel-caption p {
-  font-size: 1rem;
-  color: #e0e0e0;
-}
 @keyframes fadeSlideIn {
   from {
     opacity: 0;
@@ -41,16 +21,16 @@
 }
 .shimmer-text {
   background: linear-gradient(
-    to right,
-    #00aaff 20%,
-    #ffffff 40%,
-    #00aaff 60%
+          to right,
+          #00aaff 20%,
+          #ffffff 40%,
+          #00aaff 60%
   );
   background-size: 200% auto;
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
-  animation: shimmer 4s linear infinite;
+  animation: shimmer 5s linear infinite;
 }
 
 @keyframes shimmer {
@@ -66,9 +46,72 @@
   color: white;
 }
 
-.custom-body {
-  background-color: #111;
-  color: white;
-  transition: background-color 0.3s ease, color 0.3s ease;
+.carousel-image {
+  height: 550px;
+  object-fit: cover;
+  filter: brightness(0.8) blur(1px);
+  border-radius: 0.5rem;
+  transition: filter 0.5s ease;
 }
 
+.carousel-image:hover {
+  filter: brightness(1);
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 1rem;
+  padding: 1rem 2rem;
+  backdrop-filter: blur(4px);
+  bottom: 30px;
+}
+
+.carousel-caption h5 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.carousel-caption p {
+  font-size: 1.1rem;
+  color: #dddddd;
+}
+
+.carousel-inner {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.carousel {
+  transition: all 0.5s ease-in-out;
+}
+
+.custom-header {
+  background: linear-gradient(135deg, #004080, #0066cc);
+  color: white;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
+
+.custom-body {
+  background-color: #1a1a1a;
+  color: white;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  animation: fadeSlideIn 0.6s ease-in-out;
+}
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 0.75rem;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+}
+
+.btn-link {
+  font-weight: 500;
+  font-size: 1.1rem;
+}
