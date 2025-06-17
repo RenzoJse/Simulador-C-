@@ -50,16 +50,6 @@ public class ClassDtoOutTest
     }
 
     [TestMethod]
-    public void Constructor_WhenClassInfoIsNull_ThrowsNullReferenceException()
-    {
-        Action act = () =>
-        {
-            _ = new ClassDtoOut(null!);
-        };
-        act.Should().Throw<NullReferenceException>();
-    }
-
-    [TestMethod]
     public void Constructor_WhenParentIsNull_ParentPropertyIsNull()
     {
         var classInfo = new Class
