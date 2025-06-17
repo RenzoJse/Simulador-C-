@@ -9,6 +9,17 @@ namespace ObjectSim.DataAccess.Test;
 [TestClass]
 public class NamespaceRepositoryTest
 {
+    public class TestableNamespaceRepository(DataContext context) : NamespaceRepository(context)
+    {
+        public void InvokeLoadChildrenRecursively(Namespace ns)
+        {
+            base.GetType()
+                .GetMethod("LoadChildrenRecursively", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
+                .Invoke(this, [ns]);
+        }
+    }
+
+
     private SqliteConnection _connection = null!;
     private DataContext _context = null!;
     private NamespaceRepository _repository = null!;
@@ -132,5 +143,74 @@ public class NamespaceRepositoryTest
         var result = _repository.GetByIdWithChildren(Guid.NewGuid());
 
         Assert.IsNull(result);
+    }
+    [TestMethod]
+    public void Add_WithClassIds_ShouldPersistSerializedIds()
+    {
+        var classIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+        var ns = new Namespace
+        {
+            Name = "WithClasses",
+            ClassIds = classIds
+        };
+
+        _repository.Add(ns);
+
+        var fromDb = _context.Namespaces.FirstOrDefault(n => n.Id == ns.Id);
+
+        Assert.IsNotNull(fromDb);
+        CollectionAssert.AreEqual(classIds, fromDb!.ClassIds);
+    }
+    [TestMethod]
+    public void GetByIdWithChildren_ShouldReturnNamespaceWithClassIds()
+    {
+        var classIds = new List<Guid> { Guid.NewGuid() };
+        var ns = new Namespace
+        {
+            Name = "WithClasses",
+            ClassIds = classIds
+        };
+
+        _context.Namespaces.Add(ns);
+        _context.SaveChanges();
+
+        var result = _repository.GetByIdWithChildren(ns.Id);
+
+        Assert.IsNotNull(result);
+        CollectionAssert.AreEqual(classIds, result!.ClassIds);
+    }
+    [TestMethod]
+    public void Add_ShouldPersistNamespace_WithClassIds()
+    {
+        var classIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+        var ns = new Namespace
+        {
+            Name = "WithClasses",
+            ClassIds = classIds
+        };
+
+        var result = _repository.Add(ns);
+
+        var fromDb = _context.Namespaces.Find(result.Id);
+        Assert.IsNotNull(fromDb);
+        CollectionAssert.AreEqual(classIds, fromDb!.ClassIds);
+    }
+    [TestMethod]
+    public void GetAll_ShouldReturnNamespacesWithClassIds()
+    {
+        var classIds = new List<Guid> { Guid.NewGuid() };
+        var ns = new Namespace
+        {
+            Name = "WithClasses",
+            ClassIds = classIds
+        };
+
+        _context.Namespaces.Add(ns);
+        _context.SaveChanges();
+
+        var result = _repository.GetAll();
+
+        Assert.AreEqual(1, result.Count);
+        CollectionAssert.AreEqual(classIds, result[0].ClassIds);
     }
 }

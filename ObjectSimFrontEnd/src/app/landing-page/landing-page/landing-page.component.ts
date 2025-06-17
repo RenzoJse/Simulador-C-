@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-landing-page',
-  template: `
-    <p>
-      landing-page works!
-    </p>
-  `,
   standalone: true,
-  templateUrl: "./landing-page.component.html",
+  imports: [CommonModule],
+  templateUrl: './landing-page.component.html',
+  styleUrls: ['./landing-page.component.css']
 })
-
 export class LandingPageComponent {
-
+  images = [
+    'assets/images/image1.jpg',
+    'assets/images/image4.png',
+    'assets/images/image5.png'
+  ];
 }
