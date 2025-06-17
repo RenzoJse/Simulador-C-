@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ObjectSim.Domain;
 using ObjectSim.IBusinessLogic;
@@ -19,6 +20,8 @@ public class DataTypeControllerTest
         _dataTypeServiceMock = new Mock<IDataTypeService>();
         _controller = new DataTypeController(_dataTypeServiceMock.Object);
     }
+
+    #region GetAll
     [TestMethod]
     public void GetAll_WhenCalled_ReturnsOkWithDtoList()
     {
@@ -67,6 +70,38 @@ public class DataTypeControllerTest
         Assert.IsNotNull(actualDto);
         Assert.AreEqual(expectedDto, actualDto);
     }
+
+    [TestMethod]
+    public void GetAll_WhenNoDataTypesExist_ReturnsEmptyList()
+    {
+        _dataTypeServiceMock
+            .Setup(s => s.GetAll())
+            .Returns(new List<DataType>());
+
+        var result = _controller.GetAll() as OkObjectResult;
+        Assert.IsNotNull(result);
+        Assert.AreEqual(200, result.StatusCode);
+
+        var list = result.Value as List<DataTypeInformationDtoOut>;
+        Assert.IsNotNull(list);
+        Assert.AreEqual(0, list.Count);
+    }
+
+    [TestMethod]
+    public void GetAll_ServiceThrowsException_ShouldPropagateException()
+    {
+        _dataTypeServiceMock
+            .Setup(s => s.GetAll())
+            .Throws(new InvalidOperationException("Internal error"));
+
+        Action act = () => _controller.GetAll();
+        act.Should().Throw<InvalidOperationException>()
+           .WithMessage("Internal error");
+    }
+
+    #endregion
+
+    #region GetById
     [TestMethod]
     public void GetById_WhenNotFound_ThrowsKeyNotFoundException()
     {
@@ -79,5 +114,32 @@ public class DataTypeControllerTest
         Action act = () => _controller.GetById(id);
         Assert.ThrowsException<KeyNotFoundException>(act);
     }
+
+    [TestMethod]
+    public void GetById_EmptyGuid_ShouldThrowArgumentException()
+    {
+        var empty = Guid.Empty;
+        _dataTypeServiceMock
+            .Setup(s => s.GetById(empty))
+            .Throws(new ArgumentException("Empty id"));
+
+        Action act = () => _controller.GetById(empty);
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Empty id");
+    }
+
+    [TestMethod]
+    public void GetById_ServiceThrowsUnexpectedException_ShouldPropagateException()
+    {
+        var id = Guid.NewGuid();
+        _dataTypeServiceMock
+            .Setup(s => s.GetById(id))
+            .Throws(new Exception("Error"));
+
+        Action act = () => _controller.GetById(id);
+        act.Should().Throw<Exception>()
+           .WithMessage("Error");
+    }
+    #endregion
 
 }
