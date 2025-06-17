@@ -103,6 +103,7 @@ public class ClassServiceTest
 
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(true);
         _builderStrategyMock.Setup(x => x.CreateBuilder()).Returns(classBuilder);
+        _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>())).Returns((Class?)null);
 
         _args.Name = null;
         _classServiceTest!.CreateClass(_args);
@@ -112,6 +113,7 @@ public class ClassServiceTest
     public void CreateClass_WithNoMatchingStrategy_ThrowsException()
     {
         _builderStrategyMock!.Setup(x => x.WhichIsMyBuilder(It.IsAny<CreateClassArgs>())).Returns(false);
+        _classRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Class, bool>>())).Returns((Class?)null);
 
         Action action = () => _classServiceTest!.CreateClass(_args);
 
@@ -634,13 +636,14 @@ public class ClassServiceTest
             Name = "UsedAttribute"
         };
 
-        var localVariable = new Variable(Guid.NewGuid(), "UsedAttribute");
-
         var method = new Method
         {
-            Name = "Method",
-            LocalVariables = [localVariable]
+            Name = "Method"
         };
+
+        var localVariable = new Variable(Guid.NewGuid(), "UsedAttribute", method);
+
+        method.LocalVariables = [localVariable];
 
         var classWithAttributeInUse = new Class
         {
@@ -709,9 +712,14 @@ public class ClassServiceTest
         var method = new Method
         {
             Name = "TestMethod",
-            LocalVariables = [new Variable(Guid.NewGuid(), "DifferentName")],
-            Parameters = [new Variable(Guid.NewGuid(), "DifferentParam")]
+            LocalVariables = [],
+            Parameters = []
         };
+
+        var localVariable = new Variable(Guid.NewGuid(), "DifferentName", method);
+        var parameter = new Variable(Guid.NewGuid(), "DifferentParam", method);
+        method.LocalVariables = [localVariable];
+        method.Parameters = [parameter];
 
         var classWithMethodsAndAttribute = new Class
         {

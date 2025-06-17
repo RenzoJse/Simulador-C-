@@ -7,7 +7,8 @@ namespace ObjectSim.Examples;
 public class VisitorExampleFactory(IClassService classService, IMethodService methodService) : IExampleService
 {
     readonly Guid VOID_GUID = Guid.Parse("00000000-0000-0000-0000-000000000005");
-    //readonly Guid TO_STRING_GUID = Guid.Parse("00000000-0000-0000-0000-000000000108");
+    readonly Guid TO_STRING_GUID = Guid.Parse("00000000-0000-0000-0000-000000000108");
+    readonly Guid INT = Guid.Parse("00000000-0000-0000-0000-000000000003");
 
     public void CreateExample()
     {
@@ -23,6 +24,26 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
         var acceptMethodInterface = CreateAcceptMethodInterface(visitorInterface.Id, shapeInterface.Id);
 
         var visitorExportClass = CreateVisitorExportClass(visitorInterface.Id, circleShapeClass.Id, squareShapeClass.Id);
+        var methodsList = visitorExportClass.Methods;
+        foreach(var method in methodsList)
+        {
+            if(method.Name == "visitSquare")
+            {
+                var invokeMethodArgs = new CreateInvokeMethodArgs(
+                    TO_STRING_GUID,
+                    "square"
+                );
+                methodService.AddInvokeMethod(method.Id, [invokeMethodArgs]);
+            }
+            if(method.Name == "visitCircle")
+            {
+                var invokeMethodArgs = new CreateInvokeMethodArgs(
+                    TO_STRING_GUID,
+                    "circle"
+                );
+                methodService.AddInvokeMethod(method.Id, [invokeMethodArgs]);
+            }
+        }
 
         var acceptMethodOverrideCircle = CreateAcceptMethodOverrideCircle(visitorInterface.Id, visitCircleInterfaceMethod.Id);
         var acceptMethodOverrideSquare = CreateAcceptMethodOverrideSquare(visitorInterface.Id, visitSquareInterfaceMethod.Id);
@@ -185,7 +206,12 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
             true,
             false,
             true,
-            [],
+            [new CreateAttributeArgs(INT,
+                "public",
+                Guid.Empty,
+                "radius",
+                false
+            )],
             [],
             shapeInterfaceId
         );
@@ -228,7 +254,12 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
             true,
             false,
             true,
-            [],
+            [new CreateAttributeArgs(INT,
+                "public",
+                Guid.Empty,
+                "radius",
+                false
+                )],
             [],
             shapeInterfaceId
         );

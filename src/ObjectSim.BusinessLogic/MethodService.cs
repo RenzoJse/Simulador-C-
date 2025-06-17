@@ -307,26 +307,29 @@ public class MethodService(IRepository<Variable> variableRepository, IRepository
 
         var isMethodInClass = currentClass!.Methods?.Any(m => m.Id == invokeMethodId) ?? false;
 
-        var isInClassAttribute = currentClass.Attributes?.Any(a => a.DataTypeId == invokeMethod.ClassId) ?? false;
+        var isInClassAttribute = currentClass.Attributes?.Any(a => a.Name == reference) ?? false;
+
+        var isInMethodParameters = method.Parameters?.Any(p => p.Name == reference) ?? false;
+
+        if(isInMethodParameters)
+        {
+            return;
+        }
 
         if(isInClassAttribute)
         {
             var classAttributes = currentClass.Attributes;
-            foreach(var attribute in classAttributes)
+            foreach(var attribute in classAttributes!)
             {
                 var attributeClassId = attribute.ClassId;
                 var attributeClass = classRepository.Get(c => c.Id == attributeClassId);
-                if(attributeClass!.Methods!.All(m => m.Id != invokeMethodId))
+
+                if(invokeMethod.IsStatic && !string.Equals(reference, attributeClass!.Name, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    throw new ArgumentException($"Method with id {invokeMethodId} not found");
+                    throw new ArgumentException($"Cant invoke static attribute {attribute.Name} from class {attributeClass.Name} using reference {reference}");
                 }
-                else
-                {
-                    if(invokeMethod.IsStatic && !string.Equals(reference, attributeClass.Name, StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        throw new ArgumentException($"Cant invoke static attribute {attribute.Name} from class {attributeClass.Name} using reference {reference}");
-                    }
-                }
+
+                ValidateMethodInClassOrParents(invokeMethodId, attributeClass!);
             }
         }
 
@@ -351,6 +354,26 @@ public class MethodService(IRepository<Variable> variableRepository, IRepository
         {
             throw new ArgumentException($"Invoke method with id {invokeMethodId} is not reachable from method {method.Name}");
         }
+    }
+
+    private void ValidateMethodInClassOrParents(Guid invokeMethodId, Class attributeClass)
+    {
+        if(attributeClass.Methods != null && attributeClass.Methods.Any(m => m.Id == invokeMethodId))
+        {
+            return;
+        }
+
+        if(attributeClass.Parent != null)
+        {
+            var parentClass = classRepository.Get(c => c.Id == attributeClass.Parent.Id);
+            if(parentClass != null)
+            {
+                ValidateMethodInClassOrParents(invokeMethodId, parentClass);
+                return;
+            }
+        }
+
+        throw new ArgumentException($"Method with id {invokeMethodId} not found");
     }
 
     private InvokeMethod CreateInvokeMethod(CreateInvokeMethodArgs invokeArg, Method method)

@@ -16,7 +16,7 @@ public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeServi
         {
             try
             {
-                Attribute newAttribute = attributeService.CreateAttribute(attr);
+                Attribute newAttribute = attributeService.BuilderCreateAttribute(attr);
                 if(newAttribute.IsStatic)
                 {
                     throw new ArgumentException("Attributes in abstract class cannot be static");

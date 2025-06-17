@@ -205,7 +205,7 @@ public class AbstractBuilderTest
 
         _abstractBuilder!.SetParent(parentClass);
 
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
 
         Action action = () => _abstractBuilder!.SetMethods([TestCreateMethodArgs]);
 
@@ -236,8 +236,8 @@ public class AbstractBuilderTest
             Name = "InvalidMethod",
         };
 
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(invalidMethodArgs)).Throws(new ArgumentException());
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(invalidMethodArgs)).Throws(new ArgumentException());
 
         _abstractBuilder!.SetMethods([TestCreateMethodArgs, invalidMethodArgs]);
 
@@ -272,8 +272,8 @@ public class AbstractBuilderTest
 
         var method2 = new Method { Name = "Method2" };
 
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(method1);
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(methodCreateArgs2)).Returns(method2);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(TestCreateMethodArgs)).Returns(method1);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(methodCreateArgs2)).Returns(method2);
 
         _abstractBuilder!.SetMethods([TestCreateMethodArgs, methodCreateArgs2]);
 
@@ -306,7 +306,7 @@ public class AbstractBuilderTest
 
         _abstractBuilder!.SetParent(parentClass);
 
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(interfaceMethod);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(TestCreateMethodArgs)).Returns(interfaceMethod);
 
         _abstractBuilder!.SetMethods([TestCreateMethodArgs]);
 

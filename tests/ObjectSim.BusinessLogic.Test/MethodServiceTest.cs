@@ -15,15 +15,12 @@ public class MethodServiceTest
     private Mock<IRepository<Method>>? _methodRepositoryMock;
     private Mock<IRepository<Class>>? _classRepositoryMock;
     private Mock<IDataTypeService>? _dataTypeServiceMock;
+    private Mock<IRepository<Variable>>? _variableRepositoryMock;
     private Mock<IInvokeMethodService>? _invokeMethodServiceMock;
     private MethodService? _methodServiceTest;
 
     private static readonly Guid ClassId = Guid.NewGuid();
     private static readonly Guid MethodId = Guid.NewGuid();
-
-    private static readonly Variable TestLocalVariable = new(Guid.NewGuid(), "string");
-
-    private static readonly Variable TestParameter = new(Guid.NewGuid(), "int");
 
     private readonly CreateMethodArgs _testCreateMethodArgs = new(
         "TestMethod",
@@ -40,27 +37,39 @@ public class MethodServiceTest
         []
     );
 
-    private readonly Method? _testMethod = new()
-    {
-        Id = MethodId,
-        Name = "TestMethod",
-        TypeId = Guid.NewGuid(),
-        Abstract = false,
-        IsSealed = false,
-        Accessibility = Method.MethodAccessibility.Public,
-        Parameters = [],
-        LocalVariables = [],
-        MethodsInvoke = []
-    };
+    private Method? _testMethod;
+    private Variable? _testLocalVariable;
+    private Variable? _testParameter;
 
     [TestInitialize]
     public void Initialize()
     {
+        _testMethod = new Method
+        {
+            Id = MethodId,
+            Name = "TestMethod",
+            TypeId = Guid.NewGuid(),
+            Abstract = false,
+            IsSealed = false,
+            Accessibility = Method.MethodAccessibility.Public,
+            Parameters = [],
+            LocalVariables = [],
+            MethodsInvoke = []
+        };
+
+        _testLocalVariable = new Variable(Guid.NewGuid(), "string", _testMethod);
+        _testParameter =  new Variable(Guid.NewGuid(), "int", _testMethod);
+
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
         _classRepositoryMock = new Mock<IRepository<Class>>(MockBehavior.Strict);
         _dataTypeServiceMock = new Mock<IDataTypeService>(MockBehavior.Strict);
         _invokeMethodServiceMock = new Mock<IInvokeMethodService>(MockBehavior.Strict);
-        _methodServiceTest = new MethodService(_methodRepositoryMock.Object, _classRepositoryMock.Object, _dataTypeServiceMock.Object, _invokeMethodServiceMock.Object);
+        _variableRepositoryMock = new Mock<IRepository<Variable>>(MockBehavior.Strict);
+        _methodServiceTest = new MethodService(_variableRepositoryMock.Object,
+            _methodRepositoryMock.Object,
+            _classRepositoryMock.Object,
+            _dataTypeServiceMock.Object,
+            _invokeMethodServiceMock.Object);
     }
 
     [TestCleanup]
@@ -313,7 +322,7 @@ public class MethodServiceTest
         _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns((Method?)null);
 
-        Action act = () => _methodServiceTest!.AddParameter(_testMethod!.Id, TestParameter);
+        Action act = () => _methodServiceTest!.AddParameter(_testMethod!.Id, _testParameter!);
 
         act.Should().Throw<Exception>()
             .WithMessage($"Method with ID {_testMethod!.Id} not found.");
@@ -322,8 +331,8 @@ public class MethodServiceTest
     [TestMethod]
     public void AddParameter_WhenDuplicate_ShouldThrow()
     {
-        var existing = new Variable(Guid.NewGuid(), "bool");
-        var param = new Variable(Guid.NewGuid(), "bool");
+        var existing = new Variable(Guid.NewGuid(), "bool", _testMethod!);
+        var param = new Variable(Guid.NewGuid(), "bool", _testMethod!);
 
         _testMethod!.Parameters = [existing];
 
@@ -348,11 +357,11 @@ public class MethodServiceTest
         _methodRepositoryMock!.Setup(r => r.Update(It.IsAny<Method>()))
             .Returns((Method m) => m);
 
-        var result = _methodServiceTest!.AddParameter(_testMethod!.Id, TestParameter);
+        var result = _methodServiceTest!.AddParameter(_testMethod!.Id, _testParameter!);
 
         result.Should().NotBeNull();
-        result.Name.Should().Be(TestParameter.Name);
-        _testMethod.Parameters.Should().ContainSingle(p => p.Name == TestParameter.Name);
+        result.Name.Should().Be(_testParameter!.Name);
+        _testMethod.Parameters.Should().ContainSingle(p => p.Name == _testParameter.Name);
     }
 
     #endregion
@@ -369,7 +378,7 @@ public class MethodServiceTest
         _methodRepositoryMock!.Setup(r => r.Get(It.IsAny<Func<Method, bool>>()))
             .Returns((Method?)null);
 
-        Action act = () => _methodServiceTest!.AddLocalVariable(_testMethod!.Id, TestLocalVariable);
+        Action act = () => _methodServiceTest!.AddLocalVariable(_testMethod!.Id, _testLocalVariable!);
 
         act.Should().Throw<Exception>()
             .WithMessage($"Method with ID {_testMethod!.Id} not found.");
@@ -378,8 +387,8 @@ public class MethodServiceTest
     [TestMethod]
     public void AddLocalVariable_WhenDuplicateName_ShouldThrow()
     {
-        var existing = new Variable(Guid.NewGuid(), "bool");
-        var newVar = new Variable(Guid.NewGuid(), "bool");
+        var existing = new Variable(Guid.NewGuid(), "bool", _testMethod!);
+        var newVar = new Variable(Guid.NewGuid(), "bool", _testMethod!);
 
         _testMethod!.LocalVariables = [existing];
 
@@ -404,11 +413,11 @@ public class MethodServiceTest
         _methodRepositoryMock!.Setup(r => r.Update(It.IsAny<Method>()))
             .Returns((Method m) => m);
 
-        var result = _methodServiceTest!.AddLocalVariable(_testMethod!.Id, TestLocalVariable);
+        var result = _methodServiceTest!.AddLocalVariable(_testMethod!.Id, _testLocalVariable!);
 
         result.Should().NotBeNull();
-        result.Name.Should().Be(TestLocalVariable.Name);
-        _testMethod!.LocalVariables.Should().ContainSingle(v => v.Name == TestLocalVariable.Name);
+        result.Name.Should().Be(_testLocalVariable!.Name);
+        _testMethod!.LocalVariables.Should().ContainSingle(v => v.Name == _testLocalVariable.Name);
     }
 
     #endregion

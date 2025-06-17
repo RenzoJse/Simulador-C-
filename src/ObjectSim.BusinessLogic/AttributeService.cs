@@ -7,6 +7,19 @@ namespace ObjectSim.BusinessLogic;
 public class AttributeService(IRepository<Attribute> attributeRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService) : IAttributeService
 {
 
+    #region BuilderCreateAttribute
+
+    public Attribute BuilderCreateAttribute(CreateAttributeArgs args)
+    {
+        var attribute = BuildAttributeFromArgs(args);
+
+        AddAttributeToClass(args.ClassId, attribute);
+
+        return attribute;
+    }
+
+    #endregion
+
     #region CreateAttribute
 
     public Attribute CreateAttribute(CreateAttributeArgs args)

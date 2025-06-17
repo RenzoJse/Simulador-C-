@@ -54,6 +54,16 @@ public abstract class Builder()
         {
             Result.Attributes = [];
         }
+
+        ReturnAttributesWithClassId(attributes);
+    }
+
+    private void ReturnAttributesWithClassId(List<CreateAttributeArgs> attributesArgs)
+    {
+        foreach(var attributes in attributesArgs)
+        {
+            attributes.ClassId = Result.Id;
+        }
     }
 
     public virtual void SetMethods(List<CreateMethodArgs> methods)

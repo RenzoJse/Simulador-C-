@@ -297,7 +297,7 @@ public class BuilderTest
         var method = new Method { Name = methodArgs.Name };
 
         _attributeServiceMock!.Setup(s => s.CreateAttribute(It.IsAny<CreateAttributeArgs>())).Returns(attribute);
-        _methodServiceCreateMock!.Setup(s => s.CreateMethod(It.IsAny<CreateMethodArgs>())).Returns(method);
+        _methodServiceCreateMock!.Setup(s => s.BuilderCreateMethod(It.IsAny<CreateMethodArgs>())).Returns(method);
 
         _builder!.SetName("ValidName");
         _builder.SetAbstraction(true);
