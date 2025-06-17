@@ -36,20 +36,30 @@
   </div>
 <br>
 <!-- Tarjetas con texto desplegable -->
-<div class="row g-4 justify-content-center">
-<!-- Tarjeta 1 -->
+<div class="accordion row g-4 justify-content-center" id="guideAccordion">
+
+  <!-- Tarjeta 1 -->
   <div class="col-12 col-md-4">
     <div class="card h-100 shadow-sm border-0">
       <div class="card-header custom-header">
         <h5 class="mb-0">
-          <button class="btn btn-link w-100 text-start text-white text-decoration-none" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+          <button class="btn btn-link w-100 text-start text-white text-decoration-none"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne">
             Guide Simulation
           </button>
         </h5>
       </div>
-      <div id="collapseOne" class="collapse">
+      <div id="collapseOne" class="collapse" data-bs-parent="#guideAccordion">
         <div class="card-body custom-body">
-          Descripción de la guía simulacion
+          <ul class="mb-0 guide-text">
+            <li>Select the reference class and the instance.</li>
+            <li>Select the method to execute.</li>
+            <li>Run the simulation.</li>
+            <li>View the result with your chosen output model.</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -60,14 +70,18 @@
     <div class="card h-100 shadow-sm border-0">
       <div class="card-header custom-header">
         <h5 class="mb-0">
-          <button class="btn btn-link w-100 text-start text-white text-decoration-none" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
-            Guide outputmodel
+          <button class="btn btn-link w-100 text-start text-white text-decoration-none"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo"
+                  aria-expanded="false"
+                  aria-controls="collapseTwo">
+            Guide Output Model
           </button>
         </h5>
       </div>
-      <div id="collapseTwo" class="collapse">
+      <div id="collapseTwo" class="collapse" data-bs-parent="#guideAccordion">
         <div class="card-body custom-body">
-          Descripción de la guía sioutput
+          You can customize method execution results by uploading your own plugin (.DLL).
         </div>
       </div>
     </div>
@@ -78,18 +92,24 @@
     <div class="card h-100 shadow-sm border-0">
       <div class="card-header custom-header">
         <h5 class="mb-0">
-          <button class="btn btn-link w-100 text-start text-white text-decoration-none" data-bs-toggle="collapse" data-bs-target="#collapseThree">
-            algun otra guia
+          <button class="btn btn-link w-100 text-start text-white text-decoration-none"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseThree"
+                  aria-expanded="false"
+                  aria-controls="collapseThree">
+            Another Guide
           </button>
         </h5>
       </div>
-      <div id="collapseThree" class="collapse">
+      <div id="collapseThree" class="collapse" data-bs-parent="#guideAccordion">
         <div class="card-body custom-body">
-         eso
+          Custom content related to another part of the system.
         </div>
       </div>
     </div>
   </div>
+
 </div>
+
 
 </div>
