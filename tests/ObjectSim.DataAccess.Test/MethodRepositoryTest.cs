@@ -11,7 +11,6 @@ public class MethodRepositoryTest
     private SqliteConnection _connection = null!;
     private DbContext _context = null!;
     private MethodRepository _methodRepository = null!;
-    private ClassRepository _classRepository = null!;
 
     [TestInitialize]
     public void Setup()
@@ -26,7 +25,6 @@ public class MethodRepositoryTest
         _context = new DataContext(options);
         _context.Database.EnsureCreated();
 
-        _classRepository = new ClassRepository(_context);
         _methodRepository = new MethodRepository(_context);
     }
 
@@ -65,7 +63,7 @@ public class MethodRepositoryTest
         var result = _methodRepository.Get(m => m.Id == method.Id);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual("TestMethod", result!.Name);
+        Assert.AreEqual("TestMethod", result.Name);
     }
 }
 

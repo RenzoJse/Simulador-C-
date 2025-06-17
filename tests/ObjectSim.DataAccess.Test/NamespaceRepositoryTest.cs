@@ -13,7 +13,7 @@ public class NamespaceRepositoryTest
     {
         public void InvokeLoadChildrenRecursively(Namespace ns)
         {
-            base.GetType()
+            GetType()
                 .GetMethod("LoadChildrenRecursively", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
                 .Invoke(this, [ns]);
         }
@@ -54,7 +54,7 @@ public class NamespaceRepositoryTest
 
         var fromDb = _context.Namespaces.Find(result.Id);
         Assert.IsNotNull(fromDb);
-        Assert.AreEqual("TestNamespace", fromDb!.Name);
+        Assert.AreEqual("TestNamespace", fromDb.Name);
     }
     [TestMethod]
     public void GetAll_ShouldReturnAllNamespaces()
@@ -84,7 +84,7 @@ public class NamespaceRepositoryTest
         var result = _repository.GetByIdWithChildren(root.Id);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual("Root", result!.Name);
+        Assert.AreEqual("Root", result.Name);
         Assert.AreEqual(1, result.Children.Count);
         Assert.AreEqual("Child1", result.Children[0].Name);
         Assert.AreEqual(1, result.Children[0].Children.Count);
@@ -122,7 +122,7 @@ public class NamespaceRepositoryTest
         var result = _repository.GetByIdWithChildren(root.Id);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual("Solo", result!.Name);
+        Assert.AreEqual("Solo", result.Name);
         Assert.AreEqual(0, result.Children.Count);
     }
     [TestMethod]
@@ -159,7 +159,7 @@ public class NamespaceRepositoryTest
         var fromDb = _context.Namespaces.FirstOrDefault(n => n.Id == ns.Id);
 
         Assert.IsNotNull(fromDb);
-        CollectionAssert.AreEqual(classIds, fromDb!.ClassIds);
+        CollectionAssert.AreEqual(classIds, fromDb.ClassIds);
     }
     [TestMethod]
     public void GetByIdWithChildren_ShouldReturnNamespaceWithClassIds()
@@ -177,7 +177,7 @@ public class NamespaceRepositoryTest
         var result = _repository.GetByIdWithChildren(ns.Id);
 
         Assert.IsNotNull(result);
-        CollectionAssert.AreEqual(classIds, result!.ClassIds);
+        CollectionAssert.AreEqual(classIds, result.ClassIds);
     }
     [TestMethod]
     public void Add_ShouldPersistNamespace_WithClassIds()
@@ -193,7 +193,7 @@ public class NamespaceRepositoryTest
 
         var fromDb = _context.Namespaces.Find(result.Id);
         Assert.IsNotNull(fromDb);
-        CollectionAssert.AreEqual(classIds, fromDb!.ClassIds);
+        CollectionAssert.AreEqual(classIds, fromDb.ClassIds);
     }
     [TestMethod]
     public void GetAll_ShouldReturnNamespacesWithClassIds()

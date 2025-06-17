@@ -4,11 +4,11 @@ using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.Examples;
 
-public class VisitorExampleFactory(IClassService classService, IMethodService methodService) : IExampleService
+public class VisitorExample(IClassService classService, IMethodService methodService) : IExampleService
 {
-    readonly Guid VOID_GUID = Guid.Parse("00000000-0000-0000-0000-000000000005");
-    readonly Guid TO_STRING_GUID = Guid.Parse("00000000-0000-0000-0000-000000000108");
-    readonly Guid INT = Guid.Parse("00000000-0000-0000-0000-000000000003");
+    private static readonly Guid VoidGuid = Guid.Parse("00000000-0000-0000-0000-000000000005");
+    private static readonly Guid ToStringGuid = Guid.Parse("00000000-0000-0000-0000-000000000108");
+    private static readonly Guid Int = Guid.Parse("00000000-0000-0000-0000-000000000003");
 
     public void CreateExample()
     {
@@ -39,7 +39,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
     {
         if (method.Name == expectedName)
         {
-            var invokeMethodArgs = new CreateInvokeMethodArgs(TO_STRING_GUID, paramName);
+            var invokeMethodArgs = new CreateInvokeMethodArgs(ToStringGuid, paramName);
             methodService.AddInvokeMethod(method.Id, [invokeMethodArgs]);
         }
     }
@@ -68,7 +68,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
     {
         return new CreateMethodArgs(
             "visitSquare",
-            VOID_GUID,
+            VoidGuid,
             "public",
             false,
             false,
@@ -90,7 +90,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
     {
         return new CreateMethodArgs(
             "visitCircle",
-            VOID_GUID,
+            VoidGuid,
             "public",
             false,
             false,
@@ -130,7 +130,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
     {
         var visitSquareInterfaceArgs = new CreateMethodArgs(
             "visitSquare",
-            VOID_GUID,
+            VoidGuid,
             "public",
             true,
             false,
@@ -154,7 +154,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
     {
         var visitCircleInterfaceArgs = new CreateMethodArgs(
             "visitCircle",
-            VOID_GUID,
+            VoidGuid,
             "public",
             true,
             false,
@@ -201,7 +201,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
             true,
             false,
             true,
-            [new CreateAttributeArgs(INT,
+            [new CreateAttributeArgs(Int,
                 "public",
                 Guid.Empty,
                 "radius",
@@ -218,7 +218,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
     {
         return new CreateMethodArgs(
             "accept",
-            VOID_GUID,
+            VoidGuid,
             "public",
             false,
             false,
@@ -249,7 +249,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
             true,
             false,
             true,
-            [new CreateAttributeArgs(INT,
+            [new CreateAttributeArgs(Int,
                 "public",
                 Guid.Empty,
                 "radius",
@@ -266,7 +266,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
     {
         return new CreateMethodArgs(
             "accept",
-            VOID_GUID,
+            VoidGuid,
             "public",
             false,
             false,
@@ -294,7 +294,7 @@ public class VisitorExampleFactory(IClassService classService, IMethodService me
     {
         var acceptArgs = new CreateMethodArgs(
             "accept",
-            VOID_GUID,
+            VoidGuid,
             "public",
             true,
             false,

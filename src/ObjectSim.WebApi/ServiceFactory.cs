@@ -49,7 +49,7 @@ public static class ServiceFactory
         services.AddScoped<IValidationStrategy, KeyStrategy>();
         services.AddScoped<IInvokeMethodService, InvokeMethodService>();
         services.AddScoped<IOutputModelTransformerService, OutputModelTransformerService>();
-        services.AddScoped<IExampleService, VisitorExampleFactory>();
+        services.AddScoped<IExampleService, VisitorExample>();
     }
 
     public static void AddDataAccess(IServiceCollection services)

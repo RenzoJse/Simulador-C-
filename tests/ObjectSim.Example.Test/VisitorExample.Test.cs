@@ -7,7 +7,7 @@ using ObjectSim.IBusinessLogic;
 namespace ObjectSim.Example.Test;
 
 [TestClass]
-public class VisitorExampleFactoryTests
+public class VisitorExampleTests
 {
     [TestMethod]
     public void CreateExample_allDependenciesCalled_expectedBehavior()
@@ -37,7 +37,7 @@ public class VisitorExampleFactoryTests
 
         methodServiceMock.Setup(x => x.AddInvokeMethod(It.IsAny<Guid>(), It.IsAny<List<CreateInvokeMethodArgs>>()));
 
-        var factory = new VisitorExampleFactory(classServiceMock.Object, methodServiceMock.Object);
+        var factory = new VisitorExample(classServiceMock.Object, methodServiceMock.Object);
 
         factory.CreateExample();
 

@@ -2,11 +2,13 @@
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
+using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic;
 public class MethodService(IRepository<Variable> variableRepository, IRepository<Method> methodRepository, IRepository<Class> classRepository, IDataTypeService dataTypeService,
     IInvokeMethodService invokeMethodService) : IMethodService, IMethodServiceCreate
 {
+
     #region BuilderCreateMethod
 
     public Method BuilderCreateMethod(CreateMethodArgs methodArgs)
@@ -161,7 +163,7 @@ public class MethodService(IRepository<Variable> variableRepository, IRepository
 
     public List<Method> GetAll()
     {
-        var methods = methodRepository.GetAll(m => m.Id != Guid.Empty)?.ToList();
+        var methods = methodRepository.GetAll(m => m.Id != Guid.Empty).ToList();
         if(methods == null || methods.Count == 0)
         {
             throw new Exception("No methods found.");
@@ -300,60 +302,103 @@ public class MethodService(IRepository<Variable> variableRepository, IRepository
 
     private void ValidateInvokeMethodReachable(Method method, Guid invokeMethodId, string reference)
     {
-        var invokeMethod = methodRepository.Get(m => m.Id == invokeMethodId);
-        var currentClass = classRepository.Get(c => c.Id == method.ClassId);
+        var invokeMethod = methodRepository.Get(m => m.Id == invokeMethodId)
+                              ?? throw new ArgumentException($"Method to invoke with id {invokeMethodId} not found");
+        var currentClass = classRepository.Get(c => c.Id == method.ClassId)
+                             ?? throw new ArgumentException($"Class with id {method.ClassId} not found");
 
-        var isInSameClass = invokeMethod!.ClassId == method.ClassId;
-
-        var isMethodInClass = currentClass!.Methods?.Any(m => m.Id == invokeMethodId) ?? false;
-
-        var isInClassAttribute = currentClass.Attributes?.Any(a => a.Name == reference) ?? false;
-
-        var isInMethodParameters = method.Parameters?.Any(p => p.Name == reference) ?? false;
-
-        if(isInMethodParameters)
+        if(IsReferenceInMethodParameters(method, reference))
         {
             return;
         }
 
-        if(isInClassAttribute)
+        if(IsReferenceInClassAttributes(currentClass, reference))
         {
-            var classAttributes = currentClass.Attributes;
-            foreach(var attribute in classAttributes!)
-            {
-                var attributeClassId = attribute.ClassId;
-                var attributeClass = classRepository.Get(c => c.Id == attributeClassId);
-
-                if(invokeMethod.IsStatic && !string.Equals(reference, attributeClass!.Name, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    throw new ArgumentException($"Cant invoke static attribute {attribute.Name} from class {attributeClass.Name} using reference {reference}");
-                }
-
-                ValidateMethodInClassOrParents(invokeMethodId, attributeClass!);
-            }
+            ValidateInvokeThroughClassAttribute(currentClass, invokeMethod, invokeMethodId, reference);
         }
 
-        var matchesLocalVariable = method.LocalVariables?.Any(lv => lv.Name == invokeMethod.Name) ?? false;
-
-        if(isInSameClass == false)
+        if(!IsInSameClass(method, invokeMethod))
         {
-            var classOfInvokeMethod = classRepository.Get(c => c.Id == invokeMethod.ClassId);
-            if(invokeMethod.IsStatic && !string.Equals(reference, classOfInvokeMethod!.Name, StringComparison.CurrentCultureIgnoreCase))
-            {
-                throw new ArgumentException($"Cant invoke static method {invokeMethod.Name} from class {classOfInvokeMethod.Name} using reference {reference}");
-            }
-
-            if(invokeMethod.Accessibility != Method.MethodAccessibility.Public)
-            {
-                throw new ArgumentException("Cannot invoke a non-public method from another class.");
-            }
+            ValidateInvokeFromOtherClass(method, invokeMethod, reference);
         }
 
-        if(!isInSameClass && !isMethodInClass &&
-            !isInClassAttribute && !matchesLocalVariable)
+        if(!IsReachable(method, currentClass, invokeMethod, invokeMethodId, reference))
         {
-            throw new ArgumentException($"Invoke method with id {invokeMethodId} is not reachable from method {method.Name}");
+            throw new ArgumentException(
+                $"Invoke method with id {invokeMethodId} is not reachable from method {method.Name}");
         }
+    }
+
+    private static bool IsReferenceInMethodParameters(Method method, string reference)
+    {
+        return method.Parameters?.Any(p => p.Name == reference) ?? false;
+    }
+
+    private static bool IsReferenceInClassAttributes(Class currentClass, string reference)
+    {
+        return currentClass.Attributes?.Any(a => a.Name == reference) ?? false;
+    }
+
+    private void ValidateInvokeThroughClassAttribute(Class currentClass, Method invokeMethod, Guid invokeMethodId,
+        string reference)
+    {
+        foreach(Attribute attribute in currentClass.Attributes!)
+        {
+            var attributeClass = classRepository.Get(c => c.Id == attribute.ClassId)
+                                   ?? throw new ArgumentException(
+                                       $"Attribute class with id {attribute.ClassId} not found");
+
+            if(invokeMethod.IsStatic &&
+               !string.Equals(reference, attributeClass.Name, StringComparison.CurrentCultureIgnoreCase))
+            {
+                throw new ArgumentException(
+                    $"Cant invoke static attribute {attribute.Name} from class {attributeClass.Name} using reference {reference}");
+            }
+
+            ValidateMethodInClassOrParents(invokeMethodId, attributeClass);
+        }
+    }
+
+    private static bool IsInSameClass(Method method, Method invokeMethod)
+    {
+        return invokeMethod.ClassId == method.ClassId;
+    }
+
+    private void ValidateInvokeFromOtherClass(Method method, Method invokeMethod, string reference)
+    {
+        Class classOfInvokeMethod = classRepository.Get(c => c.Id == invokeMethod.ClassId)
+                                    ?? throw new ArgumentException($"Class with id {invokeMethod.ClassId} not found");
+
+        if(invokeMethod.IsStatic &&
+           !string.Equals(reference, classOfInvokeMethod.Name, StringComparison.CurrentCultureIgnoreCase))
+        {
+            throw new ArgumentException(
+                $"Cant invoke static method {invokeMethod.Name} from class {classOfInvokeMethod.Name} using reference {reference}");
+        }
+
+        if(invokeMethod.Accessibility != Method.MethodAccessibility.Public)
+        {
+            throw new ArgumentException("Cannot invoke a non-public method from another class.");
+        }
+    }
+
+    private static bool IsReachable(Method method, Class currentClass, Method invokeMethod, Guid invokeMethodId,
+        string reference)
+    {
+        return IsInSameClass(method, invokeMethod)
+               || IsMethodInClass(currentClass, invokeMethodId)
+               || IsReferenceInClassAttributes(currentClass, reference)
+               || IsReferenceInLocalVariables(method, invokeMethod.Name!);
+    }
+
+    private static bool IsMethodInClass(Class currentClass, Guid invokeMethodId)
+    {
+        return currentClass.Methods?.Any(m => m.Id == invokeMethodId) ?? false;
+    }
+
+    private static bool IsReferenceInLocalVariables(Method method, string name)
+    {
+        return method.LocalVariables?.Any(lv => lv.Name == name) ?? false;
     }
 
     private void ValidateMethodInClassOrParents(Guid invokeMethodId, Class attributeClass)
@@ -365,7 +410,7 @@ public class MethodService(IRepository<Variable> variableRepository, IRepository
 
         if(attributeClass.Parent != null)
         {
-            var parentClass = classRepository.Get(c => c.Id == attributeClass.Parent.Id);
+            Class? parentClass = classRepository.Get(c => c.Id == attributeClass.Parent.Id);
             if(parentClass != null)
             {
                 ValidateMethodInClassOrParents(invokeMethodId, parentClass);
@@ -384,6 +429,7 @@ public class MethodService(IRepository<Variable> variableRepository, IRepository
     #endregion
 
     #region SystemMethod
+
     public Method GetIdByName(string name)
     {
         var methods = methodRepository.GetAll(c => c.Id != Guid.Empty)?.ToList();
