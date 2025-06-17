@@ -20,7 +20,6 @@ public class OutputModelControllerTest
         _outputModelTransformerService = new Mock<IOutputModelTransformerService>();
         _controllerTest = new OutputModelController(_outputModelTransformerService.Object);
     }
-
     #region Post
 
     [TestMethod]
