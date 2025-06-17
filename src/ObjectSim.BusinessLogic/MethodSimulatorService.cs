@@ -17,21 +17,29 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
         ValidateIsValidInstance(instanceType, referenceType);
 
         var method = GetMethodById(args.MethodId); // IniciarViaje
-        if(!instanceType.Methods!.Contains(method))
+        if (!instanceType.Methods!.Contains(method) && !referenceType.Methods!.Contains(method))
         {
-            if(!referenceType.Methods!.Contains(method))
-            {
-                throw new Exception("Method not found in this classes.");
-            }
+            throw new Exception("Method not found in this classes.");
         }
 
-        var result = "Execution: \n"
-                     + instanceType.Name + "." + method.Name + "() -> " + instanceType.Name + "." + method.Name + "()\n";
+        var mainParameters = FormatParameters(method);
+        var localVariables = FormatLocalVariables(method);
+
+        var result = $"Execution: \n{instanceType.Name}.{method.Name}({mainParameters}) -> {instanceType.Name}.{method.Name}({mainParameters})\n";
+        if (!string.IsNullOrEmpty(localVariables))
+        {
+            result += localVariables + "\n";
+        }
         result += SimulateInternal(method, 0);
 
         SelectOutputModel(args.OutputModelName!);
 
         return outputModelTransformerService.TransformModel(result);
+    }
+
+    private static string FormatLocalVariables(Method method)
+    {
+        return method.LocalVariables.Count == 0 ? string.Empty : string.Join(" ", method.LocalVariables.Select(v => $"{Capitalize(v.Name)} {v.Name};"));
     }
 
     private void SelectOutputModel(string name)
@@ -70,27 +78,57 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
     private string SimulateInternal(Method method, int indentLevel, HashSet<Guid>? visited = null)
     {
         visited ??= [];
-        if(!visited.Add(method.Id))
+        if (!AddToVisited(visited, method.Id))
         {
-            return "";
+            return string.Empty;
         }
 
-        var result = "";
-        var indent = new string(' ', indentLevel * 5);
+        var result = string.Empty;
+        var indent = GetIndentation(indentLevel);
 
-        foreach(var methodInvoke in method.MethodsInvoke)
+        foreach (var methodInvoke in method.MethodsInvoke)
         {
-            var objMethodToInvoke = methodRepository.Get(m => m.Id == methodInvoke.MethodId);
+            var objMethodToInvoke = GetMethodById(methodInvoke.MethodId);
+            var parameters = FormatParameters(objMethodToInvoke);
+            result += $"{indent}{methodInvoke.Reference}.{objMethodToInvoke.Name}({parameters}) -> ";
 
-            result += $"{indent}{methodInvoke.Reference}.{objMethodToInvoke!.Name}() -> ";
-
-            if(objMethodToInvoke.MethodsInvoke.Count > 0)
+            if (HasMethodInvocations(objMethodToInvoke))
             {
                 result += SimulateInternal(objMethodToInvoke, indentLevel + 1, visited);
             }
         }
 
         return result;
+    }
+
+    private static bool AddToVisited(HashSet<Guid> visited, Guid methodId)
+    {
+        return visited.Add(methodId);
+    }
+
+    private static string GetIndentation(int indentLevel)
+    {
+        return new string(' ', indentLevel * 5);
+    }
+
+    private static string FormatParameters(Method method)
+    {
+        return method.Parameters.Count == 0 ? string.Empty : string.Join(", ", method.Parameters.Select(p => $"{Capitalize(p.Name)} {p.Name}"));
+    }
+
+    private static bool HasMethodInvocations(Method method)
+    {
+        return method.MethodsInvoke.Count > 0;
+    }
+
+    private static string Capitalize(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return value;
+        }
+
+        return char.ToUpper(value[0]) + value[1..];
     }
 
 }
