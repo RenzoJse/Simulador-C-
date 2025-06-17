@@ -60,7 +60,7 @@ public class ClassController(IClassService classService) : ControllerBase
     {
         var classes = classService.GetAll();
 
-        var response = classes.Select(m => new ClassDtoOut(m)).ToList();
+        var response = classes.Select(ClassInformationDtoOut.ToInfo).ToList();
 
         return Ok(response);
     }
