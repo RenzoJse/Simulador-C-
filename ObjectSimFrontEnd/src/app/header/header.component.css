@@ -64,3 +64,18 @@
     transform: translateY(0);
   }
 }
+
+.navbar-brand {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white !important;
+  transition: color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.navbar-brand:hover {
+  color: #cce6ff !important;
+  transform: scale(1.05);
+  text-shadow: 0 0 6px rgba(0, 174, 255, 0.5);
+}
+

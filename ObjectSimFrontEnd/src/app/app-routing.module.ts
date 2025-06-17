@@ -45,7 +45,11 @@ const routes: Routes = [
   {
     path: 'sesion',
     loadChildren: () => import('./sesion/sesion.module').then(m => m.SesionModule),
-  }
+  },
+  {
+  path: 'visitor',
+  loadComponent: () => import('./examples/visitor/visitor.component').then(m => m.VisitorComponent)
+}
 ]
 
 @NgModule({

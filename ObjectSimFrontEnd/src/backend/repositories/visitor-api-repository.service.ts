@@ -11,7 +11,7 @@ import ApiRepository from './api-repository';
 export class VisitorApiRepository extends ApiRepository {
 
   constructor(http: HttpClient) {
-    super(environments.objectsim, 'api/visitor', http);
+    super(environments.objectsim, 'api/examples', http);
   }
 
   loadExample(): Observable<void> {
