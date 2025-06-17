@@ -229,7 +229,7 @@ public class MethodSimulatorServiceTest
             .Returns((string s) => s);
 
         var result = _methodSimulatorServiceTest.Simulate(args);
-        const string expected = "Execution: \nAuto.MainMethod() -> Auto.MainMethod()\nthis.FirstInvoked() -> other.SecondInvoked() -> ";
+        const string expected = "Execution: \nAuto.MainMethod() -> Auto.MainMethod()\nthis.FirstInvoked() -> other.SecondInvoked()";
 
         result.Should().NotBeNull();
         var stringResult = result.ToString();

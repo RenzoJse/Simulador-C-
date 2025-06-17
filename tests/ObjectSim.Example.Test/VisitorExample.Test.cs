@@ -42,7 +42,7 @@ public class VisitorExampleTests
         factory.CreateExample();
 
         classServiceMock.Verify(x => x.CreateClass(It.IsAny<CreateClassArgs>()), Times.Exactly(5));
-        methodServiceMock.Verify(x => x.CreateMethod(It.IsAny<CreateMethodArgs>()), Times.Exactly(3));
+        methodServiceMock.Verify(x => x.CreateMethod(It.IsAny<CreateMethodArgs>()), Times.Exactly(5));
         methodServiceMock.Verify(x => x.AddInvokeMethod(It.Is<Guid>(id => id == visitSquareMethod.Id), It.IsAny<List<CreateInvokeMethodArgs>>()), Times.Once());
         methodServiceMock.Verify(x => x.AddInvokeMethod(It.Is<Guid>(id => id == visitCircleMethod.Id), It.IsAny<List<CreateInvokeMethodArgs>>()), Times.Once());
     }

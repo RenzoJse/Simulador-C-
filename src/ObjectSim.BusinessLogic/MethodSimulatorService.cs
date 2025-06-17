@@ -17,15 +17,12 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
         ValidateIsValidInstance(instanceType, referenceType);
 
         var method = GetMethodById(args.MethodId); // IniciarViaje
-        if (!instanceType.Methods!.Contains(method) && !referenceType.Methods!.Contains(method))
-        {
-            throw new Exception("Method not found in this classes.");
-        }
+        ValidateMethodExists(method, instanceType, referenceType);
 
         var mainParameters = FormatParameters(method);
         var localVariables = FormatLocalVariables(method);
 
-        var result = $"Execution: \n{instanceType.Name}.{method.Name}({mainParameters}) -> {instanceType.Name}.{method.Name}({mainParameters})\n";
+        var result = BuildExecutionHeader(instanceType, method, mainParameters);
         if (!string.IsNullOrEmpty(localVariables))
         {
             result += localVariables + "\n";
@@ -35,6 +32,19 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
         SelectOutputModel(args.OutputModelName!);
 
         return outputModelTransformerService.TransformModel(result);
+    }
+
+    private static void ValidateMethodExists(Method method, Class instanceType, Class referenceType)
+    {
+        if (!instanceType.Methods!.Contains(method) && !referenceType.Methods!.Contains(method))
+        {
+            throw new Exception("Method not found in this classes.");
+        }
+    }
+
+    private static string BuildExecutionHeader(Class instanceType, Method method, string mainParameters)
+    {
+        return $"Execution: \n{instanceType.Name}.{method.Name}({mainParameters}) -> {instanceType.Name}.{method.Name}({mainParameters})\n";
     }
 
     private static string FormatLocalVariables(Method method)
@@ -75,35 +85,32 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
         return method;
     }
 
-    private string SimulateInternal(Method method, int indentLevel, HashSet<Guid>? visited = null)
+    private string SimulateInternal(Method method, int indentLevel)
     {
-        visited ??= [];
-        if (!AddToVisited(visited, method.Id))
-        {
-            return string.Empty;
-        }
-
         var result = string.Empty;
         var indent = GetIndentation(indentLevel);
 
         foreach (var methodInvoke in method.MethodsInvoke)
         {
-            var objMethodToInvoke = GetMethodById(methodInvoke.MethodId);
+            var objMethodToInvoke = GetMethodById(methodInvoke.InvokeMethodId);
             var parameters = FormatParameters(objMethodToInvoke);
             result += $"{indent}{methodInvoke.Reference}.{objMethodToInvoke.Name}({parameters}) -> ";
 
-            if (HasMethodInvocations(objMethodToInvoke))
+            if (objMethodToInvoke.MethodsInvoke.Count > 0)
             {
-                result += SimulateInternal(objMethodToInvoke, indentLevel + 1, visited);
+                var firstInvoke = objMethodToInvoke.MethodsInvoke[0];
+                var firstMethod = GetMethodById(firstInvoke.MethodId);
+                result += SimulateInternal(firstMethod, indentLevel + 1);
             }
         }
 
+        result = RemoveTrailingArrow(result);
         return result;
     }
 
-    private static bool AddToVisited(HashSet<Guid> visited, Guid methodId)
+    private static string RemoveTrailingArrow(string value)
     {
-        return visited.Add(methodId);
+        return value.EndsWith(" -> ") ? value[..^4] : value;
     }
 
     private static string GetIndentation(int indentLevel)
