@@ -23,7 +23,7 @@ public class LoadAssemblers<TInterface>(string route)
                 .Where(t => t.IsClass && typeof(TInterface).IsAssignableFrom(t))
                 .ToList();
 
-            if (loadedTypes.Count == 0)
+            if(loadedTypes.Count == 0)
             {
                 Console.WriteLine($"No one implements interface of: {typeof(TInterface).Name} in the assembly: {file.FullName}");
                 return;
@@ -43,7 +43,7 @@ public class LoadAssemblers<TInterface>(string route)
         var indice = _implementations.FindIndex(t => t.Name == name);
         var type = _implementations.ElementAtOrDefault(indice);
 
-        if (type == null)
+        if(type == null)
         {
             throw new InvalidOperationException($"No implementation found: {name}");
         }

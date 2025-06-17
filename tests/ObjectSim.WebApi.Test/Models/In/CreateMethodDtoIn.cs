@@ -37,7 +37,7 @@ public class CreateMethodDtoInTest
         var typeId = Guid.NewGuid();
         var localVars = new List<CreateVariableDtoIn> { new() { Name = "var1" } };
         var parameters = new List<CreateVariableDtoIn> { new() { Name = "param1" } };
-        var invokeIds = new List<CreateInvokeMethodDtoIn> { new() { InvokeMethodId = Guid.NewGuid().ToString(), Reference = "test"} };
+        var invokeIds = new List<CreateInvokeMethodDtoIn> { new() { InvokeMethodId = Guid.NewGuid().ToString(), Reference = "test" } };
 
         var dto = new CreateMethodDtoIn
         {

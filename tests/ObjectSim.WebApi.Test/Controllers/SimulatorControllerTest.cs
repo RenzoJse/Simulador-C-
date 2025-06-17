@@ -64,4 +64,26 @@ public class SimulatorControllerTest
         Action act = () => _simulatorController.SimulateExecution(args);
         act.Should().Throw<Exception>().WithMessage("Unexpected error");
     }
+
+    [TestMethod]
+    public void SimulateExecution_NullDto_ShouldThrowNullReferenceException()
+    {
+        Action act = () => _simulatorController.SimulateExecution(null!);
+        act.Should().Throw<NullReferenceException>();
+    }
+
+    [TestMethod]
+    public void SimulateExecution_InvalidGuidStrings_ShouldThrowFormatException()
+    {
+        var badDto = new CreateSimulateExecutionDtoIn
+        {
+            ReferenceId = "not-a-guid",
+            InstanceId = "also-bad",
+            MethodId = "123"
+        };
+
+        Action act = () => _simulatorController.SimulateExecution(badDto);
+
+        act.Should().Throw<FormatException>();
+    }
 }

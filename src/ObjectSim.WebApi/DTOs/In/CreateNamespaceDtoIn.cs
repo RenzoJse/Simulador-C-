@@ -10,6 +10,6 @@ public class CreateNamespaceDtoIn
 
     public CreateNamespaceArgs ToArgs()
     {
-        return new CreateNamespaceArgs(Name, ParentId,ClassIds);
+        return new CreateNamespaceArgs(Name, ParentId, ClassIds);
     }
 }

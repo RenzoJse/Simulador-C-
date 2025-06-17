@@ -11,7 +11,7 @@ public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeServi
     {
         base.SetAttributes(attributes);
 
-        var validAttributes = attributes.Select(CreateAttributes).OfType<Attribute>().Where(attribute => Result.CanAddAttribute(attribute)).ToList();
+        var validAttributes = attributes.Select(CreateAttributes).OfType<Attribute>().Where(Result.CanAddAttribute).ToList();
 
         Result.Attributes = validAttributes;
     }
@@ -32,7 +32,7 @@ public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeServi
 
     private static void ValidateAttributeIsStatic(Attribute attribute)
     {
-        if (attribute.IsStatic)
+        if(attribute.IsStatic)
         {
             throw new ArgumentException("Attributes in abstract class cannot be static");
         }

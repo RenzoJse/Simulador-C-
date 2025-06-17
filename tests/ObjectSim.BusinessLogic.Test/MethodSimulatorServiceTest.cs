@@ -4,7 +4,6 @@ using ObjectSim.DataAccess.Interface;
 using ObjectSim.Domain;
 using ObjectSim.Domain.Args;
 using ObjectSim.IBusinessLogic;
-using ObjectSim.OutputModel;
 
 namespace ObjectSim.BusinessLogic.Test;
 
