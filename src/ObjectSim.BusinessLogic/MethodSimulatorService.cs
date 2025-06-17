@@ -123,11 +123,6 @@ public class MethodSimulatorService(IRepository<Method> methodRepository, IRepos
         return method.Parameters.Count == 0 ? string.Empty : string.Join(", ", method.Parameters.Select(p => $"{Capitalize(p.Name)} {p.Name}"));
     }
 
-    private static bool HasMethodInvocations(Method method)
-    {
-        return method.MethodsInvoke.Count > 0;
-    }
-
     private static string Capitalize(string value)
     {
         if (string.IsNullOrEmpty(value))

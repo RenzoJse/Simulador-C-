@@ -293,6 +293,33 @@ public class MethodSimulatorServiceTest
         result.Should().NotBeNull();
     }
 
+    #region Capitalize
+
+    [TestMethod]
+    public void Capitalize_WhenValueIsNullOrEmpty_ReturnsSame()
+    {
+        var resultNull = typeof(MethodSimulatorService)
+            .GetMethod("Capitalize", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+            !.Invoke(null, [null]);
+        resultNull.Should().Be(null);
+
+        var resultEmpty = typeof(MethodSimulatorService)
+            .GetMethod("Capitalize", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+            !.Invoke(null, [""]);
+        resultEmpty.Should().Be("");
+    }
+
+    [TestMethod]
+    public void Capitalize_WhenValueIsNotEmpty_ReturnsCapitalized()
+    {
+        var result = typeof(MethodSimulatorService)
+            .GetMethod("Capitalize", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+            !.Invoke(null, ["test"]);
+        result.Should().Be("Test");
+    }
+
+    #endregion
+
     #endregion
 
     #endregion

@@ -271,6 +271,20 @@ public class AttributeServiceTest
         _attributeServiceTest!.GetById(Guid.NewGuid());
     }
 
+    [TestMethod]
+    public void GetById_NonExistentId_ShouldThrowException()
+    {
+        SetupAttributeRepositoryGet(null);
+        var id = Guid.NewGuid();
+
+        Action act = () => _attributeServiceTest!.GetById(id);
+
+        act.Should().Throw<KeyNotFoundException>()
+            .WithMessage($"Attribute with ID {id} not found.");
+
+        _attributeRepositoryMock!.Verify(repo => repo.Get(It.IsAny<Func<Attribute, bool>>()), Times.Once);
+    }
+
     #endregion
 
     #region Update
@@ -401,4 +415,32 @@ public class AttributeServiceTest
     }
 
     #endregion
+
+    #region BuilderCreateAttribute
+
+    [TestMethod]
+    public void BuilderCreateAttribute_WithValidArgs_AddsAttributeToClassAndReturnsAttribute()
+    {
+        _testArgsAttribute.ClassId = _testAttribute!.ClassId;
+        _testArgsAttribute.Id = _testAttribute.Id;
+        _testArgsAttribute.Name = _testAttribute.Name!;
+        _testArgsAttribute.Visibility = _testAttribute.Visibility.ToString();
+        _testArgsAttribute.DataTypeId = Guid.NewGuid();
+
+        SetupClassRepositoryGet(new Class { Id = _testAttribute.ClassId, Attributes = [] });
+        SetupDataTypeServiceGetById(_testArgsAttribute.DataTypeId, _testDataType);
+
+        var result = _attributeServiceTest!.BuilderCreateAttribute(_testArgsAttribute);
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<Attribute>();
+        result.Should().BeEquivalentTo(_testAttribute, options =>
+            options.Excluding(x => x.Id)
+                .Excluding(x => x.DataTypeId)
+                .Excluding(x => x.DataType)
+                .Excluding(x => x.ClassId));
+    }
+
+    #endregion
 }
+
