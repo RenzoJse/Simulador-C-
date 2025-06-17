@@ -6,7 +6,7 @@ public class XmlOutputModelTransformer : IOutputModelTransformer
 {
     public object Transform(object input)
     {
-        if (input is string str)
+        if(input is string str)
         {
             var lines = str.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
             var xml = lines.Aggregate("<ExecutionResult>", (current, line) => current + $"<Line>{System.Net.WebUtility.HtmlEncode(line)}</Line>");

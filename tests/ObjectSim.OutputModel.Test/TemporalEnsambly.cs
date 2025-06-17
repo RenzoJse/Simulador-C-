@@ -53,7 +53,7 @@ public static class TemporalAssembly
         using var stream = new FileStream(route, FileMode.Create, FileAccess.Write);
         var emitResult = compilation.Emit(stream);
 
-        if (!emitResult.Success)
+        if(!emitResult.Success)
         {
             var errors = string.Join(Environment.NewLine, emitResult.Diagnostics
                 .Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error)

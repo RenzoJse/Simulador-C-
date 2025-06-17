@@ -17,7 +17,7 @@ public class OutputModelTransformerService()
 
     public void UploadDll(Stream dllStream, string fileName)
     {
-        if (dllStream == null || string.IsNullOrWhiteSpace(fileName) || !fileName.EndsWith(".dll"))
+        if(dllStream == null || string.IsNullOrWhiteSpace(fileName) || !fileName.EndsWith(".dll"))
         {
             throw new ArgumentException("Invalid File Type.");
         }
@@ -25,7 +25,7 @@ public class OutputModelTransformerService()
         Directory.CreateDirectory(_route);
         var savePath = Path.Combine(_route, fileName);
 
-        if (File.Exists(savePath))
+        if(File.Exists(savePath))
         {
             throw new InvalidOperationException("El archivo ya existe.");
         }
@@ -52,7 +52,7 @@ public class OutputModelTransformerService()
 
     public object TransformModel(string input)
     {
-        if (_transformerModel == null)
+        if(_transformerModel == null)
         {
             throw new InvalidOperationException("No transformer selected.");
         }
