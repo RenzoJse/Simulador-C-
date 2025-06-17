@@ -18,10 +18,10 @@
 
     <div class="carousel-inner rounded shadow">
       <div *ngFor="let img of images; let i = index" class="carousel-item" [class.active]="i === 0">
-        <img [src]="img" class="d-block w-100 carousel-image" alt="Imagen {{ i + 1 }}">
+        <img [src]="img.path" class="d-block w-100 carousel-image" [alt]="'Imagen de ' + img.author">
         <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
-          <h5>Imagen {{ i + 1 }}</h5>
-          <p>Descripción opcional para esta imagen.</p>
+          <h5>{{ img.author }}</h5>
+          
         </div>
       </div>
     </div>
@@ -40,7 +40,6 @@
 
   <!-- Accordion de Tarjetas -->
   <div class="accordion row g-4 justify-content-center" id="guideAccordion">
-
     <!-- Tarjeta 1 -->
     <div class="col-12 col-md-4">
       <div class="card shadow-sm border-0">
@@ -111,6 +110,5 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>

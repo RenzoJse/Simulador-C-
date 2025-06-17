@@ -10,8 +10,17 @@ import { CommonModule } from '@angular/common';
 })
 export class LandingPageComponent {
   images = [
-    'assets/images/image1.jpg',
-    'assets/images/image4.png',
-    'assets/images/image5.png'
+    {
+      path: 'assets/images/image1.jpg',
+      author: 'Joaquín Calvo'
+    },
+    {
+      path: 'assets/images/image4.png',
+      author: 'Renzo José'
+    },
+    {
+      path: 'assets/images/image5.png',
+      author: 'Matias Fontes'
+    }
   ];
 }
