@@ -28,7 +28,7 @@ public class ClassService(IDataTypeService dataTypeService, IEnumerable<IBuilder
 
     private void CheckForDuplicateName(string name)
     {
-        if (classRepository.Get(c => c.Name == name) != null)
+        if(classRepository.Get(c => c.Name == name) != null)
         {
             throw new ArgumentException("A class with that name already exists.");
         }
@@ -113,7 +113,7 @@ public class ClassService(IDataTypeService dataTypeService, IEnumerable<IBuilder
     {
         var foundClass = classRepository.Get(c => c.Id != Guid.Empty && c.Name == name);
 
-        if (foundClass == null)
+        if(foundClass == null)
         {
             throw new ArgumentException("Class not found");
         }

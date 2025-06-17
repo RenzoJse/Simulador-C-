@@ -1,5 +1,4 @@
-﻿
-
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ObjectSim.Domain;
@@ -23,6 +22,7 @@ public class NamespaceControllerTest
         _controller = new NamespaceController(_namespaceServiceMock.Object);
     }
 
+    #region GetAll
     [TestMethod]
     public void GetAll_ShouldReturnOkWithNamespaceDtos()
     {
@@ -46,6 +46,53 @@ public class NamespaceControllerTest
     }
 
     [TestMethod]
+    public void GetAll_WhenNoNamespacesExist_ReturnsEmptyList()
+    {
+        _namespaceServiceMock
+            .Setup(s => s.GetAll())
+            .Returns([]);
+
+        var result = _controller.GetAll() as OkObjectResult;
+        Assert.IsNotNull(result);
+        Assert.AreEqual(200, result.StatusCode);
+
+        var list = result.Value as List<NamespaceInformationDtoOut>;
+        Assert.IsNotNull(list);
+        Assert.AreEqual(0, list.Count);
+    }
+
+    [TestMethod]
+    public void GetAll_ServiceThrowsException_ShouldPropagateException()
+    {
+        _namespaceServiceMock
+            .Setup(s => s.GetAll())
+            .Throws(new InvalidOperationException("error interno"));
+
+        Action act = () => _controller.GetAll();
+        act.Should().Throw<InvalidOperationException>()
+           .WithMessage("error interno");
+    }
+
+
+    [TestMethod]
+    public void GetAll_ShouldMapParentIdCorrectly()
+    {
+        var parentId = Guid.NewGuid();
+        var entities = new List<Namespace>
+    {
+        new Namespace { Id = Guid.NewGuid(), Name = "A", ParentId = parentId }
+    };
+        _namespaceServiceMock.Setup(s => s.GetAll()).Returns(entities);
+
+        var ok = _controller.GetAll() as OkObjectResult;
+        var dto = (ok!.Value as List<NamespaceInformationDtoOut>)!.First();
+
+        Assert.AreEqual(parentId, dto.ParentId);
+    }
+    #endregion
+
+    #region Create 
+    [TestMethod]
     public void Create_WithValidDto_ReturnsOkStatus()
     {
         var dtoIn = new CreateNamespaceDtoIn
@@ -65,6 +112,43 @@ public class NamespaceControllerTest
         Assert.AreEqual(200, okResult.StatusCode);
     }
 
+    [TestMethod]
+    public void Create_NullDto_ShouldThrowNullReferenceException()
+    {
+        Action act = () => _controller.Create(null!);
+        act.Should().Throw<NullReferenceException>();
+    }
+
+    [TestMethod]
+    public void Create_ServiceThrowsException_ShouldPropagateException()
+    {
+        var dto = new CreateNamespaceDtoIn { Name = "N1", ParentId = null };
+        _namespaceServiceMock
+            .Setup(s => s.Create(It.IsAny<CreateNamespaceArgs>()))
+            .Throws(new InvalidOperationException("Created failed"));
+
+        Action act = () => _controller.Create(dto);
+        act.Should().Throw<InvalidOperationException>()
+           .WithMessage("Created failed");
+    }
+
+    [TestMethod]
+    public void Create_WithParentId_CallsServiceWithCorrectArgs()
+    {
+        var parentId = Guid.NewGuid();
+        var dto = new CreateNamespaceDtoIn { Name = "N1", ParentId = parentId };
+        _namespaceServiceMock
+            .Setup(s => s.Create(It.Is<CreateNamespaceArgs>(a =>
+                a.Name == "N1" && a.ParentId == parentId
+            )))
+            .Returns(new Namespace());
+
+        var ok = _controller.Create(dto) as OkResult;
+        Assert.AreEqual(200, ok!.StatusCode);
+    }
+    #endregion
+
+    #region GetAllDescendants
     [TestMethod]
     public void GetAllDescendants_WithValidNamespaceId_ReturnsDescendantDtos()
     {
@@ -110,5 +194,31 @@ public class NamespaceControllerTest
         Assert.IsNotNull(returnedDtos);
         Assert.AreEqual(0, returnedDtos.Count);
     }
+
+    [TestMethod]
+    public void GetAllDescendants_ServiceThrowsException_ShouldPropagateException()
+    {
+        var id = Guid.NewGuid();
+        _namespaceServiceMock
+            .Setup(s => s.GetAllDescendants(id))
+            .Throws(new InvalidOperationException("error descendants"));
+
+        Action act = () => _controller.GetAllDescendants(id);
+        act.Should().Throw<InvalidOperationException>()
+           .WithMessage("error descendants");
+    }
+
+    [TestMethod]
+    public void GetAllDescendants_EmptyGuid_ShouldThrowArgumentException()
+    {
+        _namespaceServiceMock
+            .Setup(s => s.GetAllDescendants(Guid.Empty))
+            .Throws(new ArgumentException("Invalid id"));
+
+        Action act = () => _controller.GetAllDescendants(Guid.Empty);
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Invalid id");
+    }
+    #endregion
 
 }

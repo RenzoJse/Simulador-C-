@@ -59,7 +59,7 @@ public class MethodServiceTest
         };
 
         _testLocalVariable = new Variable(Guid.NewGuid(), "string", _testMethod);
-        _testParameter =  new Variable(Guid.NewGuid(), "int", _testMethod);
+        _testParameter = new Variable(Guid.NewGuid(), "int", _testMethod);
 
         _methodRepositoryMock = new Mock<IRepository<Method>>(MockBehavior.Strict);
         _classRepositoryMock = new Mock<IRepository<Class>>(MockBehavior.Strict);
@@ -174,7 +174,7 @@ public class MethodServiceTest
         _methodRepositoryMock!.Setup(repo => repo.Get(It.IsAny<Func<Method, bool>>()))
             .Returns((Func<Method, bool> predicate) =>
             {
-                if (createdMethod != null && predicate(createdMethod))
+                if(createdMethod != null && predicate(createdMethod))
                 {
                     return createdMethod;
                 }
@@ -889,12 +889,16 @@ public class MethodServiceTest
 
         var attributeClass = new Class
         {
-            Id = attributeClassId, Name = "AttrClass", Parent = new Class { Id = parentClassId }
+            Id = attributeClassId,
+            Name = "AttrClass",
+            Parent = new Class { Id = parentClassId }
         };
 
         var parentClass = new Class
         {
-            Id = parentClassId, Name = "ParentClass", Methods = [invokeMethod]
+            Id = parentClassId,
+            Name = "ParentClass",
+            Methods = [invokeMethod]
         };
 
         var mainClass = new Class

@@ -6,7 +6,7 @@ public class HtmlOutputModelTransformer : IOutputModelTransformer
 {
     public object Transform(object input)
     {
-        if (input is string str)
+        if(input is string str)
         {
             var lines = str.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
             var html = "<section style='font-family: monospace; background: #f9f9f9; padding: 1em; border-radius: 6px;'>";

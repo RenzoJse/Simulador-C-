@@ -67,6 +67,13 @@ public class AttributeControllerTest
     }
 
     [TestMethod]
+    public void Create_NullModel_ShouldThrowNullReferenceException()
+    {
+        Action act = () => _attributeController.Create(null!);
+        act.Should().Throw<NullReferenceException>();
+    }
+
+    [TestMethod]
     public void GetAll_ShouldReturnEmptyList_WhenNoAttributesExist()
     {
         var emptyAttributes = new List<ObjectSim.Domain.Attribute>();
@@ -182,6 +189,39 @@ public class AttributeControllerTest
         Assert.AreEqual("Create", created.ActionName);
         Assert.AreEqual(domainAttr.Id, ((AttributeDtoOut)created.Value!).Id);
     }
+
+    [TestMethod]
+    public void Create_ShouldReturn201AndCorrectRouteValues()
+    {
+        var modelIn = new CreateAttributeDtoIn
+        {
+            Name = "TestAttr",
+            Visibility = "Public",
+            DataTypeId = Guid.NewGuid().ToString(),
+            ClassId = Guid.NewGuid()
+        };
+
+        var domainAttr = new Domain.Attribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttr",
+            Visibility = Domain.Attribute.AttributeVisibility.Public,
+            DataType = new ReferenceType(Guid.NewGuid(), "string"),
+            ClassId = modelIn.ClassId
+        };
+
+        _attributeServiceMock
+            .Setup(s => s.CreateAttribute(It.IsAny<CreateAttributeArgs>()))
+            .Returns(domainAttr);
+
+        var result = _attributeController.Create(modelIn) as CreatedAtActionResult;
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(201, result.StatusCode);
+        Assert.IsTrue(result.RouteValues.ContainsKey("id"));
+        Assert.AreEqual(domainAttr.Id, result.RouteValues["id"]);
+    }
+
     [TestMethod]
     public void GetById_ValidId_ShouldReturnAttribute()
     {
@@ -258,6 +298,21 @@ public class AttributeControllerTest
         _attributeServiceMock.Verify(s => s.GetByClassId(classId), Times.Once);
     }
 
+    [TestMethod]
+    public void GetByClassId_WhenNoAttributesExist_ShouldReturnEmptyList()
+    {
+        var classId = Guid.NewGuid();
+        _attributeServiceMock
+            .Setup(s => s.GetByClassId(classId))
+            .Returns([]);
+
+        var ok = _attributeController.GetByClassId(classId) as OkObjectResult;
+        var list = ok!.Value as List<AttributeDtoOut>;
+
+        Assert.AreEqual(200, ok.StatusCode);
+        Assert.IsNotNull(list);
+        Assert.AreEqual(0, list.Count);
+    }
 
     [TestMethod]
     public void GetByClassId_InvalidId_ShouldReturnBadRequest()
@@ -415,5 +470,16 @@ public class AttributeControllerTest
            .WithMessage("Id must not be empty.");
     }
 
+    [TestMethod]
+    public void Delete_ServiceReturnsFalse_ShouldReturnOkFalse()
+    {
+        var id = Guid.NewGuid();
+        _attributeServiceMock
+            .Setup(s => s.Delete(id))
+            .Returns(false);
 
+        var ok = _attributeController.Delete(id) as OkObjectResult;
+        Assert.AreEqual(200, ok!.StatusCode);
+        Assert.AreEqual(false, ok.Value);
+    }
 }
