@@ -9,6 +9,6 @@ import { CommonModule, NgIf, NgFor } from '@angular/common';
     styleUrls: ['./info-guide.component.css']
 })
 export class InfoGuideComponent {
-    @Input() guides: { id: string, title: string, description: string }[] = [];
+    @Input() guides: { id: string, title: string, description: string, link: string }[] = [];
     @Input() footerText?: string;
 }

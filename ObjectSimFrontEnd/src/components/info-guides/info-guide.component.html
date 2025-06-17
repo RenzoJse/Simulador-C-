@@ -13,7 +13,18 @@
             </div>
             <div [id]="guide.id" class="collapse">
                 <div class="card-body custom-body">
-                    {{ guide.description }}
+                    <p class="guide-text">{{ guide.description }}</p>
+
+                    <div *ngIf="guide.link" class="text-end mt-3">
+                        <a
+                                [href]="guide.link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="btn btn-outline-light btn-sm rounded-pill px-3"
+                        >
+                            See more
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
