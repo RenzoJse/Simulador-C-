@@ -7,6 +7,7 @@ import { VisitorApiRepository } from '../../../backend/repositories/visitor-api-
   standalone: true,
   imports: [CommonModule],
   templateUrl: './visitor.component.html',
+  styleUrls: ['./visitor.component.css']
 })
 export class VisitorComponent {
   private readonly visitorService = inject(VisitorApiRepository);
