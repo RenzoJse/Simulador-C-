@@ -1,0 +1,12 @@
+﻿<div *ngIf="show" class="popup-backdrop">
+    <div class="popup-box">
+    <span>
+      {{ message }}
+        <strong *ngIf="itemName">{{ itemName }}</strong>
+    </span>
+        <div class="popup-actions">
+            <button (click)="onConfirm()">Yes, edit</button>
+            <button class="cancel" (click)="onCancel()">Cancel</button>
+        </div>
+    </div>
+</div>
