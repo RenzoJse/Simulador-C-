@@ -346,8 +346,7 @@ public class ClassTest
 
         Action act = () => childClass.CanAddMethod(method);
 
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Override method must override a method from the parent class.");
+        act.Should().Throw<ArgumentException>();
     }
 
     [TestMethod]

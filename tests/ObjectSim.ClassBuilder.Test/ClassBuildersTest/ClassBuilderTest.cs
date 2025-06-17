@@ -117,6 +117,10 @@ public class ClassBuilderTest
 
         _attributeServiceMock!.Setup(m => m.CreateAttribute(validAttributeArgs))
             .Returns(validAttribute);
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(invalidAttributeArgs))
+            .Throws(new ArgumentException());
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(validAttributeArgs))
+            .Returns(validAttribute);
 
         _classBuilderTest!.SetAttributes([invalidAttributeArgs, validAttributeArgs]);
 
@@ -132,8 +136,12 @@ public class ClassBuilderTest
 
         _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute1")))
             .Returns(attribute1);
-
         _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
+            .Returns(attribute2);
+
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute1")))
+            .Returns(attribute1);
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
             .Returns(attribute2);
 
         var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute1", false);

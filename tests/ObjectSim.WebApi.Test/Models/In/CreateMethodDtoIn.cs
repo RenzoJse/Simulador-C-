@@ -68,7 +68,7 @@ public class CreateMethodDtoInTest
         args.ClassId.Should().Be(classId);
         args.LocalVariables.Should().HaveCount(1);
         args.Parameters.Should().HaveCount(1);
-        args.InvokeMethods.Should().BeEquivalentTo(invokeIds);
+        args.InvokeMethods.Select(x => x.InvokeMethodId.ToString()).Should().BeEquivalentTo(invokeIds.Select(x => x.InvokeMethodId));
     }
 
     #endregion

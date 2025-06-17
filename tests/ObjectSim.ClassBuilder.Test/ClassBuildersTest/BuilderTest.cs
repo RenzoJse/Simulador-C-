@@ -298,6 +298,8 @@ public class BuilderTest
 
         _attributeServiceMock!.Setup(s => s.CreateAttribute(It.IsAny<CreateAttributeArgs>())).Returns(attribute);
         _methodServiceCreateMock!.Setup(s => s.BuilderCreateMethod(It.IsAny<CreateMethodArgs>())).Returns(method);
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(attributeArgs))
+            .Returns(attribute);
 
         _builder!.SetName("ValidName");
         _builder.SetAbstraction(true);
