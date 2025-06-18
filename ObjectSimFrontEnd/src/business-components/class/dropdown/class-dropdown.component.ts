@@ -35,12 +35,12 @@ export class ClassDropdownComponent implements OnInit, OnDestroy{
     this._classService.getAllClasses()
         .subscribe({
           next: (systemClasses) => {
+            console.log(systemClasses);
             this.status = {
               systemClasses: systemClasses.map((classObj) => ({
-                value: classObj.classInfo?.id ?? '',
-                tag: classObj.name ?? '',
+                value: classObj.id,
+                tag: classObj.name,
               })),
-              error: '',
             };
           },
           error: (error) => {
@@ -57,4 +57,5 @@ export class ClassDropdownComponent implements OnInit, OnDestroy{
       });
     }
   }
+
 }

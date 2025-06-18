@@ -53,7 +53,7 @@ export class CreateAttributeFormComponent {
     this.createAttributeForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(10)]],
       visibility: ['', Validators.required],
-      isStatic: ['false', Validators.required]
+      isStatic: ['', Validators.required]
     });
   }
 
@@ -73,10 +73,12 @@ export class CreateAttributeFormComponent {
       isStatic: formValue.isStatic === 'true'
     };
 
+    console.log(newAttribute);
     this.atSubmit.emit(newAttribute);
   }
 
   onClassSelected(event: { classId: string | undefined }) {
+    console.log(event);
     this.selectedClassId = event.classId ?? '';
   }
 
