@@ -35,7 +35,6 @@ export class ClassDropdownComponent implements OnInit, OnDestroy{
     this._classService.getAllClasses()
         .subscribe({
           next: (systemClasses) => {
-            console.log(systemClasses);
             this.status = {
               systemClasses: systemClasses.map((classObj) => ({
                 value: classObj.id,

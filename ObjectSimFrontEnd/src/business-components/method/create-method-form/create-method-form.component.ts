@@ -60,8 +60,6 @@ export class CreateMethodFormComponent {
   }
 
   onSubmit() {
-    console.log('Form values:', this.createMethodForm.value);
-
     if (this.createMethodForm.invalid) {
       this.createMethodForm.markAllAsTouched();
       return;
