@@ -1,4 +1,4 @@
 ﻿export default{
     production: true,
-    objectsim: 'https://localhost:5018'
+    objectsim: 'https://localhost:5000'
 }
