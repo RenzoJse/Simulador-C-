@@ -3,7 +3,7 @@
 <ul class="list-group">
   <li *ngFor="let cls of classes" class="list-group-item">
     <label>
-      <input type="checkbox" (change)="toggle(cls.classInfo.id)" />
+      <input type="checkbox" (change)="toggle(cls.id)" />
       {{ cls.name }}
     </label>
   </li>
