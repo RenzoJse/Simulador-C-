@@ -3,13 +3,13 @@
 
     <ng-container *ngIf="!showManualForm; else manualForm">
         <button class="btn btn-primary me-2" (click)="generateAutomaticKey()">Generate Automatic Key</button>
-        <button class="btn btn-secondary" (click)="showManualForm = true">Insert Manual Key</button>
+        <button class="btn btn-warning" (click)="showManualForm = true">Insert Manual Key</button>
     </ng-container>
 
     <ng-template #manualForm>
-        
+
         <app-form [form]="insertKeyForm" (atSubmit)="onSubmit()">
-            
+
             <app-form-input
                     [form]="insertKeyForm"
                     controlName="Key"
@@ -19,24 +19,24 @@
                     [errorMessages]="{ required: 'The Key is required.' }"
                     [type]="'text'">
             </app-form-input>
-            
+
             <app-form-button title="Add Key"></app-form-button>
-            
+
             <div *ngIf="insertKeyStatus?.loading; else notLoading">
                 Loading...
             </div>
-            
+
             <ng-template #notLoading>
                 <div *ngIf="insertKeyStatus?.error">
                     {{ insertKeyStatus!.error }}
                 </div>
             </ng-template>
-            
+
         </app-form>
     </ng-template>
 
     <div *ngIf="successMessage" class="alert alert-success mt-3">
         {{ successMessage }}
     </div>
-    
+
 </div>

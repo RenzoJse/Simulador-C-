@@ -1,4 +1,4 @@
 export default interface ClassListItem {
-  classInfo: { id: string; };
+  id: string;
   name: string;
 }

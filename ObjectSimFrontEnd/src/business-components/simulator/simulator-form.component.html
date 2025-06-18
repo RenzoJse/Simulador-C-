@@ -3,15 +3,19 @@
 
     <app-form [form]="simulatorForm" (atSubmit)="onSubmit()">
 
+        <h5>Reference ("Vehicle")</h5>
         <app-class-dropdown (selectClass)="updateClassReferenceId($event)">
         </app-class-dropdown>
 
+        <h5>Instance ("Car")</h5>
         <app-class-dropdown (selectClass)="updateClassInstanceId($event)">
         </app-class-dropdown>
 
+        <h5>Method to invoke</h5>
         <app-method-dropdown (selectMethod)="updateSelectedMethodId($event)">
             </app-method-dropdown>
 
+        <h5>Input Model</h5>
         <app-outputModel-dropdown (selectModel)="updateSelectedOutputModelName($event)">
         </app-outputModel-dropdown>
 

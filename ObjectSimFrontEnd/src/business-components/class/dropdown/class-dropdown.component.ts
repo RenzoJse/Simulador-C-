@@ -37,10 +37,9 @@ export class ClassDropdownComponent implements OnInit, OnDestroy{
           next: (systemClasses) => {
             this.status = {
               systemClasses: systemClasses.map((classObj) => ({
-                value: classObj.classInfo?.id ?? '',
-                tag: classObj.name ?? '',
+                value: classObj.id,
+                tag: classObj.name,
               })),
-              error: '',
             };
           },
           error: (error) => {
@@ -57,4 +56,5 @@ export class ClassDropdownComponent implements OnInit, OnDestroy{
       });
     }
   }
+
 }

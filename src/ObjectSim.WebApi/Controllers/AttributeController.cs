@@ -14,8 +14,10 @@ public class AttributeController(IAttributeService attributeService) : Controlle
     [HttpPost]
     public IActionResult Create([FromBody] CreateAttributeDtoIn modelIn)
     {
-        Attribute attribute = attributeService.CreateAttribute(modelIn.ToArgs());
+        var attribute = attributeService.CreateAttribute(modelIn.ToArgs());
+
         var response = AttributeDtoOut.ToInfo(attribute);
+
         return CreatedAtAction(nameof(Create), new { id = response.Id }, response);
     }
 
