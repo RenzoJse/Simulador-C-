@@ -271,16 +271,19 @@ public class BuilderTest
     public void CreateClass_GetResultWhenCreationIsValid_ReturnsClass()
     {
         var attributeArgs = new CreateAttributeArgs(
-            new CreateDataTypeArgs("int", "int"),
+            Guid.NewGuid(),
             "Public",
             Guid.NewGuid(),
-            "Attr1"
+            "Attr1",
+            false
         );
 
         var methodArgs = new CreateMethodArgs(
             "Method1",
-            new CreateDataTypeArgs("void", "void"),
+            Guid.NewGuid(),
             "Public",
+            false,
+            false,
             false,
             false,
             false,
@@ -294,7 +297,9 @@ public class BuilderTest
         var method = new Method { Name = methodArgs.Name };
 
         _attributeServiceMock!.Setup(s => s.CreateAttribute(It.IsAny<CreateAttributeArgs>())).Returns(attribute);
-        _methodServiceCreateMock!.Setup(s => s.CreateMethod(It.IsAny<CreateMethodArgs>())).Returns(method);
+        _methodServiceCreateMock!.Setup(s => s.BuilderCreateMethod(It.IsAny<CreateMethodArgs>())).Returns(method);
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(attributeArgs))
+            .Returns(attribute);
 
         _builder!.SetName("ValidName");
         _builder.SetAbstraction(true);

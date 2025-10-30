@@ -6,95 +6,152 @@ namespace ObjectSim.Domain.Test.Args;
 [TestClass]
 public class CreateMethodArgsTest
 {
+    private CreateMethodArgs _args = null!;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _args = new CreateMethodArgs(
+            "Test",
+            Guid.NewGuid(),
+            "public",
+            true,
+            false,
+            true,
+            false,
+            false,
+            Guid.NewGuid(),
+            [],
+            [],
+            []
+        );
+    }
+
+    #region Name
+
     [TestMethod]
     public void Name_SetAndGet_ShouldReturnExpectedValue()
     {
-        var args = new CreateMethodArgs("Test", new CreateDataTypeArgs("Type", "int"), "public", true, false, true, Guid.NewGuid(), [], [], []);
         const string newName = "Other";
-        args.Name = newName;
-        args.Name.Should().Be(newName);
+        _args.Name = newName;
+        _args.Name.Should().Be(newName);
     }
+
+    #endregion
+
+    #region Type
 
     [TestMethod]
     public void Type_SetAndGet_ShouldReturnExpectedValue()
     {
-        var type = new CreateDataTypeArgs("Type", "int");
-        var args = new CreateMethodArgs("Test", type, "public", true, false, true, Guid.NewGuid(), [], [], []);
-        var newType = new CreateDataTypeArgs("OtherType", "float");
-        args.Type = newType;
-        args.Type.Should().Be(newType);
+        var newType = Guid.NewGuid();
+        _args.TypeId = newType;
+        _args.TypeId.Should().Be(newType);
     }
+
+    #endregion
+
+    #region Accessibility
 
     [TestMethod]
     public void Accessibility_SetAndGet_ShouldReturnExpectedValue()
     {
-        var args = new CreateMethodArgs("Test", new CreateDataTypeArgs("Type", "int"), "public", true, false, true, Guid.NewGuid(), [], [], []);
         const string newAccessibility = "private";
-        args.Accessibility = newAccessibility;
-        args.Accessibility.Should().Be(newAccessibility);
+        _args.Accessibility = newAccessibility;
+        _args.Accessibility.Should().Be(newAccessibility);
     }
+
+    #endregion
+
+    #region IsAbstract
 
     [TestMethod]
     public void IsAbstract_SetAndGet_ShouldReturnExpectedValue()
     {
-        var args = new CreateMethodArgs("Test", new CreateDataTypeArgs("Type", "int"), "public", true, false, true, Guid.NewGuid(), [], [], []);
-        args.IsAbstract = false;
-        args.IsAbstract.Should().BeFalse();
+        _args.IsAbstract = false;
+        _args.IsAbstract.Should().BeFalse();
     }
+
+    #endregion
+
+    #region IsSealed
 
     [TestMethod]
     public void IsSealed_SetAndGet_ShouldReturnExpectedValue()
     {
-        var args = new CreateMethodArgs("Test", new CreateDataTypeArgs("Type", "int"), "public", true, false, true, Guid.NewGuid(), [], [], [])
-        {
-            IsSealed = true
-        };
-        args.IsSealed.Should().BeTrue();
+        _args.IsSealed = true;
+        _args.IsSealed.Should().BeTrue();
     }
+
+    #endregion
+
+    #region IsOverride
 
     [TestMethod]
     public void IsOverride_SetAndGet_ShouldReturnExpectedValue()
     {
-        var args = new CreateMethodArgs("Test", new CreateDataTypeArgs("Type", "int"), "public", true, false, true, Guid.NewGuid(), [], [], [])
-        {
-            IsOverride = false
-        };
-        args.IsOverride.Should().BeFalse();
+        _args.IsOverride = false;
+        _args.IsOverride.Should().BeFalse();
     }
+
+    #endregion
+
+    #region IsStatic
+
+    [TestMethod]
+    public void IsStatic_SetAndGet_ShouldReturnExpectedValue()
+    {
+        _args.IsStatic = true;
+        _args.IsStatic.Should().BeTrue();
+    }
+
+    #endregion
+
+    #region ClassId
 
     [TestMethod]
     public void ClassId_SetAndGet_ShouldReturnExpectedValue()
     {
-        var args = new CreateMethodArgs("Test", new CreateDataTypeArgs("Type", "int"), "public", true, false, true, Guid.NewGuid(), [], [], []);
         var newId = Guid.NewGuid();
-        args.ClassId = newId;
-        args.ClassId.Should().Be(newId);
+        _args.ClassId = newId;
+        _args.ClassId.Should().Be(newId);
     }
+
+    #endregion
+
+    #region LocalVariables
 
     [TestMethod]
     public void LocalVariables_SetAndGet_ShouldReturnExpectedValue()
     {
-        var args = new CreateMethodArgs("Test", new CreateDataTypeArgs("Type", "int"), "public", true, false, true, Guid.NewGuid(), [], [], []);
-        var newVars = new List<CreateDataTypeArgs> { new("var", "int") };
-        args.LocalVariables = newVars;
-        args.LocalVariables.Should().BeEquivalentTo(newVars);
+        var newVars = new List<CreateVariableArgs> { new(Guid.NewGuid(), "int") };
+        _args.LocalVariables = newVars;
+        _args.LocalVariables.Should().BeEquivalentTo(newVars);
     }
+
+    #endregion
+
+    #region Parameters
 
     [TestMethod]
     public void Parameters_SetAndGet_ShouldReturnExpectedValue()
     {
-        var args = new CreateMethodArgs("Test", new CreateDataTypeArgs("Type", "int"), "public", true, false, true, Guid.NewGuid(), [], [], []);
-        var newParams = new List<CreateDataTypeArgs> { new("param", "string") };
-        args.Parameters = newParams;
-        args.Parameters.Should().BeEquivalentTo(newParams);
+        var newParams = new List<CreateVariableArgs> { new(Guid.NewGuid(), "string") };
+        _args.Parameters = newParams;
+        _args.Parameters.Should().BeEquivalentTo(newParams);
     }
+
+    #endregion
+
+    #region InvokeMethods
 
     [TestMethod]
     public void InvokeMethods_SetAndGet_ShouldReturnExpectedValue()
     {
-        var args = new CreateMethodArgs("Test", new CreateDataTypeArgs("Type", "int"), "public", true, false, true, Guid.NewGuid(), [], [], []);
-        var newInvoke = new List<Guid> { Guid.NewGuid() };
-        args.InvokeMethods = newInvoke;
-        args.InvokeMethods.Should().BeEquivalentTo(newInvoke);
+        var newInvoke = new List<CreateInvokeMethodArgs> { new CreateInvokeMethodArgs(Guid.NewGuid(), "test") };
+        _args.InvokeMethods = newInvoke;
+        _args.InvokeMethods.Should().BeEquivalentTo(newInvoke);
     }
+
+    #endregion
 }

@@ -16,7 +16,7 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
         {
             try
             {
-                var newAttribute = attributeService.CreateAttribute(attr);
+                var newAttribute = attributeService.BuilderCreateAttribute(attr);
                 if(Result.CanAddAttribute(newAttribute))
                 {
                     newAttributes.Add(newAttribute);
@@ -46,7 +46,7 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
         {
             try
             {
-                var newMethod = methodService.CreateMethod(method);
+                var newMethod = methodService.BuilderCreateMethod(method);
                 if(Result.CanAddMethod(newMethod))
                 {
                     validMethods.Add(newMethod);
@@ -63,9 +63,9 @@ public class ClassBuilder(IMethodServiceCreate methodService, IAttributeService 
     private void ValidateInterfaceImplementation(List<Method> methods)
     {
         var parent = Result.Parent;
-        if (parent is not null && parent.IsInterface == true)
+        if(parent is not null && parent.IsInterface == true)
         {
-            if ((from parentMethod in parent.Methods ?? Enumerable.Empty<Method>() select methods.Any(m => m.Name == parentMethod.Name)).Any(isImplemented => !isImplemented))
+            if((from parentMethod in parent.Methods ?? Enumerable.Empty<Method>() select methods.Any(m => m.Name == parentMethod.Name)).Any(isImplemented => !isImplemented))
             {
                 throw new ArgumentException("Parent class is an interface. Should implement all its methods");
             }

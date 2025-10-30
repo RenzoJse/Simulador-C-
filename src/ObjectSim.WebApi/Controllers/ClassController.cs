@@ -55,4 +55,21 @@ public class ClassController(IClassService classService) : ControllerBase
         return Ok();
     }
 
+    [HttpGet]
+    public IActionResult GetAllClasses()
+    {
+        var classes = classService.GetAll();
+
+        var response = classes.Select(ClassInformationDtoOut.ToInfo).ToList();
+
+        return Ok(response);
+    }
+
+    [HttpPatch("{classId:guid}")]
+    public IActionResult UpdateClass([FromRoute] Guid classId, [FromBody] UpdateClassNameDto dto)
+    {
+        classService.UpdateClass(classId, dto.Name);
+        return Ok();
+    }
+
 }

@@ -1,0 +1,49 @@
+import { Component, Inject } from '@angular/core';
+import { Router } from "@angular/router";
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+import { AttributeService } from "../../../backend/services/attribute/attribute.service";
+import CreateAttributeModel from '../../../backend/services/attribute/models/create-attribute.model';
+
+@Component({
+  selector: 'app-create-attribute',
+  templateUrl: './create-attribute.component.html',
+  styleUrl: './create-attribute.component.css'
+})
+export class CreateAttributeComponent {
+  createAttributeForm: FormGroup;
+  status: { loading?: true; error?: string } | null = null;
+  createdAttribute: CreateAttributeModel | null = null;
+
+  constructor(
+    private readonly _router: Router,
+    @Inject(AttributeService) private readonly _attributeService: AttributeService
+  ) {
+    this.createAttributeForm = new FormGroup({
+      name: new FormControl('', [Validators.required]),
+      dataTypeName: new FormControl('', [Validators.required]),
+      dataTypeKind: new FormControl('', [Validators.required]),
+      visibility: new FormControl('', [Validators.required]),
+      classId: new FormControl('', [Validators.required])
+    });
+  }
+
+  protected atSubmit(attribute: CreateAttributeModel) {
+    this.status = { loading: true };
+    console.log("Sending attribute:", attribute);
+
+    this._attributeService.createAttribute(attribute).subscribe({
+      next: (response: any) => {
+        this.status = null;
+        this.createdAttribute = response ?? attribute;
+      },
+      error: (error: any) => {
+        if (error.status === 400 && error.Message) {
+          this.status = { error: error.Message };
+        } else {
+          this.status = { error: error.message || 'Error creating attribute.' };
+        }
+      },
+    });
+  }
+}

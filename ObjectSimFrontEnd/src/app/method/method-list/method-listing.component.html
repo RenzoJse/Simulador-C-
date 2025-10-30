@@ -1,0 +1,12 @@
+﻿<app-method-list
+        [tittle]="'Select Method'"
+        (selectedMethod)="onSelectedMethod($event)" >
+</app-method-list>
+
+<app-confirmation-popup
+        [show]="showConfirmationPopup"
+        [itemName]="selectedMethod ?? ''"
+        [message]="'Are you sure you want to edit the method'"
+        (confirm)="confirmNavigation(selectedMethod ?? '')"
+        (cancel)="closePopup()">
+</app-confirmation-popup>

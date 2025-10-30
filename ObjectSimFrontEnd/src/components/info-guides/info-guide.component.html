@@ -1,0 +1,36 @@
+﻿<div class="accordion row g-4 justify-content-center" id="guideAccordion">
+    <div class="col-12 col-md-4" *ngFor="let guide of guides">
+            <div class="card shadow-sm border-0">
+                <div class="card-header custom-header">
+                    <h5 class="mb-0">
+                    <button class="btn btn-link w-100 text-start text-white text-decoration-none"
+                            data-bs-toggle="collapse"
+                            [attr.data-bs-target]="'#' + guide.id"
+                            [attr.aria-controls]="guide.id">
+                        {{ guide.title }}
+                    </button>
+                </h5>
+            </div>
+            <div [id]="guide.id" class="collapse">
+                <div class="card-body custom-body">
+                    <p class="guide-text">{{ guide.description }}</p>
+
+                    <div *ngIf="guide.link" class="text-end mt-3">
+                        <a
+                                [href]="guide.link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="btn btn-outline-light btn-sm rounded-pill px-3"
+                        >
+                            See more
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-4" *ngIf="footerText">
+    <p class="text-muted">{{ footerText }}</p>
+</div>

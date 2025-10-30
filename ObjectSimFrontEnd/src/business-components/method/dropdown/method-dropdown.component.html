@@ -1,0 +1,15 @@
+<div *ngIf="status.loading">Loading...</div>
+
+<div *ngIf="!status.loading && status.error">
+    <p>{{ status.error }}</p>
+</div>
+
+<app-dropdown
+        *ngIf="!status.loading && !status.error"
+        [options]="status.systemMethods"
+        tag="System Methods"
+        [value]="value"
+        reserve="Select a Method"
+        emptyMessage="There are no methods available"
+        (changeValue)="onSelectMethod($event)">
+</app-dropdown>

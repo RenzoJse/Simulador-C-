@@ -2,7 +2,6 @@
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
-using ObjectSim.WebApi.Filter;
 
 namespace ObjectSim.WebApi.Controllers;
 
@@ -12,9 +11,9 @@ public class MethodController(IMethodService methodService) : ControllerBase
 {
 
     [HttpPost]
-    public IActionResult CreateMethod(MethodDtoIn createMethodDtoIn)
+    public IActionResult CreateMethod(CreateMethodDtoIn createCreateMethodDtoIn)
     {
-        var methodInfo = methodService.CreateMethod(createMethodDtoIn.ToArgs());
+        var methodInfo = methodService.CreateMethod(createCreateMethodDtoIn.ToArgs());
 
         var response = new MethodInformationDtoOut(methodInfo);
 
@@ -48,10 +47,10 @@ public class MethodController(IMethodService methodService) : ControllerBase
         return Ok(response);
     }
 
-    [HttpPatch("{id:guid}/invokeMethods")]
-    public IActionResult AddInvokeMethods([FromRoute]Guid id, List<CreateInvokeMethodDtoIn> invokeMethodDtoIn)
+    [HttpPatch("{methodId:guid}/invokeMethods")]
+    public IActionResult AddInvokeMethods([FromRoute] Guid methodId, List<CreateInvokeMethodDtoIn> invokeMethodDtoIn)
     {
-        var invokeMethod = methodService.AddInvokeMethod(id, invokeMethodDtoIn.Select(dto => dto.ToArgs()).ToList());
+        var invokeMethod = methodService.AddInvokeMethod(methodId, invokeMethodDtoIn.Select(dto => dto.ToArgs()).ToList());
 
         var response = new MethodInformationDtoOut(invokeMethod);
 

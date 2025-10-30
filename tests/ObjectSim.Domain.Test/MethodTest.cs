@@ -5,8 +5,8 @@ namespace ObjectSim.Domain.Test;
 [TestClass]
 public class MethodTest
 {
-    private readonly DataType _methodType = new ValueType("methodType", "int", []);
-    private readonly DataType _methodReferenceType = new ReferenceType("methodReferenceType", "object", []);
+    private readonly DataType _methodType = new ValueType(Guid.NewGuid(), "int");
+    private readonly DataType _methodReferenceType = new ReferenceType(Guid.NewGuid(), "object");
 
     private readonly Class? _testClass = new Class
     {
@@ -22,10 +22,10 @@ public class MethodTest
     {
         Id = Guid.NewGuid(),
         Name = "OtherMethod",
-        Type = new ValueType("int", "int", []),
+        TypeId = Guid.NewGuid()
     };
 
-    private readonly InvokeMethod _testInvokeMethod = new InvokeMethod(OtherMethod.Id, Guid.NewGuid(), "this");
+    private readonly InvokeMethod _testInvokeMethod = new InvokeMethod(OtherMethod!.Id, Guid.NewGuid(), "this");
 
     [TestInitialize]
     public void Initialize()
@@ -34,21 +34,43 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "TestMethod",
-            Type = new ValueType("int", "int", []),
+            TypeId = Guid.NewGuid(),
             Accessibility = Method.MethodAccessibility.Public,
             Abstract = false,
             IsSealed = false,
             IsOverride = false,
+            IsStatic = false,
             ClassId = _testClass!.Id
         };
     }
 
+    #region DataType
+
     [TestMethod]
     public void DataType_Property_SetAndGet_ShouldBeEqual()
     {
-        var method = new Method { Type = _methodType };
-        method.Type.Should().Be(_methodType);
+        var method = new Method { TypeId = _methodType.Id };
+        method.TypeId.Should().Be(_methodType.Id);
     }
+
+    [TestMethod]
+    public void MethodDataType_CreateMethod_ShouldSetCorrectly()
+    {
+        var method = new Method { TypeId = _methodReferenceType.Id };
+        Assert.AreEqual(_methodReferenceType.Id, method.TypeId);
+    }
+
+    [TestMethod]
+    public void TypeId_SetAndGet_ShouldBeEqual()
+    {
+        var expectedTypeId = Guid.NewGuid();
+        var method = new Method { TypeId = expectedTypeId };
+        method.TypeId.Should().Be(expectedTypeId);
+    }
+
+    #endregion
+
+    #region Accessibility
 
     [TestMethod]
     public void Accessibility_Property_SetAndGet_ShouldBeEqual()
@@ -58,18 +80,15 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void MethodDataType_CreateMethod_ShouldSetCorrectly()
-    {
-        var method = new Method { Type = _methodReferenceType };
-        Assert.AreEqual(_methodReferenceType, method.Type);
-    }
-
-    [TestMethod]
     public void MethodAccessibility_CreateMethod_ShouldSetCorrectly()
     {
         _testMethod!.Accessibility = Method.MethodAccessibility.Public;
         Assert.AreEqual(Method.MethodAccessibility.Public, _testMethod.Accessibility);
     }
+
+    #endregion
+
+    #region Name
 
     [TestMethod]
     public void Name_Property_SetAndGet_ShouldBeEqual()
@@ -82,7 +101,6 @@ public class MethodTest
     public void Name_SetToEmpty_ShouldThrowArgumentException()
     {
         Action act = () => _testMethod!.Name = string.Empty;
-
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or whitespace.");
     }
@@ -91,9 +109,7 @@ public class MethodTest
     public void Name_SetToWhiteSpace_ShouldThrowArgumentException()
     {
         var method = new Method();
-
         Action act = () => method.Name = " ";
-
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or whitespace.");
     }
@@ -102,9 +118,7 @@ public class MethodTest
     public void Name_SetToTooLongValue_ShouldThrowArgumentException()
     {
         var method = new Method();
-
         Action act = () => method.Name = new string('t', 52);
-
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot exceed 50 characters.");
     }
@@ -113,12 +127,14 @@ public class MethodTest
     public void Name_SetToValueStartingWithNumber_ShouldThrowArgumentException()
     {
         var method = new Method();
-
         Action act = () => method.Name = "1Test";
-
         act.Should().Throw<ArgumentException>()
             .WithMessage("Name cannot be null or start with a num.");
     }
+
+    #endregion
+
+    #region Validate
 
     [TestMethod]
     public void Validate_ValidMethod_ShouldNotThrow()
@@ -127,12 +143,10 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "Test",
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
-
         Action act = method.ValidateFields;
-
         act.Should().NotThrow();
     }
 
@@ -143,12 +157,10 @@ public class MethodTest
         {
             Id = Guid.Empty,
             Name = "Test",
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
-
         Action act = method.ValidateFields;
-
         act.Should().Throw<ArgumentException>()
             .WithMessage("Id must be a valid non-empty GUID.");
     }
@@ -160,12 +172,10 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "mmmm",
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
-
         Action act = method.ValidateFields;
-
         act.Should().NotThrow();
     }
 
@@ -176,14 +186,11 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "test",
-            Type = _methodReferenceType
+            TypeId = _methodReferenceType.Id
         };
-
         var accessibilityField = typeof(Method).GetField("_accessibility", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         accessibilityField!.SetValue(method, (Method.MethodAccessibility)99);
-
         Action act = method.ValidateFields;
-
         act.Should().Throw<ArgumentException>()
             .WithMessage("Invalid accesibility type.");
     }
@@ -195,14 +202,48 @@ public class MethodTest
         {
             Id = Guid.NewGuid(),
             Name = "test",
-            Type = _methodReferenceType,
+            TypeId = _methodReferenceType.Id,
             Accessibility = Method.MethodAccessibility.Public
         };
-
         Action act = method.ValidateFields;
-
         act.Should().NotThrow();
     }
+
+    [TestMethod]
+    public void ValidateFields_WithInvalidName_ShouldThrow()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            TypeId = _methodReferenceType.Id,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+        var nameField = typeof(Method).GetField("_name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        nameField!.SetValue(method, "1Invalid");
+        Action act = method.ValidateFields;
+        act.Should().Throw<ArgumentException>().WithMessage("Name cannot be null or start with a num.");
+    }
+
+    [TestMethod]
+    public void ValidateFields_WithNullName_ShouldThrow()
+    {
+        var method = new Method
+        {
+            Id = Guid.NewGuid(),
+            TypeId = _methodReferenceType.Id,
+            Accessibility = Method.MethodAccessibility.Public
+        };
+        var nameField = typeof(Method).GetField("_name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        nameField!.SetValue(method, null);
+        Action act = method.ValidateFields;
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Name cannot be null or whitespace.");
+    }
+
+    #endregion
+
+    #region Bools
+
     [TestMethod]
     public void Abstract_SetAndGet_ShouldBeEqual()
     {
@@ -218,10 +259,21 @@ public class MethodTest
     }
 
     [TestMethod]
+    public void IsStatic_SetAndGet_ShouldBeEqual()
+    {
+        var method = new Method { IsStatic = true };
+        method.IsStatic.Should().BeTrue();
+    }
+
+    #endregion
+
+    #region ParametersAndVariables
+
+    [TestMethod]
     public void Parameters_AddParameter_ShouldContainParameter()
     {
         var method = new Method();
-        var param = new ValueType("variable", "int", []);
+        var param = new Variable(Guid.NewGuid(), "int", method);
         method.Parameters.Add(param);
         method.Parameters.Should().Contain(param);
     }
@@ -230,10 +282,14 @@ public class MethodTest
     public void LocalVariables_AddLocalVariable_ShouldContainLocalVariable()
     {
         var method = new Method();
-        var localVar = new ValueType("variable", "int", []);
+        var localVar = new Variable(Guid.NewGuid(), "int", method);
         method.LocalVariables.Add(localVar);
         method.LocalVariables.Should().Contain(localVar);
     }
+
+    #endregion
+
+    #region Constructor
 
     [TestMethod]
     public void Id_DefaultValue_ShouldNotBeEmpty()
@@ -243,46 +299,9 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void ValidateFields_WithInvalidName_ShouldThrow()
-    {
-        var method = new Method
-        {
-            Id = Guid.NewGuid(),
-            Type = _methodReferenceType,
-            Accessibility = Method.MethodAccessibility.Public
-        };
-
-        var nameField = typeof(Method).GetField("_name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        nameField!.SetValue(method, "1Invalid");
-
-        Action act = method.ValidateFields;
-        act.Should().Throw<ArgumentException>().WithMessage("Name cannot be null or start with a num.");
-    }
-
-    [TestMethod]
-    public void ValidateFields_WithNullName_ShouldThrow()
-    {
-        var method = new Method
-        {
-            Id = Guid.NewGuid(),
-            Type = _methodReferenceType,
-            Accessibility = Method.MethodAccessibility.Public
-        };
-
-        var nameField = typeof(Method).GetField("_name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        nameField!.SetValue(method, null);
-
-        Action act = method.ValidateFields;
-
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Name cannot be null or whitespace.");
-    }
-
-    [TestMethod]
     public void Constructor_ShouldInitializeParametersAndLocalVariables()
     {
         var method = new Method();
-
         method.Parameters.Should().NotBeNull();
         method.LocalVariables.Should().NotBeNull();
     }
@@ -296,14 +315,7 @@ public class MethodTest
         method.ClassId.Should().Be(classInstance.Id);
     }
 
-    [TestMethod]
-    public void TypeId_SetAndGet_ShouldBeEqual()
-    {
-        var expectedTypeId = Guid.NewGuid();
-        var method = new Method { TypeId = expectedTypeId };
-
-        method.TypeId.Should().Be(expectedTypeId);
-    }
+    #endregion
 
     #region InvokeMethod
 
@@ -315,6 +327,7 @@ public class MethodTest
     {
         _testMethod!.CanAddInvokeMethod(null!, _testClass!, "this");
     }
+
 
     [TestMethod]
     public void AddInvokeMethod_WhenOtherMethodIsNotInClass_ThrowsException()
@@ -331,7 +344,7 @@ public class MethodTest
         var attribute = new Attribute
         {
             Id = Guid.NewGuid(),
-            DataType = new ValueType("int", "int", []),
+            DataType = new ValueType(Guid.NewGuid(), "int"),
         };
         _testClass!.Attributes = [attribute];
 
@@ -344,12 +357,13 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenUsingMethodThatIsNotInClassNeitherParentClass_ThrowsException()
     {
+        var unreachableMethod = new Method { Name = "GhostMethod" };
+
         var parentClass = new Class { Methods = [] };
         _testClass!.Parent = parentClass;
+        _testClass.Methods!.Add(new Method { Name = "UnrelatedMethod" });
 
-        _testClass.Methods!.Add(new Method { Name = "OtherMethod" });
-
-        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod!, _testClass!, "this");
+        Action act = () => _testMethod!.CanAddInvokeMethod(unreachableMethod, _testClass!, "this");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
@@ -358,7 +372,7 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenIsTryingToUseMethodNotInLocalVariables_ThrowsException()
     {
-        var localVariable = new ValueType("int", "int", []);
+        var localVariable = new Variable(Guid.NewGuid(), "int", OtherMethod!);
 
         OtherMethod!.LocalVariables = [localVariable];
 
@@ -371,11 +385,11 @@ public class MethodTest
     [TestMethod]
     public void AddInvokeMethod_WhenIsTryingToUseMethodNotInParameters_ThrowsException()
     {
-        var parameter = new ValueType("int", "int", []);
+        var parameter = new Variable(Guid.NewGuid(), "int", OtherMethod!);
 
         OtherMethod!.Parameters = [parameter];
 
-        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!,"this");
+        Action act = () => _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "this");
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("The invoked method must be reachable from the current method.");
@@ -404,34 +418,13 @@ public class MethodTest
     }
 
     [TestMethod]
-    public void AddInvokeMethod_WhenMethodIsInAttributeDataType_AddsMethod()
-    {
-        var dataType = new ValueType("int", "int", [])
-        {
-            MethodIds = [OtherMethod!.Id]
-        };
-
-        var attribute = new Attribute
-        {
-            Id = Guid.NewGuid(),
-            DataType = dataType
-        };
-
-        _testClass!.Attributes = [attribute];
-
-        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass, "this");
-        _testMethod.MethodsInvoke.Add(_testInvokeMethod);
-        _testMethod.MethodsInvoke.Should().Contain(_testInvokeMethod);
-    }
-
-    [TestMethod]
     public void AddInvokeMethod_WhenMethodIsInLocalVariable_AddsMethod()
     {
-        var localVariable = new ValueType("int", "int", [OtherMethod!.Id]);
+        var localVariable = new Variable(Guid.NewGuid(), "int", OtherMethod!);
 
         OtherMethod!.LocalVariables = [localVariable];
 
-        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "this");
+        _testMethod!.CanAddInvokeMethod(OtherMethod, _testClass!, "test");
         _testMethod.MethodsInvoke.Add(_testInvokeMethod);
         _testMethod.MethodsInvoke.Should().Contain(_testInvokeMethod);
     }

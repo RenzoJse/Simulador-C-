@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Reflection;
+using FluentAssertions;
 using Moq;
 using ObjectSim.ClassConstructor.ClassBuilders.Builders;
 using ObjectSim.Domain;
@@ -21,16 +22,14 @@ public class AbstractBuilderTest
         Name = "TestMethod",
     };
 
-    private static readonly CreateDataTypeArgs TestArgsDataType = new(
-        "int", "value");
-
-    private static readonly DataType TestDataType = new ValueType("test", "int", []);
+    private static readonly DataType TestDataType = new ValueType(Guid.NewGuid(), "int");
 
     private static readonly CreateAttributeArgs TestCreateAttributeArgs = new(
-        TestArgsDataType,
+        Guid.NewGuid(),
         "public",
         Guid.NewGuid(),
-        "Test"
+        "Test",
+        false
     );
 
     private static readonly Class ParentClass = new Class
@@ -46,8 +45,10 @@ public class AbstractBuilderTest
 
     private static readonly CreateMethodArgs TestCreateMethodArgs = new(
         "TestMethod",
-        new CreateDataTypeArgs("TestParameter", "int"),
+        Guid.NewGuid(),
         "public",
+        false,
+        false,
         false,
         false,
         false,
@@ -77,9 +78,39 @@ public class AbstractBuilderTest
         action.Should().Throw<ArgumentNullException>();
     }
 
+    [TestMethod]
+    public void ValidateAttributeIsStatic_WithStaticAttribute_ThrowsArgumentException()
+    {
+        var attribute = new Attribute { IsStatic = true };
+
+        var method = typeof(AbstractBuilder)
+            .GetMethod("ValidateAttributeIsStatic", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+
+        Action act = () => method!.Invoke(null, [attribute]);
+
+        act.Should().Throw<TargetInvocationException>()
+            .WithInnerException<ArgumentException>()
+            .WithMessage("Attributes in abstract class cannot be static");
+    }
+
     #endregion
 
     #region Success
+
+    [TestMethod]
+    public void CreateClass_WithStaticValidAttributes_ReturnsEmptyAttributes()
+    {
+        var attribute1 = new Attribute { Name = "Attribute1", DataType = TestDataType, IsStatic = true };
+
+        _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute1")))
+            .Returns(attribute1);
+
+        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute1", true);
+
+        _abstractBuilder!.SetAttributes([attributeArgs1]);
+
+        _abstractBuilder.GetResult().Attributes.Should().HaveCount(0);
+    }
 
     [TestMethod]
     public void SetAttribute_WithSameAndDifferentAttributeNameAsParent_SetsOnlyDifferentNameAttribute()
@@ -104,13 +135,17 @@ public class AbstractBuilderTest
 
         _abstractBuilder!.SetParent(ParentClass);
 
-        var invalidAttributeArgs = new CreateAttributeArgs(TestArgsDataType, "public", Guid.NewGuid(), "TestAttribute");
-        var validAttributeArgs = new CreateAttributeArgs(TestArgsDataType, "public", Guid.NewGuid(), "NewAttribute");
+        var invalidAttributeArgs = new CreateAttributeArgs(Guid.NewGuid(), "public", Guid.NewGuid(), "TestAttribute", false);
+        var validAttributeArgs = new CreateAttributeArgs(Guid.NewGuid(), "public", Guid.NewGuid(), "NewAttribute", false);
 
         _attributeServiceMock!.Setup(m => m.CreateAttribute(invalidAttributeArgs))
             .Throws(new ArgumentException());
 
         _attributeServiceMock!.Setup(m => m.CreateAttribute(validAttributeArgs))
+            .Returns(validAttribute);
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(invalidAttributeArgs))
+            .Throws(new ArgumentException());
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(validAttributeArgs))
             .Returns(validAttribute);
 
         _abstractBuilder!.SetAttributes([invalidAttributeArgs, validAttributeArgs]);
@@ -127,12 +162,16 @@ public class AbstractBuilderTest
 
         _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute1")))
             .Returns(attribute1);
-
         _attributeServiceMock!.Setup(m => m.CreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
             .Returns(attribute2);
 
-        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataType, "public", Guid.NewGuid(), "Attribute1");
-        var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataType, "public", Guid.NewGuid(), "Attribute2");
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute1")))
+            .Returns(attribute1);
+        _attributeServiceMock!.Setup(m => m.BuilderCreateAttribute(It.Is<CreateAttributeArgs>(args => args.Name == "Attribute2")))
+            .Returns(attribute2);
+
+        var attributeArgs1 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute1", false);
+        var attributeArgs2 = new CreateAttributeArgs(TestCreateAttributeArgs.DataTypeId, "public", Guid.NewGuid(), "Attribute2", false);
 
         _abstractBuilder!.SetAttributes([attributeArgs1, attributeArgs2]);
 
@@ -190,7 +229,7 @@ public class AbstractBuilderTest
 
         _abstractBuilder!.SetParent(parentClass);
 
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
 
         Action action = () => _abstractBuilder!.SetMethods([TestCreateMethodArgs]);
 
@@ -203,8 +242,10 @@ public class AbstractBuilderTest
     {
         var invalidMethodArgs = new CreateMethodArgs(
             "InvalidMethod",
-            new CreateDataTypeArgs("MethodType", "int"),
+            Guid.NewGuid(),
             "public",
+            false,
+            false,
             false,
             false,
             false,
@@ -219,8 +260,8 @@ public class AbstractBuilderTest
             Name = "InvalidMethod",
         };
 
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(invalidMethodArgs)).Throws(new ArgumentException());
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(TestCreateMethodArgs)).Returns(TestMethod);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(invalidMethodArgs)).Throws(new ArgumentException());
 
         _abstractBuilder!.SetMethods([TestCreateMethodArgs, invalidMethodArgs]);
 
@@ -240,8 +281,10 @@ public class AbstractBuilderTest
 
         var methodCreateArgs2 = new CreateMethodArgs(
             "Method2",
-            new CreateDataTypeArgs("MethodType", "int"),
+            Guid.NewGuid(),
             "public",
+            false,
+            false,
             false,
             false,
             false,
@@ -253,8 +296,8 @@ public class AbstractBuilderTest
 
         var method2 = new Method { Name = "Method2" };
 
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(method1);
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(methodCreateArgs2)).Returns(method2);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(TestCreateMethodArgs)).Returns(method1);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(methodCreateArgs2)).Returns(method2);
 
         _abstractBuilder!.SetMethods([TestCreateMethodArgs, methodCreateArgs2]);
 
@@ -287,7 +330,7 @@ public class AbstractBuilderTest
 
         _abstractBuilder!.SetParent(parentClass);
 
-        _methodServiceCreateMock!.Setup(m => m.CreateMethod(TestCreateMethodArgs)).Returns(interfaceMethod);
+        _methodServiceCreateMock!.Setup(m => m.BuilderCreateMethod(TestCreateMethodArgs)).Returns(interfaceMethod);
 
         _abstractBuilder!.SetMethods([TestCreateMethodArgs]);
 

@@ -1,0 +1,27 @@
+<div class="create-namespace-page container mt-4">
+
+  <app-create-namespace-form
+    [title]="'Create Namespace'"
+    (nsSubmit)="onSubmit($event)">
+  </app-create-namespace-form>
+
+  <div *ngIf="createdNamespace" class="namespace-card-small mt-4 p-3">
+    <h5>✅ Namespace created successfully</h5>
+    <p><strong>Name:</strong> {{ createdNamespace.name }}</p>
+    <p><strong>Parent ID:</strong> {{ createdNamespace.parentId || '—' }}</p>
+    <p><strong>Class IDs:</strong>
+      {{ createdNamespace.classIds.length
+         ? createdNamespace.classIds.join(', ')
+         : '—' }}
+    </p>
+  </div>
+
+  <div *ngIf="status?.loading" class="text-center mt-3">
+    Loading...
+  </div>
+
+    <div *ngIf="status?.error" class="alert alert-danger mt-3">
+    {{ status?.error }}
+    </div>
+
+</div>

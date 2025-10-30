@@ -9,15 +9,15 @@ public class Attribute
         Public,
         Private,
         Protected,
-        Internal,
-        ProtectedInternal,
-        PrivateProtected
+        Internal
     }
+    public Guid DataTypeId { get; set; }
     public DataType DataType { get; set; } = null!;
     public AttributeVisibility Visibility { get; set; }
     public Guid Id { get; set; }
     public Guid ClassId { get; set; }
     public string? Name { get; set; } = null!;
+    public bool IsStatic { get; set; }
     public void Validate()
     {
         ValidateId(Id);

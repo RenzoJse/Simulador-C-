@@ -1,0 +1,18 @@
+<div class="mb-3">
+    <app-input
+            [type]="type"
+            [form]="form"
+            [tag]="tag"
+            [reserve]="reserve"
+            [controlName]="controlName"
+            [options]="options"
+            [value]="value"
+            (valueChange)="changeOnValue($event)"
+            [invalid]="(control?.invalid && (control?.touched || control?.dirty)) ?? false">
+    </app-input>
+    <div
+            class="invalid-feedback"
+            [style.display]="(control?.invalid && (control?.touched || control?.dirty)) ? 'block' : 'none'">
+        {{ errorMessage }}
+    </div>
+</div>

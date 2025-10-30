@@ -1,0 +1,32 @@
+<div class="delete-attribute-page container mt-4">
+  <h2 class="mb-3">Delete Attribute</h2>
+
+  <div *ngIf="status?.loading">Deleting...</div>
+  <div *ngIf="status?.error" class="text-danger">{{ status?.error }}</div>
+
+  <div class="mb-3">
+    <label for="attributeId">Select Attribute:</label>
+    <select
+      id="attributeId"
+      class="form-control"
+      [(ngModel)]="attributeId"
+    >
+      <option value="" disabled selected>Select an attribute</option>
+      <option *ngFor="let attr of attributesDropdown" [value]="attr.value">
+        {{ attr.tag }}
+      </option>
+    </select>
+  </div>
+
+  <button
+    class="btn btn-danger"
+    (click)="deleteAttribute()"
+    [disabled]="!attributeId || status?.loading">
+    Delete
+  </button>
+
+  <div *ngIf="success" class="delete-card-small mt-4 p-3">
+    <h5>✅ Attribute deleted successfully </h5>
+    <p><strong>ID deleted:</strong> {{ attributeId || '(not found)' }}</p>
+  </div>
+</div>

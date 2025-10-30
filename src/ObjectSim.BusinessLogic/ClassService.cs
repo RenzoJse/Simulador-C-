@@ -8,20 +8,36 @@ using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.BusinessLogic;
 
-public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepository<Class> classRepository) : IClassService
+public class ClassService(IDataTypeService dataTypeService, IEnumerable<IBuilderStrategy> builderStrategies, IRepository<Class> classRepository) : IClassService
 {
 
     #region CreateClass
 
     public Class CreateClass(CreateClassArgs args)
     {
+        CheckForDuplicateName(args.Name!);
         var builder = SelectBuilderForArgs(args);
         ConfigureBuilderWithArgs(builder, args);
 
         var newClass = builder.GetResult();
         SaveClassToRepository(newClass);
+        CreateDataType(newClass);
 
         return newClass;
+    }
+
+    private void CheckForDuplicateName(string name)
+    {
+        if(classRepository.Get(c => c.Name == name) != null)
+        {
+            throw new ArgumentException("A class with that name already exists.");
+        }
+    }
+
+    private void CreateDataType(Class newClass)
+    {
+        var dataTypeArgs = new CreateDataTypeArgs(newClass.Id, newClass.Name!);
+        dataTypeService.CreateDataType(dataTypeArgs);
     }
 
     private Builder SelectBuilderForArgs(CreateClassArgs args)
@@ -76,6 +92,37 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     #endregion
 
+    #region GetAll
+
+    public List<Class> GetAll()
+    {
+        var classes = classRepository.GetAll(c => c.Id != Guid.Empty)?.ToList();
+        if(classes == null || classes.Count == 0)
+        {
+            throw new Exception("No classes found.");
+        }
+
+        return classes;
+    }
+
+    #endregion
+
+    #region SystemMethod
+
+    public Guid GetIdByName(string name)
+    {
+        var foundClass = classRepository.Get(c => c.Id != Guid.Empty && c.Name == name);
+
+        if(foundClass == null)
+        {
+            throw new ArgumentException("Class not found");
+        }
+
+        return foundClass.Id;
+    }
+
+    #endregion
+
     #region DeleteClass
 
     public void DeleteClass(Guid? classId)
@@ -121,7 +168,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     private static void EnsureClassHasMethods(Class classObj)
     {
-        if (classObj.Methods == null || classObj.Methods.Count == 0)
+        if(classObj.Methods == null || classObj.Methods.Count == 0)
         {
             throw new ArgumentException("Class has no methods.");
         }
@@ -130,7 +177,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
     private static Method FindMethodInClass(Class classObj, Guid? methodId)
     {
         var method = classObj.Methods!.FirstOrDefault(m => m.Id == methodId);
-        if (method == null)
+        if(method == null)
         {
             throw new ArgumentException("Method not found in class.");
         }
@@ -146,19 +193,19 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     private static void ValidateParentClassConstraints(Class classObj, Method method)
     {
-        if (classObj.Parent == null)
+        if(classObj.Parent == null)
         {
             return;
         }
 
         var parentClass = classObj.Parent;
 
-        if ((bool)parentClass.IsInterface!)
+        if((bool)parentClass.IsInterface!)
         {
             EnsureMethodNotInInterface(parentClass, method);
         }
 
-        if ((bool)parentClass.IsAbstract! && method.IsOverride)
+        if((bool)parentClass.IsAbstract! && method.IsOverride)
         {
             throw new ArgumentException("Cannot remove method that is overriding abstract parent method you implement.");
         }
@@ -182,7 +229,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
             .SelectMany(m => m.MethodsInvoke)
             .Any(invocation => invocation.InvokeMethodId == method.Id);
 
-        if (isInvoked)
+        if(isInvoked)
         {
             throw new ArgumentException("Cannot remove method that is invoked by another method.");
         }
@@ -206,7 +253,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     private static void EnsureClassHasAttributes(Class classObj)
     {
-        if (classObj.Attributes == null || classObj.Attributes.Count == 0)
+        if(classObj.Attributes == null || classObj.Attributes.Count == 0)
         {
             throw new ArgumentException("The class has no attributes.");
         }
@@ -215,7 +262,7 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
     private static Attribute FindAttributeInClass(Class classObj, Guid? attributeId)
     {
         var attribute = classObj.Attributes!.FirstOrDefault(a => a.Id == attributeId);
-        if (attribute == null)
+        if(attribute == null)
         {
             throw new ArgumentException("That attribute does not exist in the class.");
         }
@@ -225,20 +272,36 @@ public class ClassService(IEnumerable<IBuilderStrategy> builderStrategies, IRepo
 
     private static void EnsureAttributeNotUsedInMethods(Class classObj, Attribute attribute)
     {
-        if (classObj.Methods == null || classObj.Methods.Count == 0)
+        if(classObj.Methods == null || classObj.Methods.Count == 0)
         {
             return;
         }
 
-        foreach (var method in classObj.Methods)
+        foreach(var method in classObj.Methods)
         {
-            if (method.LocalVariables != null && method.LocalVariables.Any(lv => lv.Name == attribute.Name))
+            if(method.LocalVariables != null && method.LocalVariables.Any(lv => lv.Name == attribute.Name))
             {
                 throw new ArgumentException("Attribute is being used in method.");
             }
         }
     }
 
+    #endregion
+
+    #region UpdateClass
+    public void UpdateClass(Guid classId, string newName)
+    {
+        var existingClass = classRepository.Get(c => c.Id == classId)
+            ?? throw new ArgumentException("Class not found");
+
+        if(string.IsNullOrWhiteSpace(newName))
+        {
+            throw new ArgumentException("Name cannot be empty");
+        }
+
+        existingClass.Name = newName;
+        classRepository.Update(existingClass);
+    }
     #endregion
 
 }

@@ -89,6 +89,25 @@ public class ClassControllerTest
         answer.Id.Should().Be(_testClass.Id);
     }
 
+    [TestMethod]
+    public void CreateClass_NullDto_ShouldThrowNullReferenceException()
+    {
+        Action act = () => _classController.CreateClass(null!);
+        act.Should().Throw<NullReferenceException>();
+    }
+
+    [TestMethod]
+    public void CreateClass_ServiceThrowsException_ShouldPropagateException()
+    {
+        var dtoIn = new CreateClassDtoIn { Name = "T1", IsAbstract = false, IsInterface = false, IsSealed = false };
+        _classServiceMock
+            .Setup(s => s.CreateClass(It.IsAny<CreateClassArgs>()))
+            .Throws(new InvalidOperationException("internal error"));
+
+        Action act = () => _classController.CreateClass(dtoIn);
+        act.Should().Throw<InvalidOperationException>()
+           .WithMessage("internal error");
+    }
     #endregion
 
     #region GetClass-GET
@@ -119,6 +138,31 @@ public class ClassControllerTest
         answer.Id.Should().Be(_testClass.Id);
     }
 
+    [TestMethod]
+    public void GetClass_ServiceThrowsException_ShouldPropagateException()
+    {
+        var id = Guid.NewGuid();
+        _classServiceMock
+            .Setup(s => s.GetById(id))
+            .Throws(new KeyNotFoundException("no existe"));
+
+        Action act = () => _classController.GetClass(id);
+        act.Should().Throw<KeyNotFoundException>()
+           .WithMessage("no existe");
+    }
+
+    [TestMethod]
+    public void GetClass_EmptyGuid_ShouldThrowArgumentException()
+    {
+        var empty = Guid.Empty;
+        _classServiceMock
+            .Setup(s => s.GetById(empty))
+            .Throws(new ArgumentException("Id inv�lido"));
+
+        Action act = () => _classController.GetClass(empty);
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Id inv�lido");
+    }
     #endregion
 
     #region DeleteClass_DELETE
@@ -135,6 +179,31 @@ public class ClassControllerTest
         var resultObject = result as OkResult;
         var statusCode = resultObject?.StatusCode;
         statusCode.Should().Be(200);
+    }
+
+    [TestMethod]
+    public void DeleteClass_ServiceThrowsException_ShouldPropagateException()
+    {
+        var id = Guid.NewGuid();
+        _classServiceMock
+            .Setup(s => s.DeleteClass(id))
+            .Throws(new InvalidOperationException("fail delete"));
+
+        Action act = () => _classController.DeleteClass(id);
+        act.Should().Throw<InvalidOperationException>()
+           .WithMessage("fail delete");
+    }
+
+    [TestMethod]
+    public void DeleteClass_EmptyGuid_ShouldThrowArgumentException()
+    {
+        _classServiceMock
+            .Setup(s => s.DeleteClass(Guid.Empty))
+            .Throws(new ArgumentException("Empty id"));
+
+        Action act = () => _classController.DeleteClass(Guid.Empty);
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Empty id");
     }
 
     #endregion
@@ -154,6 +223,20 @@ public class ClassControllerTest
         var resultObject = result as OkResult;
         var statusCode = resultObject?.StatusCode;
         statusCode.Should().Be(200);
+    }
+
+    [TestMethod]
+    public void RemoveMethod_ServiceThrowsException_ShouldPropagateException()
+    {
+        var cId = _testClass.Id;
+        var mId = Guid.NewGuid();
+        _classServiceMock
+            .Setup(s => s.RemoveMethod(cId, mId))
+            .Throws(new InvalidOperationException("Cant remove method"));
+
+        Action act = () => _classController.RemoveMethod(cId, mId);
+        act.Should().Throw<InvalidOperationException>()
+           .WithMessage("Cant remove method");
     }
 
     #endregion
@@ -177,4 +260,94 @@ public class ClassControllerTest
 
     #endregion
 
+    #region GetAll-Classes-Test
+
+    [TestMethod]
+    public void GetAllMethods_ShouldReturnAllMethods()
+    {
+        var classes = new List<Class> { _testClass };
+
+        _classServiceMock
+            .Setup(service => service.GetAll())
+            .Returns(classes);
+
+        var result = _classController.GetAllClasses();
+
+        var okResult = result as OkObjectResult;
+        okResult.Should().NotBeNull();
+        okResult!.StatusCode.Should().Be(200);
+
+        var response = okResult.Value as List<ClassInformationDtoOut>;
+        response.Should().NotBeNull();
+        response!.Count.Should().Be(classes.Count);
+        response.First().Name.Should().Be(_testClass.Name);
+    }
+
+    [TestMethod]
+    public void GetAllClasses_ServiceThrowsException_ShouldPropagateException()
+    {
+        _classServiceMock
+            .Setup(s => s.GetAll())
+            .Throws(new Exception("fail get all"));
+
+        Action act = () => _classController.GetAllClasses();
+        act.Should().Throw<Exception>()
+           .WithMessage("fail get all");
+    }
+    #endregion
+
+    #region Update-Class-Test
+    [TestMethod]
+    public void UpdateClass_WhenIsValid_MakesValidUpdate()
+    {
+        var classId = Guid.NewGuid();
+        var dto = new UpdateClassNameDto { Name = "UpdatedName" };
+
+        _classServiceMock
+            .Setup(service => service.UpdateClass(classId, dto.Name));
+
+        var result = _classController.UpdateClass(classId, dto);
+
+        var resultObject = result as OkResult;
+        var statusCode = resultObject?.StatusCode;
+        statusCode.Should().Be(200);
+
+        _classServiceMock.Verify(service => service.UpdateClass(classId, dto.Name), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateClass_NullDto_ShouldThrowNullReferenceException()
+    {
+        Action act = () => _classController.UpdateClass(Guid.NewGuid(), null!);
+        act.Should().Throw<NullReferenceException>();
+    }
+
+    [TestMethod]
+    public void UpdateClass_ServiceThrowsException_ShouldPropagateException()
+    {
+        var id = Guid.NewGuid();
+        var dto = new UpdateClassNameDto { Name = "X" };
+        _classServiceMock
+            .Setup(s => s.UpdateClass(id, dto.Name))
+            .Throws(new KeyNotFoundException("Not found"));
+
+        Action act = () => _classController.UpdateClass(id, dto);
+        act.Should().Throw<KeyNotFoundException>()
+           .WithMessage("Not found");
+    }
+
+    [TestMethod]
+    public void UpdateClass_EmptyGuid_ShouldThrowArgumentException()
+    {
+        var dto = new UpdateClassNameDto { Name = "C1" };
+        _classServiceMock
+            .Setup(s => s.UpdateClass(Guid.Empty, dto.Name))
+            .Throws(new ArgumentException("Id inv�lido"));
+
+        Action act = () => _classController.UpdateClass(Guid.Empty, dto);
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Id inv�lido");
+    }
+    #endregion
 }
+

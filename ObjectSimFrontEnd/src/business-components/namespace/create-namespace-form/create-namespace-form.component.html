@@ -1,0 +1,37 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Create Namespace</h2>
+
+  <app-form [form]="form" (atSubmit)="onSubmit()">
+
+    <app-form-input
+      [form]="form"
+      controlName="name"
+      [reserve]="'Namespace name'"
+      [name]="'name'"
+      [tag]="'Name'"
+      [errorMessages]="{ required: 'Name is required.' }"
+      [type]="'text'">
+    </app-form-input>
+
+    <app-namespace-dropdown
+      (selectNamespace)="onSelectNamespace($event)">
+    </app-namespace-dropdown>
+
+    <app-multi-select (selectedClassIds)="onClassSelect($event)"></app-multi-select>
+
+    <div *ngIf="createStatus?.loading; else notLoading">
+      Creating...
+    </div>
+
+    <ng-template #notLoading>
+      <ng-container *ngIf="createStatus as status">
+        <div *ngIf="status.error" class="text-danger">
+          {{ status.error }}
+        </div>
+      </ng-container>
+
+      <app-form-button title="Create Namespace"></app-form-button>
+    </ng-template>
+
+  </app-form>
+</div>

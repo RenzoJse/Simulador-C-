@@ -22,36 +22,6 @@ namespace ObjectSim.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ObjectSim.DataAccess.DataContext+DataTypeMethodLocalVariables", b =>
-                {
-                    b.Property<Guid>("IdDataType")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("IdMethod")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("IdDataType", "IdMethod");
-
-                    b.HasIndex("IdMethod");
-
-                    b.ToTable("DataTypeMethodLocalVariables");
-                });
-
-            modelBuilder.Entity("ObjectSim.DataAccess.DataContext+DataTypeMethodParameters", b =>
-                {
-                    b.Property<Guid>("IdDataType")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("IdMethod")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("IdDataType", "IdMethod");
-
-                    b.HasIndex("IdMethod");
-
-                    b.ToTable("DataTypeMethodParameters");
-                });
-
             modelBuilder.Entity("ObjectSim.Domain.Attribute", b =>
                 {
                     b.Property<Guid>("Id")
@@ -63,6 +33,9 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.Property<Guid>("DataTypeId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsStatic")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -77,6 +50,17 @@ namespace ObjectSim.DataAccess.Migrations
                     b.HasIndex("DataTypeId");
 
                     b.ToTable("Attributes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000201"),
+                            ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            DataTypeId = new Guid("00000000-0000-0000-0000-000000000005"),
+                            IsStatic = false,
+                            Name = "default",
+                            Visibility = 0
+                        });
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Class", b =>
@@ -114,6 +98,78 @@ namespace ObjectSim.DataAccess.Migrations
                             IsInterface = false,
                             IsSealed = false,
                             Name = "Object"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            IsAbstract = false,
+                            IsInterface = false,
+                            IsSealed = true,
+                            Name = "String",
+                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            IsAbstract = false,
+                            IsInterface = false,
+                            IsSealed = true,
+                            Name = "Int32",
+                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            IsAbstract = false,
+                            IsInterface = false,
+                            IsSealed = true,
+                            Name = "Boolean",
+                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000006"),
+                            IsAbstract = false,
+                            IsInterface = false,
+                            IsSealed = true,
+                            Name = "Char",
+                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000007"),
+                            IsAbstract = false,
+                            IsInterface = false,
+                            IsSealed = true,
+                            Name = "Decimal",
+                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
+                            IsAbstract = false,
+                            IsInterface = false,
+                            IsSealed = true,
+                            Name = "Byte",
+                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000009"),
+                            IsAbstract = false,
+                            IsInterface = false,
+                            IsSealed = true,
+                            Name = "float",
+                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000010"),
+                            IsAbstract = false,
+                            IsInterface = false,
+                            IsSealed = true,
+                            Name = "Double",
+                            ParentId = new Guid("00000000-0000-0000-0000-000000000001")
                         });
                 });
 
@@ -127,14 +183,6 @@ namespace ObjectSim.DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
-
-                    b.Property<string>("MethodIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -163,9 +211,28 @@ namespace ObjectSim.DataAccess.Migrations
 
                     b.HasKey("MethodId", "InvokeMethodId");
 
-                    b.HasIndex("InvokeMethodId");
-
                     b.ToTable("InvokeMethod");
+                });
+
+            modelBuilder.Entity("ObjectSim.Domain.Key", b =>
+                {
+                    b.Property<Guid>("AccessKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("AccessKey");
+
+                    b.ToTable("Keys");
+
+                    b.HasData(
+                        new
+                        {
+                            AccessKey = new Guid("9c0ff0b1-4abd-45c6-8a4a-831748fb7a20")
+                        },
+                        new
+                        {
+                            AccessKey = new Guid("515dd649-30a0-4d57-9302-62a8db8179bd")
+                        });
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Method", b =>
@@ -180,13 +247,19 @@ namespace ObjectSim.DataAccess.Migrations
                     b.Property<int>("Accessibility")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("ClassId")
+                    b.Property<Guid>("ClassId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsOverride")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsSealed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsStatic")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVirtual")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -212,6 +285,8 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
+                            IsVirtual = false,
                             Name = "Equals",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
                         },
@@ -223,6 +298,8 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
+                            IsVirtual = false,
                             Name = "Equals (Object, Object)",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
                         },
@@ -234,6 +311,8 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
+                            IsVirtual = false,
                             Name = "Finalize",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
                         },
@@ -245,6 +324,8 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
+                            IsVirtual = false,
                             Name = "GetHashCode",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
                         },
@@ -256,6 +337,8 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
+                            IsVirtual = false,
                             Name = "GetType",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
                         },
@@ -267,6 +350,8 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
+                            IsVirtual = false,
                             Name = "MemberwiseClone",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
                         },
@@ -278,6 +363,8 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
+                            IsVirtual = false,
                             Name = "ReferenceEquals",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
                         },
@@ -289,9 +376,73 @@ namespace ObjectSim.DataAccess.Migrations
                             ClassId = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsOverride = false,
                             IsSealed = false,
+                            IsStatic = false,
+                            IsVirtual = false,
                             Name = "ToString",
                             TypeId = new Guid("00000000-0000-0000-0000-000000000005")
                         });
+                });
+
+            modelBuilder.Entity("ObjectSim.Domain.Namespace", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ClassIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClassIdsSerialized")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ClassIdsSerialized");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Namespaces");
+                });
+
+            modelBuilder.Entity("ObjectSim.Domain.Variable", b =>
+                {
+                    b.Property<Guid>("VariableId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MethodId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("MethodId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("MethodId2")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("VariableId");
+
+                    b.HasIndex("MethodId");
+
+                    b.HasIndex("MethodId1");
+
+                    b.HasIndex("MethodId2");
+
+                    b.ToTable("Variables");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.ReferenceType", b =>
@@ -311,89 +462,43 @@ namespace ObjectSim.DataAccess.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000005"),
-                            MethodIds = "[]",
-                            Name = "void",
                             Type = "void"
                         },
                         new
                         {
-                            Id = new Guid("249d6656-0276-556c-a992-bcf6bfea8578"),
-                            MethodIds = "[]",
-                            Name = "int",
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
                             Type = "int"
                         },
                         new
                         {
-                            Id = new Guid("729965ef-64e3-5607-939f-8e19784ef0e9"),
-                            MethodIds = "[]",
-                            Name = "bool",
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
                             Type = "bool"
                         },
                         new
                         {
-                            Id = new Guid("49e4ea3e-e6d6-4eb7-a7de-01cf4dc1cf7a"),
-                            MethodIds = "[]",
-                            Name = "char",
+                            Id = new Guid("00000000-0000-0000-0000-000000000006"),
                             Type = "char"
                         },
                         new
                         {
-                            Id = new Guid("1d9cd43c-e19b-4b24-ae0f-fb6cc43f1f27"),
-                            MethodIds = "[]",
-                            Name = "decimal",
+                            Id = new Guid("00000000-0000-0000-0000-000000000007"),
                             Type = "decimal"
                         },
                         new
                         {
-                            Id = new Guid("4e82822e-e6e1-44c1-9df9-7c43f7ecda5e"),
-                            MethodIds = "[]",
-                            Name = "byte",
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
                             Type = "byte"
                         },
                         new
                         {
-                            Id = new Guid("75dfd62e-8d7c-48ee-9481-183ec3629936"),
-                            MethodIds = "[]",
-                            Name = "float",
+                            Id = new Guid("00000000-0000-0000-0000-000000000009"),
                             Type = "float"
                         },
                         new
                         {
-                            Id = new Guid("bd8e7c9e-e8d0-42f2-9479-63284c5c3fa0"),
-                            MethodIds = "[]",
-                            Name = "double",
+                            Id = new Guid("00000000-0000-0000-0000-000000000010"),
                             Type = "double"
                         });
-                });
-
-            modelBuilder.Entity("ObjectSim.DataAccess.DataContext+DataTypeMethodLocalVariables", b =>
-                {
-                    b.HasOne("ObjectSim.Domain.DataType", null)
-                        .WithMany()
-                        .HasForeignKey("IdDataType")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ObjectSim.Domain.Method", null)
-                        .WithMany()
-                        .HasForeignKey("IdMethod")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ObjectSim.DataAccess.DataContext+DataTypeMethodParameters", b =>
-                {
-                    b.HasOne("ObjectSim.Domain.DataType", null)
-                        .WithMany()
-                        .HasForeignKey("IdDataType")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ObjectSim.Domain.Method", null)
-                        .WithMany()
-                        .HasForeignKey("IdMethod")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Attribute", b =>
@@ -427,12 +532,6 @@ namespace ObjectSim.DataAccess.Migrations
                 {
                     b.HasOne("ObjectSim.Domain.Method", null)
                         .WithMany("MethodsInvoke")
-                        .HasForeignKey("InvokeMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ObjectSim.Domain.Method", null)
-                        .WithMany()
                         .HasForeignKey("MethodId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -443,15 +542,41 @@ namespace ObjectSim.DataAccess.Migrations
                     b.HasOne("ObjectSim.Domain.Class", null)
                         .WithMany("Methods")
                         .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("ObjectSim.Domain.DataType", "Type")
+                    b.HasOne("ObjectSim.Domain.DataType", null)
                         .WithMany()
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
-                    b.Navigation("Type");
+            modelBuilder.Entity("ObjectSim.Domain.Namespace", b =>
+                {
+                    b.HasOne("ObjectSim.Domain.Namespace", null)
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("ObjectSim.Domain.Variable", b =>
+                {
+                    b.HasOne("ObjectSim.Domain.Method", "Method")
+                        .WithMany()
+                        .HasForeignKey("MethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ObjectSim.Domain.Method", null)
+                        .WithMany("LocalVariables")
+                        .HasForeignKey("MethodId1");
+
+                    b.HasOne("ObjectSim.Domain.Method", null)
+                        .WithMany("Parameters")
+                        .HasForeignKey("MethodId2");
+
+                    b.Navigation("Method");
                 });
 
             modelBuilder.Entity("ObjectSim.Domain.Class", b =>
@@ -463,7 +588,16 @@ namespace ObjectSim.DataAccess.Migrations
 
             modelBuilder.Entity("ObjectSim.Domain.Method", b =>
                 {
+                    b.Navigation("LocalVariables");
+
                     b.Navigation("MethodsInvoke");
+
+                    b.Navigation("Parameters");
+                });
+
+            modelBuilder.Entity("ObjectSim.Domain.Namespace", b =>
+                {
+                    b.Navigation("Children");
                 });
 #pragma warning restore 612, 618
         }

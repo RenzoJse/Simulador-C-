@@ -1,0 +1,9 @@
+<div class="dropdown mb-3">
+    <select [value]="value" (change)="atChange($event)" class="form-select">
+        <option *ngIf="reserve && options.length > 0" value="" disabled selected>{{ reserve }}</option>
+        <option *ngIf="options.length === 0" value="" disabled selected>{{ emptyMessage }}</option>
+        <option *ngFor="let option of options" [value]="option.value" [selected]="value == option.value">
+            {{ option.tag }}
+        </option>
+    </select>
+</div>

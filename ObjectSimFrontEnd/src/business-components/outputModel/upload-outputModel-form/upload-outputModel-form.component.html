@@ -1,0 +1,19 @@
+﻿<form [formGroup]="uploadOutputModelForm" (ngSubmit)="onSubmit()">
+    <input
+            type="file"
+            class="form-control mb-3"
+            (change)="onFileSelected($event)"
+            accept=".dll" />
+
+    <button type="submit" class="btn btn-primary">Upload!</button>
+
+    <div *ngIf="uploadOutputModelFormStatus?.loading; else notLoading">
+        Loading...
+    </div>
+
+    <ng-template #notLoading>
+        <div *ngIf="uploadOutputModelFormStatus?.error">
+            {{ uploadOutputModelFormStatus!.error }}
+        </div>
+    </ng-template>
+</form>

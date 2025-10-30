@@ -1,0 +1,12 @@
+﻿<app-class-list
+        [tittle]="'Select Class'"
+        (selectedClass)="onSelectedClass($event)" >
+</app-class-list>
+
+<app-confirmation-popup
+        [show]="showConfirmationPopup"
+        [itemName]="selectedClass ?? ''"
+        [message]="'Are you sure you want to edit the class'"
+        (confirm)="confirmNavigation(selectedClass ?? '')"
+        (cancel)="closePopup()">
+</app-confirmation-popup>

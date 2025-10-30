@@ -5,7 +5,7 @@ using ObjectSim.IBusinessLogic;
 
 namespace ObjectSim.BusinessLogic;
 
-public class DataTypeService(IRepository<Class> classRepository) : IDataTypeService
+public class DataTypeService(IRepository<Class> classRepository, IRepository<DataType> dataTypeRepository) : IDataTypeService
 {
 
     #region CreateDataType
@@ -14,17 +14,17 @@ public class DataTypeService(IRepository<Class> classRepository) : IDataTypeServ
     {
         ValidateArgsNotNull(args);
 
-        if (IsBuiltinType(args.Type))
+        if(IsBuiltinType(args.Type))
         {
             return CreateBuiltinValueType(args);
         }
 
-        if (IsStringType(args.Type))
+        if(IsStringType(args.Type))
         {
             return CreateStringReferenceType(args);
         }
 
-        if (!ClassExists(args.Type))
+        if(!ClassExists(args.Type))
         {
             throw new ArgumentException($"Cannot create ReferenceType: class '{args.Type}' not found.");
         }
@@ -54,17 +54,38 @@ public class DataTypeService(IRepository<Class> classRepository) : IDataTypeServ
 
     private static Domain.ValueType CreateBuiltinValueType(CreateDataTypeArgs args)
     {
-        return new Domain.ValueType(args.Name, args.Type, []);
+        return new Domain.ValueType(args.ClassId, args.Type);
     }
 
     private static ReferenceType CreateStringReferenceType(CreateDataTypeArgs args)
     {
-        return new ReferenceType(args.Name, args.Type, []);
+        return new ReferenceType(args.ClassId, args.Type);
     }
 
-    private static ReferenceType CreateReferenceType(CreateDataTypeArgs args)
+    private ReferenceType CreateReferenceType(CreateDataTypeArgs args)
     {
-        return new ReferenceType(args.Name, args.Type, []);
+        var referenceType = new ReferenceType(args.ClassId, args.Type);
+        dataTypeRepository.Add(referenceType);
+        return referenceType;
+    }
+
+    #endregion
+
+    #region GetById
+
+    public DataType GetById(Guid id)
+    {
+        var dt = dataTypeRepository.Get(c => c.Id == id);
+        return dt ?? throw new KeyNotFoundException("DataType not found");
+    }
+
+    #endregion
+
+    #region GetAll
+
+    public List<DataType> GetAll()
+    {
+        return dataTypeRepository.GetAll(_ => true);
     }
 
     #endregion

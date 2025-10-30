@@ -1,0 +1,16 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Delete Class:</h2>
+
+  <app-form [form]="deleteClassform" (atSubmit)="onSubmit()">
+    <app-class-dropdown (selectClass)="updateClassId($event)"></app-class-dropdown>
+    <app-form-button title="Delete"></app-form-button>
+  </app-form>
+
+  <div *ngIf="loading" class="loading">Loading...</div>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="success" class="success-card">
+    Class deleted successfully!
+  </div>
+</div>

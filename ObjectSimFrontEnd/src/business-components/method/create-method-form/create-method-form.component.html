@@ -1,0 +1,68 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Create Method</h2>
+
+  <app-form [form]="createMethodForm" (atSubmit)="onSubmit()">
+
+    <app-form-input
+      [form]="createMethodForm"
+      controlName="Name"
+      [reserve]="'Method Name'"
+      [name]="'Name'"
+      [tag]="'Name'"
+      [errorMessages]="{ required: 'Name is required.' }"
+      [type]="'text'">
+    </app-form-input>
+
+    <app-form-input
+      [form]="createMethodForm"
+      controlName="typeId"
+      [reserve]="'Method Type'"
+      [name]="'typeId'"
+      [tag]="'Type ID'"
+      [errorMessages]="{ required: 'Type is required.' }"
+      [type]="'text'">
+    </app-form-input>
+
+    <app-form-input
+      [form]="createMethodForm"
+      controlName="accessibility"
+      [reserve]="'Accessibility'"
+      [name]="'Accessibility'"
+      [tag]="'Accessibility'"
+      [errorMessages]="{ required: 'Accessibility is required.' }"
+      [type]="'option'"
+      [options]="AccessibilityOptions">
+    </app-form-input>
+
+    <app-form-input
+      [form]="createMethodForm"
+      controlName="Modificadores"
+      [reserve]="'Method Modifiers'"
+      [name]="'Modifiers'"
+      [tag]="'Modifiers'"
+      [errorMessages]="{ required: 'At least one modifier is required.' }"
+      [type]="'option'"
+      [options]="Modificadores">
+    </app-form-input>
+
+    <div class="mb-3">
+      <label class="form-label">Class</label>
+      <app-class-dropdown (selectClass)="onClassSelected($event)"></app-class-dropdown>
+      <div *ngIf="createMethodForm.get('ClassID')?.touched && createMethodForm.get('ClassID')?.invalid"
+           class="text-danger">
+        Class is required.
+      </div>
+    </div>
+
+    <div *ngIf="createMethodStatus?.loading; else notLoading">
+      Loading...
+    </div>
+    <ng-template #notLoading>
+      <div *ngIf="createMethodStatus?.error" class="text-danger mb-2">
+        {{ createMethodStatus?.error }}
+      </div>
+      <app-form-button title="Create Method"></app-form-button>
+    </ng-template>
+
+  </app-form>
+</div>

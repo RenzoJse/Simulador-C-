@@ -6,7 +6,12 @@ using ObjectSim.DataAccess;
 using ObjectSim.DataAccess.Interface;
 using ObjectSim.DataAccess.Repositories;
 using ObjectSim.Domain;
+using ObjectSim.Examples;
 using ObjectSim.IBusinessLogic;
+using ObjectSim.OutputModel;
+using ObjectSim.Security;
+using ObjectSim.Security.Strategy;
+using ObjectSim.Security.Strategy.KeyStrat;
 using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.WebApi;
@@ -38,13 +43,24 @@ public static class ServiceFactory
         services.AddScoped<IBuilderStrategy, AbstractBuilderStrategy>();
         services.AddScoped<IClassService, ClassService>();
         services.AddScoped<IMethodSimulatorService, MethodSimulatorService>();
+        services.AddScoped<INamespaceService, NamespaceService>();
+
+        services.AddScoped<ISecurityService, SecurityService>();
+        services.AddScoped<IValidationStrategy, KeyStrategy>();
+        services.AddScoped<IInvokeMethodService, InvokeMethodService>();
+        services.AddScoped<IOutputModelTransformerService, OutputModelTransformerService>();
+        services.AddScoped<IExampleService, VisitorExample>();
     }
 
     public static void AddDataAccess(IServiceCollection services)
     {
         services.AddScoped<IRepository<Class>, ClassRepository>();
-        services.AddScoped<IRepository<Method>, Repository<Method>>();
+        services.AddScoped<IRepository<Method>, MethodRepository>();
         services.AddScoped<IRepository<Attribute>, Repository<Attribute>>();
         services.AddScoped<IRepository<DataType>, Repository<DataType>>();
+        services.AddScoped<IRepository<Key>, Repository<Key>>();
+        services.AddScoped<INamespaceRepository, NamespaceRepository>();
+        services.AddScoped<IRepository<InvokeMethod>, Repository<InvokeMethod>>();
+        services.AddScoped<IRepository<Variable>, Repository<Variable>>();
     }
 }

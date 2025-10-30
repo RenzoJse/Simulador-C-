@@ -2,7 +2,6 @@
 using ObjectSim.IBusinessLogic;
 using ObjectSim.WebApi.DTOs.In;
 using ObjectSim.WebApi.DTOs.Out;
-using ObjectSim.WebApi.Filter;
 using Attribute = ObjectSim.Domain.Attribute;
 
 namespace ObjectSim.WebApi.Controllers;
@@ -15,16 +14,19 @@ public class AttributeController(IAttributeService attributeService) : Controlle
     [HttpPost]
     public IActionResult Create([FromBody] CreateAttributeDtoIn modelIn)
     {
-        Attribute attribute = attributeService.CreateAttribute(modelIn.ToArgs());
+        var attribute = attributeService.CreateAttribute(modelIn.ToArgs());
+
         var response = AttributeDtoOut.ToInfo(attribute);
+
         return CreatedAtAction(nameof(Create), new { id = response.Id }, response);
     }
 
     [HttpGet]
     public IActionResult GetAll()
     {
-        List<Attribute> attributes = attributeService.GetAll();
-        return Ok(attributes);
+        var attributes = attributeService.GetAll();
+        var result = attributes.Select(AttributeDtoOut.ToInfo).ToList();
+        return Ok(result);
     }
 
     [HttpPut]

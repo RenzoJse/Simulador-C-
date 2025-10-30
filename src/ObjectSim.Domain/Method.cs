@@ -11,7 +11,6 @@ public class Method
         Protected,
     }
     public Guid Id { get; init; } = Guid.NewGuid();
-
     public Guid ClassId { get; set; }
 
     #region Name
@@ -30,12 +29,9 @@ public class Method
 
     #endregion
 
-    #region Type
+    #region TypeId
 
     public Guid TypeId { get; set; }
-    public DataType Type { get; set; } = null!;
-
-    public string GetTypeString() => Type?.Type ?? string.Empty;
 
     #endregion
 
@@ -47,8 +43,18 @@ public class Method
     public bool IsSealed { get; set; } = false;
     #endregion
 
+    #region IsVirtual
+    public bool IsVirtual { get; set; } = false;
+    #endregion
+
     #region IsOverride
     public bool IsOverride { get; set; } = false;
+    #endregion
+
+    #region IsStatic
+
+    public bool IsStatic { get; set; } = false;
+
     #endregion
 
     #region Accessibility
@@ -67,11 +73,14 @@ public class Method
     #endregion
 
     #region Parameters
-    public List<DataType> Parameters { get; set; } = [];
+    public List<Variable> Parameters { get; set; } = [];
+
     #endregion
 
     #region LocalVariable
-    public List<DataType> LocalVariables { get; set; } = [];
+
+    public List<Variable> LocalVariables { get; set; } = [];
+
     #endregion
 
     #region MethodsInvoke
@@ -91,32 +100,18 @@ public class Method
             throw new ArgumentNullException(nameof(method), "Method cannot be null.");
         }
 
-        if(MethodIsNotInClass(method, classObj)
-            && MethodIsNotFromParent(method, classObj)
-            && MethodIsNotInAttributes(method, classObj)
-            && MethodIsNotInLocalVariable(method)
-            && MethodIsNotInParameters(method))
+        if(IsReservedReference(reference))
         {
-            throw new ArgumentException("The invoked method must be reachable from the current method.");
+            if(MethodIsNotInClass(method, classObj) && MethodIsNotFromParent(method, classObj))
+            {
+                throw new ArgumentException("The invoked method must be reachable from the current method.");
+            }
         }
-
     }
 
-    private static bool MethodIsNotInParameters(Method method)
+    private static bool IsReservedReference(string reference)
     {
-        var parameters = method.Parameters;
-        return parameters.All(parameter => !parameter.MethodIds.Contains(method.Id));
-    }
-
-    private static bool MethodIsNotInLocalVariable(Method method)
-    {
-        var localVariables = method.LocalVariables;
-        return localVariables.All(localVariable => !localVariable.MethodIds.Contains(method.Id));
-    }
-
-    private static bool MethodIsNotInAttributes(Method methods, Class classObj)
-    {
-        return classObj.Attributes!.Select(attribute => attribute.DataType).All(attributeDataType => !attributeDataType.MethodIds.Contains(methods.Id));
+        return reference is "this" or "base";
     }
 
     private static bool MethodIsNotInClass(Method methods, Class classObj)
@@ -151,6 +146,7 @@ public class Method
     #endregion
 
     #region Validations
+
     public void ValidateFields()
     {
         ValidateId(Id);
@@ -189,6 +185,7 @@ public class Method
             throw new ArgumentException("Invalid accesibility type.");
         }
     }
+
     #endregion
 
 }

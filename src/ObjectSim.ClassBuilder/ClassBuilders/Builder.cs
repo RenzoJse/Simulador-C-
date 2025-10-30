@@ -54,23 +54,43 @@ public abstract class Builder()
         {
             Result.Attributes = [];
         }
+
+        ReturnAttributesWithClassId(attributes);
+    }
+
+    private void ReturnAttributesWithClassId(List<CreateAttributeArgs> attributesArgs)
+    {
+        foreach(var attributes in attributesArgs)
+        {
+            attributes.ClassId = Result.Id;
+        }
     }
 
     public virtual void SetMethods(List<CreateMethodArgs> methods)
     {
         ArgumentNullException.ThrowIfNull(methods);
 
-        if (methods.Count == 0 && ParentIsInterfaceWithUnimplementedMethods())
+        if(methods.Count == 0 && ParentIsInterfaceWithUnimplementedMethods())
         {
             throw new ArgumentException("Parent class is an interface and has methods that are not implemented");
         }
 
         Result.Methods = [];
+        ReturnMethodsWithClassId(methods);
+    }
+
+    private void ReturnMethodsWithClassId(List<CreateMethodArgs> methodsArgs)
+    {
+        foreach(var methodArgs in methodsArgs)
+        {
+            methodArgs.ClassId = Result.Id;
+        }
     }
 
     private bool ParentIsInterfaceWithUnimplementedMethods()
     {
-        return Result.Parent is not null && Result.Parent.IsInterface == true;
+        var parent = Result.Parent;
+        return parent is not null && (bool)parent.IsInterface! && parent.Methods!.Count > 0;
     }
 
     public Class GetResult()

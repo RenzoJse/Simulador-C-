@@ -1,0 +1,71 @@
+:host {
+  display: block;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 80, 170, 0.15);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h2 {
+  text-align: center;
+  color: #0057b7;
+  margin-bottom: 1.5rem;
+}
+
+app-form {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+app-method-dropdown {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+button {
+  background-color: #ff0202;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #ff0000;
+  cursor: pointer;
+}
+
+.success-card {
+  background-color: #e6ffed;
+  border: 1px solid #2ecc71;
+  color: #27ae60;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+.loading,
+.error {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.loading {
+  color: #0057b7;
+}
+
+.error {
+  color: #d9534f;
+}

@@ -1,6 +1,5 @@
 ﻿using ObjectSim.Domain;
 using ObjectSim.WebApi.DTOs.Out;
-using ValueType = ObjectSim.Domain.ValueType;
 
 namespace ObjectSim.WebApi.Test.Models.Out;
 
@@ -10,12 +9,12 @@ public class MethodInformationDtoOutTest
     [TestMethod]
     public void MethodInformationDtoOut_ShouldCreateInstance()
     {
-        var type = new ValueType("TestName", "int", []);
+        var typeId = Guid.NewGuid();
 
         var method = new Method()
         {
             Name = "TestMethod",
-            Type = type,
+            TypeId = typeId,
             Accessibility = Method.MethodAccessibility.Public,
             Abstract = false,
             IsSealed = false,
@@ -29,7 +28,7 @@ public class MethodInformationDtoOutTest
 
         Assert.IsNotNull(methodInfo);
         Assert.AreEqual("TestMethod", methodInfo.Name);
-        Assert.AreEqual("int", methodInfo.Type);
+        Assert.AreEqual(typeId.ToString(), methodInfo.Type);
         Assert.AreEqual("Public", methodInfo.Accessibility);
         Assert.IsFalse(methodInfo.IsAbstract);
         Assert.IsFalse(methodInfo.IsSealed);

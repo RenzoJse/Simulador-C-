@@ -11,24 +11,31 @@ public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeServi
     {
         base.SetAttributes(attributes);
 
-        List<Attribute> newAttributes = [];
-        foreach(var attr in attributes)
-        {
-            try
-            {
-                Attribute newAttribute = attributeService.CreateAttribute(attr);
-                if(Result.CanAddAttribute(newAttribute))
-                {
-                    newAttributes.Add(newAttribute);
-                }
-            }
-            catch
-            {
-                // ignored
-            }
-        }
+        var validAttributes = attributes.Select(CreateAttributes).OfType<Attribute>().Where(Result.CanAddAttribute).ToList();
 
-        Result.Attributes = newAttributes;
+        Result.Attributes = validAttributes;
+    }
+
+    private Attribute? CreateAttributes(CreateAttributeArgs args)
+    {
+        try
+        {
+            var attribute = attributeService.BuilderCreateAttribute(args);
+            ValidateAttributeIsStatic(attribute);
+            return attribute;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static void ValidateAttributeIsStatic(Attribute attribute)
+    {
+        if(attribute.IsStatic)
+        {
+            throw new ArgumentException("Attributes in abstract class cannot be static");
+        }
     }
 
     public override void SetMethods(List<CreateMethodArgs> methods)
@@ -41,7 +48,7 @@ public class AbstractBuilder(IMethodServiceCreate methodService, IAttributeServi
             try
             {
                 method.IsAbstract = true;
-                var newMethod = methodService.CreateMethod(method);
+                var newMethod = methodService.BuilderCreateMethod(method);
                 if(Result.CanAddMethod(newMethod))
                 {
                     newMethods.Add(newMethod);

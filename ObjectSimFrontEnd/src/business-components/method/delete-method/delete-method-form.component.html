@@ -1,0 +1,26 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Delete Method:</h2>
+
+    <app-form [form]="deleteMethodForm" (atSubmit)="onSubmit()">
+
+        <app-method-dropdown (selectMethod)="updateMethodId($event)">
+        </app-method-dropdown>
+
+        <app-form-button title="Delete"></app-form-button>
+
+        <div *ngIf="deleteMethodFormStatus?.loading; else notLoading">
+            Loading...
+        </div>
+
+        <ng-template #notLoading>
+            <div *ngIf="deleteMethodFormStatus?.error">
+                {{ deleteMethodFormStatus!.error }}
+            </div>
+        </ng-template>
+
+        <div *ngIf="success" class="success-card">
+            Method deleted successfully!
+        </div>
+
+    </app-form>
+</div>

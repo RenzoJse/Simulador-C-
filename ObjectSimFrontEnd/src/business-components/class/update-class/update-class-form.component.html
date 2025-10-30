@@ -1,0 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="onSubmitWithData(form.value)">
+  <app-class-dropdown (selectClass)="updateClassId($event)"></app-class-dropdown>
+
+  <div class="mb-3">
+    <label for="newName" class="form-label">New Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="newName"
+      formControlName="newName"
+      placeholder="Enter new class name"
+    />
+  </div>
+
+  <app-form-button title="Update"></app-form-button>
+
+  <div *ngIf="formStatus.loading">Loading...</div>
+  <div *ngIf="formStatus.error">{{ formStatus.error }}</div>
+</form>

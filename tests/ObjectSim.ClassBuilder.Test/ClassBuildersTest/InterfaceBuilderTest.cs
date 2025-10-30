@@ -9,22 +9,22 @@ public class InterfaceBuilderTest
 {
     private InterfaceBuilder? _interfaceBuilderTest;
 
-    private static readonly CreateDataTypeArgs TestArgsDataType = new(
-        "int", "reference");
-
     private static readonly Guid TestAttributeId = Guid.NewGuid();
 
     private readonly CreateAttributeArgs _testArgsAttribute = new(
-        TestArgsDataType,
+        Guid.NewGuid(),
         "public",
         TestAttributeId,
-        "Test"
+        "Test",
+        false
     );
 
     private readonly CreateMethodArgs _testCreateMethodArgs = new CreateMethodArgs(
         "TestMethod",
-        new CreateDataTypeArgs("int", "reference"),
+        Guid.NewGuid(),
         "public",
+        false,
+        false,
         false,
         false,
         false,

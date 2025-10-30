@@ -161,11 +161,42 @@ public class Class
 
     public bool CanAddMethod(Method method)
     {
+        ArgumentNullException.ThrowIfNull(method);
+
         ValidateMethodUniqueness(method);
 
         if(IsInterface == true)
         {
             ValidateInterfaceMethodConstraints(method);
+        }
+
+        if(IsAbstract == true)
+        {
+            ValidateAbstractMethodConstraints(method);
+        }
+
+        if(method.IsOverride)
+        {
+            if(Parent == null)
+            {
+                throw new ArgumentException("Override method must override a method from the parent class.");
+            }
+
+            if(Parent.IsInterface == true)
+            {
+                var found = (Parent.Methods ?? Enumerable.Empty<Method>()).Any(parentMethod => parentMethod.Name == method.Name);
+                if(!found)
+                {
+                    throw new ArgumentException("Override method must override a method from the parent interface.");
+                }
+            }
+            else
+            {
+                if((Parent.Methods ?? Enumerable.Empty<Method>()).Any(parentMethod => parentMethod.Name == method.Name && !parentMethod.IsVirtual))
+                {
+                    throw new ArgumentException("Override method must override a virtual method from the parent class.");
+                }
+            }
         }
 
         return true;
@@ -175,11 +206,19 @@ public class Class
     {
         if(Methods!.Any(classMethod =>
                classMethod.Name == method.Name &&
-               classMethod.Type.IsSameType(method.Type) &&
+               classMethod.TypeId == method.TypeId &&
                method.IsOverride == false &&
                AreParametersEqual(classMethod.Parameters, method.Parameters)))
         {
             throw new ArgumentException("Method already exists in class.");
+        }
+    }
+
+    private static void ValidateAbstractMethodConstraints(Method method)
+    {
+        if(method.IsStatic)
+        {
+            throw new ArgumentException("Method cannot be static in an abstract class.");
         }
     }
 
@@ -192,6 +231,10 @@ public class Class
         if(method.IsOverride)
         {
             throw new ArgumentException("Method cannot be override in an interface.");
+        }
+        if(method.IsStatic)
+        {
+            throw new ArgumentException("Method cannot be static in an interface.");
         }
         if(method.Accessibility == Method.MethodAccessibility.Private)
         {
@@ -211,7 +254,7 @@ public class Class
         }
     }
 
-    private static bool AreParametersEqual(List<DataType> parameters1, List<DataType> parameters2)
+    private static bool AreParametersEqual(List<Variable> parameters1, List<Variable> parameters2)
     {
         if(parameters1.Count != parameters2.Count)
         {
@@ -223,7 +266,7 @@ public class Class
             var p1 = parameters1[i];
             var p2 = parameters2[i];
 
-            if(p1.Name != p2.Name || p1.Type != p2.Type)
+            if(p1.TypeId != p2.TypeId || p1.Name != p2.Name)
             {
                 return false;
             }

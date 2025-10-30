@@ -1,0 +1,62 @@
+.shimmer-text {
+  background: linear-gradient(
+          to right,
+          #00aaff 20%,
+          #ffffff 40%,
+          #00aaff 60%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: shimmer 5s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -100% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.carousel-image {
+  height: 550px;
+  object-fit: cover;
+  filter: brightness(0.8) blur(1px);
+  border-radius: 0.5rem;
+  transition: filter 0.5s ease;
+}
+
+.carousel-image:hover {
+  filter: brightness(1);
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 1rem;
+  padding: 1rem 2rem;
+  backdrop-filter: blur(4px);
+  bottom: 30px;
+}
+
+.carousel-caption h5 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.carousel-caption p {
+  font-size: 1.1rem;
+  color: #dddddd;
+}
+
+.carousel-inner {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.carousel {
+  transition: all 0.5s ease-in-out;
+}

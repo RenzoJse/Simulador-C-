@@ -1,0 +1,133 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid justify-content-between">
+    <a routerLink="/landing-page" class="navbar-brand fs-3 fw-bold text-white text-decoration-none">
+  Object Simulator
+</a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Methods
+          </a>
+          <ul class="dropdown-menu text-center">
+              <li><a class="dropdown-item" routerLink="/method/create" routerLinkActive="active">Create Method</a></li>
+            <li><a class="dropdown-item" routerLink="/method/delete" routerLinkActive="active">Delete Method</a></li>
+              <li><a class="dropdown-item" routerLink="/method/list" routerLinkActive="active">All Methods</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Attributes
+          </a>
+          <ul class="dropdown-menu text-center">
+            <li><a class="dropdown-item" routerLink="/attribute/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Create Attribute</a></li>
+            <li><a class="dropdown-item" routerLink="/attribute/delete" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Delete Attribute</a></li>
+            <li><a class="dropdown-item" routerLink="/attribute/update" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Update Attribute</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Namespace
+          </a>
+          <ul class="dropdown-menu text-center">
+            <li><a class="dropdown-item" routerLink="/namespace/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Create Namespace</a></li>
+            <li><a class="dropdown-item" routerLink="/namespace/list" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Get Namespaces</a></li>
+            <li><a class="dropdown-item" routerLink="/namespace/children" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Get children</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Class
+          </a>
+          <ul class="dropdown-menu text-center">
+            <li><a class="dropdown-item" routerLink="/class/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Create Class</a></li>
+            <li><a class="dropdown-item" routerLink="/class/delete" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Delete Class</a></li>
+              <li><a class="dropdown-item" routerLink="/class/list" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">All Classes</a></li>
+            <li><a class="dropdown-item" routerLink="/class/edit" routerLinkActive="active">Update Class</a></li>
+          </ul>
+        </li>
+          <li class="nav-item dropdown">
+              <a
+                      class="nav-link dropdown-toggle"
+                      href="#"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+              >
+                  Simulator
+              </a>
+              <ul class="dropdown-menu text-center">
+                  <li><a class="dropdown-item" routerLink="/simulator/execute" routerLinkActive="active">Simulate Methods</a></li>
+              </ul>
+          </li>
+          <li class="nav-item dropdown">
+              <a
+                      class="nav-link dropdown-toggle"
+                      href="#"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+              >
+                  Output Models
+              </a>
+              <ul class="dropdown-menu text-center">
+                  <li><a class="dropdown-item" routerLink="/outputModel/upload" routerLinkActive="active">Upload</a></li>
+              </ul>
+          </li>
+          <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Examples
+          </a>
+          <ul class="dropdown-menu text-center">
+            <li><a class="dropdown-item" routerLink="/visitor" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Visitor</a></li>
+            <li><a class="dropdown-item" routerLink="/namespace/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Strategy</a></li>
+            <li><a class="dropdown-item" routerLink="/namespace/create" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Builder</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

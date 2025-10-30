@@ -1,0 +1,33 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Delete Attribute</h2>
+
+  <app-form [form]="deleteForm" (atSubmit)="submitDelete()">
+    <div class="form-group mb-3">
+      <label for="id">Select Attribute to Delete</label>
+      <select
+        class="form-control"
+        formControlName="id"
+        [ngClass]="{
+          'is-invalid': deleteForm.get('id')?.invalid && deleteForm.get('id')?.touched
+        }"
+      >
+        <option value="" disabled>Select an attribute</option>
+        <option *ngFor="let attr of attributes" [value]="attr.value">
+          {{ attr.tag }}
+        </option>
+      </select>
+      <div class="invalid-feedback" *ngIf="deleteForm.get('id')?.errors?.['required']">
+        Attribute is required.
+      </div>
+    </div>
+
+    <div *ngIf="deleteStatus?.loading; else notLoading">Deleting...</div>
+
+    <ng-template #notLoading>
+      <div *ngIf="deleteStatus?.error" class="text-danger">
+        {{ deleteStatus!.error }}
+      </div>
+      <app-form-button title="Delete Attribute"></app-form-button>
+    </ng-template>
+  </app-form>
+</div>

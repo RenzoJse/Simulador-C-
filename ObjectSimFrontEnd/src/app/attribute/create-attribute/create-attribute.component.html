@@ -1,0 +1,22 @@
+<div class="create-attribute-page container mt-4">
+
+  <app-create-attribute-form
+    [title]="'Attribute'"
+    (atSubmit)="atSubmit($event)">
+  </app-create-attribute-form>
+
+  <div *ngIf="createdAttribute" class="attribute-card-small mt-4 p-3">
+    <h5>✅ Attribute creado satisfactoriamente</h5>
+    <p><strong>Name:</strong> {{ createdAttribute.name }}</p>
+    <p><strong>Visibility:</strong> {{ createdAttribute.visibility }}</p>
+  </div>
+
+  <div *ngIf="status?.loading" class="text-center mt-3">
+    Loading...
+  </div>
+
+  <div *ngIf="status?.error" class="alert alert-danger mt-3">
+    {{ status?.error }}
+  </div>
+
+</div>
