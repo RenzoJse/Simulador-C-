@@ -35,7 +35,7 @@ De esta forma, permite comprender los conceptos de clases, instancias, herencia,
 
 ---
 
-## 👥 Autores
+## Autores
 
 Proyecto desarrollado por:  
 - **Matías Fontes – **  
